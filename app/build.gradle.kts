@@ -1,5 +1,7 @@
 plugins {
+    // Android Application
     alias(libs.plugins.android.application)
+    // Kotlin Android
     alias(libs.plugins.kotlin.android)
 }
 
@@ -42,6 +44,7 @@ dependencies {
     implementation(libs.android.material)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.multidex)
 
