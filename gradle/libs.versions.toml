@@ -4,6 +4,7 @@ andMaterial = "1.12.0"
 andxAppcompat = "1.7.0"
 andxCoreKtx = "1.15.0"
 andxEspressoCore = "3.6.1"
+andxMultidex = "2.0.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 kotlin = "1.9.24"
@@ -14,6 +15,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "andxCoreKtx" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "andxEspressoCore" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "andxMultidex" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 [plugins]

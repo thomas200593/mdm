@@ -1,6 +1,5 @@
 package com.thomas200593.mdm.app
 
-import android.app.Application
+import androidx.multidex.MultiDexApplication
 
-class App: Application() {
-}
+class App: MultiDexApplication()
