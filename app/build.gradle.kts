@@ -22,15 +22,31 @@ android {
         versionCode = 1
         versionName = "1.0"
         multiDexEnabled = true
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        androidResources {
+            localeFilters += setOf("en", "in")
+        }
         vectorDrawables {
             useSupportLibrary = true
         }
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        release {
+        debug {
+            isDebuggable = true
             isMinifyEnabled = false
+            isShrinkResources = false
+
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        release {
+            isDebuggable = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -51,6 +67,9 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.15"
+    }
+    testOptions.unitTests{
+        isIncludeAndroidResources = true
     }
 }
 
