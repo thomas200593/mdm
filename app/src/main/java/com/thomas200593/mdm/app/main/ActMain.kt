@@ -28,7 +28,8 @@ class ActMain: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashscreen = installSplashScreen()
         super.onCreate(savedInstanceState)
-        var uiData by mutableStateOf(null /*TODO*/)
+
+        var uiData by mutableStateOf(UiData(1))
 
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
