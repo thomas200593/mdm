@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.conf._common
+package com.thomas200593.mdm.features.conf.common
 
 import com.thomas200593.mdm.features.conf._locale.Locale
 import com.thomas200593.mdm.features.conf._ui.UI
