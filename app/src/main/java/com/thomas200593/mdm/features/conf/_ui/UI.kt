@@ -7,7 +7,7 @@ import com.thomas200593.mdm.features.conf.__theme.Theme
 
 data class UI(
     val theme: Theme,
-    val dynamicColor: DynamicColor,
     val accent: Accent,
+    val dynamicColor: DynamicColor,
     val fontSize: FontSize
 )
