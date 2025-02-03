@@ -1,7 +1,7 @@
 package com.thomas200593.mdm.app.main
 
-import com.thomas200593.mdm.features.conf.ConfCommon
-import com.thomas200593.mdm.features.conf.Theme
+import com.thomas200593.mdm.features.conf.common.ConfCommon
+import com.thomas200593.mdm.features.conf.ui.theme.Theme
 
 sealed interface UiStateMain {
     data object Loading: UiStateMain
