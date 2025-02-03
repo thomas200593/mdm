@@ -38,7 +38,7 @@ class ActMain: AppCompatActivity() {
             }
         }
 
-        splashscreen.setKeepOnScreenCondition { false } /*TODO*/
+        splashscreen.setKeepOnScreenCondition { vm.uiState.value.keepSplashScreenOn() }
 
         setContent { /*TODO*/ }
     }
