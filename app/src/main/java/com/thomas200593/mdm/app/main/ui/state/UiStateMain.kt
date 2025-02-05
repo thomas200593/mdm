@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.app.main
+package com.thomas200593.mdm.app.main.ui.state
 
 import com.thomas200593.mdm.features.conf.__dynamic_color.DynamicColor
 import com.thomas200593.mdm.features.conf.common.Common

@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.app.main
+package com.thomas200593.mdm.app.main.ui
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -12,6 +12,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.thomas200593.mdm.app.main.ui.state.UiData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
