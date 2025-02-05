@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class VMMain @Inject constructor() : ViewModel() {
+class VMMain @Inject constructor(): ViewModel() {
     val uiState: StateFlow<UiStateMain> = flowOf(UiStateMain.Loading)
         .stateIn(
             scope = viewModelScope,
