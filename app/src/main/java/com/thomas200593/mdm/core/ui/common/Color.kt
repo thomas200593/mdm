@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 
 object Color {
     object Light {
+        val scrimARGB = argb(0xe6, 0xFF, 0xFF, 0xFF)
         object ContrastDefault {
             private val primaryLight = Color(0xFF0D6680)
             private val onPrimaryLight = Color(0xFFFFFFFF)
@@ -63,7 +64,7 @@ object Color {
                 onSurface = onSurfaceLight,
                 surfaceVariant = surfaceVariantLight,
                 onSurfaceVariant = onSurfaceVariantLight,
-                surfaceTint = Color.Unspecified,
+                surfaceTint = Color(scrimARGB),
                 inverseSurface = inverseSurfaceLight,
                 inverseOnSurface = inverseOnSurfaceLight,
                 error = errorLight,
@@ -138,7 +139,7 @@ object Color {
                 onSurface = onSurfaceLightMediumContrast,
                 surfaceVariant = surfaceVariantLightMediumContrast,
                 onSurfaceVariant = onSurfaceVariantLightMediumContrast,
-                surfaceTint = Color.Unspecified,
+                surfaceTint = Color(scrimARGB),
                 inverseSurface = inverseSurfaceLightMediumContrast,
                 inverseOnSurface = inverseOnSurfaceLightMediumContrast,
                 error = errorLightMediumContrast,
@@ -213,7 +214,7 @@ object Color {
                 onSurface = onSurfaceLightHighContrast,
                 surfaceVariant = surfaceVariantLightHighContrast,
                 onSurfaceVariant = onSurfaceVariantLightHighContrast,
-                surfaceTint = Color.Unspecified,
+                surfaceTint = Color(scrimARGB),
                 inverseSurface = inverseSurfaceLightHighContrast,
                 inverseOnSurface = inverseOnSurfaceLightHighContrast,
                 error = errorLightHighContrast,
@@ -232,9 +233,9 @@ object Color {
                 surfaceDim = surfaceDimLightHighContrast
             )
         }
-        val scrimARGB = argb(0xe6, 0xFF, 0xFF, 0xFF)
     }
     object Dark {
+        val scrimARGB = argb(0x80, 0x1b, 0x1b, 0x1b)
         object ContrastDefault {
             private val primaryDark = Color(0xFF89D0EE)
             private val onPrimaryDark = Color(0xFF003545)
@@ -291,7 +292,7 @@ object Color {
                 onSurface = onSurfaceDark,
                 surfaceVariant = surfaceVariantDark,
                 onSurfaceVariant = onSurfaceVariantDark,
-                surfaceTint = Color.Unspecified,
+                surfaceTint = Color(scrimARGB),
                 inverseSurface = inverseSurfaceDark,
                 inverseOnSurface = inverseOnSurfaceDark,
                 error = errorDark,
@@ -366,7 +367,7 @@ object Color {
                 onSurface = onSurfaceDarkMediumContrast,
                 surfaceVariant = surfaceVariantDarkMediumContrast,
                 onSurfaceVariant = onSurfaceVariantDarkMediumContrast,
-                surfaceTint = Color.Unspecified,
+                surfaceTint = Color(scrimARGB),
                 inverseSurface = inverseSurfaceDarkMediumContrast,
                 inverseOnSurface = inverseOnSurfaceDarkMediumContrast,
                 error = errorDarkMediumContrast,
@@ -441,7 +442,7 @@ object Color {
                 onSurface = onSurfaceDarkHighContrast,
                 surfaceVariant = surfaceVariantDarkHighContrast,
                 onSurfaceVariant = onSurfaceVariantDarkHighContrast,
-                surfaceTint = Color.Unspecified,
+                surfaceTint = Color(scrimARGB),
                 inverseSurface = inverseSurfaceDarkHighContrast,
                 inverseOnSurface = inverseOnSurfaceDarkHighContrast,
                 error = errorDarkHighContrast,
@@ -460,6 +461,5 @@ object Color {
                 surfaceDim = surfaceDimDarkHighContrast
             )
         }
-        val scrimARGB = argb(0x80, 0x1b, 0x1b, 0x1b)
     }
 }
