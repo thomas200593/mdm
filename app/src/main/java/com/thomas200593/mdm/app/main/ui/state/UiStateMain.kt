@@ -1,7 +1,7 @@
 package com.thomas200593.mdm.app.main.ui.state
 
 import com.thomas200593.mdm.features.conf.__dynamic_color.DynamicColor
-import com.thomas200593.mdm.features.conf.common.Common
+import com.thomas200593.mdm.features.conf.common.entity.Common
 import com.thomas200593.mdm.features.conf.__theme.Theme
 
 sealed interface UiStateMain {
