@@ -1,8 +1,8 @@
 package com.thomas200593.mdm.app.main.ui.state
 
-import com.thomas200593.mdm.features.conf.__dynamic_color.DynamicColor
+import com.thomas200593.mdm.features.conf.__dynamic_color.entity.DynamicColor
 import com.thomas200593.mdm.features.conf.common.entity.Common
-import com.thomas200593.mdm.features.conf.__theme.Theme
+import com.thomas200593.mdm.features.conf.__theme.entity.Theme
 
 sealed interface UiStateMain {
     data object Loading: UiStateMain

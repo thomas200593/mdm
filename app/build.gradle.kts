@@ -22,19 +22,9 @@ android {
         versionCode = 1
         versionName = "1.0"
         multiDexEnabled = true
-        androidResources {
-            localeFilters += setOf("en", "in")
-        }
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        androidResources { localeFilters += setOf("en", "in") }
+        vectorDrawables { useSupportLibrary = true }
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField(
-            type = "String",
-            name = "APP_LOCAL_DATASTORE_FILENAME",
-            value = "\"app_local_datastore\""
-        )
     }
 
     buildTypes {
