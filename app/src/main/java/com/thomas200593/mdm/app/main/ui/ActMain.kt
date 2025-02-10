@@ -6,6 +6,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,9 +14,12 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.thomas200593.mdm.app.main.ui.state.LocalStateApp
 import com.thomas200593.mdm.app.main.ui.state.UiData
 import com.thomas200593.mdm.app.main.ui.state.UiStateMain
+import com.thomas200593.mdm.app.main.ui.state.rememberStateApp
 import com.thomas200593.mdm.core.ui.common.Color
+import com.thomas200593.mdm.core.ui.common.Theme
 import com.thomas200593.mdm.core.ui.component.isSystemInDarkTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.combine
@@ -68,6 +72,14 @@ class ActMain: ComponentActivity() {
 
         splashscreen.setKeepOnScreenCondition { vm.uiState.value.keepSplashScreenOn() }
 
-        setContent { /*TODO*/ }
+        setContent {
+            val appState = rememberStateApp()
+
+            CompositionLocalProvider(LocalStateApp provides appState) {
+                Theme.AppTheme {
+                    /*TODO*/
+                }
+            }
+        }
     }
 }
