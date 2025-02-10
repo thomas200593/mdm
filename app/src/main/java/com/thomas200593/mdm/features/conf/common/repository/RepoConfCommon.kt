@@ -37,7 +37,7 @@ internal class RepoConfCommonImpl @Inject constructor(
                 fontSize = data[DataStorePreferencesKeys.dsKeyFontSize]?.let { FontSize.valueOf(it) } ?: FontSize.defaultValue
             ),
             localization = Localization(
-                language = Language.defaultValue,
+                language = data[DataStorePreferencesKeys.dsKeyLanguage]?.let { Language.valueOf(it) } ?: Language.defaultValue,
                 country = data[DataStorePreferencesKeys.dsKeyCountry]?.let {
                     Country(
                         iso2 = it,
