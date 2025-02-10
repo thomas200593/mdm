@@ -7,4 +7,5 @@ object DataStorePreferencesKeys {
     val dsKeyContrastAccent = stringPreferencesKey("DS_KEY_CONTRAST_ACCENT")
     val dsKeyDynamicColor = stringPreferencesKey("DS_KEY_DYNAMIC_COLOR")
     val dsKeyFontSize = stringPreferencesKey("DS_KEY_FONT_SIZE")
+    val dsKeyCountry = stringPreferencesKey("DS_KEY_COUNTRY")
 }

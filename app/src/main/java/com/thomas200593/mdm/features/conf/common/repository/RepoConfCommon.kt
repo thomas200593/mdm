@@ -5,17 +5,19 @@ import com.thomas200593.mdm.core.data.local.datastore.DataStorePreferencesKeys
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
 import com.thomas200593.mdm.features.conf.__contrast_accent.entity.ContrastAccent
+import com.thomas200593.mdm.features.conf.__country.entity.Country
 import com.thomas200593.mdm.features.conf.__dynamic_color.entity.DynamicColor
 import com.thomas200593.mdm.features.conf.__font_size.entity.FontSize
 import com.thomas200593.mdm.features.conf.__language.entity.Language
 import com.thomas200593.mdm.features.conf.__theme.entity.Theme
-import com.thomas200593.mdm.features.conf._locale.entity.Locale
+import com.thomas200593.mdm.features.conf._localization.entity.Localization
 import com.thomas200593.mdm.features.conf._ui.entity.UI
 import com.thomas200593.mdm.features.conf.common.entity.Common
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import java.util.Locale
 import javax.inject.Inject
 
 interface RepoConfCommon {
@@ -29,17 +31,21 @@ internal class RepoConfCommonImpl @Inject constructor(
     override val confCommon: Flow<Common> = dataStore.instance.data.map { data ->
         Common(
             ui = UI(
-                theme = data[DataStorePreferencesKeys.dsKeyTheme]
-                    ?.let { Theme.valueOf(it) } ?: Theme.SYSTEM,
-                contrastAccent = data[DataStorePreferencesKeys.dsKeyContrastAccent]
-                    ?.let { ContrastAccent.valueOf(it) } ?: ContrastAccent.DEFAULT,
-                dynamicColor = data[DataStorePreferencesKeys.dsKeyDynamicColor]
-                    ?.let { DynamicColor.valueOf(it) } ?: DynamicColor.DISABLED,
-                fontSize = data[DataStorePreferencesKeys.dsKeyFontSize]
-                    ?.let { FontSize.valueOf(it) } ?: FontSize.MEDIUM
+                theme = data[DataStorePreferencesKeys.dsKeyTheme]?.let { Theme.valueOf(it) } ?: Theme.defaultValue,
+                contrastAccent = data[DataStorePreferencesKeys.dsKeyContrastAccent]?.let { ContrastAccent.valueOf(it) } ?: ContrastAccent.defaultValue,
+                dynamicColor = data[DataStorePreferencesKeys.dsKeyDynamicColor]?.let { DynamicColor.valueOf(it) } ?: DynamicColor.defaultValue,
+                fontSize = data[DataStorePreferencesKeys.dsKeyFontSize]?.let { FontSize.valueOf(it) } ?: FontSize.defaultValue
             ),
-            locale = Locale(
-                language = Language.EN
+            localization = Localization(
+                language = Language.defaultValue,
+                country = data[DataStorePreferencesKeys.dsKeyCountry]?.let {
+                    Country(
+                        iso2 = it,
+                        iso3 = Locale(String(), it).isO3Country,
+                        name = Locale(String(), it).displayName,
+                        flag = Country.getFlagByISOCode(it)
+                    )
+                } ?: Country.defaultValue
             )
         )
     }.flowOn(ioDispatcher)
