@@ -21,6 +21,7 @@ import com.thomas200593.mdm.app.main.ui.state.rememberStateApp
 import com.thomas200593.mdm.core.ui.common.Color
 import com.thomas200593.mdm.core.ui.common.Theme
 import com.thomas200593.mdm.core.ui.component.isSystemInDarkTheme
+import com.thomas200593.mdm.core.ui.component.setupSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -71,14 +72,15 @@ class ActMain: ComponentActivity() {
         }
 
         splashscreen.setKeepOnScreenCondition { vm.uiState.value.keepSplashScreenOn() }
+        setupSplashScreen(splashscreen)
 
         setContent {
-            val appState = rememberStateApp()
+            val appState = rememberStateApp(/*TODO*/)
 
             CompositionLocalProvider(LocalStateApp provides appState) {
-                Theme.AppTheme {
-                    /*TODO*/
-                }
+                Theme.AppTheme(
+                    content = { /*TODO*/ }
+                )
             }
         }
     }
