@@ -45,7 +45,8 @@ class ActMain: ComponentActivity() {
         var uiData by mutableStateOf(
             UiData(
                 darkThemeEnabled = resources.configuration.isSystemInDarkTheme,
-                dynamicColorEnabled = UiStateMain.Loading.dynamicColorEnabled
+                dynamicColorEnabled = UiStateMain.Loading.dynamicColorEnabled,
+                contrastAccent = UiStateMain.Loading.contrastAccent
             )
         )
 
@@ -57,7 +58,8 @@ class ActMain: ComponentActivity() {
                 ) { systemDark, uiState ->
                     UiData(
                         darkThemeEnabled = uiState.darkThemeEnabled(systemDark),
-                        dynamicColorEnabled = uiState.dynamicColorEnabled
+                        dynamicColorEnabled = uiState.dynamicColorEnabled,
+                        contrastAccent = uiState.contrastAccent
                     )
                 }.onEach { uiData = it }.map { it.darkThemeEnabled }.distinctUntilChanged()
                     .collect{ darkTheme ->
@@ -83,7 +85,10 @@ class ActMain: ComponentActivity() {
 
             CompositionLocalProvider(LocalStateApp provides appState) {
                 Theme.AppTheme(
-                    content = { /*TODO*/ }
+                    darkThemeEnabled = uiData.darkThemeEnabled,
+                    dynamicColorEnabled = uiData.dynamicColorEnabled,
+                    contrastAccent = uiData.contrastAccent,
+                    content = { /*TODO add Contrast & so on*/ }
                 )
             }
         }

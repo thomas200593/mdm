@@ -1,7 +1,9 @@
 package com.thomas200593.mdm.core.ui.common
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import com.thomas200593.mdm.features.conf.__contrast_accent.entity.ContrastAccent
 
 object Theme {
     private val lightContrastDefault = Color.Light.ContrastDefault.colorScheme
@@ -13,6 +15,9 @@ object Theme {
 
     @Composable
     fun AppTheme(
+        darkThemeEnabled: Boolean = isSystemInDarkTheme(),
+        dynamicColorEnabled: Boolean,
+        contrastAccent: ContrastAccent,
         content: @Composable () -> Unit
     ) {
         val colorScheme = when {
