@@ -14,10 +14,11 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.thomas200593.mdm.app.main.ui.state.LocalStateApp
+import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.app.main.ui.state.UiData
 import com.thomas200593.mdm.app.main.ui.state.UiStateMain
-import com.thomas200593.mdm.app.main.ui.state.rememberStateApp
+import com.thomas200593.mdm.core.design_system.network_monitor.NetworkMonitor
+import com.thomas200593.mdm.core.design_system.state_app.rememberStateApp
 import com.thomas200593.mdm.core.ui.common.Color
 import com.thomas200593.mdm.core.ui.common.Theme
 import com.thomas200593.mdm.core.ui.component.isSystemInDarkTheme
@@ -28,9 +29,12 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ActMain: ComponentActivity() {
+
+    @Inject lateinit var networkMonitor: NetworkMonitor
 
     private val vm: VMMain by viewModels()
 
@@ -75,7 +79,7 @@ class ActMain: ComponentActivity() {
         setupSplashScreen(splashscreen)
 
         setContent {
-            val appState = rememberStateApp(/*TODO*/)
+            val appState = rememberStateApp(networkMonitor = networkMonitor)
 
             CompositionLocalProvider(LocalStateApp provides appState) {
                 Theme.AppTheme(

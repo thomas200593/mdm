@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.app.main.ui.state
+package com.thomas200593.mdm.core.design_system.state_app
 
 import androidx.compose.runtime.staticCompositionLocalOf
 
