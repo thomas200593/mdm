@@ -2,6 +2,7 @@ package com.thomas200593.mdm.app.main.ui.state
 
 import com.thomas200593.mdm.features.conf.__contrast_accent.entity.ContrastAccent
 import com.thomas200593.mdm.features.conf.__dynamic_color.entity.DynamicColor
+import com.thomas200593.mdm.features.conf.__font_size.entity.FontSize
 import com.thomas200593.mdm.features.conf.__theme.entity.Theme
 import com.thomas200593.mdm.features.conf.common.entity.Common
 
@@ -22,9 +23,16 @@ sealed interface UiStateMain {
             ContrastAccent.MEDIUM -> ContrastAccent.MEDIUM
             ContrastAccent.HIGH -> ContrastAccent.HIGH
         }
+        override val fontSize: FontSize = when (confCommon.ui.fontSize) {
+            FontSize.SMALL -> FontSize.SMALL
+            FontSize.MEDIUM -> FontSize.MEDIUM
+            FontSize.LARGE -> FontSize.LARGE
+            FontSize.EXTRA_LARGE -> FontSize.EXTRA_LARGE
+        }
     }
     fun keepSplashScreenOn() = this is Loading
     fun darkThemeEnabled(isSystemInDarkTheme: Boolean) = isSystemInDarkTheme
     val dynamicColorEnabled get() = false
     val contrastAccent get() = ContrastAccent.defaultValue
+    val fontSize get() = FontSize.defaultValue
 }

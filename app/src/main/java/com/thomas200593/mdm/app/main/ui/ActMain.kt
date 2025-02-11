@@ -14,10 +14,10 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.app.main.ui.state.UiData
 import com.thomas200593.mdm.app.main.ui.state.UiStateMain
 import com.thomas200593.mdm.core.design_system.network_monitor.NetworkMonitor
+import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.rememberStateApp
 import com.thomas200593.mdm.core.ui.common.Color
 import com.thomas200593.mdm.core.ui.common.Theme
@@ -46,7 +46,8 @@ class ActMain: ComponentActivity() {
             UiData(
                 darkThemeEnabled = resources.configuration.isSystemInDarkTheme,
                 dynamicColorEnabled = UiStateMain.Loading.dynamicColorEnabled,
-                contrastAccent = UiStateMain.Loading.contrastAccent
+                contrastAccent = UiStateMain.Loading.contrastAccent,
+                fontSize = UiStateMain.Loading.fontSize
             )
         )
 
@@ -59,7 +60,8 @@ class ActMain: ComponentActivity() {
                     UiData(
                         darkThemeEnabled = uiState.darkThemeEnabled(systemDark),
                         dynamicColorEnabled = uiState.dynamicColorEnabled,
-                        contrastAccent = uiState.contrastAccent
+                        contrastAccent = uiState.contrastAccent,
+                        fontSize = uiState.fontSize
                     )
                 }.onEach { uiData = it }.map { it.darkThemeEnabled }.distinctUntilChanged()
                     .collect{ darkTheme ->
@@ -88,6 +90,7 @@ class ActMain: ComponentActivity() {
                     darkThemeEnabled = uiData.darkThemeEnabled,
                     dynamicColorEnabled = uiData.dynamicColorEnabled,
                     contrastAccent = uiData.contrastAccent,
+                    fontSize = uiData.fontSize,
                     content = { /*TODO add Contrast & so on*/ }
                 )
             }
