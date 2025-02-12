@@ -26,8 +26,7 @@ data class Country(
             'Y' to getEmojiByUnicode(unicode = 0x1F1FE), 'Z' to getEmojiByUnicode(unicode = 0x1F1FF)
         )
         private fun getEmojiByUnicode(unicode: Int) = String(Character.toChars(unicode))
-        private fun getCodeByCharacter(character: Char): String =
-            emojiMap[character.uppercaseChar()] ?: String()
+        private fun getCodeByCharacter(character: Char): String = emojiMap[character.uppercaseChar()] ?: String()
         val defaultValue: Country = Country(
             iso2 = Constants.ID,
             iso3 = Locale(String(), Constants.ID).isO3Country,
