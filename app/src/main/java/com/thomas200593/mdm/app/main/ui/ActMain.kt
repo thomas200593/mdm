@@ -91,7 +91,7 @@ class ActMain: ComponentActivity() {
                     dynamicColorEnabled = uiData.dynamicColorEnabled,
                     contrastAccent = uiData.contrastAccent,
                     fontSize = uiData.fontSize,
-                    content = { /*TODO add Contrast & so on*/ }
+                    content = { ScrApp() }
                 )
             }
         }
