@@ -91,6 +91,7 @@ dependencies {
     implementation(libs.androidx.material3.adaptive)
     implementation(libs.androidx.material3.adaptive.navigation.suite)
     implementation(libs.androidx.multidex)
+    implementation(libs.androidx.navigation)
     implementation(libs.google.dagger.hilt.android)
 
     testImplementation(libs.junit)

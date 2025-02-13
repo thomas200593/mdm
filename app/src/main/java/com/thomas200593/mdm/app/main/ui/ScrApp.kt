@@ -1,6 +1,5 @@
 package com.thomas200593.mdm.app.main.ui
 
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
@@ -12,10 +11,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import com.thomas200593.mdm.R
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.ui.component.AppNavSuiteScaffold
+import kotlin.reflect.KClass
 
 @Composable
 fun ScrApp(
@@ -47,10 +50,18 @@ private fun ScrApp(
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
     snackBarHostState: SnackbarHostState,
 ) {
+    val currentDestination = stateApp.currentDestination
     AppNavSuiteScaffold(
         modifier = modifier,
-        navSuiteItems = {},
+        navSuiteItems = {
+            stateApp.destTopLevel.forEach { dest -> /*TODO*/ }
+        },
         windowAdaptiveInfo = windowAdaptiveInfo,
         content = { /*TODO*/ }
     )
 }
+
+private fun NavDestination?.isRouteInHierarchy(route: KClass<*>) =
+    this?.hierarchy?.any {
+        it.hasRoute(route)
+    } ?: false

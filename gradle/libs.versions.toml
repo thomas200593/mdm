@@ -13,6 +13,7 @@ andxMaterial3 = "1.3.1"
 andxMaterial3Adaptive = "1.1.0-beta02"
 andxMaterial3AdaptiveNavSuite = "1.4.0-alpha08"
 andxMultidex = "2.0.1"
+andxNav = "2.8.7"
 googleDaggerHiltAndroid = "2.55"
 googleDevToolsKsp = "1.9.25-1.0.20"
 junit = "4.13.2"
@@ -34,13 +35,14 @@ androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", versi
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "andxDatastorePreferences" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "andxEspressoCore" }
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "andxHilt" }
-androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "andxHilt" }
+androidx-hilt-navigation-compose = { group = "androidx.navigation", module = "androidx.hilt:hilt-navigation-compose", version.ref = "andxHilt" }
 androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "andxHilt" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "andxJUnit" }
 androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "andxMaterial3" }
 androidx-material3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version.ref = "andxMaterial3Adaptive" }
 androidx-material3-adaptive-navigation-suite = { module = "androidx.compose.material3:material3-adaptive-navigation-suite", version.ref = "andxMaterial3AdaptiveNavSuite" }
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "andxMultidex" }
+androidx-navigation = { group = "androidx.navigation", module = "androidx.navigation:navigation-compose", version.ref = "andxNav" }
 google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "googleDaggerHiltAndroid" }
 google-dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "googleDaggerHiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
