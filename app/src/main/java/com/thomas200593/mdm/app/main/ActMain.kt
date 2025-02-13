@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.app.main.ui
+package com.thomas200593.mdm.app.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -14,6 +14,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.thomas200593.mdm.app.main.ui.ScrApp
 import com.thomas200593.mdm.app.main.ui.state.UiData
 import com.thomas200593.mdm.app.main.ui.state.UiStateMain
 import com.thomas200593.mdm.core.design_system.network_monitor.NetworkMonitor

@@ -24,7 +24,7 @@
         </service>
 
         <activity
-            android:name=".app.main.ui.ActMain"
+            android:name=".app.main.ActMain"
             android:exported="true"
             android:theme="@style/Theme.App.Starting">
             <intent-filter>

@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.app.main.ui
+package com.thomas200593.mdm.app.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
