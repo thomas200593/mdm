@@ -54,7 +54,7 @@ private fun ScrApp(
     AppNavSuiteScaffold(
         modifier = modifier,
         navSuiteItems = {
-            stateApp.destTopLevel.forEach { dest -> /*TODO*/ }
+            stateApp.destTopLevel.forEach { _ -> /*TODO*/ }
         },
         windowAdaptiveInfo = windowAdaptiveInfo,
         content = { /*TODO*/ }
