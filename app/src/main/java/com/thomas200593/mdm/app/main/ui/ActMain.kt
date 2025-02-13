@@ -84,7 +84,6 @@ class ActMain: ComponentActivity() {
 
         setContent {
             val appState = rememberStateApp(networkMonitor = networkMonitor)
-
             CompositionLocalProvider(LocalStateApp provides appState) {
                 Theme.AppTheme(
                     darkThemeEnabled = uiData.darkThemeEnabled,

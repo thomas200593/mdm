@@ -8,6 +8,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.thomas200593.mdm.core.design_system.network_monitor.NetworkMonitor
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 @Composable
 fun rememberStateApp(
@@ -31,4 +34,11 @@ class StateApp(
     coroutineScope: CoroutineScope,
     navController: NavHostController,
     networkMonitor: NetworkMonitor
-)
+) {
+    val isNetworkOffline = networkMonitor.isNetworkOnline.map(Boolean::not)
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.WhileSubscribed(1_000),
+            initialValue = false
+        )
+}
