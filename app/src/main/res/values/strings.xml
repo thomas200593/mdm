@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">mdm</string>
+    <string name="str_network_offline">You\'re currently offline. Please check your internet connection and try again.</string>
 </resources>

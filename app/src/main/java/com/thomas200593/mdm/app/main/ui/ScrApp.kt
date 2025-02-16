@@ -27,7 +27,7 @@ fun ScrApp(
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val isNetworkOffline by stateApp.isNetworkOffline.collectAsStateWithLifecycle()
-    val strNetworkOffline = stringResource(R.string.app_name)
+    val strNetworkOffline = stringResource(R.string.str_network_offline)
 
     LaunchedEffect(isNetworkOffline) {
         if(isNetworkOffline) snackBarHostState.showSnackbar(
@@ -62,6 +62,4 @@ private fun ScrApp(
 }
 
 private fun NavDestination?.isRouteInHierarchy(route: KClass<*>) =
-    this?.hierarchy?.any {
-        it.hasRoute(route)
-    } ?: false
+    this?.hierarchy?.any { it.hasRoute(route) } ?: false
