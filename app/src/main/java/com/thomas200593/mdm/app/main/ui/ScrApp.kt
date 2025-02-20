@@ -142,9 +142,9 @@ private fun ScrApp(
                             else WindowInsets(left = 0, top = 0, right = 0, bottom = 0)
                         ),
                         content = {
-                            NavigationHost(
+                            /*NavigationHost(
                                 stateApp = stateApp
-                            )
+                            )*/
                         }
                     )
                 }
