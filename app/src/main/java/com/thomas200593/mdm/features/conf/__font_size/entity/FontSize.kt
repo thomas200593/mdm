@@ -11,22 +11,22 @@ enum class FontSize(
     SMALL(
         code = "conf_font_size_small",
         sizeFactor = -2,
-        icon = AppIcons.FontSIze.small
+        icon = AppIcons.FontSize.small
     ),
     MEDIUM(
         code = "conf_font_size_medium",
         sizeFactor = 0,
-        icon = AppIcons.FontSIze.medium
+        icon = AppIcons.FontSize.medium
     ),
     LARGE(
         code = "conf_font_size_large",
         sizeFactor = 2,
-        icon = AppIcons.FontSIze.large
+        icon = AppIcons.FontSize.large
     ),
     EXTRA_LARGE(
         code = "conf_font_size_extra_large",
         sizeFactor = 4,
-        icon = AppIcons.FontSIze.x_large
+        icon = AppIcons.FontSize.x_large
     );
 
     companion object { val defaultValue: FontSize = MEDIUM }
