@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -16,6 +17,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
@@ -33,7 +35,9 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import com.thomas200593.mdm.R
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
+import com.thomas200593.mdm.core.ui.common.AppIcons
 import com.thomas200593.mdm.core.ui.component.AppNavSuiteScaffold
+import com.thomas200593.mdm.core.ui.component.DestTopLevelAppBar
 import kotlin.reflect.KClass
 
 @Composable
@@ -57,6 +61,7 @@ fun ScrApp(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScrApp(
     modifier: Modifier = Modifier,
@@ -72,19 +77,11 @@ private fun ScrApp(
                 val selected = currentDestination.isRouteInHierarchy(dest.baseRoute)
                 item(
                     selected = selected,
-                    onClick = { /*TODO*/ },
-                    icon = {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(dest.scrGraphs.iconRes),
-                            contentDescription = null
-                        )
-                    },
-                    selectedIcon = {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(dest.scrGraphs.iconRes),
-                            contentDescription = null
-                        )
-                    },
+                    onClick = { stateApp.navToDestTopLevel(dest) },
+                    icon =
+                    { Icon(imageVector = ImageVector.vectorResource(dest.scrGraphs.iconRes), contentDescription = null) },
+                    selectedIcon =
+                    { Icon(imageVector = ImageVector.vectorResource(dest.scrGraphs.iconRes), contentDescription = null) },
                     label = { dest.scrGraphs.title?.let { Text(stringResource(it)) } },
                     modifier = Modifier
                 )
@@ -100,20 +97,33 @@ private fun ScrApp(
                 snackbarHost = {
                     SnackbarHost(
                         hostState = snackBarHostState,
-                        modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
+                        modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing)
                     )
                 }
             ) { padding ->
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)
-                        .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .consumeWindowInsets(padding)
+                        .windowInsetsPadding(
+                            WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal)
+                        )
                 ) {
                     val destination = stateApp.currentTopLevelDestination
                     var shouldShowTopAppBar = false
 
                     if(destination != null) {
                         shouldShowTopAppBar = true
-                        /*TODO*/
+                        DestTopLevelAppBar(
+                            title = destination.scrGraphs.title,
+                            navBtnIcon = destination.scrGraphs.iconRes,
+                            modifier = modifier,
+                            colors = TopAppBarDefaults.topAppBarColors(),
+                            navBtnOnClick = {},
+                            actBtnIcon = AppIcons.App.icon,
+                            actBtnOnClick = {}
+                        )
                     }
                 }
             }

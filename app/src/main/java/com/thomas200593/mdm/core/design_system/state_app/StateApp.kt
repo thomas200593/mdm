@@ -8,8 +8,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.thomas200593.mdm.app.main.nav.DestTopLevel
 import com.thomas200593.mdm.core.design_system.network_monitor.NetworkMonitor
 import kotlinx.coroutines.CoroutineScope
@@ -59,4 +61,14 @@ class StateApp(
         @Composable get() = DestTopLevel.entries.firstOrNull {
             currentDestination?.hasRoute(route = it.route) == true
         }
+    fun navToDestTopLevel(dest: DestTopLevel) {
+        val navOptions = navOptions {
+            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+            launchSingleTop = true; restoreState = true
+        }
+        when(dest) {
+            DestTopLevel.DASHBOARD -> {/*TODO*/}
+            DestTopLevel.USER_PROFILE -> {/*TODO*/}
+        }
+    }
 }
