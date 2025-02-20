@@ -14,6 +14,7 @@ andxMaterial3Adaptive = "1.1.0-beta02"
 andxMaterial3AdaptiveNavSuite = "1.4.0-alpha08"
 andxMultidex = "2.0.1"
 andxNav = "2.8.7"
+andxWork = "2.10.0"
 googleDaggerHiltAndroid = "2.55"
 googleDevToolsKsp = "2.0.10-1.0.24"
 junit = "4.13.2"
@@ -44,6 +45,7 @@ androidx-material3-adaptive = { module = "androidx.compose.material3.adaptive:ad
 androidx-material3-adaptive-navigation-suite = { module = "androidx.compose.material3:material3-adaptive-navigation-suite", version.ref = "andxMaterial3AdaptiveNavSuite" }
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "andxMultidex" }
 androidx-navigation = { group = "androidx.navigation", module = "androidx.navigation:navigation-compose", version.ref = "andxNav" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "andxWork" }
 google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "googleDaggerHiltAndroid" }
 google-dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "googleDaggerHiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

@@ -1,5 +1,6 @@
 package com.thomas200593.mdm.app.main.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -78,10 +79,18 @@ private fun ScrApp(
                 item(
                     selected = selected,
                     onClick = { stateApp.navToDestTopLevel(dest) },
-                    icon =
-                    { Icon(imageVector = ImageVector.vectorResource(dest.scrGraphs.iconRes), contentDescription = null) },
-                    selectedIcon =
-                    { Icon(imageVector = ImageVector.vectorResource(dest.scrGraphs.iconRes), contentDescription = null) },
+                    icon = {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(dest.scrGraphs.iconRes),
+                            contentDescription = null
+                        )
+                    },
+                    selectedIcon = {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(dest.scrGraphs.iconRes),
+                            contentDescription = null
+                        )
+                    },
                     label = { dest.scrGraphs.title?.let { Text(stringResource(it)) } },
                     modifier = Modifier
                 )
@@ -125,6 +134,14 @@ private fun ScrApp(
                             actBtnOnClick = {}
                         )
                     }
+
+                    Box(
+                        modifier = Modifier.consumeWindowInsets(
+                            if(shouldShowTopAppBar) WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
+                            else WindowInsets(left = 0, top = 0, right = 0, bottom = 0)
+                        ),
+                        content = { /*TODO*/ }
+                    )
                 }
             }
         }

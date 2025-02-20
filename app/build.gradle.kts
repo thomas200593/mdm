@@ -94,6 +94,7 @@ dependencies {
     implementation(libs.androidx.material3.adaptive.navigation.suite)
     implementation(libs.androidx.multidex)
     implementation(libs.androidx.navigation)
+    implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.google.dagger.hilt.android)
     implementation(libs.kotlinx.serialization.json)
 
