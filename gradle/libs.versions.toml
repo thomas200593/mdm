@@ -15,10 +15,11 @@ andxMaterial3AdaptiveNavSuite = "1.4.0-alpha08"
 andxMultidex = "2.0.1"
 andxNav = "2.8.7"
 googleDaggerHiltAndroid = "2.55"
-googleDevToolsKsp = "1.9.25-1.0.20"
+googleDevToolsKsp = "2.0.10-1.0.24"
 junit = "4.13.2"
-kotlin = "1.9.25"
+kotlin = "2.0.10"
 kotlinSerialization = "2.0.10"
+kotlinxSerializationJson = "1.8.0"
 
 [libraries]
 android-material = { group = "com.google.android.material", name = "material", version.ref = "andMaterial" }
@@ -46,6 +47,7 @@ androidx-navigation = { group = "androidx.navigation", module = "androidx.naviga
 google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "googleDaggerHiltAndroid" }
 google-dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "googleDaggerHiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -53,4 +55,5 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "googleDaggerHiltAndroid" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "googleDevToolsKsp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }

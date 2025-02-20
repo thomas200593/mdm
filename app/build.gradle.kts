@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.google.dagger.hilt.android)
     // Kotlin Android
     alias(libs.plugins.kotlin.android)
+    // Kotlin Compose Compiler
+    alias(libs.plugins.kotlin.compose.compiler)
     // Kotlin Serialization
     alias(libs.plugins.kotlin.serialization)
 }
@@ -93,6 +95,7 @@ dependencies {
     implementation(libs.androidx.multidex)
     implementation(libs.androidx.navigation)
     implementation(libs.google.dagger.hilt.android)
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
 
