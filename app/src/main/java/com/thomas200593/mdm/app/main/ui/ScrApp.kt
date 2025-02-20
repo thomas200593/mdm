@@ -1,6 +1,13 @@
 package com.thomas200593.mdm.app.main.ui
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
@@ -54,12 +61,33 @@ private fun ScrApp(
     AppNavSuiteScaffold(
         modifier = modifier,
         navSuiteItems = {
-            stateApp.destTopLevel.forEach { _ -> /*TODO*/ }
+            stateApp.destTopLevel.forEach { dest ->
+                val selected = currentDestination.isRouteInHierarchy(dest.baseRoute)
+                item(
+                    selected = selected,
+                    onClick = {/*TODO*/},
+                    icon = {/*TODO*/},
+                    selectedIcon = {/*TODO*/},
+                    label = {/*TODO*/},
+                    modifier = Modifier
+                )
+            }
         },
         windowAdaptiveInfo = windowAdaptiveInfo,
-        content = { /*TODO*/ }
+        content = {
+            Scaffold(
+                snackbarHost = {
+                    SnackbarHost(
+                        hostState = snackBarHostState,
+                        modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
+                    )
+                }
+            ) { padding ->
+                Column(modifier = Modifier.padding(padding)) { /*TODO*/ }
+            }
+        }
     )
 }
 
-private fun NavDestination?.isRouteInHierarchy(route: KClass<*>) =
-    this?.hierarchy?.any { it.hasRoute(route) } ?: false
+private fun NavDestination?.isRouteInHierarchy(route: KClass<*>) = this?.hierarchy
+    ?.any { it.hasRoute(route) } ?: false

@@ -4,5 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface ScrGraphs {
-
+    @Serializable data object Dashboard: ScrGraphs
+    @Serializable data object UserProfile: ScrGraphs
 }
