@@ -96,7 +96,7 @@ private fun ScrApp(
                 modifier = modifier,
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = MaterialTheme.colorScheme.onSurface,
-                contentWindowInsets = WindowInsets(0, 0, 0, 0),
+                contentWindowInsets = WindowInsets(left = 0, top = 0, right = 0, bottom = 0),
                 snackbarHost = {
                     SnackbarHost(
                         hostState = snackBarHostState,
