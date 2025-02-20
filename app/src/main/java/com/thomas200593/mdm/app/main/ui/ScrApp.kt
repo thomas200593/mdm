@@ -34,6 +34,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.thomas200593.mdm.R
+import com.thomas200593.mdm.app.main.nav.NavigationHost
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.ui.common.AppIcons
@@ -140,7 +141,11 @@ private fun ScrApp(
                             if(shouldShowTopAppBar) WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
                             else WindowInsets(left = 0, top = 0, right = 0, bottom = 0)
                         ),
-                        content = { /*TODO*/ }
+                        content = {
+                            NavigationHost(
+                                stateApp = stateApp
+                            )
+                        }
                     )
                 }
             }
