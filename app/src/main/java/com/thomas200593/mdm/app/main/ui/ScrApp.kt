@@ -46,10 +46,8 @@ fun ScrApp(
     val strNetworkOffline = stringResource(R.string.str_network_offline)
 
     LaunchedEffect(isNetworkOffline) {
-        if(isNetworkOffline) snackBarHostState.showSnackbar(
-            message = strNetworkOffline,
-            duration = SnackbarDuration.Indefinite
-        )
+        if(isNetworkOffline) snackBarHostState
+            .showSnackbar(message = strNetworkOffline, duration = SnackbarDuration.Indefinite)
     }
 
     ScrApp(
@@ -110,7 +108,13 @@ private fun ScrApp(
                     modifier = Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)
                         .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
                 ) {
-                    Text("Route")
+                    val destination = stateApp.currentTopLevelDestination
+                    var shouldShowTopAppBar = false
+
+                    if(destination != null) {
+                        shouldShowTopAppBar = true
+                        /*TODO*/
+                    }
                 }
             }
         }

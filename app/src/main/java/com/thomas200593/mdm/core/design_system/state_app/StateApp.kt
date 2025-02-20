@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.thomas200593.mdm.app.main.nav.DestTopLevel
@@ -53,5 +54,9 @@ class StateApp(
             return currentEntry.value?.destination.also {
                 if(it != null) previousDestination.value = it
             } ?: previousDestination.value
+        }
+    val currentTopLevelDestination: DestTopLevel?
+        @Composable get() = DestTopLevel.entries.firstOrNull {
+            currentDestination?.hasRoute(route = it.route) == true
         }
 }
