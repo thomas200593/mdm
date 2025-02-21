@@ -12,6 +12,7 @@ import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.features.initial.entity.FirstTimeStatus
 import com.thomas200593.mdm.features.initial.entity.Initial
+import com.thomas200593.mdm.features.onboarding.entity.OnboardingStatus
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -30,11 +31,25 @@ fun ScrInitial(
 private fun ScrInitial(state: VMInitial.Ui.State) = when(state) {
     VMInitial.Ui.State.Loading -> {/*TODO*/}
     is VMInitial.Ui.State.Error -> {/*TODO*/}
-    is VMInitial.Ui.State.Success -> ScreenContent(data = state.data)
+    is VMInitial.Ui.State.Success -> ScreenContent(
+        data = state.data,
+        onNavToOnboarding = {/*TODO*/},
+        onNavToInitialization = {/*TODO*/}
+    )
 }
 
 @Composable
-private fun ScreenContent(data : Initial) = when(data.confCommon.firstTimeStatus) {
-    FirstTimeStatus.YES -> {/*TODO*/}
-    FirstTimeStatus.NO -> {/*TODO*/}
+private fun ScreenContent(
+    data : Initial,
+    onNavToOnboarding: () -> Unit,
+    onNavToInitialization: () -> Unit
+) = when (data.confCommon.firstTimeStatus) {
+    FirstTimeStatus.YES -> when (data.confCommon.onboardingStatus) {
+        OnboardingStatus.SHOW -> onNavToOnboarding()
+        OnboardingStatus.HIDE -> onNavToInitialization()
+    }
+    FirstTimeStatus.NO -> when (data.confCommon.onboardingStatus) {
+        OnboardingStatus.SHOW -> onNavToOnboarding()
+        OnboardingStatus.HIDE -> {/*TODO*/} //Auth
+    }
 }
