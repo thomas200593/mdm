@@ -2,6 +2,7 @@ package com.thomas200593.mdm.features.initial.ui
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
@@ -19,4 +20,5 @@ fun ScrInitial(
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) { vm.onEvent(VMInitial.Ui.Events.OnOpenEvent) }
 }
