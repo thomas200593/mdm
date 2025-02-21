@@ -3,9 +3,9 @@ package com.thomas200593.mdm.features.initial.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.features.initial.domain.UCGetDataInitial
+import com.thomas200593.mdm.features.initial.entity.Initial
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,7 +17,7 @@ class VMInitial @Inject constructor(
         data class Data(val state : State = State.Loading)
         sealed interface State {
             data object Loading : State
-            data class Success(val data: Int) : State
+            data class Success(val data: Initial) : State
             data class Error(val throwable: Throwable) : State
         }
         sealed interface Events {

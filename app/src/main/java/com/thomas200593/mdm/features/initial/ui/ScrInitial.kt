@@ -10,6 +10,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
+import com.thomas200593.mdm.features.initial.entity.FirstTimeStatus
+import com.thomas200593.mdm.features.initial.entity.Initial
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -21,6 +23,7 @@ fun ScrInitial(
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) { vm.onEvent(VMInitial.Ui.Events.OnOpenEvent) }
+    ScrInitial(state = state.state)
 }
 
 @Composable
@@ -31,4 +34,7 @@ private fun ScrInitial(state: VMInitial.Ui.State) = when(state) {
 }
 
 @Composable
-private fun ScreenContent(data: Int) {}
+private fun ScreenContent(data : Initial) = when(data.confCommon.firstTimeStatus) {
+    FirstTimeStatus.YES -> {/*TODO*/}
+    FirstTimeStatus.NO -> {/*TODO*/}
+}

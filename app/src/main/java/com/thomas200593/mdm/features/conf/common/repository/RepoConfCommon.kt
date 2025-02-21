@@ -13,6 +13,7 @@ import com.thomas200593.mdm.features.conf.__theme.entity.Theme
 import com.thomas200593.mdm.features.conf._localization.entity.Localization
 import com.thomas200593.mdm.features.conf._ui.entity.UI
 import com.thomas200593.mdm.features.conf.common.entity.Common
+import com.thomas200593.mdm.features.initial.entity.FirstTimeStatus
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -46,7 +47,8 @@ internal class RepoConfCommonImpl @Inject constructor(
                         flag = Country.getFlagByISOCode(it)
                     )
                 } ?: Country.defaultValue
-            )
+            ),
+            firstTimeStatus = data[DataStorePreferencesKeys.dsKeyFirstTimeStatus]?.let { FirstTimeStatus.valueOf(it) } ?: FirstTimeStatus.YES
         )
     }.flowOn(ioDispatcher)
 }
