@@ -6,8 +6,9 @@ import com.thomas200593.mdm.R
 import com.thomas200593.mdm.core.ui.common.AppIcons
 import kotlinx.serialization.Serializable
 
-@Serializable
-sealed interface ScrGraphs {
+@Serializable sealed interface ScrGraphs {
+    @Serializable data object Initial
+    @Serializable data object Onboarding
     @Serializable sealed class DestTopLevel(
         @DrawableRes val iconRes: Int,
         @StringRes val title: Int? = null,

@@ -42,25 +42,18 @@ class StateApp(
     val navController: NavHostController,
     networkMonitor: NetworkMonitor
 ) {
-    val isNetworkOffline = networkMonitor.isNetworkOnline.map(Boolean::not)
-        .stateIn(
-            scope = coroutineScope,
-            started = SharingStarted.WhileSubscribed(1_000),
-            initialValue = false
-        )
+    val isNetworkOffline = networkMonitor.isNetworkOnline.map(Boolean::not).stateIn(
+        scope = coroutineScope,
+        started = SharingStarted.WhileSubscribed(1_000),
+        initialValue = false
+    )
     val destTopLevel: List<DestTopLevel> = DestTopLevel.entries
     private val previousDestination = mutableStateOf<NavDestination?>(null)
-    val currentDestination: NavDestination?
-        @Composable get() {
-            val currentEntry = navController.currentBackStackEntryFlow.collectAsState(null)
-            return currentEntry.value?.destination.also {
-                if(it != null) previousDestination.value = it
-            } ?: previousDestination.value
-        }
-    val currentTopLevelDestination: DestTopLevel?
-        @Composable get() = DestTopLevel.entries.firstOrNull {
-            currentDestination?.hasRoute(route = it.route) == true
-        }
+    val currentDestination: NavDestination? @Composable get() = navController
+        .currentBackStackEntryFlow.collectAsState(initial = null).value?.destination
+        .also { if(it != null) previousDestination.value = it } ?: previousDestination.value
+    val currentTopLevelDestination: DestTopLevel? @Composable get() =
+        DestTopLevel.entries.firstOrNull { currentDestination?.hasRoute(route = it.route) == true }
     fun navToDestTopLevel(dest: DestTopLevel) {
         val navOptions = navOptions {
             popUpTo(navController.graph.findStartDestination().id) { saveState = true }
