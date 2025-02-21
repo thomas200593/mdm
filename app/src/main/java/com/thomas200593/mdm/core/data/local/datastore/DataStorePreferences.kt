@@ -20,8 +20,8 @@ interface DataStorePreferences {
 
 class DataStorePreferencesImpl @Inject constructor(
     @ApplicationContext context: Context,
-    @Dispatcher(CoroutineDispatchers.IO) ioDispatcher: CoroutineDispatcher,
-    @ApplicationScope scope: CoroutineScope
+    @ApplicationScope scope: CoroutineScope,
+    @Dispatcher(CoroutineDispatchers.IO) ioDispatcher: CoroutineDispatcher
 ) : DataStorePreferences {
     override val instance: DataStore<Preferences> = PreferenceDataStoreFactory.create(
         produceFile = { context.preferencesDataStoreFile(BuildConfig.APP_LOCAL_DATASTORE_FILENAME) },
