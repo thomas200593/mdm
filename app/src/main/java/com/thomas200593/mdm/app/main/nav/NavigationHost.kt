@@ -8,7 +8,8 @@ import com.thomas200593.mdm.core.design_system.state_app.StateApp
 @Composable
 fun NavigationHost(
     modifier: Modifier = Modifier,
-    stateApp: StateApp
+    stateApp: StateApp,
+    onShowSnackBar: suspend (String, String?) -> Boolean
 ) {
     val navController = stateApp.navController
     NavHost(

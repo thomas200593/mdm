@@ -17,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
@@ -130,9 +131,9 @@ private fun ScrApp(
                             navBtnIcon = destination.scrGraphs.iconRes,
                             modifier = modifier,
                             colors = TopAppBarDefaults.topAppBarColors(),
-                            navBtnOnClick = {},
+                            navBtnOnClick = {/*TODO*/},
                             actBtnIcon = AppIcons.App.icon,
-                            actBtnOnClick = {}
+                            actBtnOnClick = {/*TODO*/}
                         )
                     }
 
@@ -142,9 +143,16 @@ private fun ScrApp(
                             else WindowInsets(left = 0, top = 0, right = 0, bottom = 0)
                         ),
                         content = {
-                            /*NavigationHost(
-                                stateApp = stateApp
-                            )*/
+                            NavigationHost(
+                                stateApp = stateApp,
+                                onShowSnackBar = { message, action ->
+                                    snackBarHostState.showSnackbar(
+                                        message = message,
+                                        actionLabel = action,
+                                        duration = SnackbarDuration.Short
+                                    ) == SnackbarResult.ActionPerformed
+                                }
+                            )
                         }
                     )
                 }
