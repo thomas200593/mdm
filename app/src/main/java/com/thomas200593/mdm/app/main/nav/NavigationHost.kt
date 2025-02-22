@@ -13,7 +13,7 @@ fun NavigationHost(
     onShowSnackBar: suspend (String, String?) -> Boolean
 ) {
     val navController = stateApp.navController
-    NavHost (
+    NavHost(
         modifier = modifier,
         navController = navController,
         route = NavigationGraph.GraphRoot::class,

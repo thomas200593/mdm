@@ -33,9 +33,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ActMain: ComponentActivity() {
+class ActMain : ComponentActivity() {
 
-    @Inject lateinit var networkMonitor: NetworkMonitor
+    @Inject
+    lateinit var networkMonitor: NetworkMonitor
 
     private val vm: VMMain by viewModels()
 
@@ -65,7 +66,7 @@ class ActMain: ComponentActivity() {
                         fontSize = uiState.fontSize
                     )
                 }.onEach { uiData = it }.map { it.darkThemeEnabled }.distinctUntilChanged()
-                    .collect{ darkTheme ->
+                    .collect { darkTheme ->
                         enableEdgeToEdge(
                             statusBarStyle = SystemBarStyle.auto(
                                 lightScrim = android.graphics.Color.TRANSPARENT,

@@ -24,7 +24,7 @@ fun rememberStateApp(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavHostController = rememberNavController(),
     networkMonitor: NetworkMonitor
-) : StateApp = remember(
+): StateApp = remember(
     coroutineScope,
     navController,
     networkMonitor
@@ -49,19 +49,25 @@ class StateApp(
     )
     val destTopLevel: List<DestTopLevel> = DestTopLevel.entries
     private val previousDestination = mutableStateOf<NavDestination?>(null)
-    val currentDestination: NavDestination? @Composable get() = navController
-        .currentBackStackEntryFlow.collectAsState(initial = null).value?.destination
-        .also { if(it != null) previousDestination.value = it } ?: previousDestination.value
-    val currentTopLevelDestination: DestTopLevel? @Composable get() =
-        DestTopLevel.entries.firstOrNull { currentDestination?.hasRoute(route = it.route) == true }
+    val currentDestination: NavDestination?
+        @Composable get() = navController
+            .currentBackStackEntryFlow.collectAsState(initial = null).value?.destination
+            .also { if (it != null) previousDestination.value = it } ?: previousDestination.value
+    val currentTopLevelDestination: DestTopLevel?
+        @Composable get() =
+            DestTopLevel.entries.firstOrNull { currentDestination?.hasRoute(route = it.route) == true }
+
     fun navToDestTopLevel(dest: DestTopLevel) {
         val navOptions = navOptions {
             popUpTo(navController.graph.findStartDestination().id) { saveState = true }
             launchSingleTop = true; restoreState = true
         }
-        when(dest) {
-            DestTopLevel.DASHBOARD -> {/*TODO*/}
-            DestTopLevel.USER_PROFILE -> {/*TODO*/}
+        when (dest) {
+            DestTopLevel.DASHBOARD -> {/*TODO*/
+            }
+
+            DestTopLevel.USER_PROFILE -> {/*TODO*/
+            }
         }
     }
 }

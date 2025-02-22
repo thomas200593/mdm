@@ -27,36 +27,40 @@ fun ScrInitial(
     LaunchedEffect(Unit) { vm.onEvent(VMInitial.Ui.Events.OnOpenEvent) }
     ScrInitial(
         state = state.state,
-        onNavToOnboarding = {/*TODO*/}
+        onNavToOnboarding = {/*TODO*/ }
     )
 }
 
 @Composable
 private fun ScrInitial(
     state: VMInitial.Ui.State,
-    onNavToOnboarding : () -> Unit
-) = when(state) {
+    onNavToOnboarding: () -> Unit
+) = when (state) {
     VMInitial.Ui.State.Loading -> ScrLoading()
-    is VMInitial.Ui.State.Error -> {/*TODO*/}
+    is VMInitial.Ui.State.Error -> {/*TODO*/
+    }
+
     is VMInitial.Ui.State.Success -> ScreenContent(
         data = state.data,
         onNavToOnboarding = onNavToOnboarding,
-        onNavToInitialization = {/*TODO*/}
+        onNavToInitialization = {/*TODO*/ }
     )
 }
 
 @Composable
 private fun ScreenContent(
-    data : Initial,
-    onNavToOnboarding : () -> Unit,
-    onNavToInitialization : () -> Unit
+    data: Initial,
+    onNavToOnboarding: () -> Unit,
+    onNavToInitialization: () -> Unit
 ) = when (data.confCommon.firstTimeStatus) {
     FirstTimeStatus.YES -> when (data.confCommon.onboardingStatus) {
         OnboardingStatus.SHOW -> onNavToOnboarding()
         OnboardingStatus.HIDE -> onNavToInitialization()
     }
+
     FirstTimeStatus.NO -> when (data.confCommon.onboardingStatus) {
         OnboardingStatus.SHOW -> onNavToOnboarding()
-        OnboardingStatus.HIDE -> {/*TODO*/} //Auth
+        OnboardingStatus.HIDE -> {/*TODO*/
+        } //Auth
     }
 }

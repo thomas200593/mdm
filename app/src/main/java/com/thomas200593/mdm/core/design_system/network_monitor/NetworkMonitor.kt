@@ -29,7 +29,7 @@ class NetworkMonitorImpl @Inject constructor(
     override val isNetworkOnline: Flow<Boolean> = callbackFlow {
         val connectivityManager = context.getSystemService<ConnectivityManager>()
 
-        if(connectivityManager == null) {
+        if (connectivityManager == null) {
             channel.trySend(false)
             channel.close()
             return@callbackFlow
@@ -41,13 +41,16 @@ class NetworkMonitorImpl @Inject constructor(
                 networks += network
                 channel.trySend(true)
             }
+
             override fun onLost(network: Network) {
                 networks -= network
                 channel.trySend(networks.isNotEmpty())
             }
         }
 
-        val request = NetworkRequest.Builder().addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET).build()
+        val request =
+            NetworkRequest.Builder().addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .build()
 
         connectivityManager.registerNetworkCallback(request, callback)
 

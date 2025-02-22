@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class VMMain @Inject constructor(ucGetDataMain: UCGetDataMain): ViewModel() {
+class VMMain @Inject constructor(ucGetDataMain: UCGetDataMain) : ViewModel() {
     val uiState: StateFlow<UiStateMain> = ucGetDataMain.invoke().map { UiStateMain.Success(it) }
         .stateIn(
             scope = viewModelScope,

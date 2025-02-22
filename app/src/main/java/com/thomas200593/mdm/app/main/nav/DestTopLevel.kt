@@ -6,7 +6,7 @@ enum class DestTopLevel(
     val scrGraphs: ScrGraphs.DestTopLevel,
     val route: KClass<*>,
     val baseRoute: KClass<*> = route
-){
+) {
     DASHBOARD(
         scrGraphs = ScrGraphs.DestTopLevel.Dashboard,
         route = ScrGraphs.DestTopLevel.Dashboard::class

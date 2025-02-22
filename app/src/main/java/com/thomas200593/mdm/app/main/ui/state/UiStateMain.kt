@@ -7,13 +7,14 @@ import com.thomas200593.mdm.features.conf.__theme.entity.Theme
 import com.thomas200593.mdm.features.conf.common.entity.Common
 
 sealed interface UiStateMain {
-    data object Loading: UiStateMain
-    data class Success(val confCommon: Common): UiStateMain {
+    data object Loading : UiStateMain
+    data class Success(val confCommon: Common) : UiStateMain {
         override fun darkThemeEnabled(isSystemInDarkTheme: Boolean) = when (confCommon.ui.theme) {
             Theme.SYSTEM -> isSystemInDarkTheme
             Theme.LIGHT -> false
             Theme.DARK -> true
         }
+
         override val dynamicColorEnabled = when (confCommon.ui.dynamicColor) {
             DynamicColor.DISABLED -> false
             DynamicColor.ENABLED -> true
@@ -30,6 +31,7 @@ sealed interface UiStateMain {
             FontSize.EXTRA_LARGE -> FontSize.EXTRA_LARGE
         }
     }
+
     fun keepSplashScreenOn() = this is Loading
     fun darkThemeEnabled(isSystemInDarkTheme: Boolean) = isSystemInDarkTheme
     val dynamicColorEnabled get() = false

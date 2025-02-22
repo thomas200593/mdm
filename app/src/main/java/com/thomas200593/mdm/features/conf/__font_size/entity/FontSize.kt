@@ -29,5 +29,7 @@ enum class FontSize(
         icon = AppIcons.FontSize.x_large
     );
 
-    companion object { val defaultValue: FontSize = MEDIUM }
+    companion object {
+        val defaultValue: FontSize = MEDIUM
+    }
 }

@@ -16,12 +16,13 @@ class VMInitial @Inject constructor(
     private val ucGetDataInitial: UCGetDataInitial
 ) : ViewModel() {
     sealed interface Ui {
-        data class Data(val state : State = State.Loading): Ui
+        data class Data(val state: State = State.Loading) : Ui
         sealed interface State : Ui {
             data object Loading : State
             data class Success(val data: Initial) : State
             data class Error(val throwable: Throwable) : State
         }
+
         sealed interface Events : Ui {
             data object OnOpenEvent : Events
         }
@@ -31,7 +32,7 @@ class VMInitial @Inject constructor(
         private set
 
     fun onEvent(events: Ui.Events) {
-        when(events) {
+        when (events) {
             Ui.Events.OnOpenEvent -> onOpenEvent()
         }
     }
@@ -40,5 +41,5 @@ class VMInitial @Inject constructor(
         ucGetDataInitial.invoke()
             .catch { t -> state.update { it.copy(state = Ui.State.Error(throwable = t)) } }
             .collect { data -> state.update { it.copy(state = Ui.State.Success(Initial(confCommon = data))) } }
-        }
+    }
 }

@@ -4,7 +4,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 inline fun <T> MutableStateFlow<T>.update(function: (T) -> T) {
     while (true) {
-        val prev = value; val next = function(prev)
-        if(compareAndSet(prev, next)) return
+        val prev = value;
+        val next = function(prev)
+        if (compareAndSet(prev, next)) return
     }
 }

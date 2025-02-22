@@ -11,5 +11,5 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 abstract class ModConfCommon {
     @Binds
-    internal abstract fun bindsRepository(impl: RepoConfCommonImpl) : RepoConfCommon
+    internal abstract fun bindsRepository(impl: RepoConfCommonImpl): RepoConfCommon
 }

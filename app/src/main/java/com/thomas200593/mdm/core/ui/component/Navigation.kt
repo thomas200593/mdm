@@ -35,7 +35,7 @@ fun RowScope.NavBarItem(
 ) = NavigationBarItem(
     selected = selected,
     onClick = onClick,
-    icon = if(selected) selectedIcon else icon,
+    icon = if (selected) selectedIcon else icon,
     modifier = modifier,
     enabled = enabled,
     label = label,
@@ -73,7 +73,7 @@ fun NavRailItem(
 ) = NavigationRailItem(
     selected = selected,
     onClick = onClick,
-    icon = if(selected) selectedIcon else icon,
+    icon = if (selected) selectedIcon else icon,
     modifier = modifier,
     enabled = enabled,
     label = label,
@@ -162,7 +162,7 @@ class NavSuiteScope internal constructor(
     ) = navigationSuiteScope.item(
         selected = selected,
         onClick = onClick,
-        icon = { if(selected) selectedIcon() else icon() },
+        icon = { if (selected) selectedIcon() else icon() },
         label = label,
         colors = navSuiteItemColors,
         modifier = modifier
@@ -170,7 +170,10 @@ class NavSuiteScope internal constructor(
 }
 
 object NavDefaults {
-    @Composable fun navContentColor() = MaterialTheme.colorScheme.onSurfaceVariant
-    @Composable fun navSelectedItemColor() = MaterialTheme.colorScheme.onPrimaryContainer
-    @Composable fun navIndicatorColor() = MaterialTheme.colorScheme.primaryContainer
+    @Composable
+    fun navContentColor() = MaterialTheme.colorScheme.onSurfaceVariant
+    @Composable
+    fun navSelectedItemColor() = MaterialTheme.colorScheme.onPrimaryContainer
+    @Composable
+    fun navIndicatorColor() = MaterialTheme.colorScheme.primaryContainer
 }

@@ -53,7 +53,7 @@ fun ScrApp(
     val strNetworkOffline = stringResource(R.string.str_network_offline)
 
     LaunchedEffect(isNetworkOffline) {
-        if(isNetworkOffline) snackBarHostState
+        if (isNetworkOffline) snackBarHostState
             .showSnackbar(message = strNetworkOffline, duration = SnackbarDuration.Indefinite)
     }
 
@@ -124,22 +124,22 @@ private fun ScrApp(
                     val destination = stateApp.currentTopLevelDestination
                     var shouldShowTopAppBar = false
 
-                    if(destination != null) {
+                    if (destination != null) {
                         shouldShowTopAppBar = true
                         DestTopLevelAppBar(
                             title = destination.scrGraphs.title,
                             navBtnIcon = destination.scrGraphs.iconRes,
                             modifier = modifier,
                             colors = TopAppBarDefaults.topAppBarColors(),
-                            navBtnOnClick = {/*TODO*/},
+                            navBtnOnClick = {/*TODO*/ },
                             actBtnIcon = AppIcons.App.icon,
-                            actBtnOnClick = {/*TODO*/}
+                            actBtnOnClick = {/*TODO*/ }
                         )
                     }
 
                     Box(
                         modifier = Modifier.consumeWindowInsets(
-                            if(shouldShowTopAppBar) WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
+                            if (shouldShowTopAppBar) WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
                             else WindowInsets(left = 0, top = 0, right = 0, bottom = 0)
                         ),
                         content = {

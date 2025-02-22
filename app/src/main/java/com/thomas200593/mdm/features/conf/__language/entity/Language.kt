@@ -10,5 +10,7 @@ enum class Language(
         code = "conf_language_id"
     );
 
-    companion object { val defaultValue = EN }
+    companion object {
+        val defaultValue = EN
+    }
 }

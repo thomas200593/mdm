@@ -13,5 +13,5 @@ import javax.inject.Singleton
 abstract class ModDataStorePreferences {
     @Binds
     @Singleton
-    abstract fun bindsDataStorePreferences(impl: DataStorePreferencesImpl) : DataStorePreferences
+    abstract fun bindsDataStorePreferences(impl: DataStorePreferencesImpl): DataStorePreferences
 }
