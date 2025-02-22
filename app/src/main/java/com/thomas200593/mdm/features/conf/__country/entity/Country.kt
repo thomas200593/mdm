@@ -1,7 +1,7 @@
 package com.thomas200593.mdm.features.conf.__country.entity
 
 import com.thomas200593.mdm.core.design_system.util.Constants
-import com.thomas200593.mdm.core.design_system.util.Constants.EMPTY_STRING
+import com.thomas200593.mdm.core.design_system.util.Constants.STR_EMPTY
 import java.util.Locale
 
 data class Country(
@@ -29,17 +29,17 @@ data class Country(
 
         private fun getEmojiByUnicode(unicode: Int) = String(Character.toChars(unicode))
         private fun getCodeByCharacter(character: Char): String =
-            emojiMap[character.uppercaseChar()] ?: EMPTY_STRING
+            emojiMap[character.uppercaseChar()] ?: STR_EMPTY
 
         val defaultValue: Country = Country(
             iso2 = Constants.ID,
-            iso3 = Locale(EMPTY_STRING, Constants.ID).isO3Country,
-            name = Locale(EMPTY_STRING, Constants.ID).displayName,
+            iso3 = Locale(STR_EMPTY, Constants.ID).isO3Country,
+            name = Locale(STR_EMPTY, Constants.ID).displayName,
             flag = getFlagByISOCode(Constants.ID)
         )
 
         fun getFlagByISOCode(countryCode: String): String =
             if (countryCode.length == 2) getCodeByCharacter(countryCode[0]) + getCodeByCharacter(countryCode[1])
-            else EMPTY_STRING
+            else STR_EMPTY
     }
 }

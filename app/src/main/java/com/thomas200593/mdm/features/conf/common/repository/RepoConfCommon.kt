@@ -4,7 +4,7 @@ import com.thomas200593.mdm.core.data.local.datastore.DataStorePreferences
 import com.thomas200593.mdm.core.data.local.datastore.DataStorePreferencesKeys
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
-import com.thomas200593.mdm.core.design_system.util.Constants.EMPTY_STRING
+import com.thomas200593.mdm.core.design_system.util.Constants.STR_EMPTY
 import com.thomas200593.mdm.features.conf.__contrast_accent.entity.ContrastAccent
 import com.thomas200593.mdm.features.conf.__country.entity.Country
 import com.thomas200593.mdm.features.conf.__dynamic_color.entity.DynamicColor
@@ -55,8 +55,8 @@ internal class RepoConfCommonImpl @Inject constructor(
                 country = data[DataStorePreferencesKeys.dsKeyCountry]?.let {
                     Country(
                         iso2 = it,
-                        iso3 = Locale(EMPTY_STRING, it).isO3Country,
-                        name = Locale(EMPTY_STRING, it).displayName,
+                        iso3 = Locale(STR_EMPTY, it).isO3Country,
+                        name = Locale(STR_EMPTY, it).displayName,
                         flag = Country.getFlagByISOCode(it)
                     )
                 } ?: Country.defaultValue
