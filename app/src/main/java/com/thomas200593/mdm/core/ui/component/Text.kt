@@ -29,3 +29,24 @@ fun TxtLgTitle(
         style = style
     )
 }
+
+@Composable
+fun TxtMdTitle(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onSurface,
+    textAlign: TextAlign = MaterialTheme.typography.titleMedium.textAlign,
+    overflow: TextOverflow = TextOverflow.Clip,
+    maxLines: Int = Int.MAX_VALUE,
+    style: TextStyle = MaterialTheme.typography.titleMedium
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        color = color,
+        textAlign = textAlign,
+        overflow = overflow,
+        maxLines = maxLines,
+        style = style
+    )
+}

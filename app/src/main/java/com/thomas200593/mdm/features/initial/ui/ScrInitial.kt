@@ -10,6 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
+import com.thomas200593.mdm.core.ui.component.ScrLoading
 import com.thomas200593.mdm.features.initial.entity.FirstTimeStatus
 import com.thomas200593.mdm.features.initial.entity.Initial
 import com.thomas200593.mdm.features.onboarding.entity.OnboardingStatus
@@ -35,7 +36,7 @@ private fun ScrInitial(
     state: VMInitial.Ui.State,
     onNavToOnboarding : () -> Unit
 ) = when(state) {
-    VMInitial.Ui.State.Loading -> {/*TODO*/}
+    VMInitial.Ui.State.Loading -> ScrLoading()
     is VMInitial.Ui.State.Error -> {/*TODO*/}
     is VMInitial.Ui.State.Success -> ScreenContent(
         data = state.data,
