@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">mdm</string>
+    <string name="app_name">MDM</string>
     <string name="str_network_offline">You\'re currently offline. Please check your internet connection and try again.</string>
     <string name="str_dashboard">Dashboard</string>
     <string name="str_dashboard_desc">App Dashboard Desc</string>

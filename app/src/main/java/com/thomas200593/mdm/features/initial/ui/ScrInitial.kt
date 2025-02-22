@@ -24,16 +24,22 @@ fun ScrInitial(
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) { vm.onEvent(VMInitial.Ui.Events.OnOpenEvent) }
-    ScrInitial(state = state.state)
+    ScrInitial(
+        state = state.state,
+        onNavToOnboarding = {/*TODO*/}
+    )
 }
 
 @Composable
-private fun ScrInitial(state: VMInitial.Ui.State) = when(state) {
+private fun ScrInitial(
+    state: VMInitial.Ui.State,
+    onNavToOnboarding : () -> Unit
+) = when(state) {
     VMInitial.Ui.State.Loading -> {/*TODO*/}
     is VMInitial.Ui.State.Error -> {/*TODO*/}
     is VMInitial.Ui.State.Success -> ScreenContent(
         data = state.data,
-        onNavToOnboarding = {/*TODO*/},
+        onNavToOnboarding = onNavToOnboarding,
         onNavToInitialization = {/*TODO*/}
     )
 }
@@ -41,8 +47,8 @@ private fun ScrInitial(state: VMInitial.Ui.State) = when(state) {
 @Composable
 private fun ScreenContent(
     data : Initial,
-    onNavToOnboarding: () -> Unit,
-    onNavToInitialization: () -> Unit
+    onNavToOnboarding : () -> Unit,
+    onNavToInitialization : () -> Unit
 ) = when (data.confCommon.firstTimeStatus) {
     FirstTimeStatus.YES -> when (data.confCommon.onboardingStatus) {
         OnboardingStatus.SHOW -> onNavToOnboarding()
