@@ -16,7 +16,9 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaul
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItemColors
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldValue
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScope
+import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -105,7 +107,8 @@ fun AppNavSuiteScaffold(
     modifier: Modifier = Modifier,
     navSuiteItems: NavSuiteScope.() -> Unit,
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
+    state: NavigationSuiteScaffoldValue
 ) {
     val layoutType = NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(windowAdaptiveInfo)
     val navSuiteItemColors = NavigationSuiteItemColors(
@@ -144,7 +147,8 @@ fun AppNavSuiteScaffold(
             navigationRailContainerColor = Color.Transparent
         ),
         modifier = modifier,
-        content = content
+        content = content,
+        state = rememberNavigationSuiteScaffoldState(state)
     )
 }
 

@@ -12,7 +12,6 @@ import com.thomas200593.mdm.features.conf.__contrast_accent.entity.ContrastAccen
 import com.thomas200593.mdm.features.conf.__font_size.entity.FontSize
 
 object Theme {
-
     private val lightContrastDefault = Color.Light.ContrastDefault.colorScheme
     private val lightContrastMedium = Color.Light.ContrastMedium.colorScheme
     private val lightContrastHigh = Color.Light.ContrastHigh.colorScheme
@@ -20,7 +19,6 @@ object Theme {
     private val darkContrastMedium = Color.Dark.ContrastMedium.colorScheme
     private val darkContrastHigh = Color.Dark.ContrastHigh.colorScheme
     private val shapes = Shapes()
-
     @Composable
     fun AppTheme(
         darkThemeEnabled: Boolean = isSystemInDarkTheme(),
@@ -30,7 +28,6 @@ object Theme {
         content: @Composable () -> Unit
     ) {
         val context = LocalContext.current
-
         val colorScheme = when {
             // Case 1: Dynamic color is supported and enabled
             supportDynamicColor() && dynamicColorEnabled ->
@@ -57,6 +54,5 @@ object Theme {
             content = content
         )
     }
-
     private fun supportDynamicColor() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 }

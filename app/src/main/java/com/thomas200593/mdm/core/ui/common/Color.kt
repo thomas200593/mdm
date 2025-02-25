@@ -8,7 +8,6 @@ import androidx.compose.ui.graphics.Color
 object Color {
     object Light {
         val scrimARGB = argb(0xe6, 0xFF, 0xFF, 0xFF)
-
         object ContrastDefault {
             private val primaryLight = Color(0xFF0D6680)
             private val onPrimaryLight = Color(0xFFFFFFFF)
@@ -84,7 +83,6 @@ object Color {
                 surfaceDim = surfaceDimLight
             )
         }
-
         object ContrastMedium {
             private val primaryLightMediumContrast = Color(0xFF003B4C)
             private val onPrimaryLightMediumContrast = Color(0xFFFFFFFF)
@@ -160,7 +158,6 @@ object Color {
                 surfaceDim = surfaceDimLightMediumContrast
             )
         }
-
         object ContrastHigh {
             private val primaryLightHighContrast = Color(0xFF00313F)
             private val onPrimaryLightHighContrast = Color(0xFFFFFFFF)
@@ -237,10 +234,8 @@ object Color {
             )
         }
     }
-
     object Dark {
         val scrimARGB = argb(0x80, 0x1b, 0x1b, 0x1b)
-
         object ContrastDefault {
             private val primaryDark = Color(0xFF89D0EE)
             private val onPrimaryDark = Color(0xFF003545)
@@ -316,7 +311,6 @@ object Color {
                 surfaceDim = surfaceDimDark
             )
         }
-
         object ContrastMedium {
             private val primaryDarkMediumContrast = Color(0xFFA9E5FF)
             private val onPrimaryDarkMediumContrast = Color(0xFF002A36)
@@ -392,7 +386,6 @@ object Color {
                 surfaceDim = surfaceDimDarkMediumContrast
             )
         }
-
         object ContrastHigh {
             private val primaryDarkHighContrast = Color(0xFFDDF4FF)
             private val onPrimaryDarkHighContrast = Color(0xFF000000)

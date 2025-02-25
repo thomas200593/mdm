@@ -63,11 +63,8 @@ class StateApp(
             launchSingleTop = true; restoreState = true
         }
         when (dest) {
-            DestTopLevel.DASHBOARD -> {/*TODO*/
-            }
-
-            DestTopLevel.USER_PROFILE -> {/*TODO*/
-            }
+            DestTopLevel.DASHBOARD -> { /*TODO*/ }
+            DestTopLevel.USER_PROFILE -> { /*TODO*/ }
         }
     }
 }

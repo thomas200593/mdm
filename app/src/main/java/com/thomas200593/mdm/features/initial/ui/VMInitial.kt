@@ -16,22 +16,21 @@ class VMInitial @Inject constructor(
     private val ucGetDataInitial: UCGetDataInitial
 ) : ViewModel() {
     sealed interface Ui {
-        data class Data(val state: State = State.Loading) : Ui
-        sealed interface State : Ui {
-            data object Loading : State
-            data class Success(val data: Initial) : State
-            data class Error(val throwable: Throwable) : State
+        data class Data(val dataState: DataState = DataState.Loading) : Ui
+        sealed interface DataState : Ui {
+            data object Loading : DataState
+            data class Success(val data: Initial) : DataState
+            data class Error(val throwable: Throwable) : DataState
         }
-
         sealed interface Events : Ui {
             data object OnOpenEvent : Events
         }
     }
 
-    var state = MutableStateFlow(Ui.Data())
+    var uiState = MutableStateFlow(Ui.Data())
         private set
 
-    fun onEvent(events: Ui.Events) {
+    fun onEvent(events : Ui.Events) {
         when (events) {
             Ui.Events.OnOpenEvent -> onOpenEvent()
         }
@@ -39,7 +38,7 @@ class VMInitial @Inject constructor(
 
     private fun onOpenEvent() = viewModelScope.launch {
         ucGetDataInitial.invoke()
-            .catch { t -> state.update { it.copy(state = Ui.State.Error(throwable = t)) } }
-            .collect { data -> state.update { it.copy(state = Ui.State.Success(Initial(confCommon = data))) } }
+            .catch { t -> uiState.update { it.copy(dataState = Ui.DataState.Error(throwable = t)) } }
+            .collect { data -> uiState.update { it.copy(dataState = Ui.DataState.Success(Initial(confCommon = data))) } }
     }
 }

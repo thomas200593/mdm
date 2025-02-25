@@ -23,27 +23,25 @@ fun ScrInitial(
     context: Context = LocalContext.current,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
-    val state by vm.state.collectAsStateWithLifecycle()
-    LaunchedEffect(Unit) { vm.onEvent(VMInitial.Ui.Events.OnOpenEvent) }
+    val uiState by vm.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMInitial.Ui.Events.OnOpenEvent) })
     ScrInitial(
-        state = state.state,
-        onNavToOnboarding = {/*TODO*/ }
+        dataState = uiState.dataState,
+        onNavToOnboarding = { /*TODO*/ }
     )
 }
 
 @Composable
 private fun ScrInitial(
-    state: VMInitial.Ui.State,
+    dataState: VMInitial.Ui.DataState,
     onNavToOnboarding: () -> Unit
-) = when (state) {
-    VMInitial.Ui.State.Loading -> ScrLoading()
-    is VMInitial.Ui.State.Error -> {/*TODO*/
-    }
-
-    is VMInitial.Ui.State.Success -> ScreenContent(
-        data = state.data,
+) = when (dataState) {
+    VMInitial.Ui.DataState.Loading -> ScrLoading()
+    is VMInitial.Ui.DataState.Error -> { /*TODO*/ }
+    is VMInitial.Ui.DataState.Success -> ScreenContent(
+        data = dataState.data,
         onNavToOnboarding = onNavToOnboarding,
-        onNavToInitialization = {/*TODO*/ }
+        onNavToInitialization = { /*TODO*/ }
     )
 }
 
@@ -57,10 +55,8 @@ private fun ScreenContent(
         OnboardingStatus.SHOW -> onNavToOnboarding()
         OnboardingStatus.HIDE -> onNavToInitialization()
     }
-
     FirstTimeStatus.NO -> when (data.confCommon.onboardingStatus) {
         OnboardingStatus.SHOW -> onNavToOnboarding()
-        OnboardingStatus.HIDE -> {/*TODO*/
-        } //Auth
+        OnboardingStatus.HIDE -> { /*TODO*/ } //Auth
     }
 }

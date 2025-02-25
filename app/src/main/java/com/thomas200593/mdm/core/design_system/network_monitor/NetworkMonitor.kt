@@ -28,32 +28,26 @@ class NetworkMonitorImpl @Inject constructor(
 ) : NetworkMonitor {
     override val isNetworkOnline: Flow<Boolean> = callbackFlow {
         val connectivityManager = context.getSystemService<ConnectivityManager>()
-
         if (connectivityManager == null) {
             channel.trySend(false)
             channel.close()
             return@callbackFlow
         }
-
         val callback = object : NetworkCallback() {
             private val networks = mutableSetOf<Network>()
             override fun onAvailable(network: Network) {
                 networks += network
                 channel.trySend(true)
             }
-
             override fun onLost(network: Network) {
                 networks -= network
                 channel.trySend(networks.isNotEmpty())
             }
         }
-
         val request =
             NetworkRequest.Builder().addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                 .build()
-
         connectivityManager.registerNetworkCallback(request, callback)
-
         channel.trySend(connectivityManager.isCurrentlyConnected())
         awaitClose { connectivityManager.unregisterNetworkCallback(callback) }
     }.flowOn(ioDispatcher).conflate()

@@ -35,15 +35,12 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ActMain : ComponentActivity() {
 
-    @Inject
-    lateinit var networkMonitor: NetworkMonitor
-
+    @Inject lateinit var networkMonitor: NetworkMonitor
     private val vm: VMMain by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashscreen = installSplashScreen()
         super.onCreate(savedInstanceState)
-
         var uiData by mutableStateOf(
             UiData(
                 darkThemeEnabled = resources.configuration.isSystemInDarkTheme,
@@ -52,13 +49,9 @@ class ActMain : ComponentActivity() {
                 fontSize = UiStateMain.Loading.fontSize
             )
         )
-
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                combine(
-                    flow = isSystemInDarkTheme(),
-                    flow2 = vm.uiState
-                ) { systemDark, uiState ->
+                combine(flow = isSystemInDarkTheme(), flow2 = vm.uiState) { systemDark, uiState ->
                     UiData(
                         darkThemeEnabled = uiState.darkThemeEnabled(systemDark),
                         dynamicColorEnabled = uiState.dynamicColorEnabled,
@@ -80,10 +73,8 @@ class ActMain : ComponentActivity() {
                     }
             }
         }
-
         splashscreen.setKeepOnScreenCondition { vm.uiState.value.keepSplashScreenOn() }
         setupSplashScreen(splashscreen)
-
         setContent {
             val appState = rememberStateApp(networkMonitor = networkMonitor)
             CompositionLocalProvider(LocalStateApp provides appState) {

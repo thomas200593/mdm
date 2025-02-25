@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -52,10 +53,10 @@ fun ScrApp(
     val isNetworkOffline by stateApp.isNetworkOffline.collectAsStateWithLifecycle()
     val strNetworkOffline = stringResource(R.string.str_network_offline)
 
-    LaunchedEffect(isNetworkOffline) {
-        if (isNetworkOffline) snackBarHostState
-            .showSnackbar(message = strNetworkOffline, duration = SnackbarDuration.Indefinite)
-    }
+    LaunchedEffect(
+        key1 = isNetworkOffline,
+        block = { if (isNetworkOffline) snackBarHostState.showSnackbar(message = strNetworkOffline, duration = SnackbarDuration.Indefinite) }
+    )
 
     ScrApp(
         stateApp = stateApp,
@@ -73,8 +74,12 @@ private fun ScrApp(
     snackBarHostState: SnackbarHostState,
 ) {
     val currentDestination = stateApp.currentDestination
+    val state =
+        if(stateApp.currentTopLevelDestination != null) NavigationSuiteScaffoldValue.Visible
+        else NavigationSuiteScaffoldValue.Hidden
     AppNavSuiteScaffold(
         modifier = modifier,
+        state = state,
         navSuiteItems = {
             stateApp.destTopLevel.forEach { dest ->
                 val selected = currentDestination.isRouteInHierarchy(dest.baseRoute)
@@ -113,10 +118,7 @@ private fun ScrApp(
                 }
             ) { padding ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .consumeWindowInsets(padding)
+                    modifier = Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)
                         .windowInsetsPadding(
                             WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal)
                         )
@@ -131,9 +133,9 @@ private fun ScrApp(
                             navBtnIcon = destination.scrGraphs.iconRes,
                             modifier = modifier,
                             colors = TopAppBarDefaults.topAppBarColors(),
-                            navBtnOnClick = {/*TODO*/ },
+                            navBtnOnClick = { /*TODO*/ },
                             actBtnIcon = AppIcons.App.icon,
-                            actBtnOnClick = {/*TODO*/ }
+                            actBtnOnClick = { /*TODO*/ }
                         )
                     }
 
