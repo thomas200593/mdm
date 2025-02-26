@@ -14,7 +14,9 @@ import com.thomas200593.mdm.core.ui.component.ScrLoading
 import com.thomas200593.mdm.features.initial.entity.FirstTimeStatus
 import com.thomas200593.mdm.features.initial.entity.Initial
 import com.thomas200593.mdm.features.onboarding.entity.OnboardingStatus
+import com.thomas200593.mdm.features.onboarding.nav.navToOnboarding
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun ScrInitial(
@@ -27,7 +29,7 @@ fun ScrInitial(
     LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMInitial.Ui.Events.OnOpenEvent) })
     ScrInitial(
         dataState = uiState.dataState,
-        onNavToOnboarding = { /*TODO*/ }
+        onNavToOnboarding = { coroutineScope.launch { stateApp.navController.navToOnboarding() } }
     )
 }
 

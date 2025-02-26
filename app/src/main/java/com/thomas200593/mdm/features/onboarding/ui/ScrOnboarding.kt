@@ -1,21 +1,44 @@
 package com.thomas200593.mdm.features.onboarding.ui
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
-import com.thomas200593.mdm.core.design_system.state_app.StateApp
-import kotlinx.coroutines.CoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import com.thomas200593.mdm.core.ui.common.Theme
+import com.thomas200593.mdm.features.conf.__contrast_accent.entity.ContrastAccent
+import com.thomas200593.mdm.features.conf.__font_size.entity.FontSize
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ScrOnboarding() {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {},
+                actions = { Text("Actions") }
+            )
+        },
+        content = {
+            Surface(modifier = Modifier.padding(it)) {
+                Text("Onboarding Body")
+            }
+        }
+    )
+}
 
 @Composable
-fun ScrOnboarding(
-    vm: VMOnboarding = hiltViewModel(),
-    stateApp: StateApp = LocalStateApp.current,
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
-) {
-    val uiState by vm.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMOnboarding.Ui.Events.OnOpenEvent) })
-}
+@Preview
+private fun Test() = Theme.AppTheme(
+    darkThemeEnabled = true,
+    dynamicColorEnabled = true,
+    contrastAccent = ContrastAccent.DEFAULT,
+    fontSize = FontSize.MEDIUM
+) { ScrOnboarding() }
