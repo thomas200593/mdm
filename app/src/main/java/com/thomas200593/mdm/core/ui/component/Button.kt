@@ -64,7 +64,7 @@ fun BtnConfLang(
 @Composable
 @Preview
 private fun TestBtnConfLang() = Theme.AppTheme(
-    darkThemeEnabled = true,
+    darkThemeEnabled = false,
     dynamicColorEnabled = true,
     contrastAccent = ContrastAccent.defaultValue,
     fontSize = FontSize.defaultValue
