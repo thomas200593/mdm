@@ -95,6 +95,7 @@ dependencies {
     implementation(libs.androidx.multidex)
     implementation(libs.androidx.navigation)
     implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.coil.compose)
     implementation(libs.google.dagger.hilt.android)
     implementation(libs.kotlinx.serialization.json)
 
