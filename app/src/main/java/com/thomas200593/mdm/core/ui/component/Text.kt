@@ -50,3 +50,24 @@ fun TxtMdTitle(
         style = style
     )
 }
+
+@Composable
+fun TxtMdLabel(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onSurface,
+    textAlign: TextAlign = MaterialTheme.typography.labelMedium.textAlign,
+    overflow: TextOverflow = TextOverflow.Clip,
+    maxLines: Int = Int.MAX_VALUE,
+    style: TextStyle = MaterialTheme.typography.labelMedium
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        color = color,
+        textAlign = textAlign,
+        overflow = overflow,
+        maxLines = maxLines,
+        style = style
+    )
+}

@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -42,7 +42,8 @@ fun ScrOnboarding() {
                 actions = {
                     BtnConfLang(
                         onClick = {},
-                        languageIcon = String(Character.toChars(0x1F1EE)) + String(Character.toChars(0x1F1E9))
+                        languageIcon = String(Character.toChars(0x1F1EE)) + String(Character.toChars(0x1F1E9)),
+                        languageName = "Indonesia"
                     )
                 }
             )
@@ -63,8 +64,7 @@ fun ScrOnboarding() {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Button(onClick = {}, content = {})
-                        Button(onClick = {}, content = {})
+
                     }
                 }
             )
@@ -86,7 +86,7 @@ private fun OnboardingImages(modifier: Modifier) {
             .graphicsLayer { alpha = 0.6f }.background(
                 verticalGradient(colorStops = arrayOf(
                     Pair(0.6f, Color.Transparent),
-                    Pair(1.0f, Color.White)
+                    Pair(1.0f, MaterialTheme.colorScheme.onSurface)
                 ))
             )
         )
@@ -96,7 +96,7 @@ private fun OnboardingImages(modifier: Modifier) {
 @Composable
 private fun OnboardingDetails(modifier: Modifier) {
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item { TxtLgTitle(text = "Title") }
@@ -107,7 +107,7 @@ private fun OnboardingDetails(modifier: Modifier) {
 @Composable
 @Preview
 private fun Test() = Theme.AppTheme(
-    darkThemeEnabled = false,
+    darkThemeEnabled = true,
     dynamicColorEnabled = false,
     contrastAccent = ContrastAccent.DEFAULT,
     fontSize = FontSize.MEDIUM
