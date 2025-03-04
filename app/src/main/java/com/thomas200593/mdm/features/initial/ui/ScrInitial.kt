@@ -36,7 +36,6 @@ private fun ScrInitial(
     onNavToOnboarding: () -> Unit
 ) = when (dataState) {
     VMInitial.Ui.DataState.Loading -> ScrLoading()
-    is VMInitial.Ui.DataState.Error -> { /*TODO*/ }
     is VMInitial.Ui.DataState.Success -> ScreenContent(
         data = dataState.data,
         onNavToOnboarding = onNavToOnboarding,

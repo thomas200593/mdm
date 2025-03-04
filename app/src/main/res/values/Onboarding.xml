@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_title_1">Onboarding Title 1</string>
+    <string name="onboarding_title_2">Onboarding Title 2</string>
+    <string name="onboarding_title_3">Onboarding Title 3</string>
+    <string name="onboarding_desc_1">Onboarding Description 1.</string>
+    <string name="onboarding_desc_2">Onboarding Description 2.</string>
+    <string name="onboarding_desc_3">Onboarding Description 3.</string>
+</resources>
