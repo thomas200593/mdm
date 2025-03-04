@@ -1,11 +1,9 @@
 package com.thomas200593.mdm.features.initial.ui
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
@@ -22,7 +20,6 @@ import kotlinx.coroutines.launch
 fun ScrInitial(
     vm: VMInitial = hiltViewModel(),
     stateApp: StateApp = LocalStateApp.current,
-    context: Context = LocalContext.current,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
