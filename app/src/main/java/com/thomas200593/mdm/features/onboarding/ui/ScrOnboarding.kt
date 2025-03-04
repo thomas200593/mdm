@@ -9,8 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.NavigateBefore
+import androidx.compose.material.icons.automirrored.sharp.NavigateNext
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -29,6 +34,7 @@ import coil.compose.SubcomposeAsyncImage
 import com.thomas200593.mdm.core.ui.common.Theme
 import com.thomas200593.mdm.core.ui.component.BtnConfLang
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
+import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.features.conf.__contrast_accent.entity.ContrastAccent
 import com.thomas200593.mdm.features.conf.__font_size.entity.FontSize
 
@@ -64,7 +70,18 @@ fun ScrOnboarding() {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-
+                        Button(
+                            onClick = {},
+                            content = {
+                                Icon(imageVector = Icons.AutoMirrored.Default.NavigateBefore, contentDescription = null)
+                            }
+                        )
+                        Button(
+                            onClick = {},
+                            content = {
+                                Icon(imageVector = Icons.AutoMirrored.Sharp.NavigateNext, contentDescription = null)
+                            }
+                        )
                     }
                 }
             )
@@ -100,7 +117,7 @@ private fun OnboardingDetails(modifier: Modifier) {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item { TxtLgTitle(text = "Title") }
-        item { repeat(20) { Text(text = "body $it") } }
+        item { TxtMdBody(text = "Body") }
     }
 }
 

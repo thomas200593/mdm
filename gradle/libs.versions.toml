@@ -27,6 +27,8 @@ kotlinxSerializationJson = "1.8.0"
 android-material = { group = "com.google.android.material", name = "material", version.ref = "andMaterial" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "andxAppcompat" }
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "andxComposeUi" }
+androidx-compose-material-icons-core = { module = "androidx.compose.material:material-icons-core", version.ref = "andxComposeUi" }
+androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "andxComposeUi" }
 androidx-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "andxComposeUi" }
 androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "andxComposeUi" }
 androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "andxComposeUi" }

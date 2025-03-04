@@ -71,3 +71,24 @@ fun TxtMdLabel(
         style = style
     )
 }
+
+@Composable
+fun TxtMdBody(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onSurface,
+    textAlign: TextAlign = MaterialTheme.typography.bodyMedium.textAlign,
+    overflow: TextOverflow = TextOverflow.Clip,
+    maxLines: Int = Int.MAX_VALUE,
+    style: TextStyle = MaterialTheme.typography.bodyMedium
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        color = color,
+        textAlign = textAlign,
+        overflow = overflow,
+        maxLines = maxLines,
+        style = style
+    )
+}
