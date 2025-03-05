@@ -12,17 +12,17 @@ import kotlinx.serialization.Serializable
     @Serializable sealed class DestTopLevel(
         @DrawableRes val iconRes: Int,
         @StringRes val title: Int? = null,
-        @StringRes val desc: Int? = null
+        @StringRes val description: Int? = null
     ) : ScrGraphs {
         @Serializable data object Dashboard : DestTopLevel(
             iconRes = AppIcons.DestTopLevel.dashboard,
             title = R.string.str_dashboard,
-            desc = R.string.str_dashboard_desc
+            description = R.string.str_dashboard_desc
         )
         @Serializable data object UserProfile : DestTopLevel(
             iconRes = AppIcons.DestTopLevel.user_profile,
             title = R.string.str_user_profile,
-            desc = R.string.str_user_profile_desc
+            description = R.string.str_user_profile_desc
         )
     }
 }

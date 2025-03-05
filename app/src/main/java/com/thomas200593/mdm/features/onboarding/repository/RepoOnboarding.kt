@@ -1,23 +1,31 @@
 package com.thomas200593.mdm.features.onboarding.repository
 
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import com.thomas200593.mdm.R
+import com.thomas200593.mdm.core.data.local.datastore.DataStorePreferences
+import com.thomas200593.mdm.core.data.local.datastore.DataStorePreferencesKeys
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
 import com.thomas200593.mdm.features.onboarding.entity.Onboarding
+import com.thomas200593.mdm.features.onboarding.entity.OnboardingStatus
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 interface RepoOnboarding {
-    val data : Flow<List<Onboarding>>
+    val list : Flow<List<Onboarding>>
+    suspend fun hide(): Preferences
 }
 
 internal class RepoOnboardingImpl @Inject constructor(
-    @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
+    @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
+    private val dataStore: DataStorePreferences
 ) : RepoOnboarding {
-    override val data = flowOf(
+    override val list = flowOf(
         listOf(
             Onboarding(
                 imageRes = R.drawable.onboard_image_1,
@@ -36,4 +44,9 @@ internal class RepoOnboardingImpl @Inject constructor(
             )
         )
     ).flowOn(ioDispatcher)
+    override suspend fun hide() = withContext(ioDispatcher) {
+        dataStore.instance.edit {
+            it[DataStorePreferencesKeys.dsKeyOnboardingStatus] = OnboardingStatus.HIDE.name
+        }
+    }
 }

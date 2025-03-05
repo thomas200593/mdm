@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.features.onboarding.domain.UCGetDataOnboarding
 import com.thomas200593.mdm.features.onboarding.entity.OnboardingScrData
+import com.thomas200593.mdm.features.onboarding.repository.RepoOnboarding
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -12,7 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VMOnboarding @Inject constructor(
-    private val ucGetDataOnboarding: UCGetDataOnboarding
+    private val ucGetDataOnboarding: UCGetDataOnboarding,
+    private val repoOnboarding: RepoOnboarding
 ) : ViewModel() {
     sealed interface Ui {
         data class Data(val dataState: DataState = DataState.Loading) : Ui
@@ -36,7 +38,7 @@ class VMOnboarding @Inject constructor(
             Ui.Events.OnOpenEvent -> onOpenEvent()
             Ui.Events.OnNavPrevPage -> onNavPrevPageEvent()
             Ui.Events.OnNavNextPage -> onNavNextPageEvent()
-            Ui.Events.OnNavFinish -> {/*TODO*/}
+            Ui.Events.OnNavFinish -> onNavFinishEvent()
         }
     }
 
@@ -79,4 +81,6 @@ class VMOnboarding @Inject constructor(
             )
         } ?: it // Return unchanged if not in Success State
     }
+
+    private fun onNavFinishEvent() = viewModelScope.launch { repoOnboarding.hide() }
 }

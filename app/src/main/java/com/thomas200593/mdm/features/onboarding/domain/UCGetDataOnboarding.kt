@@ -17,6 +17,9 @@ class UCGetDataOnboarding @Inject constructor(
 ) {
     operator fun invoke() = combine(
         flow = repoConfCommon.confCommon,
-        flow2 = repoOnboarding.data
-    ) { confCommon, list -> OnboardingScrData(confCommon = confCommon, list = list) }.flowOn(ioDispatcher)
+        flow2 = repoOnboarding.list
+    ) { confCommon, list -> OnboardingScrData(
+        confCommon = confCommon,
+        list = list
+    ) }.flowOn(ioDispatcher)
 }

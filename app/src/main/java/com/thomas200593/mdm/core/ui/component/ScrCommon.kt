@@ -44,3 +44,12 @@ fun ScrLoading(modifier: Modifier = Modifier) {
         }
     }
 }
+
+@Composable
+fun CenteredCircularProgressIndicator() {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) { CircularProgressIndicator() }
+}
