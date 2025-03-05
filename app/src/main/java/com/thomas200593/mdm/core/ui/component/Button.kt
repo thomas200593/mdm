@@ -67,11 +67,11 @@ fun BtnNext(
     icon: ImageVector = Icons.AutoMirrored.Default.NavigateNext,
     label: String,
     enabled: Boolean = true,
-    shape: Shape = ButtonDefaults. textShape,
-    colors: ButtonColors = ButtonDefaults. textButtonColors(),
+    shape: Shape = ButtonDefaults.textShape,
+    colors: ButtonColors = ButtonDefaults.textButtonColors(),
     elevation: ButtonElevation? = null,
     border: BorderStroke? = null,
-    contentPadding: PaddingValues = ButtonDefaults. TextButtonContentPadding,
+    contentPadding: PaddingValues = ButtonDefaults.TextButtonContentPadding,
     interactionSource: MutableInteractionSource? = null
 ) {
     TextButton (
@@ -95,11 +95,11 @@ fun BtnPrevious(
     icon: ImageVector = Icons.AutoMirrored.Default.NavigateBefore,
     label: String,
     enabled: Boolean = true,
-    shape: Shape = ButtonDefaults. textShape,
-    colors: ButtonColors = ButtonDefaults. textButtonColors(),
+    shape: Shape = ButtonDefaults.textShape,
+    colors: ButtonColors = ButtonDefaults.textButtonColors(),
     elevation: ButtonElevation? = null,
     border: BorderStroke? = null,
-    contentPadding: PaddingValues = ButtonDefaults. TextButtonContentPadding,
+    contentPadding: PaddingValues = ButtonDefaults.TextButtonContentPadding,
     interactionSource: MutableInteractionSource? = null
 ) {
     TextButton (

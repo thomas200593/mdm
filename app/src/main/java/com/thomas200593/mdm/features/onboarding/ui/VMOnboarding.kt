@@ -22,6 +22,9 @@ class VMOnboarding @Inject constructor(
         }
         sealed interface Events : Ui {
             data object OnOpenEvent : Events
+            data object OnNavPrevPage : Events
+            data object OnNavNextPage : Events
+            data object OnNavFinish : Events
         }
     }
 
@@ -31,6 +34,9 @@ class VMOnboarding @Inject constructor(
     fun onEvent(events : Ui.Events) {
         when (events) {
             Ui.Events.OnOpenEvent -> onOpenEvent()
+            Ui.Events.OnNavPrevPage -> onNavPrevPageEvent()
+            Ui.Events.OnNavNextPage -> onNavNextPageEvent()
+            Ui.Events.OnNavFinish -> {/*TODO*/}
         }
     }
 
@@ -46,5 +52,31 @@ class VMOnboarding @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun onNavPrevPageEvent() = uiState.update {
+        (it.dataState as? Ui.DataState.Success)?.let { state ->
+            val prevPage = (state.data.listCurrentIndex - 1).coerceAtLeast(0)
+            it.copy(
+                dataState = state.copy(
+                    data = state.data.copy(
+                        listCurrentIndex = prevPage
+                    )
+                )
+            )
+        } ?: it // Return unchanged if not in Success state
+    }
+
+    private fun onNavNextPageEvent() = uiState.update {
+        (it.dataState as? Ui.DataState.Success)?.let { state ->
+            val nextPage = (state.data.listCurrentIndex + 1).coerceAtMost(state.data.listMaxIndex)
+            it.copy(
+                dataState = state.copy(
+                    data = state.data.copy(
+                        listCurrentIndex = nextPage
+                    )
+                )
+            )
+        } ?: it // Return unchanged if not in Success State
     }
 }
