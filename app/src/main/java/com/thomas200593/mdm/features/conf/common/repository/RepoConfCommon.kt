@@ -27,7 +27,7 @@ interface RepoConfCommon {
     val confCommon: Flow<Common>
 }
 
-internal class RepoConfCommonImpl @Inject constructor(
+class RepoConfCommonImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     dataStore: DataStorePreferences
 ) : RepoConfCommon {

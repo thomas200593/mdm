@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -25,7 +26,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
@@ -46,6 +49,7 @@ import com.thomas200593.mdm.core.ui.component.CenteredCircularProgressIndicator
 import com.thomas200593.mdm.core.ui.component.ScrLoading
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
+import com.thomas200593.mdm.features.conf._localization.entity.Localization
 import com.thomas200593.mdm.features.onboarding.entity.Onboarding
 import com.thomas200593.mdm.features.onboarding.entity.OnboardingScrData
 
@@ -90,23 +94,17 @@ private fun ScreenContent(
     topBar = {
         TopAppBar(
             title = {},
-            actions = {
-                BtnConfLang(
-                    onClick = {/*TODO*/},
-                    languageIcon = data.confCommon.localization.country.flag,
-                    languageName = data.confCommon.localization.country.name
-                )
-            }
+            actions = { SectionLangOnboarding(localization = data.confCommon.localization) }
         )
     },
     content = {
         Surface(modifier = Modifier.padding(it)) {
             Column(modifier = Modifier.fillMaxSize()) {
-                OnboardingImages(
+                SectionBannerOnboarding(
                     modifier = Modifier.fillMaxWidth().weight(1.0f),
                     currentPage = data.list[data.listCurrentIndex]
                 )
-                OnboardingDetails(
+                SectionBodyOnboarding(
                     modifier = Modifier.weight(1.0f).padding(16.dp),
                     currentPage = data.list[data.listCurrentIndex]
                 )
@@ -116,7 +114,7 @@ private fun ScreenContent(
     bottomBar = {
         BottomAppBar(
             content = {
-                OnboardingNavigation(
+                SectionNavOnboarding(
                     currentIndex = data.listCurrentIndex,
                     maxIndex = data.listMaxIndex,
                     onNavPrevPage = onNavPrevPage,
@@ -128,8 +126,25 @@ private fun ScreenContent(
     }
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun OnboardingImages(
+private fun SectionLangOnboarding(localization: Localization) {
+    var expanded by remember { mutableStateOf(false) }
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
+        content = {
+            BtnConfLang(
+                onClick = { expanded = true },
+                languageIcon = localization.country.flag,
+                languageName = localization.country.name
+            )
+        }
+    )
+}
+
+@Composable
+private fun SectionBannerOnboarding(
     modifier: Modifier,
     currentPage: Onboarding
 ) {
@@ -154,7 +169,7 @@ private fun OnboardingImages(
 }
 
 @Composable
-private fun OnboardingDetails(
+private fun SectionBodyOnboarding(
     modifier: Modifier,
     currentPage: Onboarding
 ) {
@@ -168,7 +183,7 @@ private fun OnboardingDetails(
 }
 
 @Composable
-fun OnboardingNavigation(
+private fun SectionNavOnboarding(
     currentIndex: Int,
     maxIndex: Int,
     onNavPrevPage: () -> Unit,
