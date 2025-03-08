@@ -37,6 +37,12 @@ data class Country(
             name = Locale(STR_EMPTY, Constants.ID).displayName,
             flag = getFlagByISOCode(Constants.ID)
         )
+        val countryUS: Country = Country(
+            iso2 = Locale.US.country,
+            iso3 = Locale.US.isO3Country,
+            name = Locale.US.displayName,
+            flag = getFlagByISOCode(Locale.US.country)
+        )
 
         fun getFlagByISOCode(countryCode: String): String =
             if (countryCode.length == 2) getCodeByCharacter(countryCode[0]) + getCodeByCharacter(countryCode[1])

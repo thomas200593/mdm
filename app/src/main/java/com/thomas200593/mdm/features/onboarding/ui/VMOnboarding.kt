@@ -2,6 +2,7 @@ package com.thomas200593.mdm.features.onboarding.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.thomas200593.mdm.features.conf.__language.entity.Language
 import com.thomas200593.mdm.features.onboarding.domain.UCGetDataOnboarding
 import com.thomas200593.mdm.features.onboarding.entity.OnboardingScrData
 import com.thomas200593.mdm.features.onboarding.repository.RepoOnboarding
@@ -24,6 +25,7 @@ class VMOnboarding @Inject constructor(
         }
         sealed interface Events : Ui {
             data object OnOpenEvent : Events
+            data class OnSelectLanguage(val language: Language) : Events
             data object OnNavPrevPage : Events
             data object OnNavNextPage : Events
             data object OnNavFinish : Events
@@ -35,10 +37,11 @@ class VMOnboarding @Inject constructor(
 
     fun onEvent(events : Ui.Events) {
         when (events) {
-            Ui.Events.OnOpenEvent -> onOpenEvent()
-            Ui.Events.OnNavPrevPage -> onNavPrevPageEvent()
-            Ui.Events.OnNavNextPage -> onNavNextPageEvent()
-            Ui.Events.OnNavFinish -> onNavFinishEvent()
+            is Ui.Events.OnOpenEvent -> onOpenEvent()
+            is Ui.Events.OnSelectLanguage -> onSelectLanguage(events.language)
+            is Ui.Events.OnNavPrevPage -> onNavPrevPageEvent()
+            is Ui.Events.OnNavNextPage -> onNavNextPageEvent()
+            is Ui.Events.OnNavFinish -> onNavFinishEvent()
         }
     }
 
@@ -48,13 +51,15 @@ class VMOnboarding @Inject constructor(
                 it.copy(
                     dataState = Ui.DataState.Success(
                         data = data.copy(
-                            listMaxIndex = data.list.size - 1
+                            listMaxIndex = data.onboardingPages.size - 1
                         )
                     )
                 )
             }
         }
     }
+
+    private fun onSelectLanguage(language: Language) { /*TODO*/ }
 
     private fun onNavPrevPageEvent() = uiState.update {
         (it.dataState as? Ui.DataState.Success)?.let { state ->

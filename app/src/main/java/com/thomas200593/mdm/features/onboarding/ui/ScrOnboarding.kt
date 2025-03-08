@@ -16,11 +16,15 @@ import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -49,7 +53,9 @@ import com.thomas200593.mdm.core.ui.component.CenteredCircularProgressIndicator
 import com.thomas200593.mdm.core.ui.component.ScrLoading
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
-import com.thomas200593.mdm.features.conf._localization.entity.Localization
+import com.thomas200593.mdm.core.ui.component.TxtMdLabel
+import com.thomas200593.mdm.features.conf.__language.entity.Language
+import com.thomas200593.mdm.features.conf.common.entity.Common
 import com.thomas200593.mdm.features.onboarding.entity.Onboarding
 import com.thomas200593.mdm.features.onboarding.entity.OnboardingScrData
 
@@ -61,6 +67,7 @@ fun ScrOnboarding(
     LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMOnboarding.Ui.Events.OnOpenEvent) })
     ScrOnboarding(
         dataState = uiState.dataState,
+        onSelectLanguage = { vm.onEvent(VMOnboarding.Ui.Events.OnSelectLanguage(it)) },
         onNavPrevPage = { vm.onEvent(VMOnboarding.Ui.Events.OnNavPrevPage) },
         onNavNextPage = { vm.onEvent(VMOnboarding.Ui.Events.OnNavNextPage) },
         onNavFinish = { vm.onEvent(VMOnboarding.Ui.Events.OnNavFinish) }
@@ -70,6 +77,7 @@ fun ScrOnboarding(
 @Composable
 private fun ScrOnboarding(
     dataState: VMOnboarding.Ui.DataState,
+    onSelectLanguage: (Language) -> Unit,
     onNavPrevPage: () -> Unit,
     onNavNextPage: () -> Unit,
     onNavFinish: () -> Unit
@@ -77,6 +85,7 @@ private fun ScrOnboarding(
     VMOnboarding.Ui.DataState.Loading -> ScrLoading()
     is VMOnboarding.Ui.DataState.Success -> ScreenContent(
         data = dataState.data,
+        onSelectLanguage = onSelectLanguage,
         onNavPrevPage = onNavPrevPage,
         onNavNextPage = onNavNextPage,
         onNavFinish = onNavFinish
@@ -87,6 +96,7 @@ private fun ScrOnboarding(
 @Composable
 private fun ScreenContent(
     data: OnboardingScrData,
+    onSelectLanguage: (Language) -> Unit,
     onNavPrevPage: () -> Unit,
     onNavNextPage: () -> Unit,
     onNavFinish: () -> Unit
@@ -94,7 +104,13 @@ private fun ScreenContent(
     topBar = {
         TopAppBar(
             title = {},
-            actions = { SectionLangOnboarding(localization = data.confCommon.localization) }
+            actions = {
+                SectionLangOnboarding(
+                    confCommon = data.confCommon,
+                    languages = data.languageList,
+                    onSelectLanguage = onSelectLanguage
+                )
+            }
         )
     },
     content = {
@@ -102,11 +118,11 @@ private fun ScreenContent(
             Column(modifier = Modifier.fillMaxSize()) {
                 SectionBannerOnboarding(
                     modifier = Modifier.fillMaxWidth().weight(1.0f),
-                    currentPage = data.list[data.listCurrentIndex]
+                    currentPage = data.onboardingPages[data.listCurrentIndex]
                 )
                 SectionBodyOnboarding(
                     modifier = Modifier.weight(1.0f).padding(16.dp),
-                    currentPage = data.list[data.listCurrentIndex]
+                    currentPage = data.onboardingPages[data.listCurrentIndex]
                 )
             }
         }
@@ -128,16 +144,40 @@ private fun ScreenContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SectionLangOnboarding(localization: Localization) {
+private fun SectionLangOnboarding(
+    confCommon: Common,
+    languages: List<Language>,
+    onSelectLanguage: (Language) -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
         content = {
             BtnConfLang(
+                modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
                 onClick = { expanded = true },
-                languageIcon = localization.country.flag,
-                languageName = localization.country.name
+                languageIcon = confCommon.localization.country.flag,
+                languageName = confCommon.localization.country.name
+            )
+            ExposedDropdownMenu(
+                modifier = Modifier.fillMaxWidth(0.7f),
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                content = {
+                    languages.forEach {
+                        DropdownMenuItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {
+                                expanded = false
+                                onSelectLanguage(it)
+                            },
+                            leadingIcon = { Text(it.country.flag) },
+                            text = { TxtMdLabel(text = it.country.name) },
+                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                        )
+                    }
+                }
             )
         }
     )
@@ -159,10 +199,12 @@ private fun SectionBannerOnboarding(
         )
         Box(modifier = Modifier.fillMaxSize().align(Alignment.BottomCenter)
             .graphicsLayer { alpha = 0.6f }.background(
-                verticalGradient(colorStops = arrayOf(
-                    Pair(0.6f, Color.Transparent),
-                    Pair(1.0f, MaterialTheme.colorScheme.onSurface)
-                ))
+                verticalGradient(
+                    colorStops = arrayOf(
+                        Pair(0.6f, Color.Transparent),
+                        Pair(1.0f, MaterialTheme.colorScheme.onSurface)
+                    )
+                )
             )
         )
     }
@@ -213,11 +255,29 @@ private fun SectionNavOnboarding(
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val btnNextColor = Pair(MaterialTheme.colorScheme.tertiaryContainer, MaterialTheme.colorScheme.onTertiaryContainer)
+            val btnNextColor = Pair(
+                MaterialTheme.colorScheme.tertiaryContainer,
+                MaterialTheme.colorScheme.onTertiaryContainer
+            )
             val btnNextState by remember(currentIndex, maxIndex) {
                 derivedStateOf {
-                    if (currentIndex < maxIndex) Pair(Triple("Next", Icons.AutoMirrored.Default.NavigateNext, null), onNavNextPage)
-                    else Pair(Triple("Finish", Icons.Default.Check, BorderStroke(1.dp, btnNextColor.second)), onNavFinish)
+                    if (currentIndex < maxIndex)
+                        Pair(
+                            Triple(
+                                "Next",
+                                Icons.AutoMirrored.Default.NavigateNext,
+                                null
+                            ),
+                            onNavNextPage
+                        )
+                    else Pair(
+                        Triple(
+                            "Finish",
+                            Icons.Default.Check,
+                            BorderStroke(1.dp, btnNextColor.second)
+                        ),
+                        onNavFinish
+                    )
                 }
             }
             BtnNext(
