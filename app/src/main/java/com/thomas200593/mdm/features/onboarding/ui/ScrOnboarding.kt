@@ -116,6 +116,7 @@ private fun ScreenContent(
     content = {
         Surface(modifier = Modifier.padding(it)) {
             Column(modifier = Modifier.fillMaxSize()) {
+                Text(data.toString())
                 SectionBannerOnboarding(
                     modifier = Modifier.fillMaxWidth().weight(1.0f),
                     currentPage = data.onboardingPages[data.listCurrentIndex]
@@ -155,13 +156,13 @@ private fun SectionLangOnboarding(
         onExpandedChange = { expanded = !expanded },
         content = {
             BtnConfLang(
-                modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
+                modifier = Modifier.fillMaxWidth(0.5f).menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
                 onClick = { expanded = true },
-                languageIcon = confCommon.localization.country.flag,
-                languageName = confCommon.localization.country.name
+                languageIcon = confCommon.localization.language.country.flag,
+                languageName = confCommon.localization.language.country.name
             )
             ExposedDropdownMenu(
-                modifier = Modifier.fillMaxWidth(0.7f),
+                modifier = Modifier.fillMaxWidth(0.5f),
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
                 content = {

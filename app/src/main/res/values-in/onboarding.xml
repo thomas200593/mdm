@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_title_1">Judul Onboarding 1</string>
+    <string name="onboarding_title_2">Judul Onboarding 2</string>
+    <string name="onboarding_title_3">Judul Onboarding 3</string>
+    <string name="onboarding_desc_1">Deskripsi Onboarding 1.</string>
+    <string name="onboarding_desc_2">Deskripsi Onboarding 2.</string>
+    <string name="onboarding_desc_3">Deskripsi Onboarding 3.</string>
+</resources>

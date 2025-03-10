@@ -7,11 +7,11 @@ enum class Language(
     val country: Country
 ) {
     EN(
-        code = "conf_language_en",
+        code = "en",
         country = Country.countryUS
     ),
     ID(
-        code = "conf_language_id",
+        code = "in",
         country = Country.defaultValue
     );
 

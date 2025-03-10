@@ -1,8 +1,11 @@
 package com.thomas200593.mdm.features.onboarding.ui
 
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.features.conf.__language.entity.Language
+import com.thomas200593.mdm.features.conf.__language.repository.RepoConfLanguage
 import com.thomas200593.mdm.features.onboarding.domain.UCGetDataOnboarding
 import com.thomas200593.mdm.features.onboarding.entity.OnboardingScrData
 import com.thomas200593.mdm.features.onboarding.repository.RepoOnboarding
@@ -10,12 +13,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class VMOnboarding @Inject constructor(
     private val ucGetDataOnboarding: UCGetDataOnboarding,
-    private val repoOnboarding: RepoOnboarding
+    private val repoOnboarding: RepoOnboarding,
+    private val repoConfLanguage: RepoConfLanguage
 ) : ViewModel() {
     sealed interface Ui {
         data class Data(val dataState: DataState = DataState.Loading) : Ui
@@ -59,7 +64,10 @@ class VMOnboarding @Inject constructor(
         }
     }
 
-    private fun onSelectLanguage(language: Language) { /*TODO*/ }
+    private fun onSelectLanguage(language: Language) {
+        viewModelScope.launch { repoConfLanguage.set(language) }
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.create(Locale(language.code)))
+    }
 
     private fun onNavPrevPageEvent() = uiState.update {
         (it.dataState as? Ui.DataState.Success)?.let { state ->

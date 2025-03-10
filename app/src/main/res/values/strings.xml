@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MDM</string>
+    <string name="app_name" translatable="false">MDM</string>
     <string name="str_network_offline">You\'re currently offline. Please check your internet connection and try again.</string>
     <string name="str_dashboard">Dashboard</string>
     <string name="str_dashboard_desc">App Dashboard Desc</string>

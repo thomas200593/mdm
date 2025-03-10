@@ -54,7 +54,7 @@ fun BtnConfLang(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 languageIcon?.let { TxtMdLabel(text = it) }
-                languageName?.let { TxtMdLabel(text = it, color = colors.contentColor) }
+                languageName?.let { TxtMdLabel(text = it, color = colors.contentColor, maxLines = 1) }
             }
         }
     )

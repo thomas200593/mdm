@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="str_network_offline">Jaringan offline. Mohon cek kembali koneksi internet Anda dan coba lagi.</string>
+    <string name="str_dashboard">Dasbor</string>
+    <string name="str_dashboard_desc">Deskripsi Dashbor App</string>
+    <string name="str_user_profile">Profil Pengguna</string>
+    <string name="str_user_profile_desc">Deskripsi Profil Pengguna</string>
+    <string name="str_loading">Memuat…</string>
+    <string name="str_version">Versi</string>
+</resources>

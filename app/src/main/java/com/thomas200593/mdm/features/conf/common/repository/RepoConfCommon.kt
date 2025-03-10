@@ -34,43 +34,32 @@ class RepoConfCommonImpl @Inject constructor(
     override val confCommon: Flow<Common> = dataStore.instance.data.map { data ->
         Common(
             ui = UI(
-                theme = data[DataStorePreferencesKeys.dsKeyTheme]?.let { Theme.valueOf(it) }
-                    ?: Theme.defaultValue,
-                contrastAccent = data[DataStorePreferencesKeys.dsKeyContrastAccent]?.let {
-                    ContrastAccent.valueOf(
-                        it
-                    )
-                } ?: ContrastAccent.defaultValue,
-                dynamicColor = data[DataStorePreferencesKeys.dsKeyDynamicColor]?.let {
-                    DynamicColor.valueOf(
-                        it
-                    )
-                } ?: DynamicColor.defaultValue,
-                fontSize = data[DataStorePreferencesKeys.dsKeyFontSize]?.let { FontSize.valueOf(it) }
-                    ?: FontSize.defaultValue
+                theme = data[DataStorePreferencesKeys.dsKeyTheme]
+                    ?.let { Theme.valueOf(it) } ?: Theme.defaultValue,
+                contrastAccent = data[DataStorePreferencesKeys.dsKeyContrastAccent]
+                    ?.let { ContrastAccent.valueOf(it) } ?: ContrastAccent.defaultValue,
+                dynamicColor = data[DataStorePreferencesKeys.dsKeyDynamicColor]
+                    ?.let { DynamicColor.valueOf(it) } ?: DynamicColor.defaultValue,
+                fontSize = data[DataStorePreferencesKeys.dsKeyFontSize]
+                    ?.let { FontSize.valueOf(it) } ?: FontSize.defaultValue
             ),
             localization = Localization(
-                language = data[DataStorePreferencesKeys.dsKeyLanguage]?.let { Language.valueOf(it) }
-                    ?: Language.defaultValue,
-                country = data[DataStorePreferencesKeys.dsKeyCountry]?.let {
-                    Country(
-                        iso2 = it,
-                        iso3 = Locale(STR_EMPTY, it).isO3Country,
-                        name = Locale(STR_EMPTY, it).displayName,
-                        flag = Country.getFlagByISOCode(it)
-                    )
-                } ?: Country.defaultValue
+                language = data[DataStorePreferencesKeys.dsKeyLanguage]
+                    ?.let { Language.valueOf(it) } ?: Language.defaultValue,
+                country = data[DataStorePreferencesKeys.dsKeyCountry]
+                    ?.let {
+                        Country(
+                            iso2 = it,
+                            iso3 = Locale(STR_EMPTY, it).isO3Country,
+                            name = Locale(STR_EMPTY, it).displayName,
+                            flag = Country.getFlagByISOCode(it)
+                        )
+                    } ?: Country.defaultValue
             ),
-            firstTimeStatus = data[DataStorePreferencesKeys.dsKeyFirstTimeStatus]?.let {
-                FirstTimeStatus.valueOf(
-                    it
-                )
-            } ?: FirstTimeStatus.defaultValue,
-            onboardingStatus = data[DataStorePreferencesKeys.dsKeyOnboardingStatus]?.let {
-                OnboardingStatus.valueOf(
-                    it
-                )
-            } ?: OnboardingStatus.defaultValue
+            firstTimeStatus = data[DataStorePreferencesKeys.dsKeyFirstTimeStatus]
+                ?.let { FirstTimeStatus.valueOf(it) } ?: FirstTimeStatus.defaultValue,
+            onboardingStatus = data[DataStorePreferencesKeys.dsKeyOnboardingStatus]
+                ?.let { OnboardingStatus.valueOf(it) } ?: OnboardingStatus.defaultValue
         )
     }.flowOn(ioDispatcher)
 }

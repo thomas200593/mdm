@@ -1,5 +1,9 @@
 package com.thomas200593.mdm.features.conf.__language.repository
 
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import com.thomas200593.mdm.core.data.local.datastore.DataStorePreferences
+import com.thomas200593.mdm.core.data.local.datastore.DataStorePreferencesKeys
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
 import com.thomas200593.mdm.core.design_system.util.filterSort
@@ -8,6 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.reflect.KProperty1
 
@@ -16,10 +21,12 @@ interface RepoConfLanguage {
         filter : (Language) -> Boolean = { true },
         vararg sortProperties : Pair<KProperty1<Language, Comparable<*>?>, Boolean>
     ) : Flow<List<Language>>
+    suspend fun set(language: Language): Preferences
 }
 
 class RepoImplConfLanguage @Inject constructor(
-    @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
+    @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
+    private val datastore: DataStorePreferences
 ) : RepoConfLanguage {
     private val source get() = Language.entries.toList()
     override fun list(
@@ -27,4 +34,8 @@ class RepoImplConfLanguage @Inject constructor(
         vararg sortProperties: Pair<KProperty1<Language, Comparable<*>?>, Boolean>
     ): Flow<List<Language>> = flowOf(source.filterSort(filter, *sortProperties))
         .flowOn(ioDispatcher)
+
+    override suspend fun set(language: Language) = withContext(ioDispatcher) {
+        datastore.instance.edit { it[DataStorePreferencesKeys.dsKeyLanguage] = language.name }
+    }
 }
