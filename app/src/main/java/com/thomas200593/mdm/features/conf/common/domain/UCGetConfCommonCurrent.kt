@@ -10,6 +10,4 @@ import javax.inject.Inject
 class UCGetConfCommonCurrent @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val repoConfCommon: RepoConfCommon
-) {
-    operator fun invoke() = repoConfCommon.confCommon.flowOn(ioDispatcher)
-}
+) { operator fun invoke() = repoConfCommon.confCommon.flowOn(ioDispatcher) }

@@ -13,7 +13,5 @@ enum class Theme(
         code = "conf_theme_dark"
     );
 
-    companion object {
-        val defaultValue: Theme = SYSTEM
-    }
+    companion object { val defaultValue: Theme = SYSTEM }
 }

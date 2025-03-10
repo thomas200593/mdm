@@ -18,7 +18,6 @@ object ModCoroutineScope {
     @Provides
     @Singleton
     @ApplicationScope
-    fun providesCoroutineScope(
-        @Dispatcher(CoroutineDispatchers.Default) dispatcher: CoroutineDispatcher
-    ): CoroutineScope = CoroutineScope(SupervisorJob() + dispatcher)
+    fun providesCoroutineScope(@Dispatcher(CoroutineDispatchers.Default) dispatcher: CoroutineDispatcher): CoroutineScope =
+        CoroutineScope(SupervisorJob() + dispatcher)
 }

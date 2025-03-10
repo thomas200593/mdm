@@ -32,8 +32,7 @@ class RepoImplConfLanguage @Inject constructor(
     override fun list(
         filter: (Language) -> Boolean,
         vararg sortProperties: Pair<KProperty1<Language, Comparable<*>?>, Boolean>
-    ): Flow<List<Language>> = flowOf(source.filterSort(filter, *sortProperties))
-        .flowOn(ioDispatcher)
+    ): Flow<List<Language>> = flowOf(source.filterSort(filter, *sortProperties)).flowOn(ioDispatcher)
 
     override suspend fun set(language: Language) = withContext(ioDispatcher) {
         datastore.instance.edit { it[DataStorePreferencesKeys.dsKeyLanguage] = language.name }

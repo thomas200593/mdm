@@ -118,15 +118,11 @@ private fun ScreenContent(
         Surface(modifier = Modifier.padding(it)) {
             Column(modifier = Modifier.fillMaxSize()) {
                 SectionBannerOnboarding(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1.0f),
+                    modifier = Modifier.fillMaxWidth().weight(1.0f),
                     currentPage = data.onboardingPages[data.listCurrentIndex]
                 )
                 SectionBodyOnboarding(
-                    modifier = Modifier
-                        .weight(1.0f)
-                        .padding(16.dp),
+                    modifier = Modifier.weight(1.0f).padding(16.dp),
                     currentPage = data.onboardingPages[data.listCurrentIndex]
                 )
             }
@@ -160,9 +156,7 @@ private fun SectionLangOnboarding(
         onExpandedChange = { expanded = !expanded },
         content = {
             BtnConfLang(
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
+                modifier = Modifier.fillMaxWidth(0.5f).menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
                 onClick = { expanded = true },
                 languageIcon = confCommon.localization.language.country.flag,
                 languageName = confCommon.localization.language.country.name
@@ -175,10 +169,7 @@ private fun SectionLangOnboarding(
                     languages.forEach {
                         DropdownMenuItem(
                             modifier = Modifier.fillMaxWidth(),
-                            onClick = {
-                                expanded = false
-                                onSelectLanguage(it)
-                            },
+                            onClick = { expanded = false; onSelectLanguage(it) },
                             leadingIcon = { Text(it.country.flag) },
                             text = { TxtMdLabel(text = it.country.name) },
                             contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
@@ -198,24 +189,14 @@ private fun SectionBannerOnboarding(
     Box(modifier = modifier) {
         SubcomposeAsyncImage(
             modifier = Modifier.fillMaxSize(),
-            model = ImageRequest
-                .Builder(LocalContext.current).crossfade(250).data(currentPage.imageRes).build(),
+            model = ImageRequest.Builder(LocalContext.current).crossfade(250).data(currentPage.imageRes).build(),
             contentDescription = null,
             loading = { CenteredCircularProgressIndicator() },
             contentScale = ContentScale.FillWidth
         )
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .align(Alignment.BottomCenter)
-            .graphicsLayer { alpha = 0.6f }
-            .background(
-                verticalGradient(
-                    colorStops = arrayOf(
-                        Pair(0.6f, Color.Transparent),
-                        Pair(1.0f, MaterialTheme.colorScheme.onSurface)
-                    )
-                )
-            )
+        Box(
+            modifier = Modifier.fillMaxSize().align(Alignment.BottomCenter).graphicsLayer { alpha = 0.6f }
+                .background(verticalGradient(colorStops = arrayOf(Pair(0.6f, Color.Transparent), Pair(1.0f, MaterialTheme.colorScheme.onSurface))))
         )
     }
 }
@@ -253,9 +234,8 @@ private fun SectionNavOnboarding(
             verticalAlignment = Alignment.CenterVertically
         ) {
             val strPrev = stringResource(R.string.str_back)
-            val btnPrevState by remember(currentIndex, maxIndex) {
-                derivedStateOf { if (currentIndex > 0) Pair(true, onNavPrevPage) else Pair(false) {} }
-            }
+            val btnPrevState by remember(currentIndex, maxIndex)
+            { derivedStateOf { if (currentIndex > 0) Pair(true, onNavPrevPage) else Pair(false) {} } }
             AnimatedVisibility(
                 visible = btnPrevState.first,
                 content = { BtnPrevious(onClick = btnPrevState.second, label = strPrev) }
@@ -267,29 +247,11 @@ private fun SectionNavOnboarding(
             verticalAlignment = Alignment.CenterVertically
         ) {
             val strNext = Pair(stringResource(R.string.str_next), stringResource(R.string.str_finish))
-            val btnNextColor = Pair(
-                MaterialTheme.colorScheme.tertiaryContainer,
-                MaterialTheme.colorScheme.onTertiaryContainer
-            )
+            val btnNextColor = Pair(MaterialTheme.colorScheme.tertiaryContainer, MaterialTheme.colorScheme.onTertiaryContainer)
             val btnNextState by remember(currentIndex, maxIndex) {
                 derivedStateOf {
-                    if (currentIndex < maxIndex)
-                        Pair(
-                            Triple(
-                                strNext.first,
-                                Icons.AutoMirrored.Default.NavigateNext,
-                                null
-                            ),
-                            onNavNextPage
-                        )
-                    else Pair(
-                        Triple(
-                            strNext.second,
-                            Icons.Default.Check,
-                            BorderStroke(1.dp, btnNextColor.second)
-                        ),
-                        onNavFinish
-                    )
+                    if (currentIndex < maxIndex) Pair(Triple(strNext.first, Icons.AutoMirrored.Default.NavigateNext, null), onNavNextPage)
+                    else Pair(Triple(strNext.second, Icons.Default.Check, BorderStroke(1.dp, btnNextColor.second)), onNavFinish)
                 }
             }
             BtnNext(
@@ -299,10 +261,7 @@ private fun SectionNavOnboarding(
                 border = btnNextState.first.third,
                 colors =
                     if (currentIndex < maxIndex) ButtonDefaults.textButtonColors()
-                    else ButtonDefaults.textButtonColors().copy(
-                        containerColor = btnNextColor.first,
-                        contentColor = btnNextColor.second
-                    )
+                    else ButtonDefaults.textButtonColors().copy(containerColor = btnNextColor.first, contentColor = btnNextColor.second)
             )
         }
     }

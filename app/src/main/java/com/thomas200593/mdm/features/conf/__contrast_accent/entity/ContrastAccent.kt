@@ -12,8 +12,5 @@ enum class ContrastAccent(
     HIGH(
         code = "conf_contrast_accent_high"
     );
-
-    companion object {
-        val defaultValue: ContrastAccent = DEFAULT
-    }
+    companion object { val defaultValue: ContrastAccent = DEFAULT }
 }

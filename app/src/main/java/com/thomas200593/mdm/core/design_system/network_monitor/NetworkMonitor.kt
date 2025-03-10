@@ -44,15 +44,12 @@ class NetworkMonitorImpl @Inject constructor(
                 channel.trySend(networks.isNotEmpty())
             }
         }
-        val request =
-            NetworkRequest.Builder().addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                .build()
+        val request = NetworkRequest.Builder().addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET).build()
         connectivityManager.registerNetworkCallback(request, callback)
         channel.trySend(connectivityManager.isCurrentlyConnected())
         awaitClose { connectivityManager.unregisterNetworkCallback(callback) }
     }.flowOn(ioDispatcher).conflate()
 
-    private fun ConnectivityManager.isCurrentlyConnected() = activeNetwork
-        ?.let(::getNetworkCapabilities)
-        ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
+    private fun ConnectivityManager.isCurrentlyConnected() =
+        activeNetwork?.let(::getNetworkCapabilities)?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
 }

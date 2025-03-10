@@ -28,8 +28,7 @@ data class Country(
         )
 
         private fun getEmojiByUnicode(unicode: Int) = String(Character.toChars(unicode))
-        private fun getCodeByCharacter(character: Char): String =
-            emojiMap[character.uppercaseChar()] ?: STR_EMPTY
+        private fun getCodeByCharacter(character: Char): String = emojiMap[character.uppercaseChar()] ?: STR_EMPTY
 
         val defaultValue: Country = Country(
             iso2 = Constants.ID,

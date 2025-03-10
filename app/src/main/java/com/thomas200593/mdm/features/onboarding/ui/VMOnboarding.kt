@@ -53,13 +53,7 @@ class VMOnboarding @Inject constructor(
     private fun onOpenEvent() = viewModelScope.launch {
         ucGetDataOnboarding.invoke().collect { data ->
             uiState.update {
-                it.copy(
-                    dataState = Ui.DataState.Success(
-                        data = data.copy(
-                            listMaxIndex = data.onboardingPages.size - 1
-                        )
-                    )
-                )
+                it.copy(dataState = Ui.DataState.Success(data = data.copy(listMaxIndex = data.onboardingPages.size - 1)))
             }
         }
     }
@@ -72,26 +66,14 @@ class VMOnboarding @Inject constructor(
     private fun onNavPrevPageEvent() = uiState.update {
         (it.dataState as? Ui.DataState.Success)?.let { state ->
             val prevPage = (state.data.listCurrentIndex - 1).coerceAtLeast(0)
-            it.copy(
-                dataState = state.copy(
-                    data = state.data.copy(
-                        listCurrentIndex = prevPage
-                    )
-                )
-            )
+            it.copy(dataState = state.copy(data = state.data.copy(listCurrentIndex = prevPage)))
         } ?: it // Return unchanged if not in Success state
     }
 
     private fun onNavNextPageEvent() = uiState.update {
         (it.dataState as? Ui.DataState.Success)?.let { state ->
             val nextPage = (state.data.listCurrentIndex + 1).coerceAtMost(state.data.listMaxIndex)
-            it.copy(
-                dataState = state.copy(
-                    data = state.data.copy(
-                        listCurrentIndex = nextPage
-                    )
-                )
-            )
+            it.copy(dataState = state.copy(data = state.data.copy(listCurrentIndex = nextPage)))
         } ?: it // Return unchanged if not in Success State
     }
 

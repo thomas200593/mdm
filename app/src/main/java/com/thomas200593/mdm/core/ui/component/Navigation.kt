@@ -134,12 +134,8 @@ fun AppNavSuiteScaffold(
         )
     )
     NavigationSuiteScaffold(
-        navigationSuiteItems = {
-            NavSuiteScope(
-                navigationSuiteScope = this,
-                navSuiteItemColors = navSuiteItemColors
-            ).run(navSuiteItems)
-        },
+        navigationSuiteItems =
+            { NavSuiteScope(navigationSuiteScope = this, navSuiteItemColors = navSuiteItemColors).run(navSuiteItems) },
         layoutType = layoutType,
         containerColor = Color.Transparent,
         navigationSuiteColors = NavigationSuiteDefaults.colors(
@@ -174,10 +170,7 @@ class NavSuiteScope internal constructor(
 }
 
 object NavDefaults {
-    @Composable
-    fun navContentColor() = MaterialTheme.colorScheme.onSurfaceVariant
-    @Composable
-    fun navSelectedItemColor() = MaterialTheme.colorScheme.onPrimaryContainer
-    @Composable
-    fun navIndicatorColor() = MaterialTheme.colorScheme.primaryContainer
+    @Composable fun navContentColor() = MaterialTheme.colorScheme.onSurfaceVariant
+    @Composable fun navSelectedItemColor() = MaterialTheme.colorScheme.onPrimaryContainer
+    @Composable fun navIndicatorColor() = MaterialTheme.colorScheme.primaryContainer
 }

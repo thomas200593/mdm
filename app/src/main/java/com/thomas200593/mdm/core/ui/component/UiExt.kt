@@ -27,9 +27,7 @@ fun setupSplashScreen(splashScreen: SplashScreen) {
     splashScreen.setOnExitAnimationListener { obj ->
         val slideBack = ObjectAnimator
             .ofFloat(obj.view, View.TRANSLATION_X, 0f, -obj.view.width.toFloat())
-            .apply {
-                interpolator = DecelerateInterpolator(); duration = 400L; doOnEnd { obj.remove() }
-            }
+            .apply { interpolator = DecelerateInterpolator(); duration = 400L; doOnEnd { obj.remove() } }
         slideBack.start()
     }
 }

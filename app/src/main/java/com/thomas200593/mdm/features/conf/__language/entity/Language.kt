@@ -15,7 +15,5 @@ enum class Language(
         country = Country.defaultValue
     );
 
-    companion object {
-        val defaultValue = EN
-    }
+    companion object { val defaultValue = EN }
 }
