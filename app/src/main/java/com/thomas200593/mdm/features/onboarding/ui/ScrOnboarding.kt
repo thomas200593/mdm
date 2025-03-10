@@ -46,6 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import com.thomas200593.mdm.R
 import com.thomas200593.mdm.core.ui.component.BtnConfLang
 import com.thomas200593.mdm.core.ui.component.BtnNext
 import com.thomas200593.mdm.core.ui.component.BtnPrevious
@@ -116,13 +117,16 @@ private fun ScreenContent(
     content = {
         Surface(modifier = Modifier.padding(it)) {
             Column(modifier = Modifier.fillMaxSize()) {
-                Text(data.toString())
                 SectionBannerOnboarding(
-                    modifier = Modifier.fillMaxWidth().weight(1.0f),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1.0f),
                     currentPage = data.onboardingPages[data.listCurrentIndex]
                 )
                 SectionBodyOnboarding(
-                    modifier = Modifier.weight(1.0f).padding(16.dp),
+                    modifier = Modifier
+                        .weight(1.0f)
+                        .padding(16.dp),
                     currentPage = data.onboardingPages[data.listCurrentIndex]
                 )
             }
@@ -156,7 +160,9 @@ private fun SectionLangOnboarding(
         onExpandedChange = { expanded = !expanded },
         content = {
             BtnConfLang(
-                modifier = Modifier.fillMaxWidth(0.5f).menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
                 onClick = { expanded = true },
                 languageIcon = confCommon.localization.language.country.flag,
                 languageName = confCommon.localization.language.country.name
@@ -198,8 +204,11 @@ private fun SectionBannerOnboarding(
             loading = { CenteredCircularProgressIndicator() },
             contentScale = ContentScale.FillWidth
         )
-        Box(modifier = Modifier.fillMaxSize().align(Alignment.BottomCenter)
-            .graphicsLayer { alpha = 0.6f }.background(
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .align(Alignment.BottomCenter)
+            .graphicsLayer { alpha = 0.6f }
+            .background(
                 verticalGradient(
                     colorStops = arrayOf(
                         Pair(0.6f, Color.Transparent),
@@ -243,12 +252,13 @@ private fun SectionNavOnboarding(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val strPrev = stringResource(R.string.str_prev)
             val btnPrevState by remember(currentIndex, maxIndex) {
                 derivedStateOf { if (currentIndex > 0) Pair(true, onNavPrevPage) else Pair(false) {} }
             }
             AnimatedVisibility(
                 visible = btnPrevState.first,
-                content = { BtnPrevious(onClick = btnPrevState.second, label = "Previous") }
+                content = { BtnPrevious(onClick = btnPrevState.second, label = strPrev) }
             )
         }
         Row(
@@ -256,6 +266,7 @@ private fun SectionNavOnboarding(
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val strNext = Pair(stringResource(R.string.str_next), stringResource(R.string.str_finish))
             val btnNextColor = Pair(
                 MaterialTheme.colorScheme.tertiaryContainer,
                 MaterialTheme.colorScheme.onTertiaryContainer
@@ -265,7 +276,7 @@ private fun SectionNavOnboarding(
                     if (currentIndex < maxIndex)
                         Pair(
                             Triple(
-                                "Next",
+                                strNext.first,
                                 Icons.AutoMirrored.Default.NavigateNext,
                                 null
                             ),
@@ -273,7 +284,7 @@ private fun SectionNavOnboarding(
                         )
                     else Pair(
                         Triple(
-                            "Finish",
+                            strNext.second,
                             Icons.Default.Check,
                             BorderStroke(1.dp, btnNextColor.second)
                         ),

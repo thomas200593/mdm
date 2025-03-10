@@ -7,4 +7,7 @@
     <string name="str_user_profile_desc">Deskripsi Profil Pengguna</string>
     <string name="str_loading">Memuat…</string>
     <string name="str_version">Versi</string>
+    <string name="str_next">Selanjutnya</string>
+    <string name="str_finish">Selesai</string>
+    <string name="str_prev">Sebelumnya</string>
 </resources>

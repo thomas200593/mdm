@@ -8,4 +8,7 @@
     <string name="str_user_profile_desc">User Profile Desc</string>
     <string name="str_loading">Loading…</string>
     <string name="str_version">"Version"</string>
+    <string name="str_next">Next</string>
+    <string name="str_finish">Finish</string>
+    <string name="str_prev">Previous</string>
 </resources>
