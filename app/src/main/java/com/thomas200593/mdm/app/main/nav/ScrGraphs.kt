@@ -25,4 +25,5 @@ import kotlinx.serialization.Serializable
             description = R.string.str_user_profile_desc
         )
     }
+    @Serializable data object Auth
 }

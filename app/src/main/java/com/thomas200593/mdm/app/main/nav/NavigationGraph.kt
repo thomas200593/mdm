@@ -6,4 +6,5 @@ import kotlinx.serialization.Serializable
     @Serializable data object GraphRoot
     @Serializable data object GraphInitial
     @Serializable data object GraphOnboarding
+    @Serializable data object GraphAuth
 }
