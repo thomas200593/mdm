@@ -252,7 +252,7 @@ private fun SectionNavOnboarding(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val strPrev = stringResource(R.string.str_prev)
+            val strPrev = stringResource(R.string.str_back)
             val btnPrevState by remember(currentIndex, maxIndex) {
                 derivedStateOf { if (currentIndex > 0) Pair(true, onNavPrevPage) else Pair(false) {} }
             }
