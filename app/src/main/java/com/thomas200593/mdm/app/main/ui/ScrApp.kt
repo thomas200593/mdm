@@ -52,12 +52,10 @@ fun ScrApp(
     val snackBarHostState = remember { SnackbarHostState() }
     val isNetworkOffline by stateApp.isNetworkOffline.collectAsStateWithLifecycle()
     val strNetworkOffline = stringResource(R.string.str_network_offline)
-
     LaunchedEffect(
         key1 = isNetworkOffline,
         block = { if (isNetworkOffline) snackBarHostState.showSnackbar(message = strNetworkOffline, duration = SnackbarDuration.Indefinite) }
     )
-
     ScrApp(
         stateApp = stateApp,
         windowAdaptiveInfo = windowAdaptiveInfo,
@@ -98,7 +96,7 @@ private fun ScrApp(
                             contentDescription = null
                         )
                     },
-                    label = { dest.scrGraphs.title?.let { Text(stringResource(it)) } },
+                    label = { dest.scrGraphs.title.let { Text(stringResource(it)) } },
                     modifier = Modifier
                 )
             }
@@ -116,16 +114,13 @@ private fun ScrApp(
                         modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing)
                     )
                 }
-            ) { padding ->
+            ) {
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)
-                        .windowInsetsPadding(
-                            WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal)
-                        )
+                    modifier = Modifier.fillMaxSize().padding(it).consumeWindowInsets(it)
+                        .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
                 ) {
                     val destination = stateApp.currentTopLevelDestination
                     var shouldShowTopAppBar = false
-
                     if (destination != null) {
                         shouldShowTopAppBar = true
                         DestTopLevelAppBar(
@@ -138,7 +133,6 @@ private fun ScrApp(
                             actBtnOnClick = { /*TODO*/ }
                         )
                     }
-
                     Box(
                         modifier = Modifier.consumeWindowInsets(
                             if (shouldShowTopAppBar) WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
@@ -163,5 +157,5 @@ private fun ScrApp(
     )
 }
 
-private fun NavDestination?.isRouteInHierarchy(route: KClass<*>) = this?.hierarchy
-    ?.any { it.hasRoute(route) } ?: false
+private fun NavDestination?.isRouteInHierarchy(route: KClass<*>) =
+    this?.hierarchy?.any { it.hasRoute(route) } == true

@@ -9,8 +9,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.ui.component.ScrLoading
-import com.thomas200593.mdm.features.initial.entity.FirstTimeStatus
+import com.thomas200593.mdm.features.initialization.entity.FirstTimeStatus
 import com.thomas200593.mdm.features.initial.entity.Initial
+import com.thomas200593.mdm.features.initialization.nav.navToInitialization
 import com.thomas200593.mdm.features.onboarding.entity.OnboardingStatus
 import com.thomas200593.mdm.features.onboarding.nav.navToOnboarding
 import kotlinx.coroutines.CoroutineScope
@@ -27,7 +28,8 @@ fun ScrInitial(
     ScrInitial(
         dataState = uiState.dataState,
         onNavToOnboarding = { coroutineScope.launch { stateApp.navController.navToOnboarding() } },
-        onNavToInitialization = { coroutineScope.launch { /*TODO*/ } }
+        onNavToInitialization = { coroutineScope.launch { stateApp.navController.navToInitialization() } },
+        onNavToAuth = { /*TODO*/ }
     )
 }
 
@@ -35,13 +37,15 @@ fun ScrInitial(
 private fun ScrInitial(
     dataState: VMInitial.Ui.DataState,
     onNavToOnboarding: () -> Unit,
-    onNavToInitialization: () -> Unit
+    onNavToInitialization: () -> Unit,
+    onNavToAuth: () -> Unit
 ) = when (dataState) {
     VMInitial.Ui.DataState.Loading -> ScrLoading()
     is VMInitial.Ui.DataState.Success -> ScreenContent(
         data = dataState.data,
         onNavToOnboarding = onNavToOnboarding,
-        onNavToInitialization = onNavToInitialization
+        onNavToInitialization = onNavToInitialization,
+        onNavToAuth = onNavToAuth
     )
 }
 
@@ -49,14 +53,12 @@ private fun ScrInitial(
 private fun ScreenContent(
     data: Initial,
     onNavToOnboarding: () -> Unit,
-    onNavToInitialization: () -> Unit
-) = when (data.confCommon.firstTimeStatus) {
-    FirstTimeStatus.YES -> when (data.confCommon.onboardingStatus) {
-        OnboardingStatus.SHOW -> onNavToOnboarding()
-        OnboardingStatus.HIDE -> onNavToInitialization()
-    }
-    FirstTimeStatus.NO -> when (data.confCommon.onboardingStatus) {
-        OnboardingStatus.SHOW -> onNavToOnboarding()
-        OnboardingStatus.HIDE -> { /*TODO*/ } //Auth
+    onNavToInitialization: () -> Unit,
+    onNavToAuth: () -> Unit
+) = when (data.confCommon.onboardingStatus) {
+    OnboardingStatus.SHOW -> onNavToOnboarding()
+    OnboardingStatus.HIDE -> when (data.confCommon.firstTimeStatus) {
+        FirstTimeStatus.YES -> onNavToInitialization()
+        FirstTimeStatus.NO -> onNavToAuth()
     }
 }

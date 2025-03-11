@@ -14,7 +14,7 @@ import com.thomas200593.mdm.features.conf.__theme.entity.Theme
 import com.thomas200593.mdm.features.conf._localization.entity.Localization
 import com.thomas200593.mdm.features.conf._ui.entity.UI
 import com.thomas200593.mdm.features.conf.common.entity.Common
-import com.thomas200593.mdm.features.initial.entity.FirstTimeStatus
+import com.thomas200593.mdm.features.initialization.entity.FirstTimeStatus
 import com.thomas200593.mdm.features.onboarding.entity.OnboardingStatus
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -50,8 +50,8 @@ class RepoConfCommonImpl @Inject constructor(
                     )
                 } ?: Country.defaultValue
             ),
-            firstTimeStatus = data[DataStorePreferencesKeys.dsKeyFirstTimeStatus] ?.let { FirstTimeStatus.valueOf(it) } ?: FirstTimeStatus.defaultValue,
-            onboardingStatus = data[DataStorePreferencesKeys.dsKeyOnboardingStatus] ?.let { OnboardingStatus.valueOf(it) } ?: OnboardingStatus.defaultValue
+            onboardingStatus = data[DataStorePreferencesKeys.dsKeyOnboardingStatus] ?.let { OnboardingStatus.valueOf(it) } ?: OnboardingStatus.defaultValue,
+            firstTimeStatus = data[DataStorePreferencesKeys.dsKeyFirstTimeStatus] ?.let { FirstTimeStatus.valueOf(it) } ?: FirstTimeStatus.defaultValue
         )
     }.flowOn(ioDispatcher)
 }

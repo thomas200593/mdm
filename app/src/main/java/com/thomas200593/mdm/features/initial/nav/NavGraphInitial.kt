@@ -8,6 +8,7 @@ import com.thomas200593.mdm.app.main.nav.NavigationGraph
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.features.auth.nav.navGraphAuth
 import com.thomas200593.mdm.features.initial.ui.ScrInitial
+import com.thomas200593.mdm.features.initialization.ui.ScrInitialization
 import com.thomas200593.mdm.features.onboarding.nav.navGraphOnboarding
 
 fun NavGraphBuilder.navGraphInitial() {
@@ -15,7 +16,7 @@ fun NavGraphBuilder.navGraphInitial() {
         startDestination = ScrGraphs.Initial,
         builder = {
             composable<ScrGraphs.Initial>(content = { ScrInitial() })
-            composable<ScrGraphs.Initialization>(content = { /*ScrInitialization()*/ })
+            composable<ScrGraphs.Initialization>(content = { ScrInitialization() })
             navGraphOnboarding()
             navGraphAuth()
         }

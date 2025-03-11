@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.initial.entity
+package com.thomas200593.mdm.features.initialization.entity
 
 enum class FirstTimeStatus(val code: String) {
     YES(code = "first_time_status_yes"),

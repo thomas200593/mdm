@@ -60,7 +60,7 @@ import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.TxtMdLabel
 import com.thomas200593.mdm.features.conf.__language.entity.Language
 import com.thomas200593.mdm.features.conf.common.entity.Common
-import com.thomas200593.mdm.features.initial.nav.navToInitial
+import com.thomas200593.mdm.features.initialization.nav.navToInitialization
 import com.thomas200593.mdm.features.onboarding.entity.Onboarding
 import com.thomas200593.mdm.features.onboarding.entity.OnboardingScrData
 import kotlinx.coroutines.CoroutineScope
@@ -79,11 +79,8 @@ fun ScrOnboarding(
         onSelectLanguage = { vm.onEvent(VMOnboarding.Ui.Events.OnSelectLanguage(it)) },
         onNavPrevPage = { vm.onEvent(VMOnboarding.Ui.Events.OnNavPrevPage) },
         onNavNextPage = { vm.onEvent(VMOnboarding.Ui.Events.OnNavNextPage) },
-        onNavFinish = {
-            vm.onEvent(VMOnboarding.Ui.Events.OnNavFinish).also {
-                coroutineScope.launch { stateApp.navController.navToInitial() }
-            }
-        }
+        onNavFinish = { vm.onEvent(VMOnboarding.Ui.Events.OnNavFinish)
+            .also { coroutineScope.launch { stateApp.navController.navToInitialization() } } }
     )
 }
 
@@ -127,18 +124,24 @@ private fun ScreenContent(
         )
     },
     content = {
-        Surface(modifier = Modifier.padding(it)) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                SectionBannerOnboarding(
-                    modifier = Modifier.fillMaxWidth().weight(1.0f),
-                    currentPage = data.onboardingPages[data.listCurrentIndex]
-                )
-                SectionBodyOnboarding(
-                    modifier = Modifier.weight(1.0f).padding(16.dp),
-                    currentPage = data.onboardingPages[data.listCurrentIndex]
+        Surface(
+            modifier = Modifier.padding(it),
+            content = {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    content = {
+                        SectionBannerOnboarding(
+                            modifier = Modifier.fillMaxWidth().weight(1.0f),
+                            currentPage = data.onboardingPages[data.listCurrentIndex]
+                        )
+                        SectionBodyOnboarding(
+                            modifier = Modifier.weight(1.0f).padding(16.dp),
+                            currentPage = data.onboardingPages[data.listCurrentIndex]
+                        )
+                    }
                 )
             }
-        }
+        )
     },
     bottomBar = {
         BottomAppBar(
@@ -199,19 +202,22 @@ private fun SectionBannerOnboarding(
     modifier: Modifier,
     currentPage: Onboarding
 ) {
-    Box(modifier = modifier) {
-        SubcomposeAsyncImage(
-            modifier = Modifier.fillMaxSize(),
-            model = ImageRequest.Builder(LocalContext.current).crossfade(250).data(currentPage.imageRes).build(),
-            contentDescription = null,
-            loading = { CenteredCircularProgressIndicator() },
-            contentScale = ContentScale.FillWidth
-        )
-        Box(
-            modifier = Modifier.fillMaxSize().align(Alignment.BottomCenter).graphicsLayer { alpha = 0.6f }
-                .background(verticalGradient(colorStops = arrayOf(Pair(0.6f, Color.Transparent), Pair(1.0f, MaterialTheme.colorScheme.onSurface))))
-        )
-    }
+    Box(
+        modifier = modifier,
+        content = {
+            SubcomposeAsyncImage(
+                modifier = Modifier.fillMaxSize(),
+                model = ImageRequest.Builder(LocalContext.current).crossfade(250).data(currentPage.imageRes).build(),
+                contentDescription = null,
+                loading = { CenteredCircularProgressIndicator() },
+                contentScale = ContentScale.FillWidth
+            )
+            Box(
+                modifier = Modifier.fillMaxSize().align(Alignment.BottomCenter).graphicsLayer { alpha = 0.6f }
+                    .background(verticalGradient(colorStops = arrayOf(Pair(0.6f, Color.Transparent), Pair(1.0f, MaterialTheme.colorScheme.onSurface))))
+            )
+        }
+    )
 }
 
 @Composable
@@ -221,11 +227,12 @@ private fun SectionBodyOnboarding(
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        item { TxtLgTitle(text = stringResource(currentPage.title)) }
-        item { TxtMdBody(text = stringResource(currentPage.description)) }
-    }
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        content = {
+            item { TxtLgTitle(text = stringResource(currentPage.title)) }
+            item { TxtMdBody(text = stringResource(currentPage.description)) }
+        }
+    )
 }
 
 @Composable
@@ -239,43 +246,46 @@ private fun SectionNavOnboarding(
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(
-            modifier = Modifier.weight(0.5f),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val strPrev = stringResource(R.string.str_back)
-            val btnPrevState by remember(currentIndex, maxIndex)
-            { derivedStateOf { if (currentIndex > 0) Pair(true, onNavPrevPage) else Pair(false) {} } }
-            AnimatedVisibility(
-                visible = btnPrevState.first,
-                content = { BtnPrevious(onClick = btnPrevState.second, label = strPrev) }
-            )
-        }
-        Row(
-            modifier = Modifier.weight(0.5f),
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val strNext = Pair(stringResource(R.string.str_next), stringResource(R.string.str_finish))
-            val btnNextColor = Pair(MaterialTheme.colorScheme.tertiaryContainer, MaterialTheme.colorScheme.onTertiaryContainer)
-            val btnNextState by remember(currentIndex, maxIndex) {
-                derivedStateOf {
-                    if (currentIndex < maxIndex) Pair(Triple(strNext.first, Icons.AutoMirrored.Default.NavigateNext, null), onNavNextPage)
-                    else Pair(Triple(strNext.second, Icons.Default.Check, BorderStroke(1.dp, btnNextColor.second)), onNavFinish)
+        verticalAlignment = Alignment.CenterVertically,
+        content = {
+            Row(
+                modifier = Modifier.weight(0.5f),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+                content = {
+                    val strPrev = stringResource(R.string.str_back)
+                    val btnPrevState by remember(currentIndex, maxIndex)
+                    { derivedStateOf { if (currentIndex > 0) Pair(true, onNavPrevPage) else Pair(false) {} } }
+                    AnimatedVisibility(
+                        visible = btnPrevState.first,
+                        content = { BtnPrevious(onClick = btnPrevState.second, label = strPrev) }
+                    )
                 }
-            }
-            BtnNext(
-                onClick = btnNextState.second,
-                label = btnNextState.first.first,
-                icon = btnNextState.first.second,
-                border = btnNextState.first.third,
-                colors =
-                    if (currentIndex < maxIndex) ButtonDefaults.textButtonColors()
-                    else ButtonDefaults.textButtonColors().copy(containerColor = btnNextColor.first, contentColor = btnNextColor.second)
+            )
+            Row(
+                modifier = Modifier.weight(0.5f),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+                content = {
+                    val strNext = Pair(stringResource(R.string.str_next), stringResource(R.string.str_finish))
+                    val btnNextColor = Pair(MaterialTheme.colorScheme.tertiaryContainer, MaterialTheme.colorScheme.onTertiaryContainer)
+                    val btnNextState by remember(currentIndex, maxIndex) {
+                        derivedStateOf {
+                            if (currentIndex < maxIndex) Pair(Triple(strNext.first, Icons.AutoMirrored.Default.NavigateNext, null), onNavNextPage)
+                            else Pair(Triple(strNext.second, Icons.Default.Check, BorderStroke(1.dp, btnNextColor.second)), onNavFinish)
+                        }
+                    }
+                    BtnNext(
+                        onClick = btnNextState.second,
+                        label = btnNextState.first.first,
+                        icon = btnNextState.first.second,
+                        border = btnNextState.first.third,
+                        colors =
+                            if (currentIndex < maxIndex) ButtonDefaults.textButtonColors()
+                            else ButtonDefaults.textButtonColors().copy(containerColor = btnNextColor.first, contentColor = btnNextColor.second)
+                    )
+                }
             )
         }
-    }
+    )
 }

@@ -35,12 +35,6 @@ class VMInitial @Inject constructor(
     }
 
     private fun onOpenEvent() = viewModelScope.launch {
-        ucGetDataInitial.invoke().collect { data ->
-            uiState.update {
-                it.copy(
-                    dataState = Ui.DataState.Success(data = data)
-                )
-            }
-        }
+        ucGetDataInitial.invoke().collect { data -> uiState.update { it.copy(dataState = Ui.DataState.Success(data = data)) } }
     }
 }
