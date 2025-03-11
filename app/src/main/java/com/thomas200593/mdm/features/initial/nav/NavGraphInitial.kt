@@ -1,8 +1,9 @@
 package com.thomas200593.mdm.features.initial.nav
 
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
+import androidx.navigation.navigation
 import com.thomas200593.mdm.app.main.nav.NavigationGraph
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.features.auth.nav.navGraphAuth
@@ -19,3 +20,11 @@ fun NavGraphBuilder.navGraphInitial() {
         }
     )
 }
+
+fun NavController.navToInitial() = this.navigate(
+    route = NavigationGraph.GraphInitial,
+    builder = {
+        launchSingleTop = true; restoreState = true
+        popUpTo(route = NavigationGraph.GraphInitial, popUpToBuilder = { inclusive = true })
+    }
+)

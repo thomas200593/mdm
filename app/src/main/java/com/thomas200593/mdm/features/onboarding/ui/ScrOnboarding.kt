@@ -32,6 +32,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +48,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.thomas200593.mdm.R
+import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
+import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.ui.component.BtnConfLang
 import com.thomas200593.mdm.core.ui.component.BtnNext
 import com.thomas200593.mdm.core.ui.component.BtnPrevious
@@ -57,12 +60,17 @@ import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.TxtMdLabel
 import com.thomas200593.mdm.features.conf.__language.entity.Language
 import com.thomas200593.mdm.features.conf.common.entity.Common
+import com.thomas200593.mdm.features.initial.nav.navToInitial
 import com.thomas200593.mdm.features.onboarding.entity.Onboarding
 import com.thomas200593.mdm.features.onboarding.entity.OnboardingScrData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun ScrOnboarding(
-    vm: VMOnboarding = hiltViewModel()
+    vm: VMOnboarding = hiltViewModel(),
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    stateApp: StateApp = LocalStateApp.current
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMOnboarding.Ui.Events.OnOpenEvent) })
@@ -71,7 +79,11 @@ fun ScrOnboarding(
         onSelectLanguage = { vm.onEvent(VMOnboarding.Ui.Events.OnSelectLanguage(it)) },
         onNavPrevPage = { vm.onEvent(VMOnboarding.Ui.Events.OnNavPrevPage) },
         onNavNextPage = { vm.onEvent(VMOnboarding.Ui.Events.OnNavNextPage) },
-        onNavFinish = { vm.onEvent(VMOnboarding.Ui.Events.OnNavFinish) }
+        onNavFinish = {
+            vm.onEvent(VMOnboarding.Ui.Events.OnNavFinish).also {
+                coroutineScope.launch { stateApp.navController.navToInitial() }
+            }
+        }
     )
 }
 
