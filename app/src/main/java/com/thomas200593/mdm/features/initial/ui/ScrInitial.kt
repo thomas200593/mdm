@@ -26,20 +26,22 @@ fun ScrInitial(
     LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMInitial.Ui.Events.OnOpenEvent) })
     ScrInitial(
         dataState = uiState.dataState,
-        onNavToOnboarding = { coroutineScope.launch { stateApp.navController.navToOnboarding() } }
+        onNavToOnboarding = { coroutineScope.launch { stateApp.navController.navToOnboarding() } },
+        onNavToInitialization = { /*TODO*/ }
     )
 }
 
 @Composable
 private fun ScrInitial(
     dataState: VMInitial.Ui.DataState,
-    onNavToOnboarding: () -> Unit
+    onNavToOnboarding: () -> Unit,
+    onNavToInitialization: () -> Unit
 ) = when (dataState) {
     VMInitial.Ui.DataState.Loading -> ScrLoading()
     is VMInitial.Ui.DataState.Success -> ScreenContent(
         data = dataState.data,
         onNavToOnboarding = onNavToOnboarding,
-        onNavToInitialization = { /*TODO*/ }
+        onNavToInitialization = onNavToInitialization
     )
 }
 

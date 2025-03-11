@@ -7,7 +7,6 @@ import com.thomas200593.mdm.core.data.local.datastore.DataStorePreferences
 import com.thomas200593.mdm.core.data.local.datastore.DataStorePreferencesKeys
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
-import com.thomas200593.mdm.features.initial.entity.FirstTimeStatus
 import com.thomas200593.mdm.features.onboarding.entity.Onboarding
 import com.thomas200593.mdm.features.onboarding.entity.OnboardingStatus
 import kotlinx.coroutines.CoroutineDispatcher
@@ -48,7 +47,6 @@ internal class RepoOnboardingImpl @Inject constructor(
     override suspend fun hide() = withContext(ioDispatcher) {
         dataStore.instance.edit {
             it[DataStorePreferencesKeys.dsKeyOnboardingStatus] = OnboardingStatus.HIDE.name
-            it[DataStorePreferencesKeys.dsKeyFirstTimeStatus] = FirstTimeStatus.NO.name
         }
     }
 }

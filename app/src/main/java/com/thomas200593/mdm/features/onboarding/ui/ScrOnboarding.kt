@@ -142,6 +142,7 @@ private fun ScreenContent(
     },
     bottomBar = {
         BottomAppBar(
+            containerColor = MaterialTheme.colorScheme.surface,
             content = {
                 SectionNavOnboarding(
                     currentIndex = data.listCurrentIndex,
@@ -168,10 +169,10 @@ private fun SectionLangOnboarding(
         onExpandedChange = { expanded = !expanded },
         content = {
             BtnConfLang(
-                modifier = Modifier.fillMaxWidth(0.5f).menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
+                modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
                 onClick = { expanded = true },
-                languageIcon = confCommon.localization.language.country.flag,
-                languageName = confCommon.localization.language.country.name
+                border = null,
+                languageIcon = confCommon.localization.language.country.flag
             )
             ExposedDropdownMenu(
                 modifier = Modifier.fillMaxWidth(0.5f),
