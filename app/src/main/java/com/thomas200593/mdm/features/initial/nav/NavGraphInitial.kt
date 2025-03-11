@@ -15,6 +15,7 @@ fun NavGraphBuilder.navGraphInitial() {
         startDestination = ScrGraphs.Initial,
         builder = {
             composable<ScrGraphs.Initial>(content = { ScrInitial() })
+            composable<ScrGraphs.Initialization>(content = { /*ScrInitialization()*/ })
             navGraphOnboarding()
             navGraphAuth()
         }

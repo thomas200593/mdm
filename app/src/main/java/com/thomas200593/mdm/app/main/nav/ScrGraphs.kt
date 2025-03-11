@@ -7,12 +7,14 @@ import com.thomas200593.mdm.core.ui.common.AppIcons
 import kotlinx.serialization.Serializable
 
 @Serializable sealed interface ScrGraphs {
-    @Serializable data object Initial
-    @Serializable data object Onboarding
+    @Serializable data object Initial : ScrGraphs
+    @Serializable data object Onboarding : ScrGraphs
+    @Serializable data object Initialization : ScrGraphs
+    @Serializable data object Auth : ScrGraphs
     @Serializable sealed class DestTopLevel(
         @DrawableRes val iconRes: Int,
-        @StringRes val title: Int? = null,
-        @StringRes val description: Int? = null
+        @StringRes val title: Int,
+        @StringRes val description: Int
     ) : ScrGraphs {
         @Serializable data object Dashboard : DestTopLevel(
             iconRes = AppIcons.DestTopLevel.dashboard,
@@ -25,5 +27,4 @@ import kotlinx.serialization.Serializable
             description = R.string.str_user_profile_desc
         )
     }
-    @Serializable data object Auth
 }

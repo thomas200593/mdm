@@ -27,7 +27,7 @@ fun ScrInitial(
     ScrInitial(
         dataState = uiState.dataState,
         onNavToOnboarding = { coroutineScope.launch { stateApp.navController.navToOnboarding() } },
-        onNavToInitialization = { /*TODO*/ }
+        onNavToInitialization = { coroutineScope.launch { /*TODO*/ } }
     )
 }
 
