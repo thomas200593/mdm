@@ -17,10 +17,10 @@ andxNav = "2.8.8"
 andxWork = "2.10.0"
 coilCompose = "2.7.0"
 googleDaggerHiltAndroid = "2.55"
-googleDevToolsKsp = "2.0.10-1.0.24"
+googleDevToolsKsp = "2.1.10-1.0.30"
 junit = "4.13.2"
-kotlin = "2.0.10"
-kotlinSerialization = "2.0.10"
+kotlin = "2.1.10"
+kotlinSerialization = "2.1.10"
 kotlinxSerializationJson = "1.8.0"
 
 [libraries]

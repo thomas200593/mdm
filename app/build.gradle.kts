@@ -16,7 +16,6 @@ plugins {
 android {
     namespace = "com.thomas200593.mdm"
     compileSdk = 35
-
     defaultConfig {
         applicationId = "com.thomas200593.mdm"
         minSdk = 28
@@ -27,7 +26,6 @@ android {
         androidResources { localeFilters += setOf("en", "in") }
         vectorDrawables { useSupportLibrary = true }
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
         buildConfigField(
             type = "String",
             name = "APP_LOCAL_DATASTORE_FILENAME",
@@ -40,41 +38,24 @@ android {
             isDebuggable = true
             isMinifyEnabled = false
             isShrinkResources = false
-
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         release {
             isDebuggable = false
             isMinifyEnabled = true
             isShrinkResources = true
-
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+    compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
+    kotlinOptions { jvmTarget = "17" }
     buildFeatures{
         compose = true
         buildConfig = true
         shaders = false
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15"
-    }
-    testOptions.unitTests{
-        isIncludeAndroidResources = true
-    }
+    /*composeOptions { kotlinCompilerExtensionVersion = "1.5.15" }*/
+    testOptions.unitTests{ isIncludeAndroidResources = true }
 }
 
 dependencies {
