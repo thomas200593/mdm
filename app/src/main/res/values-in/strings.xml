@@ -10,4 +10,5 @@
     <string name="str_next">Lanjut</string>
     <string name="str_finish">Selesai</string>
     <string name="str_back">Kembali</string>
+    <string name="str_email">e-mail</string>
 </resources>
