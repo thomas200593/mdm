@@ -2,6 +2,7 @@ package com.thomas200593.mdm.core.ui.component.text_field
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
@@ -9,7 +10,9 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,18 +31,18 @@ fun TxtFieldEmail(
     state: TextFieldState = rememberTextFieldState(),
     enabled: Boolean = true,
     isError: Boolean = false,
-    errorMessage: List<UiText> = emptyList(),
+    errorMessage: List<UiText> = emptyList()
 ) {
     val context = LocalContext.current
     OutlinedTextField(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         state = state,
         enabled = enabled,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Done),
-        label = { Text(text = stringResource(R.string.str_email)) },
-        placeholder = { Text(text = stringResource(R.string.str_email)) },
-        leadingIcon = { Icon(imageVector = Icons.Outlined.Email, contentDescription = null) },
-        trailingIcon = { if(isError) Icon(imageVector = Icons.Default.Error, contentDescription = null) else null },
+        label = { Text(stringResource(R.string.str_email)) },
+        placeholder = { Text(stringResource(R.string.str_email)) },
+        leadingIcon = { Icon(Icons.Outlined.Email, null) },
+        trailingIcon = { if(isError) Icon(Icons.Default.Error, null) else null },
         supportingText = {
             if (isError && errorMessage.isNotEmpty()) Column(
                 verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
@@ -49,5 +52,33 @@ fun TxtFieldEmail(
         },
         isError = isError,
         lineLimits = TextFieldLineLimits.SingleLine
+    )
+}
+
+@Composable
+fun TxtFieldPassword(
+    modifier: Modifier = Modifier,
+    state: TextFieldState = rememberTextFieldState(),
+    enabled: Boolean = true,
+    isError: Boolean = false,
+    errorMessage: List<UiText> = emptyList()
+) {
+    val context = LocalContext.current
+    OutlinedSecureTextField(
+        modifier = modifier.fillMaxWidth(),
+        state = state,
+        enabled = enabled,
+        isError = isError,
+        label = { Text(stringResource(R.string.str_password)) },
+        placeholder = { Text(stringResource(R.string.str_password)) },
+        leadingIcon = { Icon(Icons.Outlined.Password, null) },
+        trailingIcon = { if(isError) Icon(Icons.Default.Error, null) else null },
+        supportingText = {
+            if (isError && errorMessage.isNotEmpty()) Column(
+                verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
+                content = { errorMessage.forEach { Text(it.asString(context)) } }
+            )
+            else null
+        }
     )
 }

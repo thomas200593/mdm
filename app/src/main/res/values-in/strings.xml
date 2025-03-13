@@ -11,4 +11,5 @@
     <string name="str_finish">Selesai</string>
     <string name="str_back">Kembali</string>
     <string name="str_email">e-mail</string>
+    <string name="str_password">Kata sandi</string>
 </resources>

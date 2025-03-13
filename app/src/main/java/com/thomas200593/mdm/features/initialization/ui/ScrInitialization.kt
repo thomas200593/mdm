@@ -8,14 +8,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,14 +26,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.Theme.AppTheme
+import com.thomas200593.mdm.core.ui.component.BtnConfLang
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
-import com.thomas200593.mdm.core.ui.component.TxtMdTitle
+import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
+import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.features.conf.__contrast_accent.entity.ContrastAccent
 import com.thomas200593.mdm.features.conf.__font_size.entity.FontSize
 
@@ -57,7 +56,10 @@ private fun ScreenContent() = Scaffold(
 fun SectionTopBar() {
     TopAppBar(
         title = {},
-        actions = { IconButton(onClick = {}, content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) }) }
+        actions = {
+            BtnConfLang(onClick = {/*TODO*/}, border = null)
+            IconButton(onClick = {/*TODO*/}, content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) })
+        }
     )
 }
 
@@ -74,8 +76,6 @@ private fun SectionContent(paddingValues: PaddingValues) {
                     item { PartTitle() }
                     /* Form */
                     item { PartForm() }
-                    /* ToC */
-                    item { PartTnC() }
                 }
             )
         }
@@ -109,9 +109,11 @@ private fun PartForm() {
             Column(
                 modifier = Modifier.padding(Constants.Dimens.dp16),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 content =  {
-                    FieldEmail()
+                    TxtFieldEmail()
+                    TxtFieldPassword()
+                    PartTnC()
                 }
             )
         }
@@ -119,29 +121,20 @@ private fun PartForm() {
 }
 
 @Composable
-fun FieldEmail() {
-    val state = rememberTextFieldState("Email Address")
-    BasicTextField(
-        modifier = Modifier,
-        state = state,
-        enabled = true,
-        readOnly = false,
-        inputTransformation = null,
-        textStyle = TextStyle.Default,
-
-        lineLimits = TextFieldLineLimits.SingleLine
-    )
-}
-
-@Composable
 private fun PartTnC() {
     Row(
         modifier = Modifier.fillMaxWidth(1.0f),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         content = {
             Row (
                 modifier = Modifier.weight(0.1f),
-                content = { Checkbox(checked = false, onCheckedChange = {}) }
+                content = {
+                    Checkbox(
+                        checked = false /*TODO*/,
+                        onCheckedChange = {/*TODO*/}
+                    )
+                }
             )
             Row (
                 modifier = Modifier.weight(0.9f),
@@ -159,11 +152,12 @@ private fun SectionBottomBar() {
             Row(
                 modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp8),
                 content = {
-                    Button(
+                    Button (
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.extraSmall,
-                        onClick = {},
-                        content = { TxtMdTitle("Proceed") }
+                        colors = ButtonDefaults.textButtonColors().copy(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                        onClick = {/*TODO*/},
+                        content = { TxtLgTitle("Proceed"/*TODO*/, color = MaterialTheme.colorScheme.onPrimaryContainer) }
                     )
                 }
             )
