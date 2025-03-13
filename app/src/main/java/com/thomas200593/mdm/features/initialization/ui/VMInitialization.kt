@@ -12,7 +12,7 @@ class VMInitialization @Inject constructor() : ViewModel() {
         data class Data(val dataState: DataState = DataState.Loading) : Ui
         sealed interface DataState : Ui {
             data object Loading : DataState
-            data class Success(val data: InitializationScrData) : DataState
+            data class Loaded(val data: InitializationScrData) : DataState
         }
         sealed interface Events : Ui {
             data object OnOpenEvent : Events
@@ -22,8 +22,10 @@ class VMInitialization @Inject constructor() : ViewModel() {
             }
         }
     }
+
     private val _emailValidator = TxtFieldEmailValidation()
     private val _passwordValidator = TxtFieldPasswordValidation()
+
     var uiState = MutableStateFlow(Ui.Data())
         private set
 
