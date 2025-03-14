@@ -13,4 +13,5 @@
     <string name="str_back">Back</string>
     <string name="str_email">e-mail</string>
     <string name="str_password">Password</string>
+    <string name="str_proceed">Proceed</string>
 </resources>

@@ -19,4 +19,8 @@ object ModDispatcher {
     @Provides
     @Dispatcher(CoroutineDispatchers.Default)
     fun providesDispatcherDefault(): CoroutineDispatcher = Dispatchers.Default
+
+    @Provides
+    @Dispatcher(CoroutineDispatchers.Main)
+    fun providesDispatcherMain(): CoroutineDispatcher = Dispatchers.Main
 }

@@ -8,7 +8,7 @@ import com.thomas200593.mdm.features.conf.common.entity.Common
 
 sealed interface UiStateMain {
     data object Loading : UiStateMain
-    data class Success(val confCommon: Common) : UiStateMain {
+    data class Loaded(val confCommon: Common) : UiStateMain {
         override fun darkThemeEnabled(isSystemInDarkTheme: Boolean) = when (confCommon.ui.theme) {
             Theme.SYSTEM -> isSystemInDarkTheme
             Theme.LIGHT -> false

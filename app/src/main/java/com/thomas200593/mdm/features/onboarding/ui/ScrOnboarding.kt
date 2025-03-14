@@ -94,7 +94,7 @@ private fun ScrOnboarding(
     onNavFinish: () -> Unit
 ) = when (dataState) {
     VMOnboarding.Ui.DataState.Loading -> ScrLoading()
-    is VMOnboarding.Ui.DataState.Success -> ScreenContent(
+    is VMOnboarding.Ui.DataState.Loaded -> ScreenContent(
         data = dataState.data,
         onSelectLanguage = onSelectLanguage,
         onNavPrevPage = onNavPrevPage,

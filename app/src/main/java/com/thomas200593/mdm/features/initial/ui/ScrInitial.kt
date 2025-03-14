@@ -41,7 +41,7 @@ private fun ScrInitial(
     onNavToAuth: () -> Unit
 ) = when (dataState) {
     VMInitial.Ui.DataState.Loading -> ScrLoading()
-    is VMInitial.Ui.DataState.Success -> ScreenContent(
+    is VMInitial.Ui.DataState.Loaded -> ScreenContent(
         data = dataState.data,
         onNavToOnboarding = onNavToOnboarding,
         onNavToInitialization = onNavToInitialization,

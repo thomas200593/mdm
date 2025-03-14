@@ -18,7 +18,7 @@ class VMInitial @Inject constructor(
         data class Data(val dataState: DataState = DataState.Loading) : Ui
         sealed interface DataState : Ui {
             data object Loading : DataState
-            data class Success(val data: Initial) : DataState
+            data class Loaded(val data: Initial) : DataState
         }
         sealed interface Events : Ui {
             data object OnOpenEvent : Events
@@ -35,6 +35,6 @@ class VMInitial @Inject constructor(
     }
 
     private fun onOpenEvent() = viewModelScope.launch {
-        ucGetDataInitial.invoke().collect { data -> uiState.update { it.copy(dataState = Ui.DataState.Success(data = data)) } }
+        ucGetDataInitial.invoke().collect { data -> uiState.update { it.copy(dataState = Ui.DataState.Loaded(data = data)) } }
     }
 }
