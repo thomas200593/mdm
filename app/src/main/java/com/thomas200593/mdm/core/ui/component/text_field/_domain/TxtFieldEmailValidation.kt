@@ -32,6 +32,6 @@ class TxtFieldEmailValidation : BaseValidation<String, ValidationResult> {
         if (!emailPattern.matches(input)) {
             errors.add(UiText.DynamicString("Invalid e-mail format!."))
         }
-        return ValidationResult(isSuccess = errors.isEmpty(), errorMessages = if (errors.isEmpty()) null else errors)
+        return ValidationResult(isSuccess = errors.isEmpty(), errorMessages = if (errors.isEmpty()) emptyList() else errors)
     }
 }

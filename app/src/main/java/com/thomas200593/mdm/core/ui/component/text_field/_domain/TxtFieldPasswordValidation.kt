@@ -44,6 +44,6 @@ class TxtFieldPasswordValidation : BaseValidation<String, ValidationResult> {
         if (!passwordPattern.matches(input)) {
             errors.add(UiText.DynamicString("Password must contain at least 1 uppercase letter, 1 digit, and 1 special symbol."))
         }
-        return ValidationResult(isSuccess = errors.isEmpty(), errorMessages = if (errors.isEmpty()) null else errors)
+        return ValidationResult(isSuccess = errors.isEmpty(), errorMessages = if (errors.isEmpty()) emptyList() else errors)
     }
 }

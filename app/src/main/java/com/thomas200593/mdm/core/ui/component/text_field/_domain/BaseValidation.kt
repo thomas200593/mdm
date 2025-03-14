@@ -4,7 +4,7 @@ interface BaseValidation<String, ValidationResult> {
     fun validate(
         input: String,
         minLength: Int? = null,
-        maxLength: Int? = Int.MAX_VALUE,
+        maxLength: Int? = null,
         required: Boolean? = false,
         regex: Regex? = null
     ): ValidationResult
