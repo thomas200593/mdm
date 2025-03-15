@@ -13,4 +13,7 @@
     <string name="str_email">e-mail</string>
     <string name="str_password">Kata sandi</string>
     <string name="str_proceed">Proses</string>
+    <string name="str_initial">Inisial</string>
+    <string name="str_initialization">Inisialisasi</string>
+    <string name="str_onboarding">Onboarding</string>
 </resources>

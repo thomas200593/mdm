@@ -13,10 +13,10 @@ import com.thomas200593.mdm.features.onboarding.nav.navGraphOnboarding
 
 fun NavGraphBuilder.navGraphInitial() {
     navigation<NavigationGraph.GraphInitial>(
-        startDestination = ScrGraphs.Initial,
+        startDestination = ScrGraphs.Initial(),
         builder = {
-            composable<ScrGraphs.Initial>(content = { ScrInitial() })
-            composable<ScrGraphs.Initialization>(content = { ScrInitialization() })
+            composable<ScrGraphs.Initial>(content = { ScrInitial(scrGraph = ScrGraphs.Initial()) })
+            composable<ScrGraphs.Initialization>(content = { ScrInitialization(scrGraph = ScrGraphs.Initialization()) })
             navGraphOnboarding()
             navGraphAuth()
         }

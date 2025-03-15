@@ -14,4 +14,7 @@
     <string name="str_email">e-mail</string>
     <string name="str_password">Password</string>
     <string name="str_proceed">Proceed</string>
+    <string name="str_initial">Initial</string>
+    <string name="str_initialization">Initialization</string>
+    <string name="str_onboarding">Onboarding</string>
 </resources>

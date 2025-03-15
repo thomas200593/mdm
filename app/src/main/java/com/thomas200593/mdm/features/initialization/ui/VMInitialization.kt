@@ -7,8 +7,9 @@ import com.thomas200593.mdm.core.design_system.util.update
 import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldEmailValidation
 import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldPasswordValidation
 import com.thomas200593.mdm.core.ui.component.text_field._state.UiText
+import com.thomas200593.mdm.features.conf.__language.entity.Language
+import com.thomas200593.mdm.features.conf.common.entity.Common
 import com.thomas200593.mdm.features.initialization.domain.UCGetDataInitialization
-import com.thomas200593.mdm.features.initialization.entity.InitializationScrData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -18,141 +19,109 @@ import javax.inject.Inject
 class VMInitialization @Inject constructor(
     private val ucGetDataInitialization: UCGetDataInitialization
 ) : ViewModel() {
-    sealed interface Ui {
-        data class FormData(
-            val email: CharSequence = STR_EMPTY,
-            val emailError: List<UiText> = emptyList<UiText>(),
-            val password: CharSequence = STR_EMPTY,
-            val passwordError: List<UiText> = emptyList<UiText>(),
-            val tncChecked: Boolean = false,
-            val btnProceedEnabled: Boolean = false
-        ) : Ui
-        data class Data(val dataState: DataState = DataState.Loading) : Ui
-        sealed interface DataState : Ui {
-            data object Loading : DataState
-            data class Loaded(val data: InitializationScrData) : DataState
+    data class Form(
+        val fldFirstName: CharSequence = STR_EMPTY,
+        val fldFirstNameError: List<UiText> = emptyList(),
+        val fldLastName: CharSequence = STR_EMPTY,
+        val fldLastNameError: List<UiText> = emptyList(),
+        val fldEmail: CharSequence = STR_EMPTY,
+        val fldEmailError: List<UiText> = emptyList(),
+        val fldPassword: CharSequence = STR_EMPTY,
+        val fldPasswordError: List<UiText> = emptyList(),
+        val chbTncChecked: Boolean = false,
+        val btnProceedVisible: Boolean = false
+    ) {
+        private val emailValidator = TxtFieldEmailValidation()
+        private val passwordValidator = TxtFieldPasswordValidation()
+
+        fun validateEmail(email: CharSequence): Form {
+            val result = emailValidator.validate(email.toString(), required = true, maxLength = 200)
+            return copy(fldEmail = email, fldEmailError = result.errorMessages).validateAll()
         }
-        sealed interface Events : Ui {
-            data object OnOpenEvent : Events
-            sealed interface FormEvent : Events {
-                data class EmailValueChanged(val email: CharSequence) : FormEvent
-                data class PasswordValueChanged(val password: CharSequence) : FormEvent
-                data class TnCValueChanged(val checked: Boolean) : FormEvent
-            }
+
+        fun validatePassword(password: CharSequence): Form {
+            val result = passwordValidator.validate(password.toString(), required = true, maxLength = 200)
+            return copy(fldPassword = password, fldPasswordError = result.errorMessages).validateAll()
+        }
+
+        fun validateAll(): Form {
+            val emailValid = emailValidator.validate(fldEmail.toString(), required = true, maxLength = 200).isSuccess
+            val passwordValid = passwordValidator.validate(fldPassword.toString(), required = true, maxLength = 200).isSuccess
+            val isButtonVisible = emailValid && passwordValid
+            return copy(btnProceedVisible = isButtonVisible)
         }
     }
-
-    var uiState = MutableStateFlow(Ui.Data())
+    data class ScrData(
+        val confCommon: Common,
+        val languageList : List<Language>,
+        val form : Form
+    )
+    sealed interface ScrDataState {
+        data object Loading : ScrDataState
+        data class Loaded(val scrData : ScrData) : ScrDataState
+    }
+    data class UiState(
+        val scrDataState: ScrDataState = ScrDataState.Loading,
+        val result: Int = 1 /*TODO later*/
+    )
+    sealed interface Events {
+        data object OnOpenEvent : Events
+        sealed interface TopAppBarEvents : Events {
+            sealed interface BtnScrDescEvents : TopAppBarEvents{
+                data object OnClick : BtnScrDescEvents
+                data object OnDismiss : BtnScrDescEvents
+            }
+            sealed interface BtnLanguageEvents : TopAppBarEvents {
+                data class OnSelect(val language: Language) : BtnLanguageEvents
+            }
+        }
+        sealed interface FormEvents : Events {
+            data class FldFirstNameValChanged(val firstName: CharSequence) : FormEvents
+            data class FldLastNameValChanged(val lastName: CharSequence) : FormEvents
+            data class FldEmailValChanged(val email: CharSequence) : FormEvents
+            data class FldPasswordValChanged(val password: CharSequence) : FormEvents
+            data class ChbTncChecked(val checked: Boolean) : FormEvents
+            data object BtnProceedOnClick : FormEvents
+        }
+    }
+    var uiState = MutableStateFlow(UiState())
         private set
 
-    fun onEvent(events: Ui.Events) {
+    fun onEvent(events: Events) {
         when(events) {
-            is Ui.Events.OnOpenEvent -> onOpenEvent()
-            is Ui.Events.FormEvent.EmailValueChanged -> onEmailValueChanged(events.email)
-            is Ui.Events.FormEvent.PasswordValueChanged -> onPasswordValueChanged(events.password)
-            is Ui.Events.FormEvent.TnCValueChanged -> onTnCValueChanged()
+            is Events.OnOpenEvent -> onOpenEvent()
+            is Events.FormEvents.FldFirstNameValChanged -> {}
+            is Events.FormEvents.FldLastNameValChanged -> {}
+            is Events.FormEvents.FldEmailValChanged -> onFldEmailValChanged(events.email)
+            is Events.FormEvents.FldPasswordValChanged -> onFldPasswordValChanged(events.password)
+            is Events.FormEvents.ChbTncChecked -> {}
+            is Events.FormEvents.BtnProceedOnClick -> {}
+            is Events.TopAppBarEvents.BtnLanguageEvents.OnSelect -> {}
+            is Events.TopAppBarEvents.BtnScrDescEvents.OnClick -> {}
+            is Events.TopAppBarEvents.BtnScrDescEvents.OnDismiss -> {}
         }
     }
 
     private fun onOpenEvent() = viewModelScope.launch {
-        ucGetDataInitialization.invoke().collect { data ->
-            uiState.update { it.copy(dataState = Ui.DataState.Loaded(data = data)) }
+        ucGetDataInitialization.invoke().collect { scrData ->
+            uiState.update { it.copy(scrDataState = ScrDataState.Loaded(scrData = scrData)) }
         }
     }
-    private fun onEmailValueChanged(email: CharSequence) {
+    private fun onFldEmailValChanged(email: CharSequence) {
         uiState.update {
-            (it.dataState as? Ui.DataState.Loaded)?.let { state ->
-                it.copy(
-                    dataState = state.copy(
-                        data = state.data.copy(
-                            formData = state.data.formData.copy(
-                                email = email
-                            )
-                        )
-                    )
-                )
-            } ?: it
-        }
-        validateEmailField()
-        shouldShowProceedBtn()
-    }
-    private fun onPasswordValueChanged(password: CharSequence) {
-        uiState.update {
-            (it.dataState as? Ui.DataState.Loaded)?.let { state ->
-                it.copy(
-                    dataState = state.copy(
-                        data = state.data.copy(
-                            formData = state.data.formData.copy(
-                                password = password
-                            )
-                        )
-                    )
-                )
-            } ?: it
-        }
-        validatePasswordField()
-        shouldShowProceedBtn()
-    }
-    private fun onTnCValueChanged() {}
-    private fun shouldShowProceedBtn() {
-        val enabled = (validateEmailField() && validatePasswordField())
-        uiState.update {
-            (it.dataState as? Ui.DataState.Loaded)?.let { state ->
-                it.copy(
-                    dataState = state.copy(
-                        data = state.data.copy(
-                            formData = state.data.formData.copy(
-                                btnProceedEnabled = enabled
-                            )
-                        )
-                    )
-                )
+            (it.scrDataState as? ScrDataState.Loaded)?.let { state ->
+                val updatedForm = state.scrData.form.validateEmail(email)
+                it.copy(scrDataState = state.copy(scrData = state.scrData.copy(form = updatedForm)))
             } ?: it
         }
     }
 
-    // Fields Validator
-    private val _emailValidator = TxtFieldEmailValidation()
-    private val _passwordValidator = TxtFieldPasswordValidation()
-    private fun validateEmailField(): Boolean {
-        val result = _emailValidator.validate(
-            input = (uiState.value.dataState as? Ui.DataState.Loaded)?.data?.formData?.email.toString(),
-            required = true,
-            maxLength = 200
-        )
+    private fun onFldPasswordValChanged(password: CharSequence) {
         uiState.update {
-            (it.dataState as? Ui.DataState.Loaded)?.let { state ->
-                it.copy(
-                    dataState = state.copy(
-                        data = state.data.copy(
-                            formData = state.data.formData.copy(
-                                emailError = result.errorMessages
-                            )
-                        )
-                    )
-                )
+            (it.scrDataState as? ScrDataState.Loaded)?.let { state ->
+                val updatedForm = state.scrData.form.validatePassword(password)
+                it.copy(scrDataState = state.copy(scrData = state.scrData.copy(form = updatedForm)))
             } ?: it
         }
-        return result.isSuccess
-    }
-    private fun validatePasswordField(): Boolean {
-        val result = _passwordValidator.validate(
-            input = (uiState.value.dataState as? Ui.DataState.Loaded)?.data?.formData?.password.toString(),
-            required = true
-        )
-        uiState.update {
-            (it.dataState as? Ui.DataState.Loaded)?.let { state ->
-                it.copy(
-                    dataState = state.copy(
-                        data = state.data.copy(
-                            formData = state.data.formData.copy(
-                                passwordError = result.errorMessages
-                            )
-                        )
-                    )
-                )
-            } ?: it
-        }
-        return result.isSuccess
     }
 }

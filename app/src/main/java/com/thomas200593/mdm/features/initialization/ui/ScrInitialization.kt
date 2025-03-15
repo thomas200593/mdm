@@ -31,7 +31,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas200593.mdm.R
+import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
@@ -48,35 +51,40 @@ import com.thomas200593.mdm.core.ui.component.ScrLoading
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
-import com.thomas200593.mdm.features.initialization.entity.InitializationScrData
+import com.thomas200593.mdm.features.initial.nav.navToInitial
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun ScrInitialization(
+    scrGraph: ScrGraphs.Initialization,
     vm: VMInitialization = hiltViewModel(),
-    coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    stateApp: StateApp = LocalStateApp.current
+    stateApp: StateApp = LocalStateApp.current,
+    coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMInitialization.Ui.Events.OnOpenEvent) })
+    LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMInitialization.Events.OnOpenEvent) })
     ScrInitialization(
-        dataState = uiState.dataState,
-        onEmailValueChanged = { vm.onEvent(VMInitialization.Ui.Events.FormEvent.EmailValueChanged(it)) },
-        onPasswordValueChanged = { vm.onEvent(VMInitialization.Ui.Events.FormEvent.PasswordValueChanged(it)) },
-        onBtnProceedClicked = { /*TODO*/ }
+        scrDataState = uiState.scrDataState,
+        onEmailValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldEmailValChanged(it)) },
+        onPasswordValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldPasswordValChanged(it)) },
+        onBtnProceedClicked = {
+            vm.onEvent(VMInitialization.Events.FormEvents.BtnProceedOnClick)
+                .also { coroutineScope.launch { stateApp.navController.navToInitial() } }
+        }
     )
 }
 
 @Composable
 private fun ScrInitialization(
-    dataState: VMInitialization.Ui.DataState,
-    onEmailValueChanged : (CharSequence) -> Unit,
+    scrDataState: VMInitialization.ScrDataState,
+    onEmailValueChanged: (CharSequence) -> Unit,
     onPasswordValueChanged: (CharSequence) -> Unit,
     onBtnProceedClicked: () -> Unit
-) = when (dataState) {
-    VMInitialization.Ui.DataState.Loading -> ScrLoading()
-    is VMInitialization.Ui.DataState.Loaded -> ScreenContent(
-        data = dataState.data,
+) = when (scrDataState) {
+    is VMInitialization.ScrDataState.Loading -> ScrLoading()
+    is VMInitialization.ScrDataState.Loaded -> ScreenContent(
+        scrData = scrDataState.scrData,
         onEmailValueChanged = onEmailValueChanged,
         onPasswordValueChanged = onPasswordValueChanged,
         onBtnProceedClicked = onBtnProceedClicked
@@ -86,24 +94,24 @@ private fun ScrInitialization(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
-    data: InitializationScrData,
+    scrData: VMInitialization.ScrData,
     onEmailValueChanged : (CharSequence) -> Unit,
     onPasswordValueChanged: (CharSequence) -> Unit,
     onBtnProceedClicked: () -> Unit
 ) = Scaffold(
-    modifier = Modifier.imePadding(), // Add this to push everything above the keyboard
+    modifier = Modifier.imePadding(),
     topBar = { SectionTopBar() },
     content = {
         SectionContent(
             paddingValues = it,
-            formData = data.formData,
+            form = scrData.form,
             onEmailValueChanged = onEmailValueChanged,
             onPasswordValueChanged = onPasswordValueChanged
         )
     },
     bottomBar = {
         AnimatedVisibility(
-            visible = data.formData.btnProceedEnabled,
+            visible = scrData.form.btnProceedVisible,
             enter = fadeIn() + slideInVertically(),
             exit = fadeOut() + slideOutVertically()
         ) {
@@ -131,8 +139,8 @@ private fun SectionTopBar() {
 @Composable
 private fun SectionContent(
     paddingValues: PaddingValues,
-    formData: VMInitialization.Ui.FormData,
-    onEmailValueChanged : (CharSequence) -> Unit,
+    form: VMInitialization.Form,
+    onEmailValueChanged: (CharSequence) -> Unit,
     onPasswordValueChanged: (CharSequence) -> Unit
 ) {
     Surface(
@@ -147,7 +155,7 @@ private fun SectionContent(
                     /* Form */
                     item {
                         PartForm(
-                            formData = formData,
+                            form = form,
                             onEmailValueChanged = onEmailValueChanged,
                             onPasswordValueChanged = onPasswordValueChanged
                         )
@@ -178,7 +186,7 @@ private fun PartTitle() {
 
 @Composable
 private fun PartForm(
-    formData: VMInitialization.Ui.FormData,
+    form: VMInitialization.Form,
     onEmailValueChanged : (CharSequence) -> Unit,
     onPasswordValueChanged: (CharSequence) -> Unit
 ) {
@@ -191,17 +199,22 @@ private fun PartForm(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 content =  {
+                    val isEmailError by
+                        remember(form.fldEmailError) { derivedStateOf { form.fldEmailError.isNotEmpty() } }
+                    val isPasswordError by
+                        remember(form.fldPasswordError) { derivedStateOf { form.fldPasswordError.isNotEmpty() } }
+
                     TxtFieldEmail(
-                        state = rememberTextFieldState(formData.email.toString()),
+                        state = rememberTextFieldState(form.fldEmail.toString()),
                         onValueChanged = { onEmailValueChanged(it) },
-                        isError = formData.emailError.isNotEmpty(),
-                        errorMessage = formData.emailError
+                        isError = isEmailError,
+                        errorMessage = form.fldEmailError
                     )
                     TxtFieldPassword(
-                        state = rememberTextFieldState(formData.password.toString()),
+                        state = rememberTextFieldState(form.fldPassword.toString()),
                         onValueChanged = { onPasswordValueChanged(it) },
-                        isError = formData.passwordError.isNotEmpty(),
-                        errorMessage = formData.passwordError
+                        isError = isPasswordError,
+                        errorMessage = form.fldPasswordError
                     )
                 }
             )

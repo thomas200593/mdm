@@ -1,5 +1,6 @@
 package com.thomas200593.mdm.core.ui.component
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +20,10 @@ import com.thomas200593.mdm.core.design_system.util.Constants.Dimens.dp16
 import com.thomas200593.mdm.core.design_system.util.Constants.STR_APP_VERSION
 
 @Composable
-fun ScrLoading(modifier: Modifier = Modifier) {
+fun ScrLoading(
+    modifier: Modifier = Modifier,
+    @StringRes loadingLabel: Int = R.string.str_loading
+) {
     Surface(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = modifier.fillMaxSize().padding(dp16).verticalScroll(rememberScrollState()),
@@ -31,7 +35,7 @@ fun ScrLoading(modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.spacedBy(dp16, Alignment.CenterVertically)
             ) {
                 CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                TxtLgTitle(text = stringResource(R.string.str_loading))
+                TxtLgTitle(text = stringResource(loadingLabel))
             }
             Column(
                 modifier = Modifier.fillMaxWidth(),

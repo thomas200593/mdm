@@ -10,9 +10,9 @@ import com.thomas200593.mdm.features.onboarding.ui.ScrOnboarding
 
 fun NavGraphBuilder.navGraphOnboarding() {
     navigation<NavigationGraph.GraphOnboarding>(
-        startDestination = ScrGraphs.Onboarding,
+        startDestination = ScrGraphs.Onboarding(),
         builder = {
-            composable<ScrGraphs.Onboarding>(content = { ScrOnboarding() })
+            composable<ScrGraphs.Onboarding>(content = { ScrOnboarding(scrGraph = ScrGraphs.Onboarding()) })
         }
     )
 }

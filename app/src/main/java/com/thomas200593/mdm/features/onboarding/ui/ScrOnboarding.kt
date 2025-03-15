@@ -49,6 +49,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.thomas200593.mdm.R
+import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.ui.component.BtnConfLang
@@ -69,6 +70,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ScrOnboarding(
+    scrGraph: ScrGraphs.Onboarding,
     vm: VMOnboarding = hiltViewModel(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     stateApp: StateApp = LocalStateApp.current
@@ -76,6 +78,7 @@ fun ScrOnboarding(
     val uiState by vm.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMOnboarding.Ui.Events.OnOpenEvent) })
     ScrOnboarding(
+        scrGraph = scrGraph,
         dataState = uiState.dataState,
         onSelectLanguage = { vm.onEvent(VMOnboarding.Ui.Events.OnSelectLanguage(it)) },
         onNavPrevPage = { vm.onEvent(VMOnboarding.Ui.Events.OnNavPrevPage) },
@@ -87,13 +90,14 @@ fun ScrOnboarding(
 
 @Composable
 private fun ScrOnboarding(
+    scrGraph: ScrGraphs.Onboarding,
     dataState: VMOnboarding.Ui.DataState,
     onSelectLanguage: (Language) -> Unit,
     onNavPrevPage: () -> Unit,
     onNavNextPage: () -> Unit,
     onNavFinish: () -> Unit
 ) = when (dataState) {
-    VMOnboarding.Ui.DataState.Loading -> ScrLoading()
+    VMOnboarding.Ui.DataState.Loading -> ScrLoading(loadingLabel = scrGraph.title)
     is VMOnboarding.Ui.DataState.Loaded -> ScreenContent(
         data = dataState.data,
         onSelectLanguage = onSelectLanguage,
