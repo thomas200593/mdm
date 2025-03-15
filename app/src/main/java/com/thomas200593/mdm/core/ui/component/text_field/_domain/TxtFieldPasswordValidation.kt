@@ -15,7 +15,7 @@ class TxtFieldPasswordValidation : BaseValidation<String, ValidationResult> {
         val errors = mutableListOf<UiText>()
         // Define min/max length with defaults
         val minLen = minLength ?: 6
-        val maxLen = maxLength ?: 50
+        val maxLen = maxLength ?: 200
         // Password Format Validation
         val passwordPattern = regex ?: Regex(buildString {
             append("^(?=.*[0-9])")        // At least one digit

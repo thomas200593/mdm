@@ -8,6 +8,7 @@ import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldEmailVa
 import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldPasswordValidation
 import com.thomas200593.mdm.core.ui.component.text_field._state.UiText
 import com.thomas200593.mdm.features.conf.__language.entity.Language
+import com.thomas200593.mdm.features.conf.__language.repository.RepoConfLanguage
 import com.thomas200593.mdm.features.conf.common.entity.Common
 import com.thomas200593.mdm.features.initialization.domain.UCGetDataInitialization
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VMInitialization @Inject constructor(
-    private val ucGetDataInitialization: UCGetDataInitialization
+    private val ucGetDataInitialization: UCGetDataInitialization,
+    private val repoConfLanguage: RepoConfLanguage
 ) : ViewModel() {
     data class Form(
         val fldFirstName: CharSequence = STR_EMPTY,
@@ -33,17 +35,14 @@ class VMInitialization @Inject constructor(
     ) {
         private val emailValidator = TxtFieldEmailValidation()
         private val passwordValidator = TxtFieldPasswordValidation()
-
         fun validateEmail(email: CharSequence): Form {
             val result = emailValidator.validate(email.toString(), required = true, maxLength = 200)
             return copy(fldEmail = email, fldEmailError = result.errorMessages).validateAll()
         }
-
         fun validatePassword(password: CharSequence): Form {
             val result = passwordValidator.validate(password.toString(), required = true, maxLength = 200)
             return copy(fldPassword = password, fldPasswordError = result.errorMessages).validateAll()
         }
-
         fun validateAll(): Form {
             val emailValid = emailValidator.validate(fldEmail.toString(), required = true, maxLength = 200).isSuccess
             val passwordValid = passwordValidator.validate(fldPassword.toString(), required = true, maxLength = 200).isSuccess
@@ -80,33 +79,30 @@ class VMInitialization @Inject constructor(
             data class FldLastNameValChanged(val lastName: CharSequence) : FormEvents
             data class FldEmailValChanged(val email: CharSequence) : FormEvents
             data class FldPasswordValChanged(val password: CharSequence) : FormEvents
-            data class ChbTncChecked(val checked: Boolean) : FormEvents
             data object BtnProceedOnClick : FormEvents
         }
     }
     var uiState = MutableStateFlow(UiState())
         private set
-
     fun onEvent(events: Events) {
         when(events) {
             is Events.OnOpenEvent -> onOpenEvent()
+            is Events.TopAppBarEvents.BtnLanguageEvents.OnSelect -> onBtnLanguageSelect(events.language)
+            is Events.TopAppBarEvents.BtnScrDescEvents.OnClick -> {}
+            is Events.TopAppBarEvents.BtnScrDescEvents.OnDismiss -> {}
             is Events.FormEvents.FldFirstNameValChanged -> {}
             is Events.FormEvents.FldLastNameValChanged -> {}
             is Events.FormEvents.FldEmailValChanged -> onFldEmailValChanged(events.email)
             is Events.FormEvents.FldPasswordValChanged -> onFldPasswordValChanged(events.password)
-            is Events.FormEvents.ChbTncChecked -> {}
             is Events.FormEvents.BtnProceedOnClick -> {}
-            is Events.TopAppBarEvents.BtnLanguageEvents.OnSelect -> {}
-            is Events.TopAppBarEvents.BtnScrDescEvents.OnClick -> {}
-            is Events.TopAppBarEvents.BtnScrDescEvents.OnDismiss -> {}
         }
     }
-
     private fun onOpenEvent() = viewModelScope.launch {
         ucGetDataInitialization.invoke().collect { scrData ->
             uiState.update { it.copy(scrDataState = ScrDataState.Loaded(scrData = scrData)) }
         }
     }
+    private fun onBtnLanguageSelect(language: Language) = viewModelScope.launch { repoConfLanguage.set(language) }
     private fun onFldEmailValChanged(email: CharSequence) {
         uiState.update {
             (it.scrDataState as? ScrDataState.Loaded)?.let { state ->
@@ -115,7 +111,6 @@ class VMInitialization @Inject constructor(
             } ?: it
         }
     }
-
     private fun onFldPasswordValChanged(password: CharSequence) {
         uiState.update {
             (it.scrDataState as? ScrDataState.Loaded)?.let { state ->
