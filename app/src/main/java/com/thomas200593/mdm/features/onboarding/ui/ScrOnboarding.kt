@@ -64,7 +64,6 @@ import com.thomas200593.mdm.features.conf.__language.entity.Language
 import com.thomas200593.mdm.features.conf.common.entity.Common
 import com.thomas200593.mdm.features.initialization.nav.navToInitialization
 import com.thomas200593.mdm.features.onboarding.entity.Onboarding
-import com.thomas200593.mdm.features.onboarding.entity.OnboardingScrData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -76,14 +75,14 @@ fun ScrOnboarding(
     stateApp: StateApp = LocalStateApp.current
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMOnboarding.Ui.Events.OnOpenEvent) })
+    LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMOnboarding.Events.OnOpenEvent) })
     ScrOnboarding(
         scrGraph = scrGraph,
-        dataState = uiState.dataState,
-        onSelectLanguage = { vm.onEvent(VMOnboarding.Ui.Events.OnSelectLanguage(it)) },
-        onNavPrevPage = { vm.onEvent(VMOnboarding.Ui.Events.OnNavPrevPage) },
-        onNavNextPage = { vm.onEvent(VMOnboarding.Ui.Events.OnNavNextPage) },
-        onNavFinish = { vm.onEvent(VMOnboarding.Ui.Events.OnNavFinish)
+        scrDataState = uiState.scrDataState,
+        onSelectLanguage = { vm.onEvent(VMOnboarding.Events.TopAppBarEvents.BtnLanguageEvents.OnSelect(it)) },
+        onNavPrevPage = { vm.onEvent(VMOnboarding.Events.BottomAppBarEvents.BtnNavActions.PageAction(VMOnboarding.Events.OnboardingButtonNav.PREV)) },
+        onNavNextPage = { vm.onEvent(VMOnboarding.Events.BottomAppBarEvents.BtnNavActions.PageAction(VMOnboarding.Events.OnboardingButtonNav.NEXT)) },
+        onNavFinish = { vm.onEvent(VMOnboarding.Events.BottomAppBarEvents.BtnNavActions.Finish)
             .also { coroutineScope.launch { stateApp.navController.navToInitialization() } } }
     )
 }
@@ -91,15 +90,15 @@ fun ScrOnboarding(
 @Composable
 private fun ScrOnboarding(
     scrGraph: ScrGraphs.Onboarding,
-    dataState: VMOnboarding.Ui.DataState,
+    scrDataState: VMOnboarding.ScrDataState,
     onSelectLanguage: (Language) -> Unit,
     onNavPrevPage: () -> Unit,
     onNavNextPage: () -> Unit,
     onNavFinish: () -> Unit
-) = when (dataState) {
-    VMOnboarding.Ui.DataState.Loading -> ScrLoading(loadingLabel = scrGraph.title)
-    is VMOnboarding.Ui.DataState.Loaded -> ScreenContent(
-        data = dataState.data,
+) = when (scrDataState) {
+    VMOnboarding.ScrDataState.Loading -> ScrLoading(loadingLabel = scrGraph.title)
+    is VMOnboarding.ScrDataState.Loaded -> ScreenContent(
+        data = scrDataState.scrData,
         onSelectLanguage = onSelectLanguage,
         onNavPrevPage = onNavPrevPage,
         onNavNextPage = onNavNextPage,
@@ -110,7 +109,7 @@ private fun ScrOnboarding(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
-    data: OnboardingScrData,
+    data: VMOnboarding.ScrData,
     onSelectLanguage: (Language) -> Unit,
     onNavPrevPage: () -> Unit,
     onNavNextPage: () -> Unit,
@@ -191,14 +190,8 @@ private fun SectionContent(paddingValues: PaddingValues, currentPage: Onboarding
             Column(
                 modifier = Modifier.fillMaxSize(),
                 content = {
-                    PartBanner(
-                        modifier = Modifier.fillMaxWidth().weight(1.0f),
-                        currentPage = currentPage
-                    )
-                    PartDetail(
-                        modifier = Modifier.weight(1.0f).padding(16.dp),
-                        currentPage = currentPage
-                    )
+                    PartBanner(modifier = Modifier.fillMaxWidth().weight(1.0f), currentPage = currentPage)
+                    PartDetail(modifier = Modifier.weight(1.0f).padding(16.dp), currentPage = currentPage)
                 }
             )
         }

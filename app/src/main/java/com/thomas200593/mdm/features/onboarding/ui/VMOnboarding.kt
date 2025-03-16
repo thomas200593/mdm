@@ -4,9 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.features.conf.__language.entity.Language
 import com.thomas200593.mdm.features.conf.__language.repository.RepoConfLanguage
+import com.thomas200593.mdm.features.conf.common.entity.Common
 import com.thomas200593.mdm.features.onboarding.domain.UCFinishOnboarding
 import com.thomas200593.mdm.features.onboarding.domain.UCGetDataOnboarding
-import com.thomas200593.mdm.features.onboarding.entity.OnboardingScrData
+import com.thomas200593.mdm.features.onboarding.entity.Onboarding
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -19,53 +20,59 @@ class VMOnboarding @Inject constructor(
     private val ucFinishOnboarding: UCFinishOnboarding,
     private val repoConfLanguage: RepoConfLanguage
 ) : ViewModel() {
-    sealed interface Ui {
-        data class Data(val dataState: DataState = DataState.Loading) : Ui
-        sealed interface DataState : Ui {
-            data object Loading : DataState
-            data class Loaded(val data : OnboardingScrData) : DataState
-        }
-        sealed interface Events : Ui {
-            data object OnOpenEvent : Events
-            data class OnSelectLanguage(val language: Language) : Events
-            data object OnNavPrevPage : Events
-            data object OnNavNextPage : Events
-            data object OnNavFinish : Events
-        }
+    data class ScrData(
+        val confCommon: Common,
+        val languageList: List<Language>,
+        val onboardingPages: List<Onboarding>,
+        val listCurrentIndex: Int,
+        val listMaxIndex: Int
+    )
+    sealed interface ScrDataState {
+        data object Loading : ScrDataState
+        data class Loaded(val scrData : ScrData) : ScrDataState
     }
-
-    var uiState = MutableStateFlow(Ui.Data())
-        private set
-
-    fun onEvent(events : Ui.Events) {
-        when (events) {
-            is Ui.Events.OnOpenEvent -> onOpenEvent()
-            is Ui.Events.OnSelectLanguage -> onSelectLanguage(events.language)
-            is Ui.Events.OnNavPrevPage -> onNavPrevPageEvent()
-            is Ui.Events.OnNavNextPage -> onNavNextPageEvent()
-            is Ui.Events.OnNavFinish -> onNavFinishEvent()
+    data class UiState(
+        val scrDataState: ScrDataState = ScrDataState.Loading
+    )
+    sealed interface Events {
+        enum class OnboardingButtonNav { NEXT, PREV }
+        data object OnOpenEvent : Events
+        sealed interface TopAppBarEvents : Events {
+            sealed interface BtnLanguageEvents : TopAppBarEvents {
+                data class OnSelect(val language: Language) : Events
+            }
         }
-    }
-
-    private fun onOpenEvent() = viewModelScope.launch {
-        ucGetDataOnboarding.invoke().collect { data ->
-            uiState.update {
-                it.copy(dataState = Ui.DataState.Loaded(data = data.copy(listMaxIndex = data.onboardingPages.size - 1)))
+        sealed interface BottomAppBarEvents : Events {
+            sealed interface BtnNavActions : BottomAppBarEvents {
+                data class PageAction(val action: OnboardingButtonNav) : BtnNavActions
+                data object Finish : BtnNavActions
             }
         }
     }
-    private fun onSelectLanguage(language: Language) = viewModelScope.launch { repoConfLanguage.set(language) }
-    private fun onNavPrevPageEvent() = uiState.update {
-        (it.dataState as? Ui.DataState.Loaded)?.let { state ->
-            val prevPage = (state.data.listCurrentIndex - 1).coerceAtLeast(0)
-            it.copy(dataState = state.copy(data = state.data.copy(listCurrentIndex = prevPage)))
-        } ?: it // Return unchanged if not in Loaded state
+    var uiState = MutableStateFlow(UiState())
+        private set
+    fun onEvent(events: Events) {
+        when(events) {
+            is Events.OnOpenEvent -> onOpenEvent()
+            is Events.TopAppBarEvents.BtnLanguageEvents.OnSelect -> onBtnLanguageSelect(events.language)
+            is Events.BottomAppBarEvents.BtnNavActions.PageAction -> onPageAction(events.action)
+            is Events.BottomAppBarEvents.BtnNavActions.Finish -> onNavFinishEvent()
+        }
     }
-    private fun onNavNextPageEvent() = uiState.update {
-        (it.dataState as? Ui.DataState.Loaded)?.let { state ->
-            val nextPage = (state.data.listCurrentIndex + 1).coerceAtMost(state.data.listMaxIndex)
-            it.copy(dataState = state.copy(data = state.data.copy(listCurrentIndex = nextPage)))
-        } ?: it // Return unchanged if not in Loaded State
+    private fun onOpenEvent() = viewModelScope.launch { ucGetDataOnboarding.invoke()
+        .collect { scrData -> uiState.update { it.copy(scrDataState = ScrDataState.Loaded(scrData = scrData)) } } }
+    private fun onBtnLanguageSelect(language: Language) =
+        viewModelScope.launch { repoConfLanguage.set(language) }
+    private fun onPageAction(navigate: Events.OnboardingButtonNav) {
+        uiState.update {
+            (it.scrDataState as? ScrDataState.Loaded)?.let { state ->
+                val newIdx = when(navigate) {
+                    Events.OnboardingButtonNav.PREV -> (state.scrData.listCurrentIndex.minus(1)).coerceAtLeast(0)
+                    Events.OnboardingButtonNav.NEXT -> (state.scrData.listCurrentIndex.plus(1)).coerceAtMost(state.scrData.listMaxIndex)
+                }
+                it.copy(state.copy(scrData = state.scrData.copy(listCurrentIndex = newIdx)))
+            } ?: it
+        }
     }
     private fun onNavFinishEvent() = viewModelScope.launch { ucFinishOnboarding.invoke() }
 }

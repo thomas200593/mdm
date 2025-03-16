@@ -99,10 +99,10 @@ class VMInitialization @Inject constructor(
     }
     private fun onOpenEvent() = viewModelScope.launch {
         ucGetDataInitialization.invoke().collect { scrData ->
-            uiState.update { it.copy(scrDataState = ScrDataState.Loaded(scrData = scrData)) }
-        }
+            uiState.update { it.copy(scrDataState = ScrDataState.Loaded(scrData = scrData)) } }
     }
-    private fun onBtnLanguageSelect(language: Language) = viewModelScope.launch { repoConfLanguage.set(language) }
+    private fun onBtnLanguageSelect(language: Language) =
+        viewModelScope.launch { repoConfLanguage.set(language) }
     private fun onFldEmailValChanged(email: CharSequence) {
         uiState.update {
             (it.scrDataState as? ScrDataState.Loaded)?.let { state ->
