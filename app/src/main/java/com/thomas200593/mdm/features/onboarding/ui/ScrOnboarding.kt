@@ -17,24 +17,17 @@ import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
@@ -59,7 +52,6 @@ import com.thomas200593.mdm.core.ui.component.CenteredCircularProgressIndicator
 import com.thomas200593.mdm.core.ui.component.ScrLoading
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
-import com.thomas200593.mdm.core.ui.component.TxtMdLabel
 import com.thomas200593.mdm.features.conf.__language.entity.Language
 import com.thomas200593.mdm.features.conf.common.entity.Common
 import com.thomas200593.mdm.features.initialization.nav.navToInitialization
@@ -149,34 +141,10 @@ private fun SectionTopBar(
     TopAppBar(
         title = {},
         actions = {
-            var expanded by remember { mutableStateOf(false) }
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded },
-                content = {
-                    BtnConfLang(
-                        modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
-                        onClick = { expanded = true },
-                        border = null,
-                        languageIcon = confCommon.localization.language.country.flag
-                    )
-                    ExposedDropdownMenu(
-                        modifier = Modifier.fillMaxWidth(0.5f),
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                        content = {
-                            languages.forEach {
-                                DropdownMenuItem(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    onClick = { expanded = false; onSelectLanguage(it) },
-                                    leadingIcon = { Text(it.country.flag) },
-                                    text = { TxtMdLabel(text = it.country.name) },
-                                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                                )
-                            }
-                        }
-                    )
-                }
+            BtnConfLang(
+                languages = languages,
+                onSelectLanguage = onSelectLanguage,
+                languageIcon = confCommon.localization.language.country.flag
             )
         }
     )

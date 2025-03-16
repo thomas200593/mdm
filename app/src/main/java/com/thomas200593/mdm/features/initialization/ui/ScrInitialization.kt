@@ -128,7 +128,7 @@ private fun SectionTopBar() {
     TopAppBar(
         title = {},
         actions = {
-            BtnConfLang(onClick = {/*TODO*/}, border = null)
+            /*Language*/
             IconButton(onClick = {/*TODO*/}, content = {
                 Icon(imageVector = Icons.Default.Info, contentDescription = null) }
             )
