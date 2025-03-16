@@ -20,7 +20,6 @@ googleDaggerHiltAndroid = "2.55"
 googleDevToolsKsp = "2.1.10-1.0.30"
 junit = "4.13.2"
 kotlin = "2.1.10"
-kotlinSerialization = "2.1.10"
 kotlinxSerializationJson = "1.8.0"
 
 [libraries]
@@ -62,4 +61,4 @@ google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.re
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "googleDevToolsKsp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
