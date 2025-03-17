@@ -16,10 +16,9 @@ import javax.inject.Singleton
 object ModAppDatabase {
     @Provides
     @Singleton
-    fun providesAppDatabase(@ApplicationContext context: Context) =
-        Room.databaseBuilder(
-            context = context,
-            klass = AppDatabase::class.java,
-            name = BuildConfig.APP_LOCAL_DATABASE_FILENAME
-        ).build()
+    fun providesAppDatabase(@ApplicationContext context: Context) = Room.databaseBuilder(
+        context = context,
+        klass = AppDatabase::class.java,
+        name = BuildConfig.APP_LOCAL_DATABASE_FILENAME
+    ).build()
 }
