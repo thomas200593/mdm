@@ -49,7 +49,6 @@ class NetworkMonitorImpl @Inject constructor(
         channel.trySend(connectivityManager.isCurrentlyConnected())
         awaitClose { connectivityManager.unregisterNetworkCallback(callback) }
     }.flowOn(ioDispatcher).conflate()
-
-    private fun ConnectivityManager.isCurrentlyConnected() =
-        activeNetwork?.let(::getNetworkCapabilities)?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+    private fun ConnectivityManager.isCurrentlyConnected() = activeNetwork?.let(::getNetworkCapabilities)
+        ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
 }
