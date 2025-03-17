@@ -69,7 +69,7 @@ fun ScrInitialization(
         onPasswordValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldPasswordValChanged(it)) },
         onBtnProceedClicked = {
             vm.onEvent(VMInitialization.Events.FormEvents.BtnProceedOnClick)
-                .also { coroutineScope.launch { stateApp.navController.navToInitial() } }
+                /*.also { coroutineScope.launch { stateApp.navController.navToInitial() } }*/
         }
     )
 }
@@ -206,12 +206,14 @@ private fun PartForm(
                     TxtFieldEmail(
                         state = rememberTextFieldState(form.fldEmail.toString()),
                         onValueChanged = { onEmailValueChanged(it) },
+                        enabled = form.fldEmailEnabled,
                         isError = isEmailError,
                         errorMessage = form.fldEmailError
                     )
                     TxtFieldPassword(
                         state = rememberTextFieldState(form.fldPassword.toString()),
                         onValueChanged = { onPasswordValueChanged(it) },
+                        enabled = form.fldPasswordEnabled,
                         isError = isPasswordError,
                         errorMessage = form.fldPasswordError
                     )
