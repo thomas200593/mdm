@@ -148,8 +148,9 @@ private fun SectionTopBar(
                 languageIcon = languageIcon,
                 onSelectLanguage = onSelectLanguage
             )
-            IconButton(onClick = {/*TODO*/}, content = {
-                Icon(imageVector = Icons.Default.Info, contentDescription = null) }
+            IconButton(
+                onClick = {/*TODO*/},
+                content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) }
             )
         }
     )
