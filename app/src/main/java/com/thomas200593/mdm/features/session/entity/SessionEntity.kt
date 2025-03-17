@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.core.data.local.session
+package com.thomas200593.mdm.features.session.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
