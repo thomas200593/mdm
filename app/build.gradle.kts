@@ -31,6 +31,11 @@ android {
             name = "APP_LOCAL_DATASTORE_FILENAME",
             value = "\"app_local_datastore\""
         )
+        buildConfigField(
+            type = "String",
+            name = "APP_LOCAL_DATABASE_FILENAME",
+            value = "\"app_local_database\""
+        )
     }
 
     buildTypes {
