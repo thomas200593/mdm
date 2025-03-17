@@ -54,7 +54,6 @@ android {
         buildConfig = true
         shaders = false
     }
-    /*composeOptions { kotlinCompilerExtensionVersion = "1.5.15" }*/
     testOptions.unitTests{ isIncludeAndroidResources = true }
 }
 
@@ -77,11 +76,19 @@ dependencies {
     implementation(libs.androidx.material3.adaptive.navigation.suite)
     implementation(libs.androidx.multidex)
     implementation(libs.androidx.navigation)
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.androidx.paging.common.ktx)
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
+    implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.coil.compose)
     implementation(libs.google.dagger.hilt.android)
     implementation(libs.kotlinx.serialization.json)
 
+    testImplementation(libs.androidx.room.testing)
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
@@ -92,5 +99,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     ksp(libs.androidx.hilt.compiler)
+    ksp(libs.androidx.room.compiler)
     ksp(libs.google.dagger.hilt.android.compiler)
 }
