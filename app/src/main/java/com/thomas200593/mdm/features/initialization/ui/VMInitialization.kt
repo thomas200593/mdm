@@ -64,7 +64,7 @@ class VMInitialization @Inject constructor(
     }
     data class UiState(
         val scrDataState: ScrDataState = ScrDataState.Loading,
-        val result: Int = 1 /*TODO later*/
+        val result: Result = Result.Idle
     )
     sealed interface Events {
         data object OnOpenEvent : Events
@@ -127,18 +127,17 @@ class VMInitialization @Inject constructor(
         }
     }
     private fun onProceedInitialization() {
-        uiState.update { currentState ->
-            (currentState.scrDataState as? ScrDataState.Loaded)?.let { state ->
-                val updatedForm = state.scrData.form.copy(
-                    fldEmailEnabled = false,
-                    fldPasswordEnabled = false,
-                    btnProceedEnabled = false
-                )
-                currentState.copy(scrDataState = state.copy(scrData = state.scrData.copy(form = updatedForm)))
-            } ?: currentState
-        }
-        viewModelScope.launch {
-            // Perform initialization logic here
-        }
+        //disable the fields (better to separate reusable function in this VM)
+        //validate all first to the latest
+        //set the result to loading
+        //get the result from use case / repository
+        //if success -> the form is still disable the fields then the UI navigate to init
+        //if error -> the state become loading -> idle, the form reset (like reload)
+    }
+    sealed interface Result {
+        data object Idle : Result
+        data object Loading : Result
+        data class Success(val result: Int) : Result
+        data class Error(val throwable: Throwable?) : Result
     }
 }

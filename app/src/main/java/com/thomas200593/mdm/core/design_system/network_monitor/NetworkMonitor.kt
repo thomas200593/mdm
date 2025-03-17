@@ -51,5 +51,5 @@ class NetworkMonitorImpl @Inject constructor(
     }.flowOn(ioDispatcher).conflate()
 
     private fun ConnectivityManager.isCurrentlyConnected() =
-        activeNetwork?.let(::getNetworkCapabilities)?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
+        activeNetwork?.let(::getNetworkCapabilities)?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
 }
