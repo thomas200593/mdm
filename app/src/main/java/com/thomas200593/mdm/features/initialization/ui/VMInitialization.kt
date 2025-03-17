@@ -80,13 +80,13 @@ class VMInitialization @Inject constructor(
     fun onEvent(events: Events) {
         when(events) {
             is Events.OnOpenEvent -> onOpenEvent()
-            is Events.TopAppBarEvents.BtnScrDescEvents.OnClick -> {}
-            is Events.TopAppBarEvents.BtnScrDescEvents.OnDismiss -> {}
-            is Events.FormEvents.FldFirstNameValChanged -> {}
-            is Events.FormEvents.FldLastNameValChanged -> {}
+            is Events.TopAppBarEvents.BtnScrDescEvents.OnClick -> {/*TODO*/}
+            is Events.TopAppBarEvents.BtnScrDescEvents.OnDismiss -> {/*TODO*/}
+            is Events.FormEvents.FldFirstNameValChanged -> {/*TODO*/}
+            is Events.FormEvents.FldLastNameValChanged -> {/*TODO*/}
             is Events.FormEvents.FldEmailValChanged -> onFldEmailValChanged(events.email)
             is Events.FormEvents.FldPasswordValChanged -> onFldPasswordValChanged(events.password)
-            is Events.FormEvents.BtnProceedOnClick -> {}
+            is Events.FormEvents.BtnProceedOnClick -> {/*TODO*/}
         }
     }
     private fun onOpenEvent() = viewModelScope.launch {
