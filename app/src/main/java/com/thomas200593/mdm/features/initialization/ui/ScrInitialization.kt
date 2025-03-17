@@ -46,12 +46,10 @@ import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
-import com.thomas200593.mdm.core.ui.component.BtnConfLang
 import com.thomas200593.mdm.core.ui.component.ScrLoading
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
-import com.thomas200593.mdm.features.conf.__language.entity.Language
 import com.thomas200593.mdm.features.initial.nav.navToInitial
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -67,7 +65,6 @@ fun ScrInitialization(
     LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMInitialization.Events.OnOpenEvent) })
     ScrInitialization(
         scrDataState = uiState.scrDataState,
-        onSelectLanguage = { vm.onEvent(VMInitialization.Events.TopAppBarEvents.BtnLanguageEvents.OnSelect(it)) },
         onEmailValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldEmailValChanged(it)) },
         onPasswordValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldPasswordValChanged(it)) },
         onBtnProceedClicked = {
@@ -80,7 +77,6 @@ fun ScrInitialization(
 @Composable
 private fun ScrInitialization(
     scrDataState: VMInitialization.ScrDataState,
-    onSelectLanguage: (Language) -> Unit,
     onEmailValueChanged: (CharSequence) -> Unit,
     onPasswordValueChanged: (CharSequence) -> Unit,
     onBtnProceedClicked: () -> Unit
@@ -88,7 +84,6 @@ private fun ScrInitialization(
     is VMInitialization.ScrDataState.Loading -> ScrLoading()
     is VMInitialization.ScrDataState.Loaded -> ScreenContent(
         scrData = scrDataState.scrData,
-        onSelectLanguage = onSelectLanguage,
         onEmailValueChanged = onEmailValueChanged,
         onPasswordValueChanged = onPasswordValueChanged,
         onBtnProceedClicked = onBtnProceedClicked
@@ -99,19 +94,12 @@ private fun ScrInitialization(
 @Composable
 private fun ScreenContent(
     scrData: VMInitialization.ScrData,
-    onSelectLanguage: (Language) -> Unit,
     onEmailValueChanged: (CharSequence) -> Unit,
     onPasswordValueChanged: (CharSequence) -> Unit,
     onBtnProceedClicked: () -> Unit
 ) = Scaffold(
     modifier = Modifier.imePadding(),
-    topBar = {
-        SectionTopBar(
-            languages = scrData.languageList,
-            languageIcon = scrData.confCommon.localization.language.country.flag,
-            onSelectLanguage = onSelectLanguage
-        )
-    },
+    topBar = { SectionTopBar() },
     content = {
         SectionContent(
             paddingValues = it,
@@ -135,19 +123,10 @@ private fun ScreenContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SectionTopBar(
-    languages: List<Language>,
-    languageIcon: String,
-    onSelectLanguage: (Language) -> Unit
-) {
+private fun SectionTopBar() {
     TopAppBar(
         title = {},
         actions = {
-            BtnConfLang(
-                languages = languages,
-                languageIcon = languageIcon,
-                onSelectLanguage = onSelectLanguage
-            )
             IconButton(
                 onClick = {/*TODO*/},
                 content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) }

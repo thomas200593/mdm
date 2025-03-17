@@ -7,8 +7,6 @@ import com.thomas200593.mdm.core.design_system.util.update
 import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldEmailValidation
 import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldPasswordValidation
 import com.thomas200593.mdm.core.ui.component.text_field._state.UiText
-import com.thomas200593.mdm.features.conf.__language.entity.Language
-import com.thomas200593.mdm.features.conf.__language.repository.RepoConfLanguage
 import com.thomas200593.mdm.features.conf.common.entity.Common
 import com.thomas200593.mdm.features.initialization.domain.UCGetDataInitialization
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,8 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VMInitialization @Inject constructor(
-    private val ucGetDataInitialization: UCGetDataInitialization,
-    private val repoConfLanguage: RepoConfLanguage
+    private val ucGetDataInitialization: UCGetDataInitialization
 ) : ViewModel() {
     data class Form(
         val fldFirstName: CharSequence = STR_EMPTY,
@@ -52,7 +49,6 @@ class VMInitialization @Inject constructor(
     }
     data class ScrData(
         val confCommon: Common,
-        val languageList : List<Language>,
         val form : Form
     )
     sealed interface ScrDataState {
@@ -70,9 +66,6 @@ class VMInitialization @Inject constructor(
                 data object OnClick : BtnScrDescEvents
                 data object OnDismiss : BtnScrDescEvents
             }
-            sealed interface BtnLanguageEvents : TopAppBarEvents {
-                data class OnSelect(val language: Language) : BtnLanguageEvents
-            }
         }
         sealed interface FormEvents : Events {
             data class FldFirstNameValChanged(val firstName: CharSequence) : FormEvents
@@ -87,7 +80,6 @@ class VMInitialization @Inject constructor(
     fun onEvent(events: Events) {
         when(events) {
             is Events.OnOpenEvent -> onOpenEvent()
-            is Events.TopAppBarEvents.BtnLanguageEvents.OnSelect -> onBtnLanguageSelect(events.language)
             is Events.TopAppBarEvents.BtnScrDescEvents.OnClick -> {}
             is Events.TopAppBarEvents.BtnScrDescEvents.OnDismiss -> {}
             is Events.FormEvents.FldFirstNameValChanged -> {}
@@ -101,8 +93,6 @@ class VMInitialization @Inject constructor(
         ucGetDataInitialization.invoke().collect { scrData ->
             uiState.update { it.copy(scrDataState = ScrDataState.Loaded(scrData = scrData)) } }
     }
-    private fun onBtnLanguageSelect(language: Language) =
-        viewModelScope.launch { repoConfLanguage.set(language) }
     private fun onFldEmailValChanged(email: CharSequence) {
         uiState.update {
             (it.scrDataState as? ScrDataState.Loaded)?.let { state ->
