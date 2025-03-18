@@ -2,6 +2,8 @@ package com.thomas200593.mdm.features.initialization.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.thomas200593.mdm.core.design_system.security.hashing.HashingAlgorithm
+import com.thomas200593.mdm.core.design_system.security.hashing.HashingService
 import com.thomas200593.mdm.core.design_system.util.Constants.STR_EMPTY
 import com.thomas200593.mdm.core.design_system.util.update
 import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldEmailValidation
@@ -16,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VMInitialization @Inject constructor(
-    private val ucGetDataInitialization: UCGetDataInitialization
+    private val ucGetDataInitialization: UCGetDataInitialization,
+    private val hashingService: HashingService
 ) : ViewModel() {
     data class Form(
         val fldFirstName: CharSequence = STR_EMPTY,
@@ -31,6 +34,7 @@ class VMInitialization @Inject constructor(
         val fldPassword: CharSequence = STR_EMPTY,
         val fldPasswordEnabled: Boolean = true,
         val fldPasswordError: List<UiText> = emptyList(),
+        val fldPasswordHash: CharSequence = STR_EMPTY,
         val btnProceedVisible: Boolean = false,
         val btnProceedEnabled: Boolean = true
     ) {
@@ -118,7 +122,8 @@ class VMInitialization @Inject constructor(
                         form = form.copy(
                             btnProceedEnabled = false,
                             fldEmailEnabled = false,
-                            fldPasswordEnabled = false
+                            fldPasswordEnabled = false,
+                            fldPasswordHash = hashingService.hash(form.fldPassword.toString(), HashingAlgorithm.BCrypt)
                         )
                     )
                 ),

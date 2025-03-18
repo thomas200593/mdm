@@ -216,6 +216,7 @@ private fun PartForm(
                         isError = isPasswordError,
                         errorMessage = form.fldPasswordError
                     )
+                    Text("Password Hashed: ${form.fldPasswordHash}")
                 }
             )
         }

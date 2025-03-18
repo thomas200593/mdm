@@ -89,8 +89,6 @@ dependencies {
     implementation(libs.androidx.room.paging)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.argon2)
-    implementation(libs.bcprov.jdk15to18)
     implementation(libs.coil.compose)
     implementation(libs.google.dagger.hilt.android)
     implementation(libs.kotlinx.serialization.json)

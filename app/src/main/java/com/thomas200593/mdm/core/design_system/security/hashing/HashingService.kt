@@ -4,7 +4,7 @@ import java.security.MessageDigest
 import javax.inject.Inject
 import javax.inject.Singleton
 
-enum class HashingAlgorithm { ARGON2, MD5, SHA256 }
+enum class HashingAlgorithm { BCrypt, MD5, SHA256 }
 
 interface HashingService {
     fun hash(string: String, algorithm: HashingAlgorithm): String
@@ -13,15 +13,14 @@ interface HashingService {
 
 @Singleton
 class HashingServiceImpl @Inject constructor(
-    private val argon2: Argon2
 ) : HashingService {
     override fun hash(string: String, algorithm: HashingAlgorithm) : String = when(algorithm) {
-        HashingAlgorithm.ARGON2 -> argon2.hash(string)
+        HashingAlgorithm.BCrypt -> { "" }
         HashingAlgorithm.MD5 -> hashWith("MD5", string)
         HashingAlgorithm.SHA256 -> hashWith("SHA-256", string)
     }
     override fun verify(string: String, hash: String, algorithm: HashingAlgorithm): Boolean = when(algorithm) {
-        HashingAlgorithm.ARGON2 -> argon2.verify(string, hash)
+        HashingAlgorithm.BCrypt -> { false }
         HashingAlgorithm.MD5 -> hashWith("MD5", string) == hash
         HashingAlgorithm.SHA256 -> hashWith("SHA-256", string) == hash
     }
