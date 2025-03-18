@@ -37,22 +37,27 @@ class VMInitialization @Inject constructor(
         private val emailValidator = TxtFieldEmailValidation()
         private val passwordValidator = TxtFieldPasswordValidation()
         fun validateEmail(email: CharSequence): Form {
-            val result = emailValidator.validate(email.toString(), required = true, maxLength = 200)
+            val result = emailValidator.validate(input = email.toString(), required = true)
             return copy(fldEmail = email, fldEmailError = result.errorMessages).validateAll()
         }
         fun validatePassword(password: CharSequence): Form {
-            val result = passwordValidator.validate(password.toString(), required = true, maxLength = 200)
+            val result = passwordValidator.validate(input = password.toString(), required = true)
             return copy(fldPassword = password, fldPasswordError = result.errorMessages).validateAll()
         }
         fun validateAll(): Form {
-            val emailResult = emailValidator.validate(fldEmail.toString(), required = true, maxLength = 200)
-            val passwordResult = passwordValidator.validate(fldPassword.toString(), required = true, maxLength = 200)
+            val emailResult = emailValidator.validate(input = fldEmail.toString(), required = true)
+            val passwordResult = passwordValidator.validate(input = fldPassword.toString(), required = true)
             return copy(
                 fldEmailError = emailResult.errorMessages,
                 fldPasswordError = passwordResult.errorMessages,
                 btnProceedVisible = emailResult.isSuccess && passwordResult.isSuccess
             )
         }
+
+        private val validators = mapOf(
+            "email" to TxtFieldEmailValidation(),
+            "password" to TxtFieldPasswordValidation()
+        )
     }
     data class ScrData(
         val confCommon: Common,
@@ -101,9 +106,7 @@ class VMInitialization @Inject constructor(
         ucGetDataInitialization.invoke().collect { confCommon ->
             uiState.update {
                 it.copy(
-                    scrDataState = ScrDataState.Loaded(
-                        scrData = ScrData(confCommon = confCommon, form = Form())
-                    )
+                    scrDataState = ScrDataState.Loaded(scrData = ScrData(confCommon = confCommon, form = Form()))
                 )
             }
         }

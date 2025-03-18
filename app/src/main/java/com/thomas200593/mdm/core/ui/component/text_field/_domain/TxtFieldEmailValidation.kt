@@ -14,6 +14,7 @@ class TxtFieldEmailValidation : BaseValidation<String, ValidationResult> {
     ) : ValidationResult {
         // Error Messages container
         val errors = mutableListOf<UiText>()
+        val maxLen = maxLength ?: 200
         // Email Format Validation
         val emailPattern = regex ?: Patterns.EMAIL_ADDRESS.toRegex()
         // Required Check
@@ -25,13 +26,13 @@ class TxtFieldEmailValidation : BaseValidation<String, ValidationResult> {
             errors.add(UiText.DynamicString("This field required minimum $minLength character(s)."))
         }
         // Max Length Checks
-        if (maxLength != null && input.length > maxLength) {
-            errors.add(UiText.DynamicString("This field required maximum $maxLength character(s)."))
+        if (input.length > (maxLength ?: maxLen)) {
+            errors.add(UiText.DynamicString("This field requires a maximum of ${maxLength ?: maxLen} character(s)."))
         }
         //Pattern Matching
         if (!emailPattern.matches(input)) {
             errors.add(UiText.DynamicString("Invalid e-mail format!."))
         }
-        return ValidationResult(isSuccess = errors.isEmpty(), errorMessages = if (errors.isEmpty()) emptyList() else errors)
+        return ValidationResult(errorMessages = errors)
     }
 }

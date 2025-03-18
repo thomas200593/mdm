@@ -58,10 +58,15 @@ class StateApp(
             DestTopLevel.entries.firstOrNull { currentDestination?.hasRoute(route = it.route) == true }
 
     fun navToDestTopLevel(dest: DestTopLevel) {
-        val navOptions = navOptions {
-            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-            launchSingleTop = true; restoreState = true
-        }
+        val navOptions = navOptions(
+            optionsBuilder = {
+                popUpTo(
+                    id = navController.graph.findStartDestination().id,
+                    popUpToBuilder = { saveState = true }
+                )
+                launchSingleTop = true; restoreState = true
+            }
+        )
         when (dest) {
             DestTopLevel.DASHBOARD -> { /*TODO*/ }
             DestTopLevel.USER_PROFILE -> { /*TODO*/ }

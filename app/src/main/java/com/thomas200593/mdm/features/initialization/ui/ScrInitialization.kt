@@ -50,9 +50,7 @@ import com.thomas200593.mdm.core.ui.component.ScrLoading
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
-import com.thomas200593.mdm.features.initial.nav.navToInitial
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun ScrInitialization(
