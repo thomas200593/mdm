@@ -125,6 +125,7 @@ class VMInitialization @Inject constructor(
                 result = Result.Loading
             )
         }
+        /*TODO execute*/
     }
     sealed interface Result {
         data object Idle : Result
