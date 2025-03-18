@@ -113,6 +113,7 @@ private fun ScreenContent(
             exit = fadeOut() + slideOutVertically()
         ) {
             SectionBottomBar(
+                btnProceedEnabled = scrData.form.btnProceedEnabled,
                 onBtnProceedClicked = onBtnProceedClicked
             )
         }
@@ -223,6 +224,7 @@ private fun PartForm(
 
 @Composable
 private fun SectionBottomBar(
+    btnProceedEnabled: Boolean,
     onBtnProceedClicked: () -> Unit
 ) {
     BottomAppBar(
@@ -230,6 +232,7 @@ private fun SectionBottomBar(
             Button (
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onBtnProceedClicked,
+                enabled = btnProceedEnabled,
                 shape = MaterialTheme.shapes.extraSmall,
                 content = { Text(text = stringResource(R.string.str_proceed)) }
             )

@@ -36,28 +36,16 @@ class VMInitialization @Inject constructor(
     ) {
         private val emailValidator = TxtFieldEmailValidation()
         private val passwordValidator = TxtFieldPasswordValidation()
-        fun validateEmail(email: CharSequence): Form {
-            val result = emailValidator.validate(input = email.toString(), required = true)
-            return copy(fldEmail = email, fldEmailError = result.errorMessages).validateAll()
-        }
-        fun validatePassword(password: CharSequence): Form {
-            val result = passwordValidator.validate(input = password.toString(), required = true)
-            return copy(fldPassword = password, fldPasswordError = result.errorMessages).validateAll()
-        }
-        fun validateAll(): Form {
-            val emailResult = emailValidator.validate(input = fldEmail.toString(), required = true)
-            val passwordResult = passwordValidator.validate(input = fldPassword.toString(), required = true)
-            return copy(
-                fldEmailError = emailResult.errorMessages,
-                fldPasswordError = passwordResult.errorMessages,
-                btnProceedVisible = emailResult.isSuccess && passwordResult.isSuccess
-            )
-        }
-
-        private val validators = mapOf(
-            "email" to TxtFieldEmailValidation(),
-            "password" to TxtFieldPasswordValidation()
+        fun validateEmail(email: CharSequence) =
+            copy(fldEmail = email, fldEmailError = emailValidator.validate(email.toString(), required = true).errorMessages).validateAll()
+        fun validatePassword(password: CharSequence) =
+            copy(fldPassword = password, fldPasswordError = passwordValidator.validate(password.toString(), required = true).errorMessages).validateAll()
+        fun validateAll() = copy(
+            fldEmailError = emailValidator.validate(fldEmail.toString(), required = true).errorMessages,
+            fldPasswordError = passwordValidator.validate(fldPassword.toString(), required = true).errorMessages,
+            btnProceedVisible = fldEmailError.isEmpty() && fldPasswordError.isEmpty()
         )
+        fun isAllFieldValid(): Boolean = validateAll().btnProceedVisible
     }
     data class ScrData(
         val confCommon: Common,
@@ -96,8 +84,8 @@ class VMInitialization @Inject constructor(
             is Events.TopAppBarEvents.BtnScrDescEvents.OnDismiss -> {/*TODO*/}
             is Events.FormEvents.FldFirstNameValChanged -> {/*TODO*/}
             is Events.FormEvents.FldLastNameValChanged -> {/*TODO*/}
-            is Events.FormEvents.FldEmailValChanged -> onFldEmailValChanged(events.email)
-            is Events.FormEvents.FldPasswordValChanged -> onFldPasswordValChanged(events.password)
+            is Events.FormEvents.FldEmailValChanged -> updateForm { it.validateEmail(events.email) }
+            is Events.FormEvents.FldPasswordValChanged -> updateForm { it.validatePassword(events.password) }
             is Events.FormEvents.BtnProceedOnClick -> onProceedInitialization()
         }
     }
@@ -111,36 +99,37 @@ class VMInitialization @Inject constructor(
             }
         }
     }
-    private fun onFldEmailValChanged(email: CharSequence) {
-        uiState.update { currentState ->
-            (currentState.scrDataState as? ScrDataState.Loaded)?.let { state ->
-                val updatedForm = state.scrData.form.validateEmail(email)
-                if (updatedForm == state.scrData.form) return@update currentState
-                currentState.copy(scrDataState = state.copy(scrData = state.scrData.copy(form = updatedForm)))
-            } ?: currentState
-        }
-    }
-    private fun onFldPasswordValChanged(password: CharSequence) {
-        uiState.update { currentState ->
-            (currentState.scrDataState as? ScrDataState.Loaded)?.let { state ->
-                val updatedForm = state.scrData.form.validatePassword(password)
-                if (updatedForm == state.scrData.form) return@update currentState
-                currentState.copy(scrDataState = state.copy(scrData = state.scrData.copy(form = updatedForm)))
-            } ?: currentState
+    private fun updateForm(transform: (Form) -> Form) {
+        uiState.value.let { currentState ->
+            val state = currentState.scrDataState as? ScrDataState.Loaded ?: return
+            val updatedForm = transform(state.scrData.form)
+            if (updatedForm == state.scrData.form) return
+            uiState.update { it.copy(scrDataState = state.copy(scrData = state.scrData.copy(form = updatedForm))) }
         }
     }
     private fun onProceedInitialization() {
-        //disable the fields (better to separate reusable function in this VM)
-        //validate all first to the latest
-        //set the result to loading
-        //get the result from use case / repository
-        //if success -> the form is still disable the fields then the UI navigate to init
-        //if error -> the state become loading -> idle, the form reset (like reload)
+        uiState.update { currentState ->
+            val state = currentState.scrDataState as? ScrDataState.Loaded ?: return@update currentState
+            val form = state.scrData.form
+            if (!form.isAllFieldValid()) { return@update currentState.copy(result = Result.Error(Throwable("Invalid form fields"))) }
+            currentState.copy(
+                scrDataState = state.copy(
+                    scrData = state.scrData.copy(
+                        form = form.copy(
+                            btnProceedEnabled = false,
+                            fldEmailEnabled = false,
+                            fldPasswordEnabled = false
+                        )
+                    )
+                ),
+                result = Result.Loading
+            )
+        }
     }
     sealed interface Result {
         data object Idle : Result
         data object Loading : Result
-        data class Success(val result: Int) : Result
+        data class Success<T>(val result: T) : Result
         data class Error(val throwable: Throwable?) : Result
     }
 }
