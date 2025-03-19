@@ -1,0 +1,23 @@
+package com.thomas200593.mdm.features.user.di
+
+import com.thomas200593.mdm.features.user.dao.DaoUser
+import com.thomas200593.mdm.features.user.dao.DaoUserImpl
+import com.thomas200593.mdm.features.user.repository.RepoUser
+import com.thomas200593.mdm.features.user.repository.RepoUserImpl
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class ModRepoUser {
+    @Binds
+    @Singleton
+    abstract fun bindsRepository(impl: RepoUserImpl) : RepoUser
+
+    @Binds
+    @Singleton
+    abstract fun bindsDaO(impl: DaoUserImpl) : DaoUser
+}

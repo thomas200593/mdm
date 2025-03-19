@@ -2,15 +2,15 @@ package com.thomas200593.mdm.features.initialization.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.thomas200593.mdm.core.design_system.security.hashing.HashingAlgorithm
-import com.thomas200593.mdm.core.design_system.security.hashing.HashingService
 import com.thomas200593.mdm.core.design_system.util.Constants.STR_EMPTY
 import com.thomas200593.mdm.core.design_system.util.update
 import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldEmailValidation
 import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldPasswordValidation
 import com.thomas200593.mdm.core.ui.component.text_field._state.UiText
 import com.thomas200593.mdm.features.conf.common.entity.Common
+import com.thomas200593.mdm.features.initialization.domain.UCCreateInitialUser
 import com.thomas200593.mdm.features.initialization.domain.UCGetDataInitialization
+import com.thomas200593.mdm.features.initialization.entity.DTOInitialization
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class VMInitialization @Inject constructor(
     private val ucGetDataInitialization: UCGetDataInitialization,
-    private val hashingService: HashingService
+    private val ucCreateInitialUser : UCCreateInitialUser
 ) : ViewModel() {
     data class Form(
         val fldFirstName: CharSequence = STR_EMPTY,
@@ -34,7 +34,6 @@ class VMInitialization @Inject constructor(
         val fldPassword: CharSequence = STR_EMPTY,
         val fldPasswordEnabled: Boolean = true,
         val fldPasswordError: List<UiText> = emptyList(),
-        val fldPasswordHash: CharSequence = STR_EMPTY,
         val btnProceedVisible: Boolean = false,
         val btnProceedEnabled: Boolean = true
     ) {
@@ -122,15 +121,23 @@ class VMInitialization @Inject constructor(
                         form = form.copy(
                             btnProceedEnabled = false,
                             fldEmailEnabled = false,
-                            fldPasswordEnabled = false,
-                            fldPasswordHash = hashingService.hash(form.fldPassword.toString(), HashingAlgorithm.BCrypt)
+                            fldPasswordEnabled = false
                         )
                     )
                 ),
                 result = Result.Loading
             )
         }
-        /*TODO execute*/
+        viewModelScope.launch {
+            (uiState.value.scrDataState as? ScrDataState.Loaded)?.let { state ->
+                ucCreateInitialUser.invoke(
+                    DTOInitialization(
+                        state.scrData.form.fldEmail.toString(),
+                        state.scrData.form.fldPassword.toString()
+                    )
+                )
+            }
+        }
     }
     sealed interface Result {
         data object Idle : Result

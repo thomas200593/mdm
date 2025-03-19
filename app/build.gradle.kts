@@ -91,10 +91,10 @@ dependencies {
     implementation(libs.androidx.room.paging)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.bcprov.jdk18on)
     implementation(libs.coil.compose)
     implementation(libs.google.dagger.hilt.android)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.bcrypt)
 
     testImplementation(libs.androidx.room.testing)
     testImplementation(libs.junit)
