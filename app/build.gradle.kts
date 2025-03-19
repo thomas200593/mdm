@@ -37,7 +37,6 @@ android {
             value = "\"app_local_database\""
         )
     }
-
     buildTypes {
         debug {
             isDebuggable = true
@@ -58,6 +57,9 @@ android {
         compose = true
         buildConfig = true
         shaders = false
+    }
+    packaging {
+        resources.pickFirsts.add("META-INF/versions/9/OSGI-INF/MANIFEST.MF")
     }
     testOptions.unitTests{ isIncludeAndroidResources = true }
 }
@@ -89,6 +91,7 @@ dependencies {
     implementation(libs.androidx.room.paging)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.bcprov.jdk18on)
     implementation(libs.coil.compose)
     implementation(libs.google.dagger.hilt.android)
     implementation(libs.kotlinx.serialization.json)

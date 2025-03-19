@@ -17,8 +17,7 @@ andxNav = "2.8.9"
 andxPaging = "3.3.6"
 andxRoom = "2.6.1"
 andxWork = "2.10.0"
-argon2Jvm = "2.11"
-bcprovJdk15to18 = "1.70"
+bcprovJdk18on = "1.79"
 coilCompose = "2.7.0"
 googleDaggerHiltAndroid = "2.55"
 googleDevToolsKsp = "2.1.10-1.0.30"
@@ -61,6 +60,7 @@ androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "an
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "andxRoom" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "andxRoom" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "andxWork" }
+bcprov-jdk18on = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bcprovJdk18on" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "googleDaggerHiltAndroid" }
 google-dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "googleDaggerHiltAndroid" }

@@ -4,7 +4,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class BCrypt @Inject constructor() {
+class BCrypt @Inject constructor(
+) {
     fun hash(string: String): String {
         return ""
     }

@@ -12,18 +12,17 @@ interface HashingService {
 }
 
 @Singleton
-class HashingServiceImpl @Inject constructor(
-) : HashingService {
+class HashingServiceImpl @Inject constructor() : HashingService {
     override fun hash(string: String, algorithm: HashingAlgorithm) : String = when(algorithm) {
-        HashingAlgorithm.BCrypt -> { "" }
+        HashingAlgorithm.BCrypt -> ""
         HashingAlgorithm.MD5 -> hashWith("MD5", string)
         HashingAlgorithm.SHA256 -> hashWith("SHA-256", string)
     }
     override fun verify(string: String, hash: String, algorithm: HashingAlgorithm): Boolean = when(algorithm) {
-        HashingAlgorithm.BCrypt -> { false }
+        HashingAlgorithm.BCrypt -> true
         HashingAlgorithm.MD5 -> hashWith("MD5", string) == hash
         HashingAlgorithm.SHA256 -> hashWith("SHA-256", string) == hash
     }
-    private fun hashWith(algorithm: String, input: String): String = MessageDigest
-        .getInstance(algorithm).digest(input.toByteArray()).joinToString("") { "%02x".format(it) }
+    private fun hashWith(algorithm: String, input: String): String = MessageDigest.getInstance(algorithm)
+        .digest(input.toByteArray()).joinToString("") { "%02x".format(it) }
 }
