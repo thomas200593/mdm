@@ -1,40 +1,37 @@
 package com.thomas200593.mdm.features.auth.repository
 
-import com.thomas200593.mdm.features.auth.entity.AuthResult
+import androidx.room.Transaction
+import com.thomas200593.mdm.features.auth.dao.DaoAuth
+import com.thomas200593.mdm.features.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.auth.entity.AuthType
+import com.thomas200593.mdm.features.user.entity.UserEntity
+import javax.inject.Inject
 
 interface RepoAuth<T: AuthType> {
-    suspend fun authenticate(authType: T): Result<AuthResult>
+    suspend fun registerAuth(user: UserEntity, authType: AuthType.LocalEmailPassword): Result<AuthEntity>
 }
 
-class RepoAuthImpl : RepoAuth<AuthType> {
-    override suspend fun authenticate(authType: AuthType) : Result<AuthResult> = when(authType) {
-        is AuthType.LocalEmailPassword -> {
-            Result.success(
-                AuthResult(
-                    authType = AuthType.LocalEmailPassword(
-                        provider = authType.provider,
-                        email = authType.email,
-                        password = authType.password
-                    ),
-                    email = "",
-                    displayName = "Display Name",
-                    sessionToken = ""
-                )
+class RepoAuthImpl @Inject constructor(
+    private val daoAuth: DaoAuth
+) : RepoAuth<AuthType> {
+    @Transaction
+    override suspend fun registerAuth(
+        user: UserEntity,
+        authType: AuthType.LocalEmailPassword,
+    ) : Result<AuthEntity> {
+        return try {
+            val existingAuth = daoAuth.getAuthByUserIdAndType(user.seqId, authType)
+            if(existingAuth != null) {
+                return Result.success(existingAuth)
+            }
+            val authEntity = AuthEntity(
+                userId = user.seqId,
+                authType = authType
             )
-        }
-        is AuthType.OAuth -> {
-            Result.success(
-                AuthResult(
-                    authType = AuthType.OAuth(
-                        provider = authType.provider,
-                        token = authType.token
-                    ),
-                    email = "",
-                    displayName = "",
-                    sessionToken = ""
-                )
-            )
+            daoAuth.insertAuth(authEntity)
+            Result.success(authEntity)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 }

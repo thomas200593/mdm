@@ -2,8 +2,10 @@ package com.thomas200593.mdm.core.data.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.thomas200593.mdm.features.auth.dao.DaoAuth
 import com.thomas200593.mdm.features.auth.entity.AuthEntity
+import com.thomas200593.mdm.features.auth.entity.TypeConverterAuthType
 import com.thomas200593.mdm.features.user.dao.DaoUser
 import com.thomas200593.mdm.features.user.entity.UserEntity
 import javax.inject.Singleton
@@ -16,6 +18,11 @@ import javax.inject.Singleton
     ],
     version = 1,
     exportSchema = false
+)
+@TypeConverters(
+    value = [
+        TypeConverterAuthType::class
+    ]
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun daoUser() : DaoUser

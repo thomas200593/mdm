@@ -1,7 +1,29 @@
 package com.thomas200593.mdm.features.auth.dao
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy.Companion.REPLACE
+import androidx.room.Query
+import com.thomas200593.mdm.core.data.local.database.AppDatabase
+import com.thomas200593.mdm.features.auth.entity.AuthEntity
+import com.thomas200593.mdm.features.auth.entity.AuthType
+import javax.inject.Inject
 
 @Dao
-interface DaoAuth
-class DaoAuthImpl : DaoAuth
+interface DaoAuth {
+    @Insert(
+        entity = AuthEntity::class,
+        onConflict = REPLACE
+    )
+    suspend fun insertAuth(authEntity: AuthEntity)
+    @Query("SELECT * FROM auth WHERE userId = :userId AND authType = :authType LIMIT 1;")
+    suspend fun getAuthByUserIdAndType(userId: Long, authType: AuthType) : AuthEntity?
+}
+class DaoAuthImpl @Inject constructor(
+    private val appDatabase: AppDatabase
+) : DaoAuth {
+    override suspend fun insertAuth(authEntity: AuthEntity) =
+        appDatabase.daoAuth().insertAuth(authEntity)
+    override suspend fun getAuthByUserIdAndType(userId: Long, authType: AuthType) =
+        appDatabase.daoAuth().getAuthByUserIdAndType(userId, authType)
+}

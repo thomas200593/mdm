@@ -7,10 +7,11 @@ import com.thomas200593.mdm.core.design_system.util.update
 import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldEmailValidation
 import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldPasswordValidation
 import com.thomas200593.mdm.core.ui.component.text_field._state.UiText
+import com.thomas200593.mdm.features.auth.entity.AuthProvider
+import com.thomas200593.mdm.features.auth.entity.AuthType
 import com.thomas200593.mdm.features.conf.common.entity.Common
 import com.thomas200593.mdm.features.initialization.domain.UCCreateInitialUser
 import com.thomas200593.mdm.features.initialization.domain.UCGetDataInitialization
-import com.thomas200593.mdm.features.initialization.entity.DTOInitialization
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -131,9 +132,10 @@ class VMInitialization @Inject constructor(
         viewModelScope.launch {
             (uiState.value.scrDataState as? ScrDataState.Loaded)?.let { state ->
                 ucCreateInitialUser.invoke(
-                    DTOInitialization(
-                        state.scrData.form.fldEmail.toString(),
-                        state.scrData.form.fldPassword.toString()
+                    authType = AuthType.LocalEmailPassword(
+                        provider = AuthProvider.LOCAL_EMAIL_PASSWORD,
+                        email = state.scrData.form.fldEmail.toString(),
+                        password = state.scrData.form.fldPassword.toString()
                     )
                 )
             }

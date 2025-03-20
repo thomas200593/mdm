@@ -8,12 +8,8 @@ enum class AuthProvider(
         code = "auth_local_email_password",
         title = "Local (Email & Password)"
     ),
-    GOOGLE(
+    OAUTH2_GOOGLE(
         code = "auth_oauth_google",
         title = "Social (Google)"
-    ),
-    FACEBOOK(
-        code = "auth_oauth_facebook",
-        title = "Social (Facebook)"
     )
 }

@@ -19,5 +19,5 @@ import com.thomas200593.mdm.features.user.entity.UserEntity
 )
 data class AuthEntity(
     @PrimaryKey val userId: Long,
-    val password: String
+    val authType: AuthType
 )
