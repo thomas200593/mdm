@@ -1,6 +1,7 @@
 package com.thomas200593.mdm.features.auth.repository
 
 import androidx.room.Transaction
+import com.thomas200593.mdm.core.design_system.security.hashing.BCrypt
 import com.thomas200593.mdm.features.auth.dao.DaoAuth
 import com.thomas200593.mdm.features.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.auth.entity.AuthType
@@ -12,7 +13,8 @@ interface RepoAuth<T: AuthType> {
 }
 
 class RepoAuthImpl @Inject constructor(
-    private val daoAuth: DaoAuth
+    private val daoAuth: DaoAuth,
+    private val bCrypt: BCrypt
 ) : RepoAuth<AuthType> {
     @Transaction
     override suspend fun registerAuth(
@@ -26,7 +28,9 @@ class RepoAuthImpl @Inject constructor(
             }
             val authEntity = AuthEntity(
                 userId = user.seqId,
-                authType = authType
+                authType = authType.copy(
+                    password = bCrypt.hash(authType.password)
+                )
             )
             daoAuth.insertAuth(authEntity)
             Result.success(authEntity)

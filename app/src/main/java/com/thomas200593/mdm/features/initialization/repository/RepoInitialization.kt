@@ -7,7 +7,10 @@ import com.thomas200593.mdm.features.user.repository.RepoUser
 import javax.inject.Inject
 
 interface RepoInitialization {
-    suspend fun createUserFromLocalEmailPassword(authType: AuthType.LocalEmailPassword): Result<AuthType.LocalEmailPassword>
+    suspend fun createUserFromLocalEmailPassword(
+        authType: AuthType.LocalEmailPassword,
+        email: String
+    ): Result<AuthType.LocalEmailPassword>
 }
 
 class RepoInitializationImpl @Inject constructor(
@@ -15,10 +18,13 @@ class RepoInitializationImpl @Inject constructor(
     private val repoAuth: RepoAuth<AuthType>
 ) : RepoInitialization {
     @Transaction
-    override suspend fun createUserFromLocalEmailPassword(authTypeLocal: AuthType.LocalEmailPassword): Result<AuthType.LocalEmailPassword> {
+    override suspend fun createUserFromLocalEmailPassword(
+        authTypeLocal: AuthType.LocalEmailPassword,
+        email: String
+    ): Result<AuthType.LocalEmailPassword> {
         return try {
             //Step 1: Ensure User Exists
-            val userResult = repoUser.getOrCreateUser(authTypeLocal)
+            val userResult = repoUser.getOrCreateUser(authTypeLocal, email)
             if(userResult.isFailure) return Result.failure(userResult.exceptionOrNull()!!)
 
             val user = userResult.getOrThrow()

@@ -133,10 +133,10 @@ class VMInitialization @Inject constructor(
             (uiState.value.scrDataState as? ScrDataState.Loaded)?.let { state ->
                 ucCreateInitialUser.invoke(
                     authType = AuthType.LocalEmailPassword(
-                        provider = AuthProvider.LOCAL_EMAIL_PASSWORD,
-                        email = state.scrData.form.fldEmail.toString(),
+                        provider = AuthProvider.LOCAL_EMAIL_PASSWORD.name,
                         password = state.scrData.form.fldPassword.toString()
-                    )
+                    ),
+                    email = state.scrData.form.fldEmail.toString()
                 )
             }
         }

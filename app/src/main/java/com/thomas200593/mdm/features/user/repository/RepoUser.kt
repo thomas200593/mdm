@@ -8,18 +8,27 @@ import java.util.UUID
 import javax.inject.Inject
 
 interface RepoUser {
-    suspend fun getOrCreateUser(authTypeLocal: AuthType.LocalEmailPassword): Result<UserEntity>
+    suspend fun getOrCreateUser(
+        authTypeLocal: AuthType.LocalEmailPassword,
+        email: String
+    ): Result<UserEntity>
 }
 
 class RepoUserImpl @Inject constructor(
     private val daoUser: DaoUser
 ) : RepoUser {
-    override suspend fun getOrCreateUser(authTypeLocal: AuthType.LocalEmailPassword): Result<UserEntity> {
+    override suspend fun getOrCreateUser(
+        authTypeLocal: AuthType.LocalEmailPassword,
+        email: String
+    ): Result<UserEntity> {
         return try {
             // Get User
-            daoUser.getUserByEmail(authTypeLocal.email)?.let{ existingUser -> return Result.success(existingUser) }
+            daoUser.getUserByEmail(email)?.let{ existingUser -> return Result.success(existingUser) }
             // Or Create User
-            val newUser = authTypeLocal.toUserEntity(uid = UUID.randomUUID().toString())
+            val newUser = authTypeLocal.toUserEntity(
+                uid = UUID.randomUUID().toString(),
+                email = email
+            )
             val newUserId = daoUser.insertUser(newUser)
             if(newUserId > 0) Result.success(newUser.copy(seqId = newUserId))
             else Result.failure(Exception("User Creation Failed"))
