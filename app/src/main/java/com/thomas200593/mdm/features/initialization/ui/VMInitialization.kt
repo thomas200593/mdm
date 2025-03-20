@@ -6,12 +6,14 @@ import com.thomas200593.mdm.core.design_system.util.Constants.STR_EMPTY
 import com.thomas200593.mdm.core.design_system.util.update
 import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldEmailValidation
 import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldPasswordValidation
+import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldPersonNameValidation
 import com.thomas200593.mdm.core.ui.component.text_field._state.UiText
 import com.thomas200593.mdm.features.auth.entity.AuthProvider
 import com.thomas200593.mdm.features.auth.entity.AuthType
 import com.thomas200593.mdm.features.conf.common.entity.Common
 import com.thomas200593.mdm.features.initialization.domain.UCCreateInitialUser
 import com.thomas200593.mdm.features.initialization.domain.UCGetDataInitialization
+import com.thomas200593.mdm.features.initialization.entity.DTOInitialization
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -38,16 +40,24 @@ class VMInitialization @Inject constructor(
         val btnProceedVisible: Boolean = false,
         val btnProceedEnabled: Boolean = true
     ) {
+        private val firstNameValidator = TxtFieldPersonNameValidation()
+        private val lastNameValidator = TxtFieldPersonNameValidation()
         private val emailValidator = TxtFieldEmailValidation()
         private val passwordValidator = TxtFieldPasswordValidation()
+        fun validateFirstName(firstName: CharSequence) =
+            copy(fldFirstName = firstName, fldFirstNameError = firstNameValidator.validate(firstName.toString(), required = true).errorMessages).validateAll()
+        fun validateLastName(lastName: CharSequence) =
+            copy(fldLastName = lastName, fldLastNameError = lastNameValidator.validate(lastName.toString(), required = false).errorMessages).validateAll()
         fun validateEmail(email: CharSequence) =
             copy(fldEmail = email, fldEmailError = emailValidator.validate(email.toString(), required = true).errorMessages).validateAll()
         fun validatePassword(password: CharSequence) =
             copy(fldPassword = password, fldPasswordError = passwordValidator.validate(password.toString(), required = true).errorMessages).validateAll()
         fun validateAll() = copy(
+            fldFirstNameError = firstNameValidator.validate(fldFirstName.toString(), required = true).errorMessages,
+            fldLastNameError = lastNameValidator.validate(fldLastName.toString(), required = false).errorMessages,
             fldEmailError = emailValidator.validate(fldEmail.toString(), required = true).errorMessages,
             fldPasswordError = passwordValidator.validate(fldPassword.toString(), required = true).errorMessages,
-            btnProceedVisible = fldEmailError.isEmpty() && fldPasswordError.isEmpty()
+            btnProceedVisible = fldFirstNameError.isEmpty() && fldLastNameError.isEmpty() && fldEmailError.isEmpty() && fldPasswordError.isEmpty()
         )
         fun isAllFieldValid(): Boolean = validateAll().btnProceedVisible
     }
@@ -86,8 +96,8 @@ class VMInitialization @Inject constructor(
             is Events.OnOpenEvent -> onOpenEvent()
             is Events.TopAppBarEvents.BtnScrDescEvents.OnClick -> {/*TODO*/}
             is Events.TopAppBarEvents.BtnScrDescEvents.OnDismiss -> {/*TODO*/}
-            is Events.FormEvents.FldFirstNameValChanged -> {/*TODO*/}
-            is Events.FormEvents.FldLastNameValChanged -> {/*TODO*/}
+            is Events.FormEvents.FldFirstNameValChanged -> updateForm { it.validateFirstName(events.firstName) }
+            is Events.FormEvents.FldLastNameValChanged -> updateForm { it.validateLastName(events.lastName) }
             is Events.FormEvents.FldEmailValChanged -> updateForm { it.validateEmail(events.email) }
             is Events.FormEvents.FldPasswordValChanged -> updateForm { it.validatePassword(events.password) }
             is Events.FormEvents.BtnProceedOnClick -> onProceedInitialization()
@@ -121,8 +131,8 @@ class VMInitialization @Inject constructor(
                     scrData = state.scrData.copy(
                         form = form.copy(
                             btnProceedEnabled = false,
-                            fldEmailEnabled = false,
-                            fldPasswordEnabled = false
+                            fldFirstNameEnabled = false, fldLastNameEnabled = false,
+                            fldEmailEnabled = false, fldPasswordEnabled = false
                         )
                     )
                 ),
@@ -131,12 +141,16 @@ class VMInitialization @Inject constructor(
         }
         viewModelScope.launch {
             (uiState.value.scrDataState as? ScrDataState.Loaded)?.let { state ->
-                ucCreateInitialUser.invoke(
-                    authType = AuthType.LocalEmailPassword(
-                        provider = AuthProvider.LOCAL_EMAIL_PASSWORD.name,
-                        password = state.scrData.form.fldPassword.toString()
-                    ),
-                    email = state.scrData.form.fldEmail.toString()
+                val result = ucCreateInitialUser.invoke(
+                    DTOInitialization(
+                        firstName = state.scrData.form.fldFirstName.toString(),
+                        lastName = state.scrData.form.fldLastName.toString(),
+                        email = state.scrData.form.fldEmail.toString(),
+                        authType = AuthType.LocalEmailPassword(
+                            provider = AuthProvider.LOCAL_EMAIL_PASSWORD.name,
+                            password = state.scrData.form.fldPassword.toString()
+                        )
+                    )
                 )
             }
         }

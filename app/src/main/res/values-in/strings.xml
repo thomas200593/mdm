@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="str_version">Versi</string>
+    <string name="str_loading">Memuat…</string>
     <string name="str_network_offline">Jaringan offline. Mohon cek kembali koneksi internet Anda dan coba lagi.</string>
+    <string name="str_initial">Inisial</string>
+    <string name="str_onboarding">Onboarding</string>
+    <string name="str_back">Kembali</string>
+    <string name="str_next">Lanjut</string>
+    <string name="str_finish">Selesai</string>
+    <string name="str_initialization">Inisialisasi</string>
+    <string name="str_initialization_title">Pertama-tama, atur akun admin Anda.</string>
+    <string name="str_first_name">Nama Depan</string>
+    <string name="str_last_name">Nama Belakang (Opsional)</string>
+    <string name="str_email">e-mail</string>
+    <string name="str_password">Kata sandi</string>
+    <string name="str_proceed">Proses</string>
     <string name="str_dashboard">Dasbor</string>
     <string name="str_dashboard_desc">Deskripsi Dashbor App</string>
     <string name="str_user_profile">Profil Pengguna</string>
     <string name="str_user_profile_desc">Deskripsi Profil Pengguna</string>
-    <string name="str_loading">Memuat…</string>
-    <string name="str_version">Versi</string>
-    <string name="str_next">Lanjut</string>
-    <string name="str_finish">Selesai</string>
-    <string name="str_back">Kembali</string>
-    <string name="str_email">e-mail</string>
-    <string name="str_password">Kata sandi</string>
-    <string name="str_proceed">Proses</string>
-    <string name="str_initial">Inisial</string>
-    <string name="str_initialization">Inisialisasi</string>
-    <string name="str_onboarding">Onboarding</string>
-    <string name="str_initialization_title">Pertama-tama, atur akun admin Anda.</string>
 </resources>

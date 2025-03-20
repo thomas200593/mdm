@@ -50,6 +50,7 @@ import com.thomas200593.mdm.core.ui.component.ScrLoading
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
+import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPersonName
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -63,6 +64,8 @@ fun ScrInitialization(
     LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMInitialization.Events.OnOpenEvent) })
     ScrInitialization(
         scrDataState = uiState.scrDataState,
+        onFirstNameValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldFirstNameValChanged(it)) },
+        onLastNameValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldLastNameValChanged(it)) },
         onEmailValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldEmailValChanged(it)) },
         onPasswordValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldPasswordValChanged(it)) },
         onBtnProceedClicked = {
@@ -75,6 +78,8 @@ fun ScrInitialization(
 @Composable
 private fun ScrInitialization(
     scrDataState: VMInitialization.ScrDataState,
+    onFirstNameValueChanged : (CharSequence) -> Unit,
+    onLastNameValueChanged : (CharSequence) -> Unit,
     onEmailValueChanged: (CharSequence) -> Unit,
     onPasswordValueChanged: (CharSequence) -> Unit,
     onBtnProceedClicked: () -> Unit
@@ -82,6 +87,8 @@ private fun ScrInitialization(
     is VMInitialization.ScrDataState.Loading -> ScrLoading()
     is VMInitialization.ScrDataState.Loaded -> ScreenContent(
         scrData = scrDataState.scrData,
+        onFirstNameValueChanged = onFirstNameValueChanged,
+        onLastNameValueChanged = onLastNameValueChanged,
         onEmailValueChanged = onEmailValueChanged,
         onPasswordValueChanged = onPasswordValueChanged,
         onBtnProceedClicked = onBtnProceedClicked
@@ -92,6 +99,8 @@ private fun ScrInitialization(
 @Composable
 private fun ScreenContent(
     scrData: VMInitialization.ScrData,
+    onFirstNameValueChanged : (CharSequence) -> Unit,
+    onLastNameValueChanged : (CharSequence) -> Unit,
     onEmailValueChanged: (CharSequence) -> Unit,
     onPasswordValueChanged: (CharSequence) -> Unit,
     onBtnProceedClicked: () -> Unit
@@ -102,6 +111,8 @@ private fun ScreenContent(
         SectionContent(
             paddingValues = it,
             form = scrData.form,
+            onFirstNameValueChanged = onFirstNameValueChanged,
+            onLastNameValueChanged = onLastNameValueChanged,
             onEmailValueChanged = onEmailValueChanged,
             onPasswordValueChanged = onPasswordValueChanged
         )
@@ -138,6 +149,8 @@ private fun SectionTopBar() {
 private fun SectionContent(
     paddingValues: PaddingValues,
     form: VMInitialization.Form,
+    onFirstNameValueChanged : (CharSequence) -> Unit,
+    onLastNameValueChanged : (CharSequence) -> Unit,
     onEmailValueChanged: (CharSequence) -> Unit,
     onPasswordValueChanged: (CharSequence) -> Unit
 ) {
@@ -145,7 +158,9 @@ private fun SectionContent(
         modifier = Modifier.padding(paddingValues),
         content = {
             LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(Constants.Dimens.dp16),
                 verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
                 content = {
                     /* Welcome Message */
@@ -154,6 +169,8 @@ private fun SectionContent(
                     item {
                         PartForm(
                             form = form,
+                            onFirstNameValueChanged = onFirstNameValueChanged,
+                            onLastNameValueChanged = onLastNameValueChanged,
                             onEmailValueChanged = onEmailValueChanged,
                             onPasswordValueChanged = onPasswordValueChanged
                         )
@@ -185,6 +202,8 @@ private fun PartTitle() {
 @Composable
 private fun PartForm(
     form: VMInitialization.Form,
+    onFirstNameValueChanged : (CharSequence) -> Unit,
+    onLastNameValueChanged : (CharSequence) -> Unit,
     onEmailValueChanged : (CharSequence) -> Unit,
     onPasswordValueChanged: (CharSequence) -> Unit
 ) {
@@ -197,11 +216,28 @@ private fun PartForm(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 content =  {
-                    val isEmailError by
-                        remember(form.fldEmailError) { derivedStateOf { form.fldEmailError.isNotEmpty() } }
-                    val isPasswordError by
-                        remember(form.fldPasswordError) { derivedStateOf { form.fldPasswordError.isNotEmpty() } }
-
+                    val isFirstNameError by remember(form.fldFirstNameError) { derivedStateOf { form.fldFirstNameError.isNotEmpty() } }
+                    val isLastNameError by remember(form.fldLastNameError) { derivedStateOf { form.fldLastNameError.isNotEmpty() } }
+                    val isEmailError by remember(form.fldEmailError) { derivedStateOf { form.fldEmailError.isNotEmpty() } }
+                    val isPasswordError by remember(form.fldPasswordError) { derivedStateOf { form.fldPasswordError.isNotEmpty() } }
+                    TxtFieldPersonName(
+                        state = rememberTextFieldState(form.fldFirstName.toString()),
+                        onValueChanged = { onFirstNameValueChanged(it) },
+                        enabled = form.fldFirstNameEnabled,
+                        isError = isFirstNameError,
+                        errorMessage = form.fldFirstNameError,
+                        label = stringResource(R.string.str_first_name),
+                        placeholder = stringResource(R.string.str_first_name)
+                    )
+                    TxtFieldPersonName(
+                        state = rememberTextFieldState(form.fldLastName.toString()),
+                        onValueChanged = { onLastNameValueChanged(it) },
+                        enabled = form.fldLastNameEnabled,
+                        isError = isLastNameError,
+                        errorMessage = form.fldLastNameError,
+                        label = stringResource(R.string.str_last_name),
+                        placeholder = stringResource(R.string.str_last_name)
+                    )
                     TxtFieldEmail(
                         state = rememberTextFieldState(form.fldEmail.toString()),
                         onValueChanged = { onEmailValueChanged(it) },

@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">MDM</string>
+    <string name="str_version">"Version"</string>
+    <string name="str_loading">Loading…</string>
     <string name="str_network_offline">You\'re currently offline. Please check your internet connection and try again.</string>
+    <string name="str_initial">Initial</string>
+    <string name="str_onboarding">Onboarding</string>
+    <string name="str_back">Back</string>
+    <string name="str_next">Next</string>
+    <string name="str_finish">Finish</string>
+    <string name="str_initialization">Initialization</string>
+    <string name="str_initialization_title">First thing first, set up your admin account.</string>
+    <string name="str_first_name">First Name</string>
+    <string name="str_last_name">Last Name (Optional)</string>
+    <string name="str_email">e-mail</string>
+    <string name="str_password">Password</string>
+    <string name="str_proceed">Proceed</string>
     <string name="str_dashboard">Dashboard</string>
     <string name="str_dashboard_desc">App Dashboard Desc</string>
     <string name="str_user_profile">User Profile</string>
     <string name="str_user_profile_desc">User Profile Desc</string>
-    <string name="str_loading">Loading…</string>
-    <string name="str_version">"Version"</string>
-    <string name="str_next">Next</string>
-    <string name="str_finish">Finish</string>
-    <string name="str_back">Back</string>
-    <string name="str_email">e-mail</string>
-    <string name="str_password">Password</string>
-    <string name="str_proceed">Proceed</string>
-    <string name="str_initial">Initial</string>
-    <string name="str_initialization">Initialization</string>
-    <string name="str_onboarding">Onboarding</string>
-    <string name="str_initialization_title">First thing first, set up your admin account.</string>
 </resources>
