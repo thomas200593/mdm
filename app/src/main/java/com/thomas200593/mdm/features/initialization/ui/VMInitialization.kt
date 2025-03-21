@@ -44,20 +44,29 @@ class VMInitialization @Inject constructor(
         private val lastNameValidator = TxtFieldPersonNameValidation()
         private val emailValidator = TxtFieldEmailValidation()
         private val passwordValidator = TxtFieldPasswordValidation()
-        fun validateFirstName(firstName: CharSequence) =
-            copy(fldFirstName = firstName, fldFirstNameError = firstNameValidator.validate(firstName.toString(), required = true).errorMessages).validateAll()
-        fun validateLastName(lastName: CharSequence) =
-            copy(fldLastName = lastName, fldLastNameError = lastNameValidator.validate(lastName.toString(), required = false).errorMessages).validateAll()
-        fun validateEmail(email: CharSequence) =
-            copy(fldEmail = email, fldEmailError = emailValidator.validate(email.toString(), required = true).errorMessages).validateAll()
-        fun validatePassword(password: CharSequence) =
-            copy(fldPassword = password, fldPasswordError = passwordValidator.validate(password.toString(), required = true).errorMessages).validateAll()
+        fun validateFirstName(firstName: CharSequence) = copy(
+            fldFirstName = firstName,
+            fldFirstNameError = firstNameValidator.validate(firstName.toString(), required = true).errorMessages
+        ).validateAll()
+        fun validateLastName(lastName: CharSequence) = copy(
+            fldLastName = lastName,
+            fldLastNameError = lastNameValidator.validate(lastName.toString(), required = false).errorMessages
+        ).validateAll()
+        fun validateEmail(email: CharSequence) = copy(
+            fldEmail = email,
+            fldEmailError = emailValidator.validate(email.toString(), required = true).errorMessages
+        ).validateAll()
+        fun validatePassword(password: CharSequence) = copy(
+            fldPassword = password,
+            fldPasswordError = passwordValidator.validate(password.toString(), required = true).errorMessages
+        ).validateAll()
         fun validateAll() = copy(
             fldFirstNameError = firstNameValidator.validate(fldFirstName.toString(), required = true).errorMessages,
             fldLastNameError = lastNameValidator.validate(fldLastName.toString(), required = false).errorMessages,
             fldEmailError = emailValidator.validate(fldEmail.toString(), required = true).errorMessages,
             fldPasswordError = passwordValidator.validate(fldPassword.toString(), required = true).errorMessages,
-            btnProceedVisible = fldFirstNameError.isEmpty() && fldLastNameError.isEmpty() && fldEmailError.isEmpty() && fldPasswordError.isEmpty()
+            btnProceedVisible = fldFirstNameError.isEmpty() && fldLastNameError.isEmpty() &&
+                    fldEmailError.isEmpty() && fldPasswordError.isEmpty()
         )
         fun isAllFieldValid(): Boolean = validateAll().btnProceedVisible
     }
@@ -112,9 +121,7 @@ class VMInitialization @Inject constructor(
     private fun onOpenEvent() = viewModelScope.launch {
         uiState.update { it.copy(scrDataState = ScrDataState.Loading) }
         ucGetDataInitialization.invoke().collect { confCommon ->
-            uiState.update { it
-                .copy(scrDataState = ScrDataState.Loaded(scrData = ScrData(confCommon = confCommon, form = Form())))
-            }
+            uiState.update { it.copy(scrDataState = ScrDataState.Loaded(scrData = ScrData(confCommon = confCommon, form = Form()))) }
         }
     }
     private fun updateForm(transform: (Form) -> Form) {
@@ -157,13 +164,8 @@ class VMInitialization @Inject constructor(
                     )
                 )
             ).fold(
-                onSuccess = {
-                    /*Update State*/
-
-                },
-                onFailure = {
-                    /*Update State*/
-                }
+                onSuccess = {/*Update State*/},
+                onFailure = {/*Update State*/}
             )
         }
     }

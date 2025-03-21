@@ -68,10 +68,7 @@ fun ScrInitialization(
         onLastNameValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldLastNameValChanged(it)) },
         onEmailValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldEmailValChanged(it)) },
         onPasswordValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldPasswordValChanged(it)) },
-        onBtnProceedClicked = {
-            vm.onEvent(VMInitialization.Events.FormEvents.BtnProceedOnClick)
-                /*.also { coroutineScope.launch { stateApp.navController.navToInitial() } }*/
-        }
+        onBtnProceedClicked = { vm.onEvent(VMInitialization.Events.FormEvents.BtnProceedOnClick) }
     )
 }
 
