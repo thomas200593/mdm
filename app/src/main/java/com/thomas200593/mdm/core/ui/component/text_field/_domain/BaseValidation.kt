@@ -1,11 +1,11 @@
 package com.thomas200593.mdm.core.ui.component.text_field._domain
 
-interface BaseValidation<String, ValidationResult> {
+interface BaseValidation<I, R> {
     fun validate(
-        input: String,
+        input: I,
         minLength: Int? = null,
         maxLength: Int? = null,
         required: Boolean? = false,
         regex: Regex? = null
-    ): ValidationResult
+    ) : R
 }
