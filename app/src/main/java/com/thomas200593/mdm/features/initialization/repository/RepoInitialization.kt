@@ -19,18 +19,14 @@ class RepoInitializationImpl @Inject constructor(
     private val repoAuth: RepoAuth<AuthType>
 ) : RepoInitialization {
     @Transaction
-    override suspend fun createUserLocalEmailPassword(dto: DTOInitialization) : Result<DTOInitialization> {
-        return try {
-            //Step 1: Ensure User Exists
-            val userResult = repoUser.getOrCreateUser(dto.toUserEntity(UUIDv7.generateAsString()))
-            if(userResult.isFailure) return Result.failure(userResult.exceptionOrNull()!!)
-            val user = userResult.getOrThrow()
-            //Step 2: Create Auth method
-            val authResult = repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid))
-            if(authResult.isFailure) return Result.failure(authResult.exceptionOrNull()!!)
-            else Result.success(dto)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
+    override suspend fun createUserLocalEmailPassword(dto: DTOInitialization): Result<DTOInitialization> =
+        repoUser.getOrCreateUser(dto.toUserEntity(UUIDv7.generateAsString())).fold(
+            onSuccess = { user ->
+                repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid)).fold(
+                    onSuccess = { Result.success(dto) },
+                    onFailure = { Result.failure(it) }
+                )
+            },
+            onFailure = { Result.failure(it) }
+        )
 }

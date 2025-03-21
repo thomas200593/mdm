@@ -16,18 +16,14 @@ class RepoAuthImpl @Inject constructor(
     private val bCrypt: BCrypt
 ) : RepoAuth<AuthType> {
     @Transaction
-    override suspend fun registerAuthLocalEmailPassword(authEntity: AuthEntity) : Result<AuthEntity> {
-        return try {
-            daoAuth.deleteAuthByUserId(authEntity.userId)
-            daoAuth.insertAuth(
-                authEntity.copy(
-                    authType = (authEntity.authType as AuthType.LocalEmailPassword)
-                        .copy(password = bCrypt.hash(authEntity.authType.password))
-                )
-            )
-            Result.success(authEntity)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
+    override suspend fun registerAuthLocalEmailPassword(authEntity: AuthEntity): Result<AuthEntity> = runCatching {
+        daoAuth.deleteAuthByUserId(authEntity.userId)
+        val hashedAuthEntity = authEntity.copy(authType = (authEntity.authType as AuthType.LocalEmailPassword)
+            .copy(password = bCrypt.hash(authEntity.authType.password)))
+        daoAuth.insertAuth(hashedAuthEntity)
+        hashedAuthEntity
+    }.fold(
+        onSuccess = { Result.success(it) },
+        onFailure = { Result.failure(it) }
+    )
 }

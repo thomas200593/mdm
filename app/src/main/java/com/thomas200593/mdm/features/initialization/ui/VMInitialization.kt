@@ -69,9 +69,15 @@ class VMInitialization @Inject constructor(
         data object Loading : ScrDataState
         data class Loaded(val scrData : ScrData) : ScrDataState
     }
+    sealed interface ResultInitialization {
+        data object Idle : ResultInitialization
+        data object Loading : ResultInitialization
+        data class Success(val result: Result<DTOInitialization>) : ResultInitialization
+        data class Error(val t : Throwable) : ResultInitialization
+    }
     data class UiState(
         val scrDataState: ScrDataState = ScrDataState.Loading,
-        val result: Result = Result.Idle
+        val result : ResultInitialization = ResultInitialization.Idle
     )
     sealed interface Events {
         data object OnOpenEvent : Events
@@ -106,10 +112,8 @@ class VMInitialization @Inject constructor(
     private fun onOpenEvent() = viewModelScope.launch {
         uiState.update { it.copy(scrDataState = ScrDataState.Loading) }
         ucGetDataInitialization.invoke().collect { confCommon ->
-            uiState.update {
-                it.copy(
-                    scrDataState = ScrDataState.Loaded(scrData = ScrData(confCommon = confCommon, form = Form()))
-                )
+            uiState.update { it
+                .copy(scrDataState = ScrDataState.Loaded(scrData = ScrData(confCommon = confCommon, form = Form())))
             }
         }
     }
@@ -125,40 +129,42 @@ class VMInitialization @Inject constructor(
         uiState.update { currentState ->
             val state = currentState.scrDataState as? ScrDataState.Loaded ?: return@update currentState
             val form = state.scrData.form
-            if (!form.isAllFieldValid()) { return@update currentState.copy(result = Result.Error(Throwable("Invalid form fields"))) }
+            if (!form.isAllFieldValid()) { return@update currentState.copy(result = ResultInitialization.Error(Throwable("Invalid form fields"))) }
             currentState.copy(
                 scrDataState = state.copy(
                     scrData = state.scrData.copy(
                         form = form.copy(
-                            btnProceedEnabled = false,
                             fldFirstNameEnabled = false, fldLastNameEnabled = false,
-                            fldEmailEnabled = false, fldPasswordEnabled = false
+                            fldEmailEnabled = false, fldPasswordEnabled = false,
+                            btnProceedEnabled = false
                         )
                     )
                 ),
-                result = Result.Loading
+                result = ResultInitialization.Loading
             )
         }
+        // Launch a coroutine to perform user initialization
         viewModelScope.launch {
-            (uiState.value.scrDataState as? ScrDataState.Loaded)?.let { state ->
-                val result = ucCreateInitialUser.invoke(
-                    dto = DTOInitialization(
-                        firstName = state.scrData.form.fldFirstName.toString(),
-                        lastName = state.scrData.form.fldLastName.toString(),
-                        email = state.scrData.form.fldEmail.toString(),
-                        authType = AuthType.LocalEmailPassword(
-                            provider = AuthProvider.LOCAL_EMAIL_PASSWORD.name,
-                            password = state.scrData.form.fldPassword.toString()
-                        )
+            val state = uiState.value.scrDataState as? ScrDataState.Loaded ?: return@launch
+            ucCreateInitialUser.invoke(
+                dto = DTOInitialization(
+                    firstName = state.scrData.form.fldFirstName.toString(),
+                    lastName = state.scrData.form.fldLastName.toString(),
+                    email = state.scrData.form.fldEmail.toString(),
+                    authType = AuthType.LocalEmailPassword(
+                        provider = AuthProvider.LOCAL_EMAIL_PASSWORD.name,
+                        password = state.scrData.form.fldPassword.toString()
                     )
                 )
-            }
+            ).fold(
+                onSuccess = {
+                    /*Update State*/
+
+                },
+                onFailure = {
+                    /*Update State*/
+                }
+            )
         }
-    }
-    sealed interface Result {
-        data object Idle : Result
-        data object Loading : Result
-        data class Success<T>(val result: T) : Result
-        data class Error(val throwable: Throwable?) : Result
     }
 }

@@ -20,17 +20,20 @@ class TxtFieldPersonNameValidation : BaseValidation<String, ValidationResult> {
         if (required == true && input.isBlank()) {
             errors.add(UiText.DynamicString("This field is required!"))
         }
-        // Min Length Checks
-        if (minLength != null && input.length < minLength) {
-            errors.add(UiText.DynamicString("This field requires a minimum of $minLength character(s)."))
-        }
-        // Max Length Checks
-        if (input.length > maxLen) {
-            errors.add(UiText.DynamicString("This field allows up to $maxLen character(s)."))
-        }
-        // Pattern Matching
-        if (required == true && !namePattern.matches(input)) {
-            errors.add(UiText.DynamicString("Invalid name format! Only letters, spaces, hyphens, and apostrophes are allowed."))
+        // Apply validation if input is not empty
+        if (input.isNotBlank()) {
+            // Min Length Checks
+            if (minLength != null && input.length < minLength) {
+                errors.add(UiText.DynamicString("This field requires a minimum of $minLength character(s)."))
+            }
+            // Max Length Checks
+            if (input.length > maxLen) {
+                errors.add(UiText.DynamicString("This field allows up to $maxLen character(s)."))
+            }
+            // Pattern Matching
+            if (!namePattern.matches(input)) {
+                errors.add(UiText.DynamicString("Invalid name format! Only letters, spaces, hyphens, and apostrophes are allowed."))
+            }
         }
         return ValidationResult(errorMessages = errors)
     }

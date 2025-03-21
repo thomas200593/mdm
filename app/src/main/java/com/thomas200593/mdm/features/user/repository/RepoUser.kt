@@ -11,8 +11,10 @@ interface RepoUser {
 class RepoUserImpl @Inject constructor(
     private val daoUser: DaoUser
 ) : RepoUser {
-    override suspend fun getOrCreateUser(user: UserEntity): Result<UserEntity> = runCatching {
-        daoUser.getUserByEmail(user.email) ?: user.takeIf { daoUser.insertUser(it) > 0 }
-        ?: throw Throwable("Error Creating User")
-    }
+    override suspend fun getOrCreateUser(user: UserEntity) : Result<UserEntity> =
+        runCatching { daoUser.getUserByEmail(user.email) ?: user.takeIf { daoUser.insertUser(it) > 0 } ?: error("Error creating user.") }
+            .fold(
+                onSuccess = { entity -> Result.success(entity) },
+                onFailure = { t -> Result.failure(t) }
+            )
 }
