@@ -8,8 +8,8 @@ import javax.inject.Inject
 class UCCreateInitialUser @Inject constructor(
     private val repoInitialization: RepoInitialization
 ) {
-    suspend operator fun invoke(dtoInitialization: DTOInitialization) = when(dtoInitialization.authType) {
-        is AuthType.LocalEmailPassword -> {}
-        is AuthType.OAuth -> Result.failure<Throwable>(Throwable("Method not Available"))
+    suspend operator fun invoke(dto : DTOInitialization) : Result<DTOInitialization> = when(dto.authType) {
+        is AuthType.LocalEmailPassword -> repoInitialization.createUserLocalEmailPassword(dto)
+        is AuthType.OAuth -> Result.failure(Throwable("Method not Available"))
     }
 }

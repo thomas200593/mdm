@@ -29,7 +29,7 @@ class TxtFieldPersonNameValidation : BaseValidation<String, ValidationResult> {
             errors.add(UiText.DynamicString("This field allows up to $maxLen character(s)."))
         }
         // Pattern Matching
-        if (!namePattern.matches(input)) {
+        if (required == true && !namePattern.matches(input)) {
             errors.add(UiText.DynamicString("Invalid name format! Only letters, spaces, hyphens, and apostrophes are allowed."))
         }
         return ValidationResult(errorMessages = errors)

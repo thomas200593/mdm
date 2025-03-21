@@ -5,11 +5,10 @@ import com.thomas200593.mdm.core.design_system.security.hashing.BCrypt
 import com.thomas200593.mdm.features.auth.dao.DaoAuth
 import com.thomas200593.mdm.features.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.auth.entity.AuthType
-import com.thomas200593.mdm.features.user.entity.UserEntity
 import javax.inject.Inject
 
 interface RepoAuth<T: AuthType> {
-    suspend fun registerAuth(user: UserEntity, authType: AuthType.LocalEmailPassword): Result<AuthEntity>
+    suspend fun registerAuthLocalEmailPassword(authEntity: AuthEntity): Result<AuthEntity>
 }
 
 class RepoAuthImpl @Inject constructor(
@@ -17,22 +16,15 @@ class RepoAuthImpl @Inject constructor(
     private val bCrypt: BCrypt
 ) : RepoAuth<AuthType> {
     @Transaction
-    override suspend fun registerAuth(
-        user: UserEntity,
-        authType: AuthType.LocalEmailPassword,
-    ) : Result<AuthEntity> {
+    override suspend fun registerAuthLocalEmailPassword(authEntity: AuthEntity) : Result<AuthEntity> {
         return try {
-            val existingAuth = daoAuth.getAuthByUserIdAndType(user.seqId, authType)
-            if(existingAuth != null) {
-                return Result.success(existingAuth)
-            }
-            val authEntity = AuthEntity(
-                userId = user.seqId,
-                authType = authType.copy(
-                    password = bCrypt.hash(authType.password)
+            daoAuth.deleteAuthByUserId(authEntity.userId)
+            daoAuth.insertAuth(
+                authEntity.copy(
+                    authType = (authEntity.authType as AuthType.LocalEmailPassword)
+                        .copy(password = bCrypt.hash(authEntity.authType.password))
                 )
             )
-            daoAuth.insertAuth(authEntity)
             Result.success(authEntity)
         } catch (e: Exception) {
             Result.failure(e)

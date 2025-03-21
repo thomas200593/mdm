@@ -10,20 +10,13 @@ import javax.inject.Inject
 
 @Dao
 interface DaoUser {
-    @Insert(
-        entity = UserEntity::class,
-        onConflict = ABORT
-    )
+    @Insert(entity = UserEntity::class, onConflict = ABORT)
     suspend fun insertUser(user : UserEntity) : Long
     @Query("SELECT * FROM user WHERE email = :email LIMIT 1")
     suspend fun getUserByEmail(email: String) : UserEntity?
 }
 
-class DaoUserImpl @Inject constructor(
-    private val appDatabase: AppDatabase
-) : DaoUser {
-    override suspend fun insertUser(user: UserEntity): Long =
-        appDatabase.daoUser().insertUser(user)
-    override suspend fun getUserByEmail(email: String): UserEntity? =
-        appDatabase.daoUser().getUserByEmail(email)
+class DaoUserImpl @Inject constructor(private val appDatabase: AppDatabase) : DaoUser {
+    override suspend fun insertUser(user: UserEntity): Long = appDatabase.daoUser().insertUser(user)
+    override suspend fun getUserByEmail(email: String): UserEntity? = appDatabase.daoUser().getUserByEmail(email)
 }

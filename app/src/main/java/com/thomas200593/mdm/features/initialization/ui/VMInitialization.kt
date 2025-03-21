@@ -142,7 +142,7 @@ class VMInitialization @Inject constructor(
         viewModelScope.launch {
             (uiState.value.scrDataState as? ScrDataState.Loaded)?.let { state ->
                 val result = ucCreateInitialUser.invoke(
-                    DTOInitialization(
+                    dto = DTOInitialization(
                         firstName = state.scrData.form.fldFirstName.toString(),
                         lastName = state.scrData.form.fldLastName.toString(),
                         email = state.scrData.form.fldEmail.toString(),
