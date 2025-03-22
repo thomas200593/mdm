@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.BottomAppBar
@@ -46,12 +47,15 @@ import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
+import com.thomas200593.mdm.core.ui.component.Dialog
 import com.thomas200593.mdm.core.ui.component.ScrLoading
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPersonName
+import com.thomas200593.mdm.features.initial.nav.navToInitial
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun ScrInitialization(
@@ -64,31 +68,49 @@ fun ScrInitialization(
     LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMInitialization.Events.OnOpenEvent) })
     ScrInitialization(
         scrDataState = uiState.scrDataState,
+        dialogState = uiState.dialogState,
+        scrGraph = scrGraph,
+        onScrDescClick = { vm.onEvent(VMInitialization.Events.TopAppBarEvents.BtnScrDescEvents.OnClick) },
+        onScrDescDismiss = { vm.onEvent(VMInitialization.Events.TopAppBarEvents.BtnScrDescEvents.OnDismiss) },
         onFirstNameValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldFirstNameValChanged(it)) },
         onLastNameValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldLastNameValChanged(it)) },
         onEmailValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldEmailValChanged(it)) },
         onPasswordValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldPasswordValChanged(it)) },
-        onBtnProceedClicked = { vm.onEvent(VMInitialization.Events.FormEvents.BtnProceedOnClick) }
+        onBtnProceedClicked = { vm.onEvent(VMInitialization.Events.FormEvents.BtnProceedOnClick) },
+        onSuccessInitializationDismiss = {
+            vm.onEvent(VMInitialization.Events.FormEvents.DialogSuccessInitializationOnClick)
+            coroutineScope.launch { stateApp.navController.navToInitial() }
+        }
     )
 }
 
 @Composable
 private fun ScrInitialization(
     scrDataState: VMInitialization.ScrDataState,
+    scrGraph: ScrGraphs.Initialization,
+    dialogState: VMInitialization.DialogState,
+    onScrDescClick: () -> Unit,
+    onScrDescDismiss: () -> Unit,
     onFirstNameValueChanged : (CharSequence) -> Unit,
     onLastNameValueChanged : (CharSequence) -> Unit,
     onEmailValueChanged: (CharSequence) -> Unit,
     onPasswordValueChanged: (CharSequence) -> Unit,
-    onBtnProceedClicked: () -> Unit
+    onBtnProceedClicked: () -> Unit,
+    onSuccessInitializationDismiss: () -> Unit
 ) = when (scrDataState) {
     is VMInitialization.ScrDataState.Loading -> ScrLoading()
     is VMInitialization.ScrDataState.Loaded -> ScreenContent(
         scrData = scrDataState.scrData,
+        scrGraph = scrGraph,
+        dialogState = dialogState,
+        onScrDescClick = onScrDescClick,
+        onScrDescDismiss = onScrDescDismiss,
         onFirstNameValueChanged = onFirstNameValueChanged,
         onLastNameValueChanged = onLastNameValueChanged,
         onEmailValueChanged = onEmailValueChanged,
         onPasswordValueChanged = onPasswordValueChanged,
-        onBtnProceedClicked = onBtnProceedClicked
+        onBtnProceedClicked = onBtnProceedClicked,
+        onSuccessInitializationDismiss = onSuccessInitializationDismiss
     )
 }
 
@@ -96,15 +118,26 @@ private fun ScrInitialization(
 @Composable
 private fun ScreenContent(
     scrData: VMInitialization.ScrData,
-    onFirstNameValueChanged : (CharSequence) -> Unit,
-    onLastNameValueChanged : (CharSequence) -> Unit,
+    scrGraph: ScrGraphs.Initialization,
+    dialogState: VMInitialization.DialogState,
+    onScrDescClick: () -> Unit,
+    onScrDescDismiss: () -> Unit,
+    onFirstNameValueChanged: (CharSequence) -> Unit,
+    onLastNameValueChanged: (CharSequence) -> Unit,
     onEmailValueChanged: (CharSequence) -> Unit,
     onPasswordValueChanged: (CharSequence) -> Unit,
-    onBtnProceedClicked: () -> Unit
+    onBtnProceedClicked: () -> Unit,
+    onSuccessInitializationDismiss: () -> Unit
 ) = Scaffold(
     modifier = Modifier.imePadding(),
-    topBar = { SectionTopBar() },
+    topBar = { SectionTopBar(onScrDescClick) },
     content = {
+        HandleDialogs(
+            dialogState = dialogState,
+            scrGraph = scrGraph,
+            onScrDescDismiss = onScrDescDismiss,
+            onSuccessInitializationDismiss = onSuccessInitializationDismiss
+        )
         SectionContent(
             paddingValues = it,
             form = scrData.form,
@@ -128,14 +161,43 @@ private fun ScreenContent(
     }
 )
 
+@Composable
+private fun HandleDialogs(
+    scrGraph: ScrGraphs.Initialization,
+    dialogState: VMInitialization.DialogState,
+    onScrDescDismiss: () -> Unit,
+    onSuccessInitializationDismiss: () -> Unit
+) {
+    when(dialogState) {
+        is VMInitialization.DialogState.None -> Unit
+        is VMInitialization.DialogState.ScrDescInfo -> Dialog(
+            onDismissRequest = onScrDescDismiss,
+            icon = { Icon(Icons.Default.Info, null) },
+            title = { Text(stringResource(scrGraph.title)) },
+            text = { Text(stringResource(scrGraph.description)) },
+            confirmButton = { Button(onClick = onScrDescDismiss, content = { Text(stringResource(R.string.str_back)) }) }
+        )
+        is VMInitialization.DialogState.Error -> Unit
+        is VMInitialization.DialogState.SuccessInitialization -> Dialog(
+            onDismissRequest = onSuccessInitializationDismiss,
+            icon = { Icon(Icons.Default.Check, null) },
+            title = { Text("Success") },
+            text = { Text("Initialization Success!") },
+            confirmButton = { Button(onClick = onSuccessInitializationDismiss, content = { Text(stringResource(R.string.str_finish)) }) }
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SectionTopBar() {
+private fun SectionTopBar(
+    onScrDescClick: () -> Unit
+) {
     TopAppBar(
         title = {},
         actions = {
             IconButton(
-                onClick = {/*TODO*/},
+                onClick = onScrDescClick,
                 content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) }
             )
         }
@@ -155,9 +217,7 @@ private fun SectionContent(
         modifier = Modifier.padding(paddingValues),
         content = {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(Constants.Dimens.dp16),
+                modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
                 verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
                 content = {
                     /* Welcome Message */
