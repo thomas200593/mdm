@@ -1,5 +1,6 @@
 package com.thomas200593.mdm.core.ui.component
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -40,6 +41,7 @@ fun PermissionHandler(
     onPermissionsResult: (Map<String, Boolean>) -> Unit,
     content: @Composable (grantedPermissions: Map<String, Boolean>) -> Unit
 ) {
+    /*TODO: Read from Datastore Preferences as JSON Array and try parse (make sure array not duplicate)*/
     val context = LocalContext.current
     val sharedPrefs = remember { context.getSharedPreferences("permissions_prefs", Context.MODE_PRIVATE) }
     val deniedPermissions = sharedPrefs.getStringSet("denied_permissions", emptySet()) ?: emptySet()
@@ -124,9 +126,9 @@ fun PermissionSettingsDialog(
 
 fun getRationaleMessage(missingPermissions: List<String>): String {
     return when {
-        /*Manifest.permission.CAMERA in missingPermissions -> "📷 Camera access is needed to take photos."
+        Manifest.permission.CAMERA in missingPermissions -> "📷 Camera access is needed to take photos."
         Manifest.permission.READ_EXTERNAL_STORAGE in missingPermissions -> "🗂 Storage access is required to load media."
-        Manifest.permission.POST_NOTIFICATIONS in missingPermissions -> "🔔 Notifications permission is needed to alert you."*/
+        Manifest.permission.POST_NOTIFICATIONS in missingPermissions -> "🔔 Notifications permission is needed to alert you."
         else -> "This app requires permissions to function properly."
     }
 }
