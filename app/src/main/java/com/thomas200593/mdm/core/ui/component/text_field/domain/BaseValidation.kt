@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.core.ui.component.text_field._domain
+package com.thomas200593.mdm.core.ui.component.text_field.domain
 
 interface BaseValidation<I, R> {
     fun validate(

@@ -11,4 +11,5 @@ object DataStorePreferencesKeys {
     val dsKeyFontSize = stringPreferencesKey("DS_KEY_FONT_SIZE")
     val dsKeyCountry = stringPreferencesKey("DS_KEY_COUNTRY")
     val dsKeyLanguage = stringPreferencesKey("DS_KEY_LANGUAGE")
+    val dsKeyDeniedAppPermissions = stringPreferencesKey("DS_KEY_DENIED_APP_PERMISSIONS")
 }

@@ -18,6 +18,7 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Checklist
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -40,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas200593.mdm.R
@@ -80,7 +82,8 @@ fun ScrInitialization(
         onSuccessInitializationDismiss = {
             vm.onEvent(VMInitialization.Events.FormEvents.DialogSuccessInitializationOnClick)
             coroutineScope.launch { stateApp.navController.navToInitial() }
-        }
+        },
+        onErrorInitializationDismiss = { vm.onEvent(VMInitialization.Events.FormEvents.DialogErrorInitializationOnClick) }
     )
 }
 
@@ -96,7 +99,8 @@ private fun ScrInitialization(
     onEmailValueChanged: (CharSequence) -> Unit,
     onPasswordValueChanged: (CharSequence) -> Unit,
     onBtnProceedClicked: () -> Unit,
-    onSuccessInitializationDismiss: () -> Unit
+    onSuccessInitializationDismiss: () -> Unit,
+    onErrorInitializationDismiss: () -> Unit
 ) = when (scrDataState) {
     is VMInitialization.ScrDataState.Loading -> ScrLoading()
     is VMInitialization.ScrDataState.Loaded -> ScreenContent(
@@ -110,7 +114,8 @@ private fun ScrInitialization(
         onEmailValueChanged = onEmailValueChanged,
         onPasswordValueChanged = onPasswordValueChanged,
         onBtnProceedClicked = onBtnProceedClicked,
-        onSuccessInitializationDismiss = onSuccessInitializationDismiss
+        onSuccessInitializationDismiss = onSuccessInitializationDismiss,
+        onErrorInitializationDismiss = onErrorInitializationDismiss
     )
 }
 
@@ -127,7 +132,8 @@ private fun ScreenContent(
     onEmailValueChanged: (CharSequence) -> Unit,
     onPasswordValueChanged: (CharSequence) -> Unit,
     onBtnProceedClicked: () -> Unit,
-    onSuccessInitializationDismiss: () -> Unit
+    onSuccessInitializationDismiss: () -> Unit,
+    onErrorInitializationDismiss: () -> Unit
 ) = Scaffold(
     modifier = Modifier.imePadding(),
     topBar = { SectionTopBar(onScrDescClick) },
@@ -136,7 +142,8 @@ private fun ScreenContent(
             dialogState = dialogState,
             scrGraph = scrGraph,
             onScrDescDismiss = onScrDescDismiss,
-            onSuccessInitializationDismiss = onSuccessInitializationDismiss
+            onSuccessInitializationDismiss = onSuccessInitializationDismiss,
+            onErrorInitializationDismiss = onErrorInitializationDismiss
         )
         SectionContent(
             paddingValues = it,
@@ -166,7 +173,8 @@ private fun HandleDialogs(
     scrGraph: ScrGraphs.Initialization,
     dialogState: VMInitialization.DialogState,
     onScrDescDismiss: () -> Unit,
-    onSuccessInitializationDismiss: () -> Unit
+    onSuccessInitializationDismiss: () -> Unit,
+    onErrorInitializationDismiss: () -> Unit
 ) {
     when(dialogState) {
         is VMInitialization.DialogState.None -> Unit
@@ -177,7 +185,14 @@ private fun HandleDialogs(
             text = { Text(stringResource(scrGraph.description)) },
             confirmButton = { Button(onClick = onScrDescDismiss, content = { Text(stringResource(R.string.str_back)) }) }
         )
-        is VMInitialization.DialogState.Error -> Unit
+        is VMInitialization.DialogState.Error -> Dialog(
+            onDismissRequest = onErrorInitializationDismiss,
+            icon = { Icon(Icons.Default.Close, null) },
+            title = { Text("Error") },
+            text = { Text("Initialization Error!") },
+            confirmButton = { Button(onClick = onErrorInitializationDismiss, content = { Text(stringResource(R.string.str_back)) }) },
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        )
         is VMInitialization.DialogState.SuccessInitialization -> Dialog(
             onDismissRequest = onSuccessInitializationDismiss,
             icon = { Icon(Icons.Default.Check, null) },

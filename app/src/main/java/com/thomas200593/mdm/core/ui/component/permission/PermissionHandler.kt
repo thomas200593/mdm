@@ -1,11 +1,8 @@
-package com.thomas200593.mdm.core.ui.component
+package com.thomas200593.mdm.core.ui.component.permission
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
-import android.provider.Settings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,22 +26,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.shouldShowRationale
 
+
+/*Is it work if the permission changed runtime?*/
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PermissionHandler(
     permissions: List<String>,
+    vm: PermissionViewModel = hiltViewModel(),
     onPermissionsResult: (Map<String, Boolean>) -> Unit,
     content: @Composable (grantedPermissions: Map<String, Boolean>) -> Unit
 ) {
-    /*TODO: Read from Datastore Preferences as JSON Array and try parse (make sure array not duplicate)*/
     val context = LocalContext.current
     val sharedPrefs = remember { context.getSharedPreferences("permissions_prefs", Context.MODE_PRIVATE) }
     val deniedPermissions = sharedPrefs.getStringSet("denied_permissions", emptySet()) ?: emptySet()
+
     val permissionsToRequest = permissions
         .filter { it !in deniedPermissions && ContextCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED }
     val permissionState = rememberMultiplePermissionsState(
@@ -69,9 +70,9 @@ fun PermissionHandler(
             onDismiss = { showSettingsDialog = false },
             onOpenSettings = {
                 showSettingsDialog = false
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    .apply { data = Uri.fromParts("package", context.packageName, null) }
-                context.startActivity(intent)
+                /*val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    .apply { Intent.setData = Uri.fromParts("package", context.packageName, null) }
+                context.startActivity(intent)*/
             }
         )
     }

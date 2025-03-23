@@ -1,7 +1,7 @@
-package com.thomas200593.mdm.core.ui.component.text_field._domain
+package com.thomas200593.mdm.core.ui.component.text_field.domain
 
-import com.thomas200593.mdm.core.ui.component.text_field._state.UiText
-import com.thomas200593.mdm.core.ui.component.text_field._state.ValidationResult
+import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
+import com.thomas200593.mdm.core.ui.component.text_field.state.ValidationResult
 
 class TxtFieldPersonNameValidation : BaseValidation<String, ValidationResult> {
     override fun validate(

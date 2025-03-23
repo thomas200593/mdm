@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.core.design_system.util.Constants.STR_EMPTY
 import com.thomas200593.mdm.core.design_system.util.update
-import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldEmailValidation
-import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldPasswordValidation
-import com.thomas200593.mdm.core.ui.component.text_field._domain.TxtFieldPersonNameValidation
-import com.thomas200593.mdm.core.ui.component.text_field._state.UiText
+import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldEmailValidation
+import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldPasswordValidation
+import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldPersonNameValidation
+import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 import com.thomas200593.mdm.features.auth.entity.AuthProvider
 import com.thomas200593.mdm.features.auth.entity.AuthType
 import com.thomas200593.mdm.features.conf.common.entity.Common
@@ -59,7 +59,7 @@ class VMInitialization @Inject constructor(
     sealed interface DialogState {
         data object None : DialogState
         data object ScrDescInfo : DialogState
-        data object Error : DialogState
+        data class Error(val t: Throwable?) : DialogState
         data object SuccessInitialization : DialogState
     }
     sealed interface ResultInitialization {
@@ -88,6 +88,7 @@ class VMInitialization @Inject constructor(
             data class FldPasswordValChanged(val password: CharSequence) : FormEvents
             data object BtnProceedOnClick : FormEvents
             data object DialogSuccessInitializationOnClick : FormEvents
+            data object DialogErrorInitializationOnClick: FormEvents
         }
     }
     var uiState = MutableStateFlow(UiState())
@@ -103,13 +104,20 @@ class VMInitialization @Inject constructor(
             is Events.FormEvents.FldPasswordValChanged -> updateForm { it.validatePassword(events.password) }
             is Events.FormEvents.BtnProceedOnClick -> onProceedInitialization()
             is Events.FormEvents.DialogSuccessInitializationOnClick -> updateDialog { DialogState.None }
+            is Events.FormEvents.DialogErrorInitializationOnClick -> onOpenEvent()
         }
     }
     private fun onOpenEvent() = viewModelScope.launch {
-        uiState.update { it.copy(scrDataState = ScrDataState.Loading, resultInitialization = ResultInitialization.Idle) }
+        uiState.update { UiState(scrDataState = ScrDataState.Loading, resultInitialization = ResultInitialization.Idle) }
         updateDialog { DialogState.None }
         ucGetDataInitialization.invoke().collect { confCommon ->
-            uiState.update { it.copy(scrDataState = ScrDataState.Loaded(scrData = ScrData(confCommon = confCommon, form = Form()))) }
+            uiState.update {
+                UiState(
+                    scrDataState = ScrDataState.Loaded(ScrData(confCommon = confCommon, form = Form())),
+                    dialogState = DialogState.None,
+                    resultInitialization = ResultInitialization.Idle
+                )
+            }
         }
     }
     private fun updateForm(transform: (Form) -> Form) {
@@ -156,7 +164,10 @@ class VMInitialization @Inject constructor(
                     uiState.update { it.copy(resultInitialization = ResultInitialization.Success(result)) }
                     updateDialog { DialogState.SuccessInitialization }
                 },
-                onFailure = { error -> uiState.update { it.copy(resultInitialization = ResultInitialization.Error(error)) } }
+                onFailure = { error ->
+                    uiState.update { it.copy(resultInitialization = ResultInitialization.Error(error)) }
+                    updateDialog { DialogState.Error(error) }
+                }
             )
         }
     }

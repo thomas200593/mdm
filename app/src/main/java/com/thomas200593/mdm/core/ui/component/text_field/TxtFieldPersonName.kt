@@ -20,7 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.thomas200593.mdm.core.design_system.util.Constants
-import com.thomas200593.mdm.core.ui.component.text_field._state.UiText
+import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
