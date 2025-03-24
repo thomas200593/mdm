@@ -22,4 +22,5 @@
     <string name="str_dashboard_desc">App Dashboard Desc</string>
     <string name="str_user_profile">User Profile</string>
     <string name="str_user_profile_desc">User Profile Desc</string>
+    <string name="str_auth">Authentication</string>
 </resources>

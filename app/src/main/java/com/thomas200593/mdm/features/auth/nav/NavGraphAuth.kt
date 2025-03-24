@@ -10,9 +10,9 @@ import com.thomas200593.mdm.features.auth.ui.ScrAuth
 
 fun NavGraphBuilder.navGraphAuth() {
     navigation<NavigationGraph.GraphAuth>(
-        startDestination = ScrGraphs.Auth,
+        startDestination = ScrGraphs.Auth(),
         builder = {
-            composable<ScrGraphs.Auth> { ScrAuth() }
+            composable<ScrGraphs.Auth> { ScrAuth(scrGraph = ScrGraphs.Auth()) }
         }
     )
 }

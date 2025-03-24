@@ -24,7 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.thomas200593.mdm.R
+import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.Theme.AppTheme
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
@@ -32,22 +34,22 @@ import com.thomas200593.mdm.features.conf.__contrast_accent.entity.ContrastAccen
 import com.thomas200593.mdm.features.conf.__font_size.entity.FontSize
 
 @Composable
-fun ScrAuth() {
+fun ScrAuth(
+    scrGraph: ScrGraphs.Auth,
+    vm: VMAuth = hiltViewModel()
+) { ScrAuth() }
+
+@Composable
+private fun ScrAuth() {
     ScreenContent()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent() = Scaffold(
-    topBar = {
-        SectionTopBar()
-    },
-    content = {
-        SectionContent(paddingValues = it)
-    },
-    bottomBar = {
-        SectionBottomBar()
-    }
+    topBar = { SectionTopBar() },
+    content = { SectionContent(paddingValues = it) },
+    bottomBar = { SectionBottomBar() }
 )
 
 @OptIn(ExperimentalMaterial3Api::class)

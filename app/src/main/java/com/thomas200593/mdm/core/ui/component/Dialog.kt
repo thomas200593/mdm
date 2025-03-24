@@ -65,7 +65,7 @@ private fun getContainerColor(dialogType: DialogType) = when(dialogType) {
 }
 
 @Composable
-fun getContentColor(dialogType: DialogType) = when (dialogType) {
+private fun getContentColor(dialogType: DialogType) = when (dialogType) {
     DialogType.CONFIRMATION -> MaterialTheme.colorScheme.onSecondaryContainer
     DialogType.ERROR -> MaterialTheme.colorScheme.onErrorContainer
     DialogType.INFORMATION -> MaterialTheme.colorScheme.onPrimaryContainer

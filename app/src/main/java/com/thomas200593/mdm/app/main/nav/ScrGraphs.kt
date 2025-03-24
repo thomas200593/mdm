@@ -19,7 +19,10 @@ import kotlinx.serialization.Serializable
         @StringRes val title: Int = R.string.str_initialization,
         @StringRes val description: Int = R.string.str_initialization
     )
-    @Serializable data object Auth
+    @Serializable data class Auth(
+        @StringRes val title: Int = R.string.str_auth,
+        @StringRes val description: Int = R.string.str_auth
+    )
     @Serializable sealed class DestTopLevel(
         @DrawableRes val iconRes: Int,
         @StringRes val title: Int,
