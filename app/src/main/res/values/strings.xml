@@ -6,6 +6,8 @@
     <string name="str_network_offline">You\'re currently offline. Please check your internet connection and try again.</string>
     <string name="str_initial">Initial</string>
     <string name="str_onboarding">Onboarding</string>
+    <string name="str_success">Success</string>
+    <string name="str_error">Error</string>
     <string name="str_back">Back</string>
     <string name="str_next">Next</string>
     <string name="str_finish">Finish</string>

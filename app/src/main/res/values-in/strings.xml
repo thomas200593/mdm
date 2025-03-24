@@ -5,6 +5,8 @@
     <string name="str_network_offline">Jaringan offline. Mohon cek kembali koneksi internet Anda dan coba lagi.</string>
     <string name="str_initial">Inisial</string>
     <string name="str_onboarding">Onboarding</string>
+    <string name="str_success">Sukses</string>
+    <string name="str_error">Galat</string>
     <string name="str_back">Kembali</string>
     <string name="str_next">Lanjut</string>
     <string name="str_finish">Selesai</string>

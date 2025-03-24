@@ -40,6 +40,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -49,13 +50,24 @@ import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
+import com.thomas200593.mdm.core.ui.common.Theme
 import com.thomas200593.mdm.core.ui.component.Dialog
 import com.thomas200593.mdm.core.ui.component.ScrLoading
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPersonName
+import com.thomas200593.mdm.features.conf.__contrast_accent.entity.ContrastAccent.Companion.defaultValue
+import com.thomas200593.mdm.features.conf.__country.entity.Country
+import com.thomas200593.mdm.features.conf.__dynamic_color.entity.DynamicColor
+import com.thomas200593.mdm.features.conf.__font_size.entity.FontSize
+import com.thomas200593.mdm.features.conf.__language.entity.Language
+import com.thomas200593.mdm.features.conf._localization.entity.Localization
+import com.thomas200593.mdm.features.conf._ui.entity.UI
+import com.thomas200593.mdm.features.conf.common.entity.Common
 import com.thomas200593.mdm.features.initial.nav.navToInitial
+import com.thomas200593.mdm.features.initialization.entity.FirstTimeStatus
+import com.thomas200593.mdm.features.onboarding.entity.OnboardingStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -188,7 +200,7 @@ private fun HandleDialogs(
         is VMInitialization.DialogState.Error -> Dialog(
             onDismissRequest = onErrorInitializationDismiss,
             icon = { Icon(Icons.Default.Close, null) },
-            title = { Text("Error") },
+            title = { Text(stringResource(R.string.str_error)) },
             text = { Text("Initialization Error!") },
             confirmButton = { Button(onClick = onErrorInitializationDismiss, content = { Text(stringResource(R.string.str_back)) }) },
             properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
@@ -196,7 +208,7 @@ private fun HandleDialogs(
         is VMInitialization.DialogState.SuccessInitialization -> Dialog(
             onDismissRequest = onSuccessInitializationDismiss,
             icon = { Icon(Icons.Default.Check, null) },
-            title = { Text("Success") },
+            title = { Text(stringResource(R.string.str_success)) },
             text = { Text("Initialization Success!") },
             confirmButton = { Button(onClick = onSuccessInitializationDismiss, content = { Text(stringResource(R.string.str_finish)) }) }
         )
@@ -345,3 +357,46 @@ private fun SectionBottomBar(
         }
     )
 }
+
+@Composable
+@Preview
+private fun Preview() = Theme.AppTheme(
+    darkThemeEnabled = true,
+    dynamicColorEnabled = false,
+    contrastAccent = defaultValue,
+    fontSize = FontSize.defaultValue,
+    content = {
+        ScrInitialization(
+            onScrDescClick = {},
+            onScrDescDismiss = {},
+            onFirstNameValueChanged = {},
+            onLastNameValueChanged = {},
+            onEmailValueChanged = {},
+            onPasswordValueChanged = {},
+            onBtnProceedClicked = {},
+            onSuccessInitializationDismiss = {},
+            onErrorInitializationDismiss = {},
+            scrGraph = ScrGraphs.Initialization(),
+            dialogState = VMInitialization.DialogState.None,
+            scrDataState = VMInitialization.ScrDataState.Loaded(
+                scrData = VMInitialization.ScrData(
+                    confCommon = Common(
+                        onboardingStatus = OnboardingStatus.HIDE,
+                        firstTimeStatus = FirstTimeStatus.NO,
+                        ui = UI(
+                            theme = com.thomas200593.mdm.features.conf.__theme.entity.Theme.defaultValue,
+                            contrastAccent = defaultValue,
+                            dynamicColor = DynamicColor.defaultValue,
+                            fontSize = FontSize.defaultValue
+                        ),
+                        localization = Localization(
+                            country = Country.defaultValue,
+                            language = Language.defaultValue
+                        ),
+                    ),
+                    form = VMInitialization.Form()
+                )
+            ),
+        )
+    }
+)
