@@ -16,12 +16,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.thomas200593.mdm.R
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.Theme.AppTheme
@@ -41,9 +43,7 @@ private fun ScreenContent() = Scaffold(
         SectionTopBar()
     },
     content = {
-        SectionContent(
-            paddingValues = it
-        )
+        SectionContent(paddingValues = it)
     },
     bottomBar = {
         SectionBottomBar()
@@ -71,7 +71,13 @@ private fun SectionContent(paddingValues: PaddingValues) {
         content = {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                content = {}
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(40.dp),
+                content = {
+                    item { Text("Panel Logo") }
+                    item { Text("Panel Page Title") }
+                    item { Text("Panel Page Auth Method") }
+                }
             )
         }
     )

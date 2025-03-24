@@ -2,7 +2,6 @@ package com.thomas200593.mdm.features.auth.di
 
 import com.thomas200593.mdm.features.auth.dao.DaoAuth
 import com.thomas200593.mdm.features.auth.dao.DaoAuthImpl
-import com.thomas200593.mdm.features.auth.entity.AuthResult
 import com.thomas200593.mdm.features.auth.entity.AuthType
 import com.thomas200593.mdm.features.auth.repository.RepoAuth
 import com.thomas200593.mdm.features.auth.repository.RepoAuthImpl

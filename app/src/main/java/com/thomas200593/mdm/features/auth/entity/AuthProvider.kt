@@ -7,9 +7,5 @@ enum class AuthProvider(
     LOCAL_EMAIL_PASSWORD(
         code = "auth_local_email_password",
         title = "Local (Email & Password)"
-    ),
-    OAUTH2_GOOGLE(
-        code = "auth_oauth_google",
-        title = "Social (Google)"
     )
 }
