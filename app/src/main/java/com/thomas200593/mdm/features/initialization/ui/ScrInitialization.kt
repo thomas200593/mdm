@@ -235,9 +235,7 @@ private fun SectionContent(
                 modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
                 verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
                 content = {
-                    /* Welcome Message */
                     item { PartTitle() }
-                    /* Form */
                     item {
                         PartForm(
                             form = form,
