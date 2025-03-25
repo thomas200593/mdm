@@ -12,5 +12,6 @@ object Constants {
     object Dimens {
         val dp8 = 8.dp
         val dp16 = 16.dp
+        val dp36 = 36.dp
     }
 }

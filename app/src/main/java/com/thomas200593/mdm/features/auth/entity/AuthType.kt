@@ -7,17 +7,13 @@ import kotlinx.serialization.json.Json
 @Serializable
 sealed interface AuthType {
     @Serializable
-    data class LocalEmailPassword(val provider: String, val password: String) : AuthType
+    data class LocalEmailPassword(val provider: AuthProvider, val password: String) : AuthType
 }
 
 class TypeConverterAuthType {
     private val json = Json { ignoreUnknownKeys = true }
     @TypeConverter
-    fun toJson(authType: AuthType): String {
-        return json.encodeToString(authType)
-    }
+    fun toJson(authType: AuthType): String? = runCatching { json.encodeToString(authType) }.getOrNull()
     @TypeConverter
-    fun fromJson(authTypeString: String): AuthType {
-        return json.decodeFromString(authTypeString)
-    }
+    fun fromJson(authTypeString: String): AuthType? = runCatching { json.decodeFromString<AuthType>(authTypeString) }.getOrNull()
 }
