@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material3.Icon
@@ -27,8 +26,8 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun TxtFieldEmail(
-    modifier: Modifier = Modifier.Companion,
-    state: TextFieldState = rememberTextFieldState(),
+    modifier: Modifier = Modifier,
+    state: TextFieldState,
     onValueChanged : (CharSequence) -> Unit,
     enabled: Boolean = true,
     isError: Boolean = false,
@@ -36,29 +35,27 @@ fun TxtFieldEmail(
 ) {
     val context = LocalContext.current
     // Listen for text state changes
-    LaunchedEffect(state) {
-        snapshotFlow { state.text }.collectLatest { newValue ->
-            onValueChanged(
-                newValue
-            )
-        }
-    }
+    LaunchedEffect(
+        key1 = state.text,
+        block = { snapshotFlow { state.text }.collectLatest { newValue -> onValueChanged(newValue) } }
+    )
     OutlinedTextField(
         modifier = modifier.fillMaxWidth(),
         state = state,
         enabled = enabled,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Companion.Email,
-            imeAction = ImeAction.Companion.Done
+            keyboardType = KeyboardType.Email, imeAction = ImeAction.Done
         ),
         label = { Text(stringResource(R.string.str_email)) },
         placeholder = { Text(stringResource(R.string.str_email)) },
         leadingIcon = { Icon(Icons.Outlined.Email, null) },
         supportingText = {
-            if (isError && errorMessage.isNotEmpty()) Column(
-                verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
-                content = { errorMessage.forEach { Text("• ${it.asString(context)}") } }
-            ) else null
+            if (isError && errorMessage.isNotEmpty()) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
+                    content = { errorMessage.forEach { Text("• ${it.asString(context)}") } }
+                )
+            }
         },
         isError = isError,
         lineLimits = TextFieldLineLimits.SingleLine

@@ -41,7 +41,10 @@ fun TxtFieldPassword(
     val context = LocalContext.current
     var passwordVisible by remember { mutableStateOf(false) } // Toggle password visibility
     // Listen for text state changes
-    LaunchedEffect(state) { snapshotFlow { state.text }.collectLatest { newValue -> onValueChanged(newValue) } }
+    LaunchedEffect(
+        key1 = state.text,
+        block = { snapshotFlow { state.text }.collectLatest { newValue -> onValueChanged(newValue) } }
+    )
     OutlinedSecureTextField(
         modifier = modifier.fillMaxWidth(),
         state = state,
@@ -64,10 +67,12 @@ fun TxtFieldPassword(
             )
         },
         supportingText = {
-            if (isError && errorMessage.isNotEmpty()) Column(
-                verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
-                content = { errorMessage.forEach { Text("• ${it.asString(context)}") } }
-            ) else null
+            if (isError && errorMessage.isNotEmpty()) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
+                    content = { errorMessage.forEach { Text("• ${it.asString(context)}") } }
+                )
+            }
         },
         textObfuscationMode = if(passwordVisible) TextObfuscationMode.Visible else TextObfuscationMode.RevealLastTyped
     )

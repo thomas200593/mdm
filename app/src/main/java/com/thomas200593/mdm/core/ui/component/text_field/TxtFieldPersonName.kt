@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material3.Icon
@@ -26,7 +25,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun TxtFieldPersonName(
     modifier: Modifier = Modifier,
-    state: TextFieldState = rememberTextFieldState(),
+    state: TextFieldState,
     onValueChanged: (CharSequence) -> Unit,
     enabled: Boolean = true,
     isError: Boolean = false,
@@ -36,23 +35,17 @@ fun TxtFieldPersonName(
     leadingIcon: @Composable (() -> Unit) = { Icon(Icons.Outlined.Face, contentDescription = null) } // Default icon
 ) {
     val context = LocalContext.current
-
     // Listen for text state changes
-    LaunchedEffect(state) {
-        snapshotFlow { state.text }.collectLatest { newValue ->
-            onValueChanged(
-                newValue
-            )
-        }
-    }
-
+    LaunchedEffect(
+        key1 = state.text,
+        block = { snapshotFlow { state.text }.collectLatest { newValue -> onValueChanged(newValue) } }
+    )
     OutlinedTextField(
         modifier = modifier.fillMaxWidth(),
         state = state,
         enabled = enabled,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Companion.Text,
-            imeAction = ImeAction.Companion.Next
+            keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
         ),
         label = { label?.let { Text(it) } },
         placeholder = { placeholder?.let { Text(it) } },
@@ -60,10 +53,9 @@ fun TxtFieldPersonName(
         supportingText = {
             if (isError && errorMessage.isNotEmpty()) {
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8)
-                ) {
-                    errorMessage.forEach { Text("• ${it.asString(context)}") }
-                }
+                    verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
+                    content = { errorMessage.forEach { Text("• ${it.asString(context)}") } }
+                )
             }
         },
         isError = isError,

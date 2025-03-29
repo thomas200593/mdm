@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Checklist
@@ -40,7 +39,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -50,24 +48,13 @@ import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
-import com.thomas200593.mdm.core.ui.common.Theme
 import com.thomas200593.mdm.core.ui.component.Dialog
 import com.thomas200593.mdm.core.ui.component.ScrLoading
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPersonName
-import com.thomas200593.mdm.features.conf.__contrast_accent.entity.ContrastAccent.Companion.defaultValue
-import com.thomas200593.mdm.features.conf.__country.entity.Country
-import com.thomas200593.mdm.features.conf.__dynamic_color.entity.DynamicColor
-import com.thomas200593.mdm.features.conf.__font_size.entity.FontSize
-import com.thomas200593.mdm.features.conf.__language.entity.Language
-import com.thomas200593.mdm.features.conf._localization.entity.Localization
-import com.thomas200593.mdm.features.conf._ui.entity.UI
-import com.thomas200593.mdm.features.conf.common.entity.Common
 import com.thomas200593.mdm.features.initial.nav.navToInitial
-import com.thomas200593.mdm.features.initialization.entity.FirstTimeStatus
-import com.thomas200593.mdm.features.onboarding.entity.OnboardingStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -79,31 +66,28 @@ fun ScrInitialization(
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMInitialization.Events.OnOpenEvent) })
+    LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMInitialization.UiComponents.Events.OnOpenEvent) })
     ScrInitialization(
-        scrDataState = uiState.scrDataState,
-        dialogState = uiState.dialogState,
         scrGraph = scrGraph,
-        onScrDescClick = { vm.onEvent(VMInitialization.Events.TopAppBarEvents.BtnScrDescEvents.OnClick) },
-        onScrDescDismiss = { vm.onEvent(VMInitialization.Events.TopAppBarEvents.BtnScrDescEvents.OnDismiss) },
-        onFirstNameValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldFirstNameValChanged(it)) },
-        onLastNameValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldLastNameValChanged(it)) },
-        onEmailValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldEmailValChanged(it)) },
-        onPasswordValueChanged = { vm.onEvent(VMInitialization.Events.FormEvents.FldPasswordValChanged(it)) },
-        onBtnProceedClicked = { vm.onEvent(VMInitialization.Events.FormEvents.BtnProceedOnClick) },
+        componentState = uiState.componentState,
+        onScrDescClick = { vm.onEvent(VMInitialization.UiComponents.Events.TopAppBarEvents.BtnScrDescEvents.OnClick) },
+        onScrDescDismiss = { vm.onEvent(VMInitialization.UiComponents.Events.TopAppBarEvents.BtnScrDescEvents.OnDismiss) },
+        onFirstNameValueChanged = { vm.onEvent(VMInitialization.UiComponents.Events.FormEvents.FldFirstNameValChanged(it)) },
+        onLastNameValueChanged = { vm.onEvent(VMInitialization.UiComponents.Events.FormEvents.FldLastNameValChanged(it)) },
+        onEmailValueChanged = { vm.onEvent(VMInitialization.UiComponents.Events.FormEvents.FldEmailValChanged(it)) },
+        onPasswordValueChanged = { vm.onEvent(VMInitialization.UiComponents.Events.FormEvents.FldPasswordValChanged(it)) },
+        onBtnProceedClicked = { vm.onEvent(VMInitialization.UiComponents.Events.FormEvents.BtnProceedOnClick) },
         onSuccessInitializationDismiss = {
-            vm.onEvent(VMInitialization.Events.FormEvents.DialogSuccessInitializationOnClick)
+            vm.onEvent(VMInitialization.UiComponents.Events.FormEvents.DialogSuccessInitializationOnClick)
             coroutineScope.launch { stateApp.navController.navToInitial() }
         },
-        onErrorInitializationDismiss = { vm.onEvent(VMInitialization.Events.FormEvents.DialogErrorInitializationOnClick) }
+        onErrorInitializationDismiss = { vm.onEvent(VMInitialization.UiComponents.Events.FormEvents.DialogErrorInitializationOnClick) }
     )
 }
-
 @Composable
 private fun ScrInitialization(
-    scrDataState: VMInitialization.ScrDataState,
     scrGraph: ScrGraphs.Initialization,
-    dialogState: VMInitialization.DialogState,
+    componentState: VMInitialization.UiComponents.ComponentState,
     onScrDescClick: () -> Unit,
     onScrDescDismiss: () -> Unit,
     onFirstNameValueChanged : (CharSequence) -> Unit,
@@ -113,12 +97,11 @@ private fun ScrInitialization(
     onBtnProceedClicked: () -> Unit,
     onSuccessInitializationDismiss: () -> Unit,
     onErrorInitializationDismiss: () -> Unit
-) = when (scrDataState) {
-    is VMInitialization.ScrDataState.Loading -> ScrLoading()
-    is VMInitialization.ScrDataState.Loaded -> ScreenContent(
-        scrData = scrDataState.scrData,
+) = when (componentState) {
+    is VMInitialization.UiComponents.ComponentState.Loading -> ScrLoading()
+    is VMInitialization.UiComponents.ComponentState.Loaded -> ScreenContent(
+        components = componentState,
         scrGraph = scrGraph,
-        dialogState = dialogState,
         onScrDescClick = onScrDescClick,
         onScrDescDismiss = onScrDescDismiss,
         onFirstNameValueChanged = onFirstNameValueChanged,
@@ -130,13 +113,11 @@ private fun ScrInitialization(
         onErrorInitializationDismiss = onErrorInitializationDismiss
     )
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
-    scrData: VMInitialization.ScrData,
     scrGraph: ScrGraphs.Initialization,
-    dialogState: VMInitialization.DialogState,
+    components: VMInitialization.UiComponents.ComponentState.Loaded,
     onScrDescClick: () -> Unit,
     onScrDescDismiss: () -> Unit,
     onFirstNameValueChanged: (CharSequence) -> Unit,
@@ -151,7 +132,7 @@ private fun ScreenContent(
     topBar = { SectionTopBar(onScrDescClick) },
     content = {
         HandleDialogs(
-            dialogState = dialogState,
+            dialogState = components.dialogState,
             scrGraph = scrGraph,
             onScrDescDismiss = onScrDescDismiss,
             onSuccessInitializationDismiss = onSuccessInitializationDismiss,
@@ -159,7 +140,7 @@ private fun ScreenContent(
         )
         SectionContent(
             paddingValues = it,
-            form = scrData.form,
+            form = components.form,
             onFirstNameValueChanged = onFirstNameValueChanged,
             onLastNameValueChanged = onLastNameValueChanged,
             onEmailValueChanged = onEmailValueChanged,
@@ -168,36 +149,35 @@ private fun ScreenContent(
     },
     bottomBar = {
         AnimatedVisibility(
-            visible = scrData.form.btnProceedVisible,
+            visible = components.form.btnProceedVisible,
             enter = fadeIn() + slideInVertically(),
             exit = fadeOut() + slideOutVertically()
         ) {
             SectionBottomBar(
-                btnProceedEnabled = scrData.form.btnProceedEnabled,
+                btnProceedEnabled = components.form.btnProceedEnabled,
                 onBtnProceedClicked = onBtnProceedClicked
             )
         }
     }
 )
-
 @Composable
 private fun HandleDialogs(
+    dialogState: VMInitialization.UiComponents.DialogState,
     scrGraph: ScrGraphs.Initialization,
-    dialogState: VMInitialization.DialogState,
     onScrDescDismiss: () -> Unit,
     onSuccessInitializationDismiss: () -> Unit,
     onErrorInitializationDismiss: () -> Unit
 ) {
     when(dialogState) {
-        is VMInitialization.DialogState.None -> Unit
-        is VMInitialization.DialogState.ScrDescInfo -> Dialog(
+        is VMInitialization.UiComponents.DialogState.None -> Unit
+        is VMInitialization.UiComponents.DialogState.ScrDescInfo -> Dialog(
             onDismissRequest = onScrDescDismiss,
             icon = { Icon(Icons.Default.Info, null) },
             title = { Text(stringResource(scrGraph.title)) },
             text = { Text(stringResource(scrGraph.description)) },
             confirmButton = { Button(onClick = onScrDescDismiss, content = { Text(stringResource(R.string.str_back)) }) }
         )
-        is VMInitialization.DialogState.Error -> Dialog(
+        is VMInitialization.UiComponents.DialogState.Error -> Dialog(
             onDismissRequest = onErrorInitializationDismiss,
             icon = { Icon(Icons.Default.Close, null) },
             title = { Text(stringResource(R.string.str_error)) },
@@ -205,7 +185,7 @@ private fun HandleDialogs(
             confirmButton = { Button(onClick = onErrorInitializationDismiss, content = { Text(stringResource(R.string.str_back)) }) },
             properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
         )
-        is VMInitialization.DialogState.SuccessInitialization -> Dialog(
+        is VMInitialization.UiComponents.DialogState.SuccessInitialization -> Dialog(
             onDismissRequest = onSuccessInitializationDismiss,
             icon = { Icon(Icons.Default.Check, null) },
             title = { Text(stringResource(R.string.str_success)) },
@@ -214,12 +194,9 @@ private fun HandleDialogs(
         )
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SectionTopBar(
-    onScrDescClick: () -> Unit
-) {
+private fun SectionTopBar(onScrDescClick: () -> Unit) {
     TopAppBar(
         title = {},
         actions = {
@@ -230,13 +207,12 @@ private fun SectionTopBar(
         }
     )
 }
-
 @Composable
 private fun SectionContent(
     paddingValues: PaddingValues,
-    form: VMInitialization.Form,
-    onFirstNameValueChanged : (CharSequence) -> Unit,
-    onLastNameValueChanged : (CharSequence) -> Unit,
+    form: VMInitialization.UiComponents.Form,
+    onFirstNameValueChanged: (CharSequence) -> Unit,
+    onLastNameValueChanged: (CharSequence) -> Unit,
     onEmailValueChanged: (CharSequence) -> Unit,
     onPasswordValueChanged: (CharSequence) -> Unit
 ) {
@@ -262,7 +238,6 @@ private fun SectionContent(
         }
     )
 }
-
 @Composable
 private fun PartTitle() {
     Row(
@@ -280,13 +255,12 @@ private fun PartTitle() {
         }
     )
 }
-
 @Composable
 private fun PartForm(
-    form: VMInitialization.Form,
-    onFirstNameValueChanged : (CharSequence) -> Unit,
-    onLastNameValueChanged : (CharSequence) -> Unit,
-    onEmailValueChanged : (CharSequence) -> Unit,
+    form: VMInitialization.UiComponents.Form,
+    onFirstNameValueChanged: (CharSequence) -> Unit,
+    onLastNameValueChanged: (CharSequence) -> Unit,
+    onEmailValueChanged: (CharSequence) -> Unit,
     onPasswordValueChanged: (CharSequence) -> Unit
 ) {
     Card(
@@ -302,8 +276,9 @@ private fun PartForm(
                     val isLastNameError by remember(form.fldLastNameError) { derivedStateOf { form.fldLastNameError.isNotEmpty() } }
                     val isEmailError by remember(form.fldEmailError) { derivedStateOf { form.fldEmailError.isNotEmpty() } }
                     val isPasswordError by remember(form.fldPasswordError) { derivedStateOf { form.fldPasswordError.isNotEmpty() } }
+
                     TxtFieldPersonName(
-                        state = rememberTextFieldState(form.fldFirstName.toString()),
+                        state = form.fldFirstName,
                         onValueChanged = { onFirstNameValueChanged(it) },
                         enabled = form.fldFirstNameEnabled,
                         isError = isFirstNameError,
@@ -312,7 +287,7 @@ private fun PartForm(
                         placeholder = stringResource(R.string.str_first_name)
                     )
                     TxtFieldPersonName(
-                        state = rememberTextFieldState(form.fldLastName.toString()),
+                        state = form.fldLastName,
                         onValueChanged = { onLastNameValueChanged(it) },
                         enabled = form.fldLastNameEnabled,
                         isError = isLastNameError,
@@ -321,14 +296,14 @@ private fun PartForm(
                         placeholder = stringResource(R.string.str_last_name)
                     )
                     TxtFieldEmail(
-                        state = rememberTextFieldState(form.fldEmail.toString()),
+                        state = form.fldEmail,
                         onValueChanged = { onEmailValueChanged(it) },
                         enabled = form.fldEmailEnabled,
                         isError = isEmailError,
                         errorMessage = form.fldEmailError
                     )
                     TxtFieldPassword(
-                        state = rememberTextFieldState(form.fldPassword.toString()),
+                        state = form.fldPassword,
                         onValueChanged = { onPasswordValueChanged(it) },
                         enabled = form.fldPasswordEnabled,
                         isError = isPasswordError,
@@ -339,7 +314,6 @@ private fun PartForm(
         }
     )
 }
-
 @Composable
 private fun SectionBottomBar(
     btnProceedEnabled: Boolean,
@@ -357,46 +331,3 @@ private fun SectionBottomBar(
         }
     )
 }
-
-@Composable
-@Preview
-private fun Preview() = Theme.AppTheme(
-    darkThemeEnabled = true,
-    dynamicColorEnabled = false,
-    contrastAccent = defaultValue,
-    fontSize = FontSize.defaultValue,
-    content = {
-        ScrInitialization(
-            onScrDescClick = {},
-            onScrDescDismiss = {},
-            onFirstNameValueChanged = {},
-            onLastNameValueChanged = {},
-            onEmailValueChanged = {},
-            onPasswordValueChanged = {},
-            onBtnProceedClicked = {},
-            onSuccessInitializationDismiss = {},
-            onErrorInitializationDismiss = {},
-            scrGraph = ScrGraphs.Initialization(),
-            dialogState = VMInitialization.DialogState.None,
-            scrDataState = VMInitialization.ScrDataState.Loaded(
-                scrData = VMInitialization.ScrData(
-                    confCommon = Common(
-                        onboardingStatus = OnboardingStatus.HIDE,
-                        firstTimeStatus = FirstTimeStatus.NO,
-                        ui = UI(
-                            theme = com.thomas200593.mdm.features.conf.__theme.entity.Theme.defaultValue,
-                            contrastAccent = defaultValue,
-                            dynamicColor = DynamicColor.defaultValue,
-                            fontSize = FontSize.defaultValue
-                        ),
-                        localization = Localization(
-                            country = Country.defaultValue,
-                            language = Language.defaultValue
-                        ),
-                    ),
-                    form = VMInitialization.Form()
-                )
-            ),
-        )
-    }
-)
