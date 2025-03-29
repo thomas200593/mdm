@@ -277,6 +277,7 @@ private fun PartForm(
                     val isEmailError by remember(form.fldEmailError) { derivedStateOf { form.fldEmailError.isNotEmpty() } }
                     val isPasswordError by remember(form.fldPasswordError) { derivedStateOf { form.fldPasswordError.isNotEmpty() } }
 
+                    /*TODO Reworking State Delay*/
                     TxtFieldPersonName(
                         state = form.fldFirstName,
                         onValueChanged = { onFirstNameValueChanged(it) },
