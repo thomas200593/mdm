@@ -1,12 +1,14 @@
 package com.thomas200593.mdm.features.auth.entity
 
 import androidx.room.TypeConverter
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 @Serializable
 sealed interface AuthType {
     @Serializable
+    @SerialName("LocalEmailPassword")
     data class LocalEmailPassword(val provider: AuthProvider, val password: String) : AuthType
 }
 

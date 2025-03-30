@@ -183,16 +183,16 @@ class VMInitialization @Inject constructor(
                 )
             } ?: currentState
         }
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch {
             val form = (uiState.value.componentState as? UiComponents.ComponentState.Loaded)?. form ?: return@launch
             ucCreateDataInitialization.invoke(
                 dto = DTOInitialization(
-                    firstName = form.fldFirstName.toString(),
-                    lastName = form.fldLastName.toString(),
-                    email = form.fldEmail.toString(),
+                    firstName = form.fldFirstName.text.toString(),
+                    lastName = form.fldLastName.text.toString(),
+                    email = form.fldEmail.text.toString(),
                     authType = AuthType.LocalEmailPassword(
                         provider = AuthProvider.LOCAL_EMAIL_PASSWORD,
-                        password = form.fldPassword.toString()
+                        password = form.fldPassword.text.toString()
                     )
                 )
             ).fold(

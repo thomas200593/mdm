@@ -27,8 +27,11 @@ import androidx.compose.ui.res.stringResource
 import com.thomas200593.mdm.R
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 
+@OptIn(FlowPreview::class)
 @Composable
 fun TxtFieldPassword(
     modifier: Modifier = Modifier,
@@ -43,7 +46,7 @@ fun TxtFieldPassword(
     // Listen for text state changes
     LaunchedEffect(
         key1 = state.text,
-        block = { snapshotFlow { state.text }.collectLatest { newValue -> onValueChanged(newValue) } }
+        block = { snapshotFlow { state.text }.debounce(400).collectLatest { newValue -> onValueChanged(newValue) } }
     )
     OutlinedSecureTextField(
         modifier = modifier.fillMaxWidth(),
