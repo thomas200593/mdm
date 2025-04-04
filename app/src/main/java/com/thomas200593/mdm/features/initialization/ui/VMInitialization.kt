@@ -68,30 +68,21 @@ class VMInitialization @Inject constructor(
             }
         }
     }
-    private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) {
+    private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
         uiState.update { currentState ->
-            (currentState.componentsState as? ComponentsState.Loaded) ?. let(transform)
+            (currentState.componentsState as? ComponentsState.Loaded)
+                ?. let(transform)
                 ?. let{ updatedState -> currentState.copy(componentsState = updatedState)}
                 ?: currentState
         }
-    }
-    private fun updateDialog(transform: (DialogState) -> DialogState) = updateUiState { it.copy(dialogState = transform(it.dialogState)) }
-    private fun updateForm(transform: (FormState) -> FormState) = updateUiState { it.copy(formState = transform(it.formState)) }
-    private fun resetFormAndUiState() = updateUiState {
-        it.copy(
-            dialogState = DialogState.None,
-            resultInitializationState = ResultInitializationState.Idle, formState = FormState()
-        )
-    }
+    private fun updateDialog(transform: (DialogState) -> DialogState) =
+        updateUiState { it.copy(dialogState = transform(it.dialogState)) }
+    private fun updateForm(transform: (FormState) -> FormState) =
+        updateUiState { it.copy(formState = transform(it.formState)) }
+    private fun resetFormAndUiState() =
+        updateUiState { it.copy(dialogState = DialogState.None, resultInitializationState = ResultInitializationState.Idle, formState = FormState()) }
     private fun onProceedInit() = viewModelScope.launch{
-        val success = runCatching {
-            updateUiState { componentState ->
-                componentState.copy(
-                    resultInitializationState = ResultInitializationState.Loading,
-                    formState = componentState.formState.disableInputs()
-                )
-            }
-        }.isSuccess
+        val success = runCatching { updateUiState { componentState -> componentState.copy(resultInitializationState = ResultInitializationState.Loading, formState = componentState.formState.disableInputs()) } }.isSuccess
         if (!success) return@launch
         val form = (uiState.value.componentsState as? ComponentsState.Loaded)?.formState ?: return@launch
         ucCreateDataInitialization.invoke(
@@ -100,8 +91,7 @@ class VMInitialization @Inject constructor(
                 lastName = form.fldLastName.text.toString(),
                 email = form.fldEmail.text.toString(),
                 authType = AuthType.LocalEmailPassword(
-                    provider = AuthProvider.LOCAL_EMAIL_PASSWORD,
-                    password = form.fldPassword.text.toString()
+                    provider = AuthProvider.LOCAL_EMAIL_PASSWORD, password = form.fldPassword.text.toString()
                 )
             )
         ).fold(
