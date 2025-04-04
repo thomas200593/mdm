@@ -19,17 +19,51 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/**
+ * Repository interface for handling user initialization operations.
+ */
 interface RepoInitialization {
+    /**
+     * Creates a new user using local email and password authentication.
+     *
+     * @param dto The user initialization data.
+     * @return A [Result] containing the created [DTOInitialization] on success, or an error on failure.
+     */
     suspend fun createUserLocalEmailPassword(dto: DTOInitialization): Result<DTOInitialization>
+    /**
+     * Updates the first-time user status in the data store.
+     *
+     * @param firstTimeStatus The new [FirstTimeStatus] value.
+     * @return A [Preferences] object after updating the data store.
+     */
     suspend fun updateFirstTimeStatus(firstTimeStatus: FirstTimeStatus): Preferences
 }
-
+/**
+ * Implementation of [RepoInitialization], handling user creation and first-time status updates.
+ *
+ * This class interacts with [RepoUser] and [RepoAuth] to manage user-related operations
+ * and stores first-time user status in [DataStorePreferences].
+ *
+ * @param ioDispatcher The [CoroutineDispatcher] for executing database operations on the IO thread.
+ * @param repoUser The repository responsible for user-related operations.
+ * @param repoAuth The authentication repository for handling user authentication.
+ * @param dataStore The DataStore instance for persisting user preferences.
+ */
 class RepoInitializationImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val repoUser: RepoUser,
     private val repoAuth: RepoAuth<AuthType>,
     private val dataStore: DataStorePreferences
 ) : RepoInitialization {
+    /**
+     * Creates a new user using local email and password authentication.
+     *
+     * This function first attempts to create or retrieve an existing user entity.
+     * If successful, it then registers authentication credentials for the user.
+     *
+     * @param dto The user initialization data.
+     * @return A [Result] containing the created [DTOInitialization] on success, or an error on failure.
+     */
     @Transaction
     override suspend fun createUserLocalEmailPassword(dto: DTOInitialization): Result<DTOInitialization> =
         repoUser.getOrCreateUser(dto.toUserEntity(UUIDv7.generateAsString())).fold(
@@ -41,6 +75,14 @@ class RepoInitializationImpl @Inject constructor(
             },
             onFailure = { Result.failure(it) }
         )
+    /**
+     * Updates the first-time user status in the data store.
+     *
+     * This function runs on the IO dispatcher to ensure efficient background execution.
+     *
+     * @param firstTimeStatus The new [FirstTimeStatus] value.
+     * @return A [Preferences] object after updating the data store.
+     */
     override suspend fun updateFirstTimeStatus(firstTimeStatus: FirstTimeStatus) =
         withContext(ioDispatcher){ dataStore.instance.edit { it[DataStorePreferencesKeys.dsKeyFirstTimeStatus] = firstTimeStatus.name } }
 }
