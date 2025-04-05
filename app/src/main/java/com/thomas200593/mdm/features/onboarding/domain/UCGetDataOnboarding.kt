@@ -5,7 +5,6 @@ import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
 import com.thomas200593.mdm.features.conf.__language.repository.RepoConfLanguage
 import com.thomas200593.mdm.features.conf.common.domain.UCGetConfCommonCurrent
 import com.thomas200593.mdm.features.onboarding.repository.RepoOnboarding
-import com.thomas200593.mdm.features.onboarding.ui.VMOnboarding
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
@@ -22,7 +21,7 @@ class UCGetDataOnboarding @Inject constructor(
         flow2 = repoConfLanguage.list(),
         flow3 = repoOnboarding.list
     ) { confCommon, languageList, onboardingPages ->
-        VMOnboarding.ScrData(
+        DTOOnboarding(
             confCommon = confCommon,
             languageList = languageList,
             onboardingPages = onboardingPages,

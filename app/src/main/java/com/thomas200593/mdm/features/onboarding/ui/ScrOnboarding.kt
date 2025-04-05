@@ -56,6 +56,8 @@ import com.thomas200593.mdm.features.conf.__language.entity.Language
 import com.thomas200593.mdm.features.conf.common.entity.Common
 import com.thomas200593.mdm.features.initialization.nav.navToInitialization
 import com.thomas200593.mdm.features.onboarding.entity.Onboarding
+import com.thomas200593.mdm.features.onboarding.ui.events.Events
+import com.thomas200593.mdm.features.onboarding.ui.state.ComponentsState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -67,89 +69,73 @@ fun ScrOnboarding(
     stateApp: StateApp = LocalStateApp.current
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMOnboarding.Events.OnOpenEvent) })
+    LaunchedEffect(key1 = Unit, block = { vm.onScreenEvents(Events.Screen.OnOpen) })
     ScrOnboarding(
         scrGraph = scrGraph,
-        scrDataState = uiState.scrDataState,
-        onSelectLanguage = { vm.onEvent(VMOnboarding.Events.TopAppBarEvents.BtnLanguageEvents.OnSelect(it)) },
-        onNavPrevPage = { vm.onEvent(VMOnboarding.Events.BottomAppBarEvents.BtnNavActions.PageAction(VMOnboarding.Events.OnboardingButtonNav.PREV)) },
-        onNavNextPage = { vm.onEvent(VMOnboarding.Events.BottomAppBarEvents.BtnNavActions.PageAction(VMOnboarding.Events.OnboardingButtonNav.NEXT)) },
-        onNavFinish = { vm.onEvent(VMOnboarding.Events.BottomAppBarEvents.BtnNavActions.Finish)
+        componentsState = uiState.componentsState,
+        onTopAppBarEvents = vm::onTopAppBarEvents,
+        onBottomBarEvents = { vm.onBottomBarEvents(it) },
+        onNavFinish = { vm.onBottomBarEvents(it)
             .also { coroutineScope.launch { stateApp.navController.navToInitialization() } } }
     )
 }
-
 @Composable
 private fun ScrOnboarding(
     scrGraph: ScrGraphs.Onboarding,
-    scrDataState: VMOnboarding.ScrDataState,
-    onSelectLanguage: (Language) -> Unit,
-    onNavPrevPage: () -> Unit,
-    onNavNextPage: () -> Unit,
-    onNavFinish: () -> Unit
-) = when (scrDataState) {
-    VMOnboarding.ScrDataState.Loading -> ScrLoading(loadingLabel = scrGraph.title)
-    is VMOnboarding.ScrDataState.Loaded -> ScreenContent(
-        data = scrDataState.scrData,
-        onSelectLanguage = onSelectLanguage,
-        onNavPrevPage = onNavPrevPage,
-        onNavNextPage = onNavNextPage,
+    componentsState: ComponentsState,
+    onTopAppBarEvents: (Events.TopAppBar) -> Unit,
+    onBottomBarEvents: (Events.BottomAppBar) -> Unit,
+    onNavFinish: (Events.BottomAppBar) -> Unit
+) = when (componentsState) {
+    is ComponentsState.Loading -> ScrLoading(loadingLabel = scrGraph.title)
+    is ComponentsState.Loaded -> ScreenContent(
+        componentsState = componentsState,
+        onTopAppBarEvents = onTopAppBarEvents,
+        onBottomBarEvents = onBottomBarEvents,
         onNavFinish = onNavFinish
     )
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
-    data: VMOnboarding.ScrData,
-    onSelectLanguage: (Language) -> Unit,
-    onNavPrevPage: () -> Unit,
-    onNavNextPage: () -> Unit,
-    onNavFinish: () -> Unit
+    componentsState: ComponentsState.Loaded,
+    onTopAppBarEvents: (Events.TopAppBar) -> Unit,
+    onBottomBarEvents: (Events.BottomAppBar) -> Unit,
+    onNavFinish: (Events.BottomAppBar) -> Unit
 ) = Scaffold(
     topBar = {
         SectionTopBar(
-            confCommon = data.confCommon,
-            languages = data.languageList,
-            onSelectLanguage = onSelectLanguage
+            confCommon = componentsState.confCommon, languages = componentsState.languageList,
+            onTopAppBarEvents = onTopAppBarEvents
         )
     },
     content = {
         SectionContent(
             paddingValues = it,
-            currentPage = data.onboardingPages[data.listCurrentIndex]
+            currentPage = componentsState.onboardingPages[componentsState.listCurrentIndex]
         )
     },
     bottomBar = {
         SectionBottomBar(
-            currentIndex = data.listCurrentIndex,
-            maxIndex = data.listMaxIndex,
-            onNavPrevPage = onNavPrevPage,
-            onNavNextPage = onNavNextPage,
-            onNavFinish = onNavFinish
+            currentIndex = componentsState.listCurrentIndex, maxIndex = componentsState.listMaxIndex,
+            onBottomBarEvents = onBottomBarEvents, onNavFinish = onNavFinish
         )
     }
 )
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SectionTopBar(
-    confCommon: Common,
-    languages: List<Language>,
-    onSelectLanguage: (Language) -> Unit
-) {
+private fun SectionTopBar(confCommon: Common, languages: List<Language>, onTopAppBarEvents: (Events.TopAppBar) -> Unit) {
     TopAppBar(
         title = {},
         actions = {
             BtnConfLang(
                 languages = languages,
-                onSelectLanguage = onSelectLanguage,
+                onSelectLanguage = { onTopAppBarEvents(Events.TopAppBar.BtnLanguage.OnSelect(it)) },
                 languageIcon = confCommon.localization.language.country.flag
             )
         }
     )
 }
-
 @Composable
 private fun SectionContent(paddingValues: PaddingValues, currentPage: Onboarding) {
     Surface(
@@ -165,12 +151,8 @@ private fun SectionContent(paddingValues: PaddingValues, currentPage: Onboarding
         }
     )
 }
-
 @Composable
-private fun PartBanner(
-    modifier: Modifier,
-    currentPage: Onboarding
-) {
+private fun PartBanner(modifier: Modifier, currentPage: Onboarding) {
     Box(
         modifier = modifier,
         content = {
@@ -188,12 +170,8 @@ private fun PartBanner(
         }
     )
 }
-
 @Composable
-private fun PartDetail(
-    modifier: Modifier,
-    currentPage: Onboarding
-) {
+private fun PartDetail(modifier: Modifier, currentPage: Onboarding) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -203,14 +181,10 @@ private fun PartDetail(
         }
     )
 }
-
 @Composable
 private fun SectionBottomBar(
-    currentIndex: Int,
-    maxIndex: Int,
-    onNavPrevPage: () -> Unit,
-    onNavNextPage: () -> Unit,
-    onNavFinish: () -> Unit
+    currentIndex: Int, maxIndex: Int,
+    onBottomBarEvents: (Events.BottomAppBar) -> Unit, onNavFinish: (Events.BottomAppBar) -> Unit
 ) {
     BottomAppBar (
         content = {
@@ -226,7 +200,10 @@ private fun SectionBottomBar(
                         content = {
                             val strPrev = stringResource(R.string.str_back)
                             val btnPrevState by remember(currentIndex, maxIndex)
-                            { derivedStateOf { if (currentIndex > 0) Pair(true, onNavPrevPage) else Pair(false) {} } }
+                            { derivedStateOf {
+                                if (currentIndex > 0) true to { onBottomBarEvents(Events.BottomAppBar.BtnNavActions.PageAction(Events.OnboardingButtonNav.PREV)) }
+                                else false to {}
+                            } }
                             AnimatedVisibility(
                                 visible = btnPrevState.first,
                                 content = { BtnPrevious(onClick = btnPrevState.second, label = strPrev) }
@@ -242,8 +219,8 @@ private fun SectionBottomBar(
                             val btnNextColor = Pair(MaterialTheme.colorScheme.tertiaryContainer, MaterialTheme.colorScheme.onTertiaryContainer)
                             val btnNextState by remember(currentIndex, maxIndex) {
                                 derivedStateOf {
-                                    if (currentIndex < maxIndex) Pair(Triple(strNext.first, Icons.AutoMirrored.Default.NavigateNext, null), onNavNextPage)
-                                    else Pair(Triple(strNext.second, Icons.Default.Check, BorderStroke(1.dp, btnNextColor.second)), onNavFinish)
+                                    if (currentIndex < maxIndex) Triple(strNext.first, Icons.AutoMirrored.Default.NavigateNext, null) to { onBottomBarEvents(Events.BottomAppBar.BtnNavActions.PageAction(Events.OnboardingButtonNav.NEXT)) }
+                                    else Triple(strNext.second, Icons.Default.Check, BorderStroke(1.dp, btnNextColor.second)) to { onNavFinish(Events.BottomAppBar.BtnNavActions.Finish) }
                                 }
                             }
                             BtnNext(
