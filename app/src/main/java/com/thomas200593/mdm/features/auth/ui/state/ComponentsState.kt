@@ -1,0 +1,12 @@
+package com.thomas200593.mdm.features.auth.ui.state
+
+import com.thomas200593.mdm.features.auth.entity.AuthType
+import com.thomas200593.mdm.features.conf.common.entity.Common
+
+sealed interface ComponentsState {
+    data object Loading : ComponentsState
+    data class Loaded(
+        val confCommon: Common,
+        val authType: AuthType
+    ) : ComponentsState
+}

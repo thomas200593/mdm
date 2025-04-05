@@ -11,7 +11,6 @@ sealed interface AuthType {
     @SerialName("LocalEmailPassword")
     data class LocalEmailPassword(val provider: AuthProvider, val password: String) : AuthType
 }
-
 class TypeConverterAuthType {
     private val json = Json { ignoreUnknownKeys = true }
     @TypeConverter

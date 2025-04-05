@@ -11,14 +11,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.DialogProperties
 
 enum class DialogType {
-    CONFIRMATION, /** Confirmation context for actions that require user confirmation. */
-    ERROR, /** Error context for displaying error messages. */
-    INFORMATION, /** Information context for general notifications. */
-    SUCCESS, /** SuccessInitialization context for successful operations. */
-    WARNING; /** Warning context for cautionary messages. */
+    CONFIRMATION,
+    ERROR,
+    INFORMATION,
+    SUCCESS,
+    WARNING;
     companion object { val defaultValue = INFORMATION }
 }
-
 @Composable
 fun Dialog (
     modifier: Modifier = Modifier,
@@ -54,7 +53,6 @@ fun Dialog (
         properties = properties,
     )
 }
-
 @Composable
 private fun getContainerColor(dialogType: DialogType) = when(dialogType) {
     DialogType.CONFIRMATION -> MaterialTheme.colorScheme.secondaryContainer
@@ -63,7 +61,6 @@ private fun getContainerColor(dialogType: DialogType) = when(dialogType) {
     DialogType.SUCCESS -> MaterialTheme.colorScheme.tertiaryContainer
     DialogType.WARNING -> MaterialTheme.colorScheme.errorContainer
 }
-
 @Composable
 private fun getContentColor(dialogType: DialogType) = when (dialogType) {
     DialogType.CONFIRMATION -> MaterialTheme.colorScheme.onSecondaryContainer
