@@ -11,6 +11,8 @@ import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.ui.component.ScrLoading
 import com.thomas200593.mdm.features.auth.nav.navToAuth
+import com.thomas200593.mdm.features.initial.ui.events.Events
+import com.thomas200593.mdm.features.initial.ui.state.ComponentsState
 import com.thomas200593.mdm.features.initialization.entity.FirstTimeStatus
 import com.thomas200593.mdm.features.initialization.nav.navToInitialization
 import com.thomas200593.mdm.features.onboarding.entity.OnboardingStatus
@@ -26,42 +28,40 @@ fun ScrInitial(
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = Unit, block = { vm.onEvent(VMInitial.Events.OnOpenEvent) })
+    LaunchedEffect(key1 = Unit, block = { vm.onScreenEvents(Events.Screen.OnOpen) })
     ScrInitial(
         scrGraph = scrGraph,
-        scrDataState = uiState.scrDataState,
+        componentsState = uiState.componentsState,
         onNavToOnboarding = { coroutineScope.launch { stateApp.navController.navToOnboarding() } },
         onNavToInitialization = { coroutineScope.launch { stateApp.navController.navToInitialization() } },
         onNavToAuth = { coroutineScope.launch { stateApp.navController.navToAuth() } }
     )
 }
-
 @Composable
 private fun ScrInitial(
     scrGraph: ScrGraphs.Initial,
-    scrDataState: VMInitial.ScrDataState,
+    componentsState: ComponentsState,
     onNavToOnboarding: () -> Unit,
     onNavToInitialization: () -> Unit,
     onNavToAuth: () -> Unit
-) = when (scrDataState) {
-    VMInitial.ScrDataState.Loading -> ScrLoading(loadingLabel = scrGraph.title)
-    is VMInitial.ScrDataState.Loaded -> ScreenContent(
-        scrData = scrDataState.scrData,
+) = when (componentsState) {
+    ComponentsState.Loading -> ScrLoading(loadingLabel = scrGraph.title)
+    is ComponentsState.Loaded -> ScreenContent(
+        components = componentsState,
         onNavToOnboarding = onNavToOnboarding,
         onNavToInitialization = onNavToInitialization,
         onNavToAuth = onNavToAuth
     )
 }
-
 @Composable
 private fun ScreenContent(
-    scrData: VMInitial.ScrData,
+    components: ComponentsState.Loaded,
     onNavToOnboarding: () -> Unit,
     onNavToInitialization: () -> Unit,
     onNavToAuth: () -> Unit
-) = when (scrData.confCommon.onboardingStatus) {
+) = when (components.confCommon.onboardingStatus) {
     OnboardingStatus.SHOW -> onNavToOnboarding()
-    OnboardingStatus.HIDE -> when (scrData.confCommon.firstTimeStatus) {
+    OnboardingStatus.HIDE -> when (components.confCommon.firstTimeStatus) {
         FirstTimeStatus.YES -> onNavToInitialization()
         FirstTimeStatus.NO -> onNavToAuth()
     }
