@@ -25,7 +25,13 @@ class VMInitial @Inject constructor(
         uiState.update { it.copy(componentsState = ComponentsState.Loading) }
         viewModelScope.launch {
             ucGetDataInitial.invoke().collect { confCommon ->
-                uiState.update { it.copy(componentsState = ComponentsState.Loaded(confCommon = confCommon)) }
+                uiState.update { currentState ->
+                    currentState.copy(
+                        componentsState = ComponentsState.Loaded(
+                            confCommon = confCommon
+                        )
+                    )
+                }
             }
         }
     }

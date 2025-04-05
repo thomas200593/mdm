@@ -39,11 +39,8 @@ fun ScrInitial(
 }
 @Composable
 private fun ScrInitial(
-    scrGraph: ScrGraphs.Initial,
-    componentsState: ComponentsState,
-    onNavToOnboarding: () -> Unit,
-    onNavToInitialization: () -> Unit,
-    onNavToAuth: () -> Unit
+    scrGraph: ScrGraphs.Initial, componentsState: ComponentsState,
+    onNavToOnboarding: () -> Unit, onNavToInitialization: () -> Unit, onNavToAuth: () -> Unit
 ) = when (componentsState) {
     ComponentsState.Loading -> ScrLoading(loadingLabel = scrGraph.title)
     is ComponentsState.Loaded -> ScreenContent(
@@ -56,9 +53,7 @@ private fun ScrInitial(
 @Composable
 private fun ScreenContent(
     components: ComponentsState.Loaded,
-    onNavToOnboarding: () -> Unit,
-    onNavToInitialization: () -> Unit,
-    onNavToAuth: () -> Unit
+    onNavToOnboarding: () -> Unit, onNavToInitialization: () -> Unit, onNavToAuth: () -> Unit
 ) = when (components.confCommon.onboardingStatus) {
     OnboardingStatus.SHOW -> onNavToOnboarding()
     OnboardingStatus.HIDE -> when (components.confCommon.firstTimeStatus) {
