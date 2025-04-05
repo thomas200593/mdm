@@ -2,7 +2,6 @@ package com.thomas200593.mdm.features.auth.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,43 +12,35 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.thomas200593.mdm.R
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.util.Constants
-import com.thomas200593.mdm.core.ui.common.Theme.AppTheme
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
-import com.thomas200593.mdm.features.conf.__contrast_accent.entity.ContrastAccent
-import com.thomas200593.mdm.features.conf.__font_size.entity.FontSize
 
 @Composable
 fun ScrAuth(
     scrGraph: ScrGraphs.Auth,
     vm: VMAuth = hiltViewModel()
 ) { ScrAuth() }
-
 @Composable
 private fun ScrAuth() {
     ScreenContent()
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent() = Scaffold(
@@ -57,7 +48,6 @@ private fun ScreenContent() = Scaffold(
     content = { SectionContent(paddingValues = it) },
     bottomBar = { SectionBottomBar() }
 )
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SectionTopBar() {
@@ -71,7 +61,6 @@ private fun SectionTopBar() {
         }
     )
 }
-
 @Composable
 private fun SectionContent(paddingValues: PaddingValues) {
     Surface(
@@ -90,7 +79,6 @@ private fun SectionContent(paddingValues: PaddingValues) {
         }
     )
 }
-
 @Composable
 private fun SectionPageLogo() {
     Surface(
@@ -103,15 +91,12 @@ private fun SectionPageLogo() {
         }
     )
 }
-
 @Composable
 private fun SectionPageTitle() { TxtLgTitle(stringResource(R.string.str_auth)) }
-
 @Composable
 fun SectionPageAuthMethods() {
     TxtMdBody("Auth Methods")
 }
-
 @Composable
 private fun SectionBottomBar() {
     BottomAppBar (
@@ -125,15 +110,3 @@ private fun SectionBottomBar() {
         }
     )
 }
-
-@Composable
-@Preview
-private fun Preview() = AppTheme(
-    darkThemeEnabled = true,
-    dynamicColorEnabled = false,
-    contrastAccent = ContrastAccent.defaultValue,
-    fontSize = FontSize.defaultValue,
-    content = {
-        ScrAuth()
-    }
-)

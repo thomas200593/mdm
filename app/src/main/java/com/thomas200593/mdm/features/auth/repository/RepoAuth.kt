@@ -10,7 +10,6 @@ import javax.inject.Inject
 interface RepoAuth<T: AuthType> {
     suspend fun registerAuthLocalEmailPassword(authEntity: AuthEntity): Result<AuthEntity>
 }
-
 class RepoAuthImpl @Inject constructor(
     private val daoAuth: DaoAuth,
     private val bCrypt: BCrypt

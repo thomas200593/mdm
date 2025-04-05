@@ -16,7 +16,6 @@ fun NavGraphBuilder.navGraphAuth() {
         }
     )
 }
-
 fun NavController.navToAuth() = this.navigate(
     route = NavigationGraph.GraphAuth,
     builder = {

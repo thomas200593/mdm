@@ -17,7 +17,6 @@ abstract class ModAuth {
     @Binds
     @Singleton
     abstract fun bindsRepository(impl: RepoAuthImpl) : RepoAuth<AuthType>
-
     @Binds
     @Singleton
     abstract fun bindsDao(impl: DaoAuthImpl) : DaoAuth

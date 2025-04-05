@@ -22,7 +22,6 @@ fun NavGraphBuilder.navGraphInitial() {
         }
     )
 }
-
 fun NavController.navToInitial() = this.navigate(
     route = NavigationGraph.GraphInitial,
     builder = {

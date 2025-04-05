@@ -20,7 +20,6 @@ interface RepoOnboarding {
     val list : Flow<List<Onboarding>>
     suspend fun hide(): Preferences
 }
-
 internal class RepoOnboardingImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val dataStore: DataStorePreferences

@@ -16,7 +16,6 @@ fun NavGraphBuilder.navGraphOnboarding() {
         }
     )
 }
-
 fun NavController.navToOnboarding() = this.navigate(
     route = NavigationGraph.GraphOnboarding,
     builder = {
