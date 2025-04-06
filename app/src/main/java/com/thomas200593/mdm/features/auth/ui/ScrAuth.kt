@@ -112,13 +112,7 @@ private fun SectionPageTitle() {
     )
 }
 @Composable
-private fun SectionPageAuthMethods() {
-    Column (
-        content = {
-
-        }
-    )
-}
+private fun SectionPageAuthMethods() {}
 @Composable
 private fun SectionBottomBar() {
     BottomAppBar (
