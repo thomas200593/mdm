@@ -35,8 +35,6 @@ fun PanelCard(
         content = {
             Column (
                 modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp16),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16, Alignment.CenterVertically),
                 content = { title?.invoke(); content.invoke(); footer?.invoke() }
             )
         }

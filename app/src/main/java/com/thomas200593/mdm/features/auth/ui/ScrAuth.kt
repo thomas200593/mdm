@@ -10,15 +10,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,6 +40,8 @@ import com.thomas200593.mdm.core.ui.common.Theme
 import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
+import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
+import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.features.conf.__contrast_accent.entity.ContrastAccent
 import com.thomas200593.mdm.features.conf.__font_size.entity.FontSize
 
@@ -79,7 +86,8 @@ private fun SectionContent(paddingValues: PaddingValues) {
                 content = {
                     item { SectionPageLogo() }
                     item { SectionPageTitle() }
-                    item { SectionPageAuthMethods() }
+                    item { SectionPageAuthPanel() }
+                    item { SectionRecoverAccount() }
                 }
             )
         }
@@ -104,15 +112,53 @@ private fun SectionPageTitle() {
         verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16, Alignment.CenterVertically),
         content = {
             TxtLgTitle(stringResource(R.string.str_auth))
+            TxtMdBody("To continue, please sign-in into your account.")
+        }
+    )
+}
+@Composable
+private fun SectionPageAuthPanel() {
+    PanelCard(
+        modifier = Modifier.padding(Constants.Dimens.dp16),
+        content = {
+            TxtFieldEmail(
+                state = TextFieldState(),
+                onValueChanged = {}
+            )
+            TxtFieldPassword(
+                state = TextFieldState(),
+                onValueChanged = {}
+            )
             PanelCard(
-                modifier = Modifier.padding(Constants.Dimens.dp16),
-                content = {}
+                colors = CardDefaults.cardColors().copy(
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                ),
+                content = { TxtMdBody("Error") }
+            )
+            Button (
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { },
+                shape = MaterialTheme.shapes.extraSmall,
+                content = { Text(text = "Sign in") }
             )
         }
     )
 }
 @Composable
-private fun SectionPageAuthMethods() {}
+private fun SectionRecoverAccount() {
+    Column (
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        content = {
+            TextButton(
+                onClick = {/*TODO*/},
+                content = { TxtMdBody("Recover my account") }
+            )
+        }
+    )
+}
 @Composable
 private fun SectionBottomBar() {
     BottomAppBar (
