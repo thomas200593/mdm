@@ -8,6 +8,4 @@ import com.thomas200593.mdm.app.main.nav.ScrGraphs
 fun ScrInitialization(
     scrGraph: ScrGraphs.Initialization,
     vm: VMInitialization = hiltViewModel()
-) {
-
-}
+) {}
