@@ -70,9 +70,11 @@ fun ScrInitialization(
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
+    val formState = vm.formState
     LaunchedEffect(key1 = Unit, block = { vm.onScreenEvents(Events.Screen.OnOpen) })
     ScrInitialization(
         scrGraph = scrGraph, componentsState = uiState.componentsState,
+        formState = formState,
         onTopAppBarEvents = vm::onTopAppBarEvents, onDialogEvents = vm::onDialogEvents,
         onFormEvents = vm::onFormEvents, onBottomBarEvents = vm::onBottomBarEvents,
         onSuccessInitialization = {
@@ -85,6 +87,7 @@ fun ScrInitialization(
 private fun ScrInitialization(
     scrGraph: ScrGraphs.Initialization,
     componentsState: ComponentsState,
+    formState: FormState,
     onTopAppBarEvents: (Events.TopAppBar) -> Unit,
     onBottomBarEvents: (Events.BottomAppBar) -> Unit,
     onFormEvents: (Events.Content.Form) -> Unit,
@@ -94,6 +97,7 @@ private fun ScrInitialization(
     is ComponentsState.Loading -> ScrLoading()
     is ComponentsState.Loaded -> ScreenContent(
         components = componentsState, scrGraph = scrGraph,
+        formState = formState,
         onTopAppBarEvents = onTopAppBarEvents, onDialogEvents = onDialogEvents,
         onFormEvents = onFormEvents, onBottomBarEvents = onBottomBarEvents,
         onSuccessInitialization = onSuccessInitialization
@@ -104,6 +108,7 @@ private fun ScrInitialization(
 private fun ScreenContent(
     scrGraph: ScrGraphs.Initialization,
     components: ComponentsState.Loaded,
+    formState: FormState,
     onTopAppBarEvents : (Events.TopAppBar) -> Unit,
     onFormEvents: (Events.Content.Form) -> Unit,
     onDialogEvents: (Events.Dialog) -> Unit,
@@ -123,17 +128,17 @@ private fun ScreenContent(
         content = {
             SectionContent(
                 paddingValues = it,
-                formState = components.formState,
+                formState = formState,
                 onFormEvents = onFormEvents
             )
         },
         bottomBar = {
             AnimatedVisibility (
-                visible = components.formState.btnProceedVisible,
+                visible = formState.btnProceedVisible,
                 enter = fadeIn() + slideInVertically(), exit = fadeOut() + slideOutVertically()
             ) {
                 SectionBottomBar(
-                    btnProceedEnabled = components.formState.btnProceedEnabled,
+                    btnProceedEnabled = formState.btnProceedEnabled,
                     onBottomBarEvents = onBottomBarEvents
                 )
             }
