@@ -122,12 +122,12 @@ private fun SectionPageAuthPanel() {
         modifier = Modifier.padding(Constants.Dimens.dp16),
         content = {
             TxtFieldEmail(
-                state = TextFieldState(),
-                onValueChanged = {}
+                value = "",
+                onValueChange = {}
             )
             TxtFieldPassword(
-                state = TextFieldState(),
-                onValueChanged = {}
+                value = "",
+                onValueChange = {}
             )
             PanelCard(
                 colors = CardDefaults.cardColors().copy(

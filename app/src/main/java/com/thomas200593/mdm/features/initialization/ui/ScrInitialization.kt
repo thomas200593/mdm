@@ -255,8 +255,8 @@ private fun PartForm(formState: FormState, onFormEvents : (Events.Content.Form) 
                     val isPasswordError by remember(formState.fldPasswordError)
                     { derivedStateOf { formState.fldPasswordError.isNotEmpty() } }
                     TxtFieldPersonName(
-                        state = formState.fldFirstName,
-                        onValueChanged = { onFormEvents(Events.Content.Form.FldValChgFirstName(it)) },
+                        value = formState.fldFirstName,
+                        onValueChange = { onFormEvents(Events.Content.Form.FldValChgFirstName(it)) },
                         enabled = formState.fldFirstNameEnabled,
                         isError = isFirstNameError,
                         errorMessage = formState.fldFirstNameError,
@@ -264,8 +264,8 @@ private fun PartForm(formState: FormState, onFormEvents : (Events.Content.Form) 
                         placeholder = stringResource(R.string.str_first_name)
                     )
                     TxtFieldPersonName(
-                        state = formState.fldLastName,
-                        onValueChanged = { onFormEvents(Events.Content.Form.FldValChgLastName(it)) },
+                        value = formState.fldLastName,
+                        onValueChange = { onFormEvents(Events.Content.Form.FldValChgLastName(it)) },
                         enabled = formState.fldLastNameEnabled,
                         isError = isLastNameError,
                         errorMessage = formState.fldLastNameError,
@@ -273,15 +273,15 @@ private fun PartForm(formState: FormState, onFormEvents : (Events.Content.Form) 
                         placeholder = stringResource(R.string.str_last_name)
                     )
                     TxtFieldEmail(
-                        state = formState.fldEmail,
-                        onValueChanged = { onFormEvents(Events.Content.Form.FldValChgEmail(it)) },
+                        value = formState.fldEmail,
+                        onValueChange = { onFormEvents(Events.Content.Form.FldValChgEmail(it)) },
                         enabled = formState.fldEmailEnabled,
                         isError = isEmailError,
                         errorMessage = formState.fldEmailError
                     )
                     TxtFieldPassword(
-                        state = formState.fldPassword,
-                        onValueChanged = { onFormEvents(Events.Content.Form.FldValChgPassword(it)) },
+                        value = formState.fldPassword,
+                        onValueChange = { onFormEvents(Events.Content.Form.FldValChgPassword(it)) },
                         enabled = formState.fldPasswordEnabled,
                         isError = isPasswordError,
                         errorMessage = formState.fldPasswordError

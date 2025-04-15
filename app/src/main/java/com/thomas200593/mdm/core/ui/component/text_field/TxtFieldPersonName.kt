@@ -4,16 +4,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
@@ -21,47 +17,39 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.debounce
 
 @OptIn(FlowPreview::class)
 @Composable
 fun TxtFieldPersonName(
     modifier: Modifier = Modifier,
-    state: TextFieldState,
-    onValueChanged: (CharSequence) -> Unit,
+    value: String,
+    onValueChange: (String) -> Unit,
     enabled: Boolean = true,
+    readOnly: Boolean = false,
     isError: Boolean = false,
     errorMessage: List<UiText> = emptyList(),
     label: String? = null,
     placeholder: String? = null,
-    leadingIcon: @Composable (() -> Unit) = { Icon(Icons.Outlined.Face, contentDescription = null) } // Default icon
+    leadingIcon: @Composable (() -> Unit) = { Icon(Icons.Outlined.Face, contentDescription = null) }
 ) {
     val context = LocalContext.current
-    // Listen for text state changes
-    LaunchedEffect(
-        key1 = state.text,
-        block = { snapshotFlow { state.text }.debounce(400).collectLatest { newValue -> onValueChanged(newValue) } }
-    )
     OutlinedTextField(
+        value = value,
+        onValueChange = { onValueChange(it) },
         modifier = modifier.fillMaxWidth(),
-        state = state,
         enabled = enabled,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
-        ),
+        readOnly = readOnly,
         label = { label?.let { Text(it) } },
         placeholder = { placeholder?.let { Text(it) } },
         leadingIcon = { leadingIcon() },
-        supportingText = {
-            if (isError && errorMessage.isNotEmpty()) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
-                    content = { errorMessage.forEach { Text("• ${it.asString(context)}") } }
-                )
-            }
-        },
+        supportingText = { if (isError && errorMessage.isNotEmpty()) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
+                content = { errorMessage.forEach { Text("• ${it.asString(context)}") } }
+            )
+        } },
         isError = isError,
-        lineLimits = TextFieldLineLimits.SingleLine
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
+        singleLine = true
     )
 }

@@ -1,6 +1,5 @@
 package com.thomas200593.mdm.features.initialization.ui.state
 
-import androidx.compose.foundation.text.input.TextFieldState
 import com.thomas200593.mdm.core.design_system.util.Constants.STR_EMPTY
 import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldEmailValidation
 import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldPasswordValidation
@@ -8,16 +7,16 @@ import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldPersonNa
 import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 
 data class FormState(
-    val fldFirstName: TextFieldState = TextFieldState(STR_EMPTY),
+    val fldFirstName: String = STR_EMPTY,
     val fldFirstNameEnabled: Boolean = true,
     val fldFirstNameError: List<UiText> = emptyList(),
-    val fldLastName: TextFieldState = TextFieldState(STR_EMPTY),
+    val fldLastName: String = STR_EMPTY,
     val fldLastNameEnabled: Boolean = true,
     val fldLastNameError: List<UiText> = emptyList(),
-    val fldEmail: TextFieldState = TextFieldState(STR_EMPTY),
+    val fldEmail: String = STR_EMPTY,
     val fldEmailEnabled: Boolean = true,
     val fldEmailError: List<UiText> = emptyList(),
-    val fldPassword: TextFieldState = TextFieldState(STR_EMPTY),
+    val fldPassword: String = STR_EMPTY,
     val fldPasswordEnabled: Boolean = true,
     val fldPasswordError: List<UiText> = emptyList(),
     val btnProceedVisible: Boolean = false,
@@ -28,17 +27,13 @@ data class FormState(
     private val emailValidator = TxtFieldEmailValidation()
     private val passwordValidator = TxtFieldPasswordValidation()
     fun validateField(
-        firstName: CharSequence = fldFirstName.text, lastName: CharSequence = fldLastName.text,
-        email: CharSequence = fldEmail.text, password: CharSequence = fldPassword.text
+        firstName: String = fldFirstName, lastName: String = fldLastName,
+        email: String = fldEmail, password: String = fldPassword
     ) = copy(
-        fldFirstName = TextFieldState(firstName.toString()),
-        fldFirstNameError = firstNameValidator.validate(firstName.toString(), required = true).errorMessages,
-        fldLastName = TextFieldState(lastName.toString()),
-        fldLastNameError = lastNameValidator.validate(lastName.toString(), required = false).errorMessages,
-        fldEmail = TextFieldState(email.toString()),
-        fldEmailError = emailValidator.validate(email.toString(), required = true).errorMessages,
-        fldPassword = TextFieldState(password.toString()),
-        fldPasswordError = passwordValidator.validate(password.toString(), required = true).errorMessages
+        fldFirstName = firstName, fldFirstNameError = firstNameValidator.validate(firstName, required = true).errorMessages,
+        fldLastName = lastName, fldLastNameError = lastNameValidator.validate(lastName, required = false).errorMessages,
+        fldEmail = email, fldEmailError = emailValidator.validate(email, required = true).errorMessages,
+        fldPassword = password, fldPasswordError = passwordValidator.validate(password, required = true).errorMessages
     ).validateFields()
     fun validateFields() = copy(
         btnProceedVisible = fldFirstNameError.isEmpty() && fldLastNameError.isEmpty() &&

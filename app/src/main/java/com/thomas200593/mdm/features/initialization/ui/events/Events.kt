@@ -12,10 +12,10 @@ sealed interface Events {
     }
     sealed interface Content : Events {
         sealed interface Form : Content {
-            data class FldValChgFirstName(val firstName: CharSequence) : Form
-            data class FldValChgLastName(val lastName: CharSequence) : Form
-            data class FldValChgEmail(val email: CharSequence) : Form
-            data class FldValChgPassword(val password: CharSequence) : Form
+            data class FldValChgFirstName(val firstName: String) : Form
+            data class FldValChgLastName(val lastName: String) : Form
+            data class FldValChgEmail(val email: String) : Form
+            data class FldValChgPassword(val password: String) : Form
         }
     }
     sealed interface BottomAppBar : Events {

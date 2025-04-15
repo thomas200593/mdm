@@ -14,6 +14,7 @@ import com.thomas200593.mdm.features.initialization.ui.state.DialogState
 import com.thomas200593.mdm.features.initialization.ui.state.FormState
 import com.thomas200593.mdm.features.initialization.ui.state.ResultInitializationState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -58,7 +59,7 @@ class VMInitialization @Inject constructor(
                     currentState.copy(
                         componentsState = ComponentsState.Loaded(
                             confCommon = confCommon,
-                            formState = FormState(),
+                            formState = FormState().validateField(),
                             dialogState = DialogState.None,
                             resultInitializationState = ResultInitializationState.Idle
                         )
@@ -76,8 +77,9 @@ class VMInitialization @Inject constructor(
         }
     private fun updateDialog(transform: (DialogState) -> DialogState) =
         updateUiState { it.copy(dialogState = transform(it.dialogState)) }
-    private fun updateForm(transform: (FormState) -> FormState) =
+    private fun updateForm(transform: (FormState) -> FormState) = viewModelScope.launch(Dispatchers.Main.immediate) {
         updateUiState { it.copy(formState = transform(it.formState)) }
+    }
     private fun resetFormAndUiState() =
         updateUiState { it.copy(dialogState = DialogState.None, resultInitializationState = ResultInitializationState.Idle, formState = FormState()) }
     private fun onProceedInit() = viewModelScope.launch{
@@ -86,11 +88,11 @@ class VMInitialization @Inject constructor(
         val form = (uiState.value.componentsState as? ComponentsState.Loaded)?.formState ?: return@launch
         ucCreateDataInitialization.invoke(
             dto = DTOInitialization(
-                firstName = form.fldFirstName.text.toString(),
-                lastName = form.fldLastName.text.toString(),
-                email = form.fldEmail.text.toString(),
+                firstName = form.fldFirstName.toString(),
+                lastName = form.fldLastName.toString(),
+                email = form.fldEmail.toString(),
                 authType = AuthType.LocalEmailPassword(
-                    provider = AuthProvider.LOCAL_EMAIL_PASSWORD, password = form.fldPassword.text.toString()
+                    provider = AuthProvider.LOCAL_EMAIL_PASSWORD, password = form.fldPassword.toString()
                 )
             )
         ).fold(
