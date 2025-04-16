@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.core.ui.component
+package com.thomas200593.mdm.core.ui.component.dialog
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AlertDialogDefaults

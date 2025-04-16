@@ -46,9 +46,10 @@ import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
-import com.thomas200593.mdm.core.ui.component.Dialog
 import com.thomas200593.mdm.core.ui.component.ScrLoading
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
+import com.thomas200593.mdm.core.ui.component.dialog.Dialog
+import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPersonName
@@ -122,16 +123,12 @@ private fun HandleDialogs(
 ) {
     when(dialog) {
         is DialogState.None -> Unit
-        is DialogState.ScrDescDialog -> Dialog(
+        is DialogState.ScrDescDialog -> ScrInfoDialog(
             onDismissRequest = { onTopBarEvent(Events.TopBar.BtnScrDesc.Dismissed) },
-            icon = { Icon(Icons.Default.Info, null) },
-            title = { Text(stringResource(scrGraph.title)) },
-            text = { Text(stringResource(scrGraph.description)) },
-            confirmButton = { Button(
-                onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Dismissed) },
-                content = { Text(stringResource(R.string.str_back)) }
-            ) }
+            title = scrGraph.title,
+            description = scrGraph.description
         )
+        is DialogState.LoadingDialog -> {}
         is DialogState.ErrorDialog -> Dialog(
             onDismissRequest = { onDialogEvent(Events.Dialog.ErrorDismissed) },
             icon = { Icon(Icons.Default.Close, null) },

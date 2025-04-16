@@ -19,6 +19,7 @@ import com.thomas200593.mdm.features.initialization.ui.state.ResultInitializatio
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -52,10 +53,10 @@ class VMInitialization @Inject constructor(
     fun onBottomBarEvent(event: Events.BottomBar) = when(event) {
         is Events.BottomBar.BtnProceedInit.Clicked -> handleInitialization()
     }
-    private fun handleOpenScreen() {
-        uiState.update { it.copy(componentsState = ComponentsState.Loading) }
-        viewModelScope.launch {
-            ucGetScreenData.invoke().collect { confCommon ->
+    private fun handleOpenScreen() = viewModelScope.launch {
+        ucGetScreenData.invoke()
+            .onStart { formState = formState.validateField(); uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
+            .collect { confCommon ->
                 uiState.update { currentState -> currentState.copy(
                     componentsState = ComponentsState.Loaded(
                         confCommon = confCommon,
@@ -64,9 +65,8 @@ class VMInitialization @Inject constructor(
                     )
                 ) }
             }
-        }
-        formState = formState.validateField()
     }
+
     private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
         viewModelScope.launch(Dispatchers.Main.immediate) {
             uiState.update { current ->
@@ -93,18 +93,20 @@ class VMInitialization @Inject constructor(
         formState = FormState().validateField()
     }
     private fun handleInitialization() {
-        formState = formState.disableInputs()
-        updateUiState { componentState -> componentState.copy(resultInitialization = ResultInitialization.Loading) }
+        val frozenForm = formState.disableInputs(); formState = frozenForm
+        updateUiState { componentState -> componentState.copy(resultInitialization = ResultInitialization.Loading, dialogState = DialogState.LoadingDialog) }
         viewModelScope.launch {
-            val form = (uiState.value.componentsState as? ComponentsState.Loaded)?.let { formState } ?: return@launch
-            ucCreateDataInitialization.invoke(
-                dto = DTOInitialization(
-                    firstName = form.fldFirstName.toString(),
-                    lastName = form.fldLastName.toString(),
-                    email = form.fldEmail.toString(),
-                    authType = AuthType.LocalEmailPassword(provider = AuthProvider.LOCAL_EMAIL_PASSWORD, password = form.fldPassword.toString())
+            val isLoaded = uiState.value.componentsState is ComponentsState.Loaded
+            if (!isLoaded) return@launch
+            val dto = DTOInitialization(
+                firstName = frozenForm.fldFirstName.toString(),
+                lastName = frozenForm.fldLastName.toString(),
+                email = frozenForm.fldEmail.toString(),
+                authType = AuthType.LocalEmailPassword(
+                    provider = AuthProvider.LOCAL_EMAIL_PASSWORD, password = frozenForm.fldPassword.toString()
                 )
-            ).fold(
+            )
+            ucCreateDataInitialization.invoke(dto).fold(
                 onSuccess = { result ->
                     updateUiState { it.copy(
                         resultInitialization = ResultInitialization.Success(result),
