@@ -18,20 +18,16 @@ class VMInitial @Inject constructor(
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
     var uiState = MutableStateFlow(UiState())
         private set
-    fun onScreenEvents(screenEvents: Events.Screen) = when(screenEvents) {
-        is Events.Screen.OnOpen -> onOpenEvent()
+    fun onScreenEvent(event: Events.Screen) = when(event) {
+        is Events.Screen.Opened -> handleOpenScreen()
     }
-    private fun onOpenEvent() {
+    private fun handleOpenScreen() {
         uiState.update { it.copy(componentsState = ComponentsState.Loading) }
         viewModelScope.launch {
             ucGetDataInitial.invoke().collect { confCommon ->
-                uiState.update { currentState ->
-                    currentState.copy(
-                        componentsState = ComponentsState.Loaded(
-                            confCommon = confCommon
-                        )
-                    )
-                }
+                uiState.update { currentState -> currentState.copy(
+                    componentsState = ComponentsState.Loaded(confCommon = confCommon)
+                ) }
             }
         }
     }

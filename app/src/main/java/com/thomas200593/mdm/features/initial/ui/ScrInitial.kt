@@ -22,16 +22,13 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ScrInitial(
-    scrGraph: ScrGraphs.Initial,
-    vm: VMInitial = hiltViewModel(),
-    stateApp: StateApp = LocalStateApp.current,
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
+    scrGraph: ScrGraphs.Initial, vm: VMInitial = hiltViewModel(),
+    stateApp: StateApp = LocalStateApp.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = Unit, block = { vm.onScreenEvents(Events.Screen.OnOpen) })
+    LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrInitial(
-        scrGraph = scrGraph,
-        componentsState = uiState.componentsState,
+        scrGraph = scrGraph, componentsState = uiState.componentsState,
         onNavToOnboarding = { coroutineScope.launch { stateApp.navController.navToOnboarding() } },
         onNavToInitialization = { coroutineScope.launch { stateApp.navController.navToInitialization() } },
         onNavToAuth = { coroutineScope.launch { stateApp.navController.navToAuth() } }
