@@ -17,6 +17,7 @@ import com.thomas200593.mdm.features.initialization.ui.state.DialogState
 import com.thomas200593.mdm.features.initialization.ui.state.FormState
 import com.thomas200593.mdm.features.initialization.ui.state.ResultInitializationState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -70,6 +71,7 @@ class VMInitialization @Inject constructor(
                 }
             }
         }
+        formState = formState.validateField()
     }
     private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
         uiState.update { currentState ->
@@ -80,11 +82,11 @@ class VMInitialization @Inject constructor(
         }
     private fun updateDialog(transform: (DialogState) -> DialogState) =
         updateUiState { it.copy(dialogState = transform(it.dialogState)) }
-    private fun updateForm(transform: (FormState) -> FormState) {
-        (uiState.value.componentsState as? ComponentsState.Loaded)?.let {
-            formState = transform(formState)
+    private fun updateForm(transform: (FormState) -> FormState) =
+        viewModelScope.launch(Dispatchers.Main.immediate) {
+            (uiState.value.componentsState as? ComponentsState.Loaded)
+                ?.let { formState = transform(formState) }
         }
-    }
     private fun resetFormAndUiState() {
         updateUiState {
             it.copy(
@@ -92,6 +94,7 @@ class VMInitialization @Inject constructor(
                 resultInitializationState = ResultInitializationState.Idle
             )
         }
+        formState = FormState().validateField()
     }
     private fun onProceedInit() = viewModelScope.launch{
         val success = runCatching {

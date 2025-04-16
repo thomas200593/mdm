@@ -246,19 +246,19 @@ private fun PartForm(formState: FormState, onFormEvents : (Events.Content.Form) 
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.extraSmall,
         content = {
+            val isFirstNameError by remember (formState.fldFirstNameError)
+            { derivedStateOf { formState.fldFirstNameError.isNotEmpty() } }
+            val isLastNameError by remember(formState.fldLastNameError)
+            { derivedStateOf { formState.fldLastNameError.isNotEmpty() } }
+            val isEmailError by remember(formState.fldEmailError)
+            { derivedStateOf { formState.fldEmailError.isNotEmpty() } }
+            val isPasswordError by remember(formState.fldPasswordError)
+            { derivedStateOf { formState.fldPasswordError.isNotEmpty() } }
             Column(
                 modifier = Modifier.padding(Constants.Dimens.dp16),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 content =  {
-                    val isFirstNameError by remember (formState.fldFirstNameError)
-                    { derivedStateOf { formState.fldFirstNameError.isNotEmpty() } }
-                    val isLastNameError by remember(formState.fldLastNameError)
-                    { derivedStateOf { formState.fldLastNameError.isNotEmpty() } }
-                    val isEmailError by remember(formState.fldEmailError)
-                    { derivedStateOf { formState.fldEmailError.isNotEmpty() } }
-                    val isPasswordError by remember(formState.fldPasswordError)
-                    { derivedStateOf { formState.fldPasswordError.isNotEmpty() } }
                     TxtFieldPersonName(
                         value = formState.fldFirstName,
                         onValueChange = { onFormEvents(Events.Content.Form.FldValChgFirstName(it)) },
