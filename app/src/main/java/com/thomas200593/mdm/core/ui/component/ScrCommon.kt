@@ -47,7 +47,6 @@ fun ScrLoading(@StringRes loadingLabel: Int = R.string.str_loading) {
         }
     )
 }
-
 @Composable
 fun CenteredCircularProgressIndicator() {
     Column(

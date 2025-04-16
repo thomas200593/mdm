@@ -32,9 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -79,7 +77,7 @@ fun ScrInitialization(
         onFormEvents = vm::onFormEvents, onBottomBarEvents = vm::onBottomBarEvents,
         onSuccessInitialization = {
             vm.onDialogEvents(Events.Dialog.InitializationSuccessOnDismiss)
-            coroutineScope.launch { stateApp.navController.navToInitial() }
+                .also { coroutineScope.launch { stateApp.navController.navToInitial() } }
         }
     )
 }
@@ -246,14 +244,6 @@ private fun PartForm(formState: FormState, onFormEvents : (Events.Content.Form) 
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.extraSmall,
         content = {
-            val isFirstNameError by remember (formState.fldFirstNameError)
-            { derivedStateOf { formState.fldFirstNameError.isNotEmpty() } }
-            val isLastNameError by remember(formState.fldLastNameError)
-            { derivedStateOf { formState.fldLastNameError.isNotEmpty() } }
-            val isEmailError by remember(formState.fldEmailError)
-            { derivedStateOf { formState.fldEmailError.isNotEmpty() } }
-            val isPasswordError by remember(formState.fldPasswordError)
-            { derivedStateOf { formState.fldPasswordError.isNotEmpty() } }
             Column(
                 modifier = Modifier.padding(Constants.Dimens.dp16),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -263,7 +253,7 @@ private fun PartForm(formState: FormState, onFormEvents : (Events.Content.Form) 
                         value = formState.fldFirstName,
                         onValueChange = { onFormEvents(Events.Content.Form.FldValChgFirstName(it)) },
                         enabled = formState.fldFirstNameEnabled,
-                        isError = isFirstNameError,
+                        isError = formState.fldFirstNameError.isNotEmpty(),
                         errorMessage = formState.fldFirstNameError,
                         label = stringResource(R.string.str_first_name),
                         placeholder = stringResource(R.string.str_first_name)
@@ -272,7 +262,7 @@ private fun PartForm(formState: FormState, onFormEvents : (Events.Content.Form) 
                         value = formState.fldLastName,
                         onValueChange = { onFormEvents(Events.Content.Form.FldValChgLastName(it)) },
                         enabled = formState.fldLastNameEnabled,
-                        isError = isLastNameError,
+                        isError = formState.fldLastNameError.isNotEmpty(),
                         errorMessage = formState.fldLastNameError,
                         label = stringResource(R.string.str_last_name),
                         placeholder = stringResource(R.string.str_last_name)
@@ -281,14 +271,14 @@ private fun PartForm(formState: FormState, onFormEvents : (Events.Content.Form) 
                         value = formState.fldEmail,
                         onValueChange = { onFormEvents(Events.Content.Form.FldValChgEmail(it)) },
                         enabled = formState.fldEmailEnabled,
-                        isError = isEmailError,
+                        isError = formState.fldEmailError.isNotEmpty(),
                         errorMessage = formState.fldEmailError
                     )
                     TxtFieldPassword(
                         value = formState.fldPassword,
                         onValueChange = { onFormEvents(Events.Content.Form.FldValChgPassword(it)) },
                         enabled = formState.fldPasswordEnabled,
-                        isError = isPasswordError,
+                        isError = formState.fldPasswordError.isNotEmpty(),
                         errorMessage = formState.fldPasswordError
                     )
                 }

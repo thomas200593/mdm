@@ -87,8 +87,8 @@ class VMInitialization @Inject constructor(
     private fun updateForm(transform: (FormState) -> FormState) =
         viewModelScope.launch(Dispatchers.Main.immediate) {
             (uiState.value.componentsState as? ComponentsState.Loaded)?.let {
-                val newFormState = transform(formState)
-                if (newFormState != formState) formState = newFormState
+                val updated = transform(formState)
+                if (updated != formState) formState = updated
             }
         }
     private fun resetFormAndUiState() {
@@ -98,30 +98,32 @@ class VMInitialization @Inject constructor(
         ) }
         formState = FormState().validateField()
     }
-    private fun onProceedInit() = viewModelScope.launch{
+    private fun onProceedInit() {
         formState = formState.disableInputs()
         updateUiState { componentState -> componentState.copy(resultInitializationState = ResultInitializationState.Loading) }
-        val form = (uiState.value.componentsState as? ComponentsState.Loaded)?.let { formState } ?: return@launch
-        ucCreateDataInitialization.invoke(
-            dto = DTOInitialization(
-                firstName = form.fldFirstName.toString(),
-                lastName = form.fldLastName.toString(),
-                email = form.fldEmail.toString(),
-                authType = AuthType.LocalEmailPassword(provider = AuthProvider.LOCAL_EMAIL_PASSWORD, password = form.fldPassword.toString())
+        viewModelScope.launch {
+            val form = (uiState.value.componentsState as? ComponentsState.Loaded)?.let { formState } ?: return@launch
+            ucCreateDataInitialization.invoke(
+                dto = DTOInitialization(
+                    firstName = form.fldFirstName.toString(),
+                    lastName = form.fldLastName.toString(),
+                    email = form.fldEmail.toString(),
+                    authType = AuthType.LocalEmailPassword(provider = AuthProvider.LOCAL_EMAIL_PASSWORD, password = form.fldPassword.toString())
+                )
+            ).fold(
+                onSuccess = { result ->
+                    updateUiState { it.copy(
+                        resultInitializationState = ResultInitializationState.Success(result),
+                        dialogState = DialogState.SuccessInitialization
+                    ) }
+                },
+                onFailure = { err ->
+                    updateUiState { it.copy(
+                        resultInitializationState = ResultInitializationState.Error(err),
+                        dialogState = DialogState.Error(err)
+                    ) }
+                }
             )
-        ).fold(
-            onSuccess = { result ->
-                updateUiState { it.copy(
-                    resultInitializationState = ResultInitializationState.Success(result),
-                    dialogState = DialogState.SuccessInitialization
-                ) }
-            },
-            onFailure = { err ->
-                updateUiState { it.copy(
-                    resultInitializationState = ResultInitializationState.Error(err),
-                    dialogState = DialogState.Error(err)
-                ) }
-            }
-        )
+        }
     }
 }
