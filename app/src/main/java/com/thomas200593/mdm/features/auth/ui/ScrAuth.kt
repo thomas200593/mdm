@@ -32,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,15 +40,14 @@ import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
-import com.thomas200593.mdm.core.ui.common.Theme
 import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
+import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.features.auth.ui.events.Events
-import com.thomas200593.mdm.features.conf.__contrast_accent.entity.ContrastAccent
-import com.thomas200593.mdm.features.conf.__font_size.entity.FontSize
+import com.thomas200593.mdm.features.auth.ui.state.ComponentsState
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -59,15 +57,22 @@ fun ScrAuth(
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
-    ScrAuth()
+    ScrAuth(
+        scrGraph = scrGraph, components = uiState.componentsState
+    )
 }
 @Composable
-private fun ScrAuth() {
-    ScreenContent()
+private fun ScrAuth(
+    scrGraph: ScrGraphs.Auth, components: ComponentsState
+) = when (components) {
+    is ComponentsState.Loading -> ScrLoading()
+    is ComponentsState.Loaded -> ScreenContent(
+        scrGraph = scrGraph, components = components
+    )
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ScreenContent() = Scaffold(
+private fun ScreenContent(scrGraph: ScrGraphs.Auth, components: ComponentsState.Loaded) = Scaffold(
     topBar = { SectionTopBar() },
     content = { SectionContent(paddingValues = it) },
     bottomBar = { SectionBottomBar() }
@@ -183,14 +188,3 @@ private fun SectionBottomBar() {
         }
     )
 }
-@Composable
-@Preview
-private fun Preview() = Theme.AppTheme(
-    darkThemeEnabled = false,
-    dynamicColorEnabled = false,
-    contrastAccent = ContrastAccent.defaultValue,
-    fontSize = FontSize.defaultValue,
-    content = {
-        ScrAuth()
-    }
-)
