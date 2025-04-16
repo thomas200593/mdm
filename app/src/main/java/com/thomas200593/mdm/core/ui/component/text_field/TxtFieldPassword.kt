@@ -1,7 +1,5 @@
 package com.thomas200593.mdm.core.ui.component.text_field
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -15,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -28,7 +25,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.thomas200593.mdm.R
-import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 
 @Composable
@@ -76,12 +72,5 @@ private fun PasswordVisibilityToggleIcon(
     IconButton(
         onClick = onTogglePasswordVisibility,
         content = { Icon(imageVector = image, contentDescription = contentDescription) }
-    )
-}
-@Composable
-private fun ErrorSupportingText(errorTexts: List<String>) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
-        content = { errorTexts.forEach { text -> key(text) { Text(text) } } }
     )
 }

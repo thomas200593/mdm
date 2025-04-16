@@ -53,10 +53,3 @@ fun TxtFieldEmail(
         singleLine = true
     )
 }
-@Composable
-private fun ErrorSupportingText(errorTexts: List<String>) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
-        content = { errorTexts.forEach { text -> key(text) { Text(text) } } }
-    )
-}
