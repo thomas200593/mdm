@@ -9,7 +9,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
-import com.thomas200593.mdm.core.ui.component.ScrLoading
+import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.features.auth.nav.navToAuth
 import com.thomas200593.mdm.features.initial.ui.events.Events
 import com.thomas200593.mdm.features.initial.ui.state.ComponentsState

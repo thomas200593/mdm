@@ -43,7 +43,7 @@ import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
-import com.thomas200593.mdm.core.ui.component.ScrLoading
+import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.LoadingDialog

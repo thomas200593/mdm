@@ -45,11 +45,11 @@ import com.thomas200593.mdm.R
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
-import com.thomas200593.mdm.core.ui.component.BtnConfLang
-import com.thomas200593.mdm.core.ui.component.BtnNext
-import com.thomas200593.mdm.core.ui.component.BtnPrevious
-import com.thomas200593.mdm.core.ui.component.CenteredCircularProgressIndicator
-import com.thomas200593.mdm.core.ui.component.ScrLoading
+import com.thomas200593.mdm.core.ui.component.button.BtnConfLang
+import com.thomas200593.mdm.core.ui.component.button.BtnNext
+import com.thomas200593.mdm.core.ui.component.button.BtnPrevious
+import com.thomas200593.mdm.core.ui.component.screen.InnerCircularProgressIndicator
+import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.features.conf.__language.entity.Language
@@ -140,7 +140,7 @@ private fun PartBanner(modifier: Modifier, currentPage: Onboarding) {
             SubcomposeAsyncImage(
                 modifier = Modifier.fillMaxSize(),
                 model = ImageRequest.Builder(LocalContext.current).crossfade(250).data(currentPage.imageRes).build(),
-                contentDescription = null, loading = { CenteredCircularProgressIndicator() },
+                contentDescription = null, loading = { InnerCircularProgressIndicator() },
                 contentScale = ContentScale.FillWidth
             )
             Box(

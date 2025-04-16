@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.core.ui.component
+package com.thomas200593.mdm.core.ui.component.screen
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +19,8 @@ import androidx.compose.ui.res.stringResource
 import com.thomas200593.mdm.R
 import com.thomas200593.mdm.core.design_system.util.Constants.Dimens.dp16
 import com.thomas200593.mdm.core.design_system.util.Constants.STR_APP_VERSION
+import com.thomas200593.mdm.core.ui.component.TxtLgTitle
+import com.thomas200593.mdm.core.ui.component.TxtMdTitle
 
 @Composable
 fun ScrLoading(@StringRes label: Int = R.string.str_loading) {
@@ -45,14 +47,5 @@ fun ScrLoading(@StringRes label: Int = R.string.str_loading) {
                 }
             )
         }
-    )
-}
-@Composable
-fun CenteredCircularProgressIndicator() {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        content = { CircularProgressIndicator() }
     )
 }
