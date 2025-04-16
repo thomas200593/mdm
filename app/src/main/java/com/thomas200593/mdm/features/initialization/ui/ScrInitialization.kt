@@ -15,9 +15,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Checklist
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -38,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas200593.mdm.R
@@ -48,8 +45,10 @@ import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.component.ScrLoading
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
-import com.thomas200593.mdm.core.ui.component.dialog.Dialog
+import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
+import com.thomas200593.mdm.core.ui.component.dialog.LoadingDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
+import com.thomas200593.mdm.core.ui.component.dialog.SuccessDialog
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPersonName
@@ -125,29 +124,14 @@ private fun HandleDialogs(
         is DialogState.None -> Unit
         is DialogState.ScrDescDialog -> ScrInfoDialog(
             onDismissRequest = { onTopBarEvent(Events.TopBar.BtnScrDesc.Dismissed) },
-            title = scrGraph.title, description = scrGraph.description
+            title = stringResource(scrGraph.title), description = stringResource(scrGraph.description)
         )
-        is DialogState.LoadingDialog -> {}
-        is DialogState.ErrorDialog -> Dialog(
-            onDismissRequest = { onDialogEvent(Events.Dialog.ErrorDismissed) },
-            icon = { Icon(Icons.Default.Close, null) },
-            title = { Text(stringResource(R.string.str_error)) },
-            text = { Text("Initialization ErrorDialog!") },
-            confirmButton = { Button(
-                onClick = { onDialogEvent(Events.Dialog.ErrorDismissed) },
-                content = { Text(stringResource(R.string.str_back)) }
-            ) },
-            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        is DialogState.LoadingDialog -> LoadingDialog()
+        is DialogState.ErrorDialog -> ErrorDialog(
+            onDismissRequest = { onDialogEvent(Events.Dialog.ErrorDismissed) }, message = "Initialization Failed!"
         )
-        is DialogState.SuccessDialog -> Dialog(
-            onDismissRequest = { onInitializationSuccess() },
-            icon = { Icon(Icons.Default.Check, null) },
-            title = { Text(stringResource(R.string.str_success)) },
-            text = { Text("Initialization Success!") },
-            confirmButton = { Button(
-                onClick = { onInitializationSuccess() },
-                content = { Text(stringResource(R.string.str_finish)) }
-            ) }
+        is DialogState.SuccessDialog -> SuccessDialog(
+            onDismissRequest = { onInitializationSuccess() }, message = "Initialization Success!"
         )
     }
 }
