@@ -12,10 +12,8 @@ import com.thomas200593.mdm.R
 @Composable
 fun ScrInfoDialog(onDismissRequest: () -> Unit, title: String, description: String) {
     Dialog(
-        onDismissRequest = onDismissRequest,
-        icon = { Icon(Icons.Default.PermDeviceInformation, null) },
-        title = { Text(title) },
-        text = { Text(description) },
+        onDismissRequest = onDismissRequest, icon = { Icon(Icons.Default.PermDeviceInformation, null) },
+        title = { Text(title) }, text = { Text(description) },
         confirmButton = { Button(onClick = onDismissRequest, content = { Text(stringResource(R.string.str_back)) }) }
     )
 }
