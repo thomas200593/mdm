@@ -17,7 +17,7 @@ fun ErrorDialog(
     message: String = stringResource(R.string.str_error),
     btnConfirmText: String = stringResource(R.string.str_back)
 ) {
-    Dialog(
+    BaseAlertDialog(
         onDismissRequest = onDismissRequest,
         dialogType = DialogType.ERROR,
         icon = { Icon(Icons.Default.Close, contentDescription = null) },

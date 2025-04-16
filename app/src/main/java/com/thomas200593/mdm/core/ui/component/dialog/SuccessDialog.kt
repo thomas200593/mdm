@@ -17,7 +17,7 @@ fun SuccessDialog(
     message: String = stringResource(R.string.str_success),
     btnConfirmText: String = stringResource(R.string.str_ok)
 ) {
-    Dialog(
+    BaseAlertDialog(
         onDismissRequest = onDismissRequest,
         dialogType = DialogType.SUCCESS,
         icon = { Icon(Icons.Default.Check, contentDescription = null) },

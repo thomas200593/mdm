@@ -15,7 +15,7 @@ enum class DialogType {
     companion object { val defaultValue = INFORMATION }
 }
 @Composable
-fun Dialog (
+fun BaseAlertDialog (
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     dialogType: DialogType = DialogType.defaultValue,
