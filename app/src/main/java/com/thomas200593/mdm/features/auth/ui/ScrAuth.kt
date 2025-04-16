@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
@@ -26,6 +25,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -33,8 +35,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas200593.mdm.R
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
+import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
+import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.Theme
 import com.thomas200593.mdm.core.ui.component.PanelCard
@@ -42,14 +47,20 @@ import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
+import com.thomas200593.mdm.features.auth.ui.events.Events
 import com.thomas200593.mdm.features.conf.__contrast_accent.entity.ContrastAccent
 import com.thomas200593.mdm.features.conf.__font_size.entity.FontSize
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun ScrAuth(
-    scrGraph: ScrGraphs.Auth,
-    vm: VMAuth = hiltViewModel()
-) { ScrAuth() }
+    scrGraph: ScrGraphs.Auth, vm: VMAuth = hiltViewModel(),
+    stateApp: StateApp = LocalStateApp.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
+) {
+    val uiState by vm.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
+    ScrAuth()
+}
 @Composable
 private fun ScrAuth() {
     ScreenContent()

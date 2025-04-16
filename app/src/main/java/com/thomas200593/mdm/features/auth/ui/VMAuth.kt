@@ -15,10 +15,10 @@ class VMAuth @Inject constructor() : ViewModel() {
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
     var uiState = MutableStateFlow(UiState())
         private set
-    fun onScreenEvents(screenEvents: Events.Screen) = when(screenEvents) {
-        Events.Screen.OnOpen -> onOpenEvent()
+    fun onScreenEvent(event: Events.Screen) = when(event) {
+        is Events.Screen.Opened -> handleOpenScreen()
     }
-    private fun onOpenEvent() {
+    private fun handleOpenScreen() {
         uiState.update { it.copy(componentsState = ComponentsState.Loading) }
         viewModelScope.launch {
 
