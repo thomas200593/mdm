@@ -7,10 +7,8 @@ import com.thomas200593.mdm.features.onboarding.entity.Onboarding
 sealed interface ComponentsState {
     data object Loading : ComponentsState
     data class Loaded(
-        val confCommon: Common,
-        val languageList: List<Language>,
+        val confCommon: Common, val languages: List<Language>,
         val onboardingPages: List<Onboarding>,
-        val listCurrentIndex: Int,
-        val listMaxIndex: Int
+        val currentIndex: Int, val maxIndex: Int
     ) : ComponentsState
 }

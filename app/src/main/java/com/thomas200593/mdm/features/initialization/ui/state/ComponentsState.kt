@@ -7,6 +7,6 @@ sealed interface ComponentsState {
     data class Loaded(
         val confCommon: Common,
         val dialogState: DialogState,
-        val resultInitializationState: ResultInitializationState
+        val resultInitialization: ResultInitialization
     ) : ComponentsState
 }

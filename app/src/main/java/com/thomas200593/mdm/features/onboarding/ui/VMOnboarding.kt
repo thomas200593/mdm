@@ -23,43 +23,41 @@ class VMOnboarding @Inject constructor(
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
     var uiState = MutableStateFlow(UiState())
         private set
-    fun onScreenEvents(screenEvents: Events.Screen) = when(screenEvents) {
-        is Events.Screen.OnOpen -> onOpenEvent()
+    fun onScreenEvent(event: Events.Screen) = when(event) {
+        is Events.Screen.Opened -> handleOpenScreen()
     }
-    fun onTopAppBarEvents(topAppBarEvents: Events.TopAppBar) = when(topAppBarEvents) {
-        is Events.TopAppBar.BtnLanguage.OnSelect -> onSelectLanguageEvent(topAppBarEvents.language)
+    fun onTopBarEvent(event: Events.TopBar) = when(event) {
+        is Events.TopBar.BtnLanguage.Selected -> handleSelectLanguage(event.language)
     }
-    fun onBottomBarEvents(bottomAppBarEvents: Events.BottomAppBar) = when(bottomAppBarEvents) {
-        is Events.BottomAppBar.BtnNavActions.PageAction -> onNavOnboardingPageEvent(bottomAppBarEvents.action)
-        is Events.BottomAppBar.BtnNavActions.Finish -> onNavOnboardingFinishEvent()
+    fun onBottomBarEvent(event: Events.BottomBar) = when(event) {
+        is Events.BottomBar.NavButton.Page -> handlePageAction(event.action)
+        is Events.BottomBar.NavButton.Finish -> handlePageFinish()
     }
-    private fun onOpenEvent() {
+    private fun handleOpenScreen() {
         uiState.update { it.copy(componentsState = ComponentsState.Loading) }
         viewModelScope.launch {
             ucGetDataOnboarding.invoke().collect { result ->
-                uiState.update { currentState ->
-                    currentState.copy(
-                        componentsState = ComponentsState.Loaded(
-                            confCommon = result.confCommon,
-                            languageList = result.languageList,
-                            onboardingPages = result.onboardingPages,
-                            listCurrentIndex = result.listCurrentIndex,
-                            listMaxIndex = result.listMaxIndex
-                        )
+                uiState.update { currentState -> currentState.copy(
+                    componentsState = ComponentsState.Loaded(
+                        confCommon = result.confCommon,
+                        languages = result.languageList,
+                        onboardingPages = result.onboardingPages,
+                        currentIndex = result.listCurrentIndex,
+                        maxIndex = result.listMaxIndex
                     )
-                }
+                ) }
             }
         }
     }
-    private fun onSelectLanguageEvent(language: Language) = viewModelScope.launch { repoConfLanguage.set(language) }
-    private fun onNavOnboardingPageEvent(navigate: Events.OnboardingButtonNav) = uiState.update { currentState ->
+    private fun handleSelectLanguage(language: Language) = viewModelScope.launch { repoConfLanguage.set(language) }
+    private fun handlePageAction(action: Events.Action) = uiState.update { currentState ->
         (currentState.componentsState as? ComponentsState.Loaded) ?.let { state ->
-            val newIdx = when(navigate) {
-                Events.OnboardingButtonNav.PREV -> state.listCurrentIndex.minus(1).coerceAtLeast(0)
-                Events.OnboardingButtonNav.NEXT -> state.listCurrentIndex.plus(1).coerceAtMost(state.listMaxIndex)
+            val newIdx = when(action) {
+                Events.Action.PREV -> state.currentIndex.minus(1).coerceAtLeast(0)
+                Events.Action.NEXT -> state.currentIndex.plus(1).coerceAtMost(state.maxIndex)
             }
-            currentState.copy(state.copy(listCurrentIndex = newIdx))
+            currentState.copy(state.copy(currentIndex = newIdx))
         } ?: currentState
     }
-    private fun onNavOnboardingFinishEvent() = viewModelScope.launch { ucFinishOnboarding.invoke() }
+    private fun handlePageFinish() = viewModelScope.launch { ucFinishOnboarding.invoke() }
 }

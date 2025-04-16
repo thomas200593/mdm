@@ -21,7 +21,7 @@ import com.thomas200593.mdm.core.design_system.util.Constants.Dimens.dp16
 import com.thomas200593.mdm.core.design_system.util.Constants.STR_APP_VERSION
 
 @Composable
-fun ScrLoading(@StringRes loadingLabel: Int = R.string.str_loading) {
+fun ScrLoading(@StringRes label: Int = R.string.str_loading) {
     Scaffold(
         content = {
             Column (
@@ -30,7 +30,7 @@ fun ScrLoading(@StringRes loadingLabel: Int = R.string.str_loading) {
                 verticalArrangement = Arrangement.spacedBy(dp16, Alignment.CenterVertically),
                 content = {
                     CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                    TxtLgTitle(text = stringResource(loadingLabel))
+                    TxtLgTitle(text = stringResource(label))
                 }
             )
         },

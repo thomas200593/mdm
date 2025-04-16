@@ -3,19 +3,19 @@ package com.thomas200593.mdm.features.onboarding.ui.events
 import com.thomas200593.mdm.features.conf.__language.entity.Language
 
 sealed interface Events {
-    enum class OnboardingButtonNav { NEXT, PREV }
+    enum class Action { NEXT, PREV }
     sealed interface Screen : Events {
-        data object OnOpen : Screen
+        data object Opened : Screen
     }
-    sealed interface TopAppBar : Events {
-        sealed interface BtnLanguage : TopAppBar {
-            data class OnSelect(val language: Language) : TopAppBar
+    sealed interface TopBar : Events {
+        sealed interface BtnLanguage : TopBar {
+            data class Selected(val language: Language) : TopBar
         }
     }
-    sealed interface BottomAppBar : Events {
-        sealed interface BtnNavActions : BottomAppBar {
-            data class PageAction(val action: OnboardingButtonNav) : BtnNavActions
-            data object Finish : BtnNavActions
+    sealed interface BottomBar : Events {
+        sealed interface NavButton : BottomBar {
+            data class Page(val action: Action) : NavButton
+            data object Finish : NavButton
         }
     }
 }

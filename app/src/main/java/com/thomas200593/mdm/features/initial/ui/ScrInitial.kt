@@ -42,7 +42,7 @@ private fun ScrInitial(
     scrGraph: ScrGraphs.Initial, componentsState: ComponentsState,
     onNavToOnboarding: () -> Unit, onNavToInitialization: () -> Unit, onNavToAuth: () -> Unit
 ) = when (componentsState) {
-    ComponentsState.Loading -> ScrLoading(loadingLabel = scrGraph.title)
+    ComponentsState.Loading -> ScrLoading(label = scrGraph.title)
     is ComponentsState.Loaded -> ScreenContent(
         components = componentsState,
         onNavToOnboarding = onNavToOnboarding,
