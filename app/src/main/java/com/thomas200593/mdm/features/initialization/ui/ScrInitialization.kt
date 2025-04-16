@@ -125,8 +125,7 @@ private fun HandleDialogs(
         is DialogState.None -> Unit
         is DialogState.ScrDescDialog -> ScrInfoDialog(
             onDismissRequest = { onTopBarEvent(Events.TopBar.BtnScrDesc.Dismissed) },
-            title = scrGraph.title,
-            description = scrGraph.description
+            title = scrGraph.title, description = scrGraph.description
         )
         is DialogState.LoadingDialog -> {}
         is DialogState.ErrorDialog -> Dialog(
