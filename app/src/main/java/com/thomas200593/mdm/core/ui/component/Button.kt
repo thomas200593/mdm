@@ -93,7 +93,6 @@ fun BtnConfLang(
         }
     }
 }
-
 @Composable
 fun BtnNext(
     modifier: Modifier = Modifier,
@@ -121,7 +120,6 @@ fun BtnNext(
         content = { Text(label); Icon(imageVector = icon, contentDescription = null)  }
     )
 }
-
 @Composable
 fun BtnPrevious(
     modifier: Modifier = Modifier,

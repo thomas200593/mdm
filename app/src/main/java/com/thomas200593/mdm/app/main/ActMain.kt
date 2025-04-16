@@ -34,10 +34,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ActMain : AppCompatActivity() {
-
     @Inject lateinit var networkMonitor: NetworkMonitor
     private val vm: VMMain by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashscreen = installSplashScreen()
         super.onCreate(savedInstanceState)

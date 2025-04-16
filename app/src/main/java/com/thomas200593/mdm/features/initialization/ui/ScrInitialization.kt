@@ -62,151 +62,113 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ScrInitialization(
-    scrGraph: ScrGraphs.Initialization,
-    vm: VMInitialization = hiltViewModel(),
-    stateApp: StateApp = LocalStateApp.current,
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
+    scrGraph: ScrGraphs.Initialization, vm: VMInitialization = hiltViewModel(),
+    stateApp: StateApp = LocalStateApp.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
-    val formState = vm.formState
-    LaunchedEffect(key1 = Unit, block = { vm.onScreenEvents(Events.Screen.OnOpen) })
+    val form = vm.formState
+    LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrInitialization(
-        scrGraph = scrGraph, componentsState = uiState.componentsState,
-        formState = formState,
-        onTopAppBarEvents = vm::onTopAppBarEvents, onDialogEvents = vm::onDialogEvents,
-        onFormEvents = vm::onFormEvents, onBottomBarEvents = vm::onBottomBarEvents,
-        onSuccessInitialization = {
-            vm.onDialogEvents(Events.Dialog.InitializationSuccessOnDismiss)
-                .also { coroutineScope.launch { stateApp.navController.navToInitial() } }
-        }
+        scrGraph = scrGraph, components = uiState.componentsState,
+        form = form,
+        onTopBarEvent = vm::onTopBarEvent, onDialogEvent = vm::onDialogEvent,
+        onFormEvent = vm::onFormEvent, onBottomBarEvent = vm::onBottomBarEvent,
+        onInitializationSuccess = { vm.onDialogEvent(Events.Dialog.SuccessDismissed)
+            .also { coroutineScope.launch { stateApp.navController.navToInitial() } } }
     )
 }
 @Composable
 private fun ScrInitialization(
-    scrGraph: ScrGraphs.Initialization,
-    componentsState: ComponentsState,
-    formState: FormState,
-    onTopAppBarEvents: (Events.TopAppBar) -> Unit,
-    onBottomBarEvents: (Events.BottomAppBar) -> Unit,
-    onFormEvents: (Events.Content.Form) -> Unit,
-    onDialogEvents: (Events.Dialog) -> Unit,
-    onSuccessInitialization: () -> Unit
-) = when (componentsState) {
+    scrGraph: ScrGraphs.Initialization, components: ComponentsState, form: FormState,
+    onTopBarEvent: (Events.TopBar) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit,
+    onFormEvent: (Events.Content.Form) -> Unit, onDialogEvent: (Events.Dialog) -> Unit,
+    onInitializationSuccess: () -> Unit
+) = when (components) {
     is ComponentsState.Loading -> ScrLoading()
     is ComponentsState.Loaded -> ScreenContent(
-        components = componentsState, scrGraph = scrGraph,
-        formState = formState,
-        onTopAppBarEvents = onTopAppBarEvents, onDialogEvents = onDialogEvents,
-        onFormEvents = onFormEvents, onBottomBarEvents = onBottomBarEvents,
-        onSuccessInitialization = onSuccessInitialization
+        components = components, scrGraph = scrGraph, form = form,
+        onDialogEvent = onDialogEvent, onTopBarEvent = onTopBarEvent,
+        onFormEvent = onFormEvent, onBottomBarEvent = onBottomBarEvent,
+        onInitializationSuccess = onInitializationSuccess
     )
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
-    scrGraph: ScrGraphs.Initialization,
-    components: ComponentsState.Loaded,
-    formState: FormState,
-    onTopAppBarEvents : (Events.TopAppBar) -> Unit,
-    onFormEvents: (Events.Content.Form) -> Unit,
-    onDialogEvents: (Events.Dialog) -> Unit,
-    onBottomBarEvents: (Events.BottomAppBar) -> Unit,
-    onSuccessInitialization: () -> Unit
+    scrGraph: ScrGraphs.Initialization, components: ComponentsState.Loaded, form: FormState,
+    onDialogEvent: (Events.Dialog) -> Unit, onTopBarEvent : (Events.TopBar) -> Unit,
+    onFormEvent: (Events.Content.Form) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit,
+    onInitializationSuccess: () -> Unit
 ) {
     HandleDialogs(
-        dialogState = components.dialogState,
-        scrGraph = scrGraph,
-        onTopAppBarEvents = onTopAppBarEvents,
-        onDialogEvents = onDialogEvents,
-        onSuccessInitialization = onSuccessInitialization
+        dialog = components.dialogState, scrGraph = scrGraph, onDialogEvent = onDialogEvent,
+        onTopBarEvent = onTopBarEvent, onInitializationSuccess = onInitializationSuccess
     )
     Scaffold(
         modifier = Modifier.imePadding(),
-        topBar = { SectionTopBar(onTopAppBarEvents) },
-        content = {
-            SectionContent(
-                paddingValues = it,
-                formState = formState,
-                onFormEvents = onFormEvents
-            )
-        },
-        bottomBar = {
-            AnimatedVisibility (
-                visible = formState.btnProceedVisible,
-                enter = fadeIn() + slideInVertically(), exit = fadeOut() + slideOutVertically()
-            ) {
-                SectionBottomBar(
-                    btnProceedEnabled = formState.btnProceedEnabled,
-                    onBottomBarEvents = onBottomBarEvents
-                )
-            }
-        }
+        topBar = { SectionTopBar(onTopBarEvent) },
+        content = { SectionContent(paddingValues = it, form = form, onFormEvent = onFormEvent) },
+        bottomBar = { AnimatedVisibility (
+            visible = form.btnProceedVisible,
+            enter = fadeIn() + slideInVertically(), exit = fadeOut() + slideOutVertically(),
+            content = { SectionBottomBar(btnProceedEnabled = form.btnProceedEnabled, onBottomBarEvent = onBottomBarEvent) }
+        ) }
     )
 }
 @Composable
 private fun HandleDialogs(
-    dialogState: DialogState,
-    scrGraph: ScrGraphs.Initialization,
-    onTopAppBarEvents: (Events.TopAppBar) -> Unit,
-    onDialogEvents: (Events.Dialog) -> Unit,
-    onSuccessInitialization: () -> Unit
+    dialog: DialogState, scrGraph: ScrGraphs.Initialization, onDialogEvent: (Events.Dialog) -> Unit,
+    onTopBarEvent: (Events.TopBar) -> Unit, onInitializationSuccess: () -> Unit
 ) {
-    when(dialogState) {
+    when(dialog) {
         is DialogState.None -> Unit
-        is DialogState.InfoScrDesc -> Dialog(
-            onDismissRequest = { onTopAppBarEvents(Events.TopAppBar.BtnScrDesc.OnDismiss) },
+        is DialogState.ScrDescDialog -> Dialog(
+            onDismissRequest = { onTopBarEvent(Events.TopBar.BtnScrDesc.Dismissed) },
             icon = { Icon(Icons.Default.Info, null) },
             title = { Text(stringResource(scrGraph.title)) },
             text = { Text(stringResource(scrGraph.description)) },
-            confirmButton = {
-                Button(
-                    onClick = { onTopAppBarEvents(Events.TopAppBar.BtnScrDesc.OnDismiss) },
-                    content = { Text(stringResource(R.string.str_back)) }
-                )
-            }
+            confirmButton = { Button(
+                onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Dismissed) },
+                content = { Text(stringResource(R.string.str_back)) }
+            ) }
         )
-        is DialogState.Error -> Dialog(
-            onDismissRequest = { onDialogEvents(Events.Dialog.InitializationErrorOnDismiss) },
+        is DialogState.ErrorDialog -> Dialog(
+            onDismissRequest = { onDialogEvent(Events.Dialog.ErrorDismissed) },
             icon = { Icon(Icons.Default.Close, null) },
             title = { Text(stringResource(R.string.str_error)) },
-            text = { Text("Initialization Error!") },
-            confirmButton = {
-                Button(
-                    onClick = { onDialogEvents(Events.Dialog.InitializationErrorOnDismiss) },
-                    content = { Text(stringResource(R.string.str_back)) }
-                )
-            },
+            text = { Text("Initialization ErrorDialog!") },
+            confirmButton = { Button(
+                onClick = { onDialogEvent(Events.Dialog.ErrorDismissed) },
+                content = { Text(stringResource(R.string.str_back)) }
+            ) },
             properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
         )
-        is DialogState.SuccessInitialization -> Dialog(
-            onDismissRequest = { onSuccessInitialization() },
+        is DialogState.SuccessDialog -> Dialog(
+            onDismissRequest = { onInitializationSuccess() },
             icon = { Icon(Icons.Default.Check, null) },
             title = { Text(stringResource(R.string.str_success)) },
             text = { Text("Initialization Success!") },
-            confirmButton = {
-                Button(
-                    onClick = { onSuccessInitialization() },
-                    content = { Text(stringResource(R.string.str_finish)) }
-                )
-            }
+            confirmButton = { Button(
+                onClick = { onInitializationSuccess() },
+                content = { Text(stringResource(R.string.str_finish)) }
+            ) }
         )
     }
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SectionTopBar(onTopAppBarEvents: (Events.TopAppBar) -> Unit) {
+private fun SectionTopBar(onTopAppBarEvents: (Events.TopBar) -> Unit) {
     TopAppBar(
-        title = {},
-        actions = {
+        title = {}, actions = {
             IconButton(
-                onClick = { onTopAppBarEvents(Events.TopAppBar.BtnScrDesc.OnClick) },
+                onClick = { onTopAppBarEvents(Events.TopBar.BtnScrDesc.Clicked) },
                 content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) }
             )
         }
     )
 }
 @Composable
-private fun SectionContent(paddingValues: PaddingValues, formState: FormState, onFormEvents: (Events.Content.Form) -> Unit) {
+private fun SectionContent(paddingValues: PaddingValues, form: FormState, onFormEvent: (Events.Content.Form) -> Unit) {
     Surface(
         modifier = Modifier.padding(paddingValues),
         content = {
@@ -215,7 +177,7 @@ private fun SectionContent(paddingValues: PaddingValues, formState: FormState, o
                 verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
                 content = {
                     item { PartTitle() }
-                    item { PartForm(formState = formState, onFormEvents = onFormEvents) }
+                    item { PartForm(form = form, onFormEvent = onFormEvent) }
                 }
             )
         }
@@ -239,47 +201,45 @@ private fun PartTitle() {
     )
 }
 @Composable
-private fun PartForm(formState: FormState, onFormEvents : (Events.Content.Form) -> Unit) {
+private fun PartForm(form: FormState, onFormEvent : (Events.Content.Form) -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.extraSmall,
+        modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.extraSmall,
         content = {
             Column(
                 modifier = Modifier.padding(Constants.Dimens.dp16),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                content =  {
+                verticalArrangement = Arrangement.spacedBy(8.dp), content =  {
                     TxtFieldPersonName(
-                        value = formState.fldFirstName,
-                        onValueChange = { onFormEvents(Events.Content.Form.FldValChgFirstName(it)) },
-                        enabled = formState.fldFirstNameEnabled,
-                        isError = formState.fldFirstNameError.isNotEmpty(),
-                        errorMessage = formState.fldFirstNameError,
+                        value = form.fldFirstName,
+                        onValueChange = { onFormEvent(Events.Content.Form.FirstNameChanged(it)) },
+                        enabled = form.fldFirstNameEnabled,
+                        isError = form.fldFirstNameError.isNotEmpty(),
+                        errorMessage = form.fldFirstNameError,
                         label = stringResource(R.string.str_first_name),
                         placeholder = stringResource(R.string.str_first_name)
                     )
                     TxtFieldPersonName(
-                        value = formState.fldLastName,
-                        onValueChange = { onFormEvents(Events.Content.Form.FldValChgLastName(it)) },
-                        enabled = formState.fldLastNameEnabled,
-                        isError = formState.fldLastNameError.isNotEmpty(),
-                        errorMessage = formState.fldLastNameError,
+                        value = form.fldLastName,
+                        onValueChange = { onFormEvent(Events.Content.Form.LastNameChanged(it)) },
+                        enabled = form.fldLastNameEnabled,
+                        isError = form.fldLastNameError.isNotEmpty(),
+                        errorMessage = form.fldLastNameError,
                         label = stringResource(R.string.str_last_name),
                         placeholder = stringResource(R.string.str_last_name)
                     )
                     TxtFieldEmail(
-                        value = formState.fldEmail,
-                        onValueChange = { onFormEvents(Events.Content.Form.FldValChgEmail(it)) },
-                        enabled = formState.fldEmailEnabled,
-                        isError = formState.fldEmailError.isNotEmpty(),
-                        errorMessage = formState.fldEmailError
+                        value = form.fldEmail,
+                        onValueChange = { onFormEvent(Events.Content.Form.EmailChanged(it)) },
+                        enabled = form.fldEmailEnabled,
+                        isError = form.fldEmailError.isNotEmpty(),
+                        errorMessage = form.fldEmailError
                     )
                     TxtFieldPassword(
-                        value = formState.fldPassword,
-                        onValueChange = { onFormEvents(Events.Content.Form.FldValChgPassword(it)) },
-                        enabled = formState.fldPasswordEnabled,
-                        isError = formState.fldPasswordError.isNotEmpty(),
-                        errorMessage = formState.fldPasswordError
+                        value = form.fldPassword,
+                        onValueChange = { onFormEvent(Events.Content.Form.PasswordChanged(it)) },
+                        enabled = form.fldPasswordEnabled,
+                        isError = form.fldPasswordError.isNotEmpty(),
+                        errorMessage = form.fldPasswordError
                     )
                 }
             )
@@ -287,16 +247,14 @@ private fun PartForm(formState: FormState, onFormEvents : (Events.Content.Form) 
     )
 }
 @Composable
-private fun SectionBottomBar(btnProceedEnabled: Boolean, onBottomBarEvents: (Events.BottomAppBar) -> Unit) {
+private fun SectionBottomBar(btnProceedEnabled: Boolean, onBottomBarEvent: (Events.BottomBar) -> Unit) {
     BottomAppBar(
-        content = {
-            Button (
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { onBottomBarEvents(Events.BottomAppBar.BtnProceedInit.OnClick) },
-                enabled = btnProceedEnabled,
-                shape = MaterialTheme.shapes.extraSmall,
-                content = { Text(text = stringResource(R.string.str_proceed)) }
-            )
-        }
+        content = { Button (
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { onBottomBarEvent(Events.BottomBar.BtnProceedInit.Clicked) },
+            enabled = btnProceedEnabled,
+            shape = MaterialTheme.shapes.extraSmall,
+            content = { Text(text = stringResource(R.string.str_proceed)) }
+        ) }
     )
 }

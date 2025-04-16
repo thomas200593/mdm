@@ -9,7 +9,6 @@ import java.time.Instant
  */
 object UUIDv7 {
     private val random = SecureRandom()
-
     fun generateAsBytes(): ByteArray {
         val timestamp = Instant.now().toEpochMilli()
         val randomBytes = ByteArray(10).apply { random.nextBytes(this) }
@@ -21,21 +20,16 @@ object UUIDv7 {
             *randomBytes.copyOfRange(3, 10)
         )
     }
-
     fun generateAsString(): String = generateAsBytes().toUUIDString()
-
     fun extractTimestamp(uuidBytes: ByteArray): Long = uuidBytes
         .also { require(it.size == 16) { "Invalid UUID: must be 16 bytes" } }.toLong(0, 6)
-
     fun fromUUIDString(uuid: String): ByteArray = uuid.replace("-", "")
         .also { require(it.length == 32) { "Invalid UUID format: must be 32 hex characters" } }
         .chunked(2).map { it.toInt(16).toByte() }.toByteArray()
-
     private fun ByteArray.toUUIDString(): String =
         also { require(size == 16) { "Invalid UUID: must be 16 bytes" } }
             .joinToString("") { "%02x".format(it) }
                 .replace(Regex("(.{8})(.{4})(.{4})(.{4})(.{12})"), "$1-$2-$3-$4-$5")
-
     private fun ByteArray.toLong(startIndex: Int, length: Int): Long =
         also { require(length in 1..8) { "Cannot convert more than 8 bytes to Long" } }
             .also { require(startIndex + length <= size) { "ByteArray out of bounds" } }

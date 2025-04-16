@@ -32,54 +32,48 @@ class VMInitialization @Inject constructor(
         private set
     var formState by mutableStateOf(FormState())
         private set
-    fun onScreenEvents(screenEvents: Events.Screen) = when(screenEvents) {
-        Events.Screen.OnOpen -> onOpenEvent()
+    fun onScreenEvent(event: Events.Screen) = when(event) {
+        is Events.Screen.Opened -> onOpenEvent()
     }
-    fun onTopAppBarEvents(topAppBarEvents: Events.TopAppBar) = when(topAppBarEvents) {
-        Events.TopAppBar.BtnScrDesc.OnClick -> updateDialog { DialogState.InfoScrDesc }
-        Events.TopAppBar.BtnScrDesc.OnDismiss -> updateDialog { DialogState.None }
+    fun onDialogEvent(dialogEvents: Events.Dialog) = when(dialogEvents) {
+        is Events.Dialog.ErrorDismissed -> resetState()
+        is Events.Dialog.SuccessDismissed -> resetState()
     }
-    fun onDialogEvents(dialogEvents: Events.Dialog) = when(dialogEvents) {
-        Events.Dialog.InitializationErrorOnDismiss -> resetFormAndUiState()
-        Events.Dialog.InitializationSuccessOnDismiss -> resetFormAndUiState()
+    fun onTopBarEvent(event: Events.TopBar) = when(event) {
+        is Events.TopBar.BtnScrDesc.Clicked -> updateDialog { DialogState.ScrDescDialog }
+        is Events.TopBar.BtnScrDesc.Dismissed -> updateDialog { DialogState.None }
     }
-    fun onFormEvents(formEvents: Events.Content.Form) = when(formEvents) {
-        is Events.Content.Form.FldValChgFirstName ->
-            updateForm { it.validateField(firstName = formEvents.firstName).validateFields() }
-        is Events.Content.Form.FldValChgLastName ->
-            updateForm { it.validateField(lastName = formEvents.lastName).validateFields() }
-        is Events.Content.Form.FldValChgEmail ->
-            updateForm { it.validateField(email = formEvents.email).validateFields() }
-        is Events.Content.Form.FldValChgPassword ->
-            updateForm { it.validateField(password = formEvents.password).validateFields() }
+    fun onFormEvent(event: Events.Content.Form) = when(event) {
+        is Events.Content.Form.FirstNameChanged -> updateForm { it.validateField(firstName = event.firstName).validateFields() }
+        is Events.Content.Form.LastNameChanged -> updateForm { it.validateField(lastName = event.lastName).validateFields() }
+        is Events.Content.Form.EmailChanged -> updateForm { it.validateField(email = event.email).validateFields() }
+        is Events.Content.Form.PasswordChanged -> updateForm { it.validateField(password = event.password).validateFields() }
     }
-    fun onBottomBarEvents(bottomBarEvents: Events.BottomAppBar) = when(bottomBarEvents) {
-        Events.BottomAppBar.BtnProceedInit.OnClick -> onProceedInit()
+    fun onBottomBarEvent(event: Events.BottomBar) = when(event) {
+        is Events.BottomBar.BtnProceedInit.Clicked -> handleInitialization()
     }
     private fun onOpenEvent() {
         uiState.update { it.copy(componentsState = ComponentsState.Loading) }
         viewModelScope.launch {
             ucGetDataInitialization.invoke().collect { confCommon ->
-                uiState.update { currentState ->
-                    currentState.copy(
-                        componentsState = ComponentsState.Loaded(
-                            confCommon = confCommon,
-                            dialogState = DialogState.None,
-                            resultInitializationState = ResultInitializationState.Idle
-                        )
+                uiState.update { currentState -> currentState.copy(
+                    componentsState = ComponentsState.Loaded(
+                        confCommon = confCommon,
+                        dialogState = DialogState.None,
+                        resultInitializationState = ResultInitializationState.Idle
                     )
-                }
+                ) }
             }
         }
         formState = formState.validateField()
     }
     private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
         viewModelScope.launch(Dispatchers.Main.immediate) {
-            uiState.update { currentState ->
-                (currentState.componentsState as? ComponentsState.Loaded)
+            uiState.update { current ->
+                (current.componentsState as? ComponentsState.Loaded)
                     ?. let(transform)
-                    ?. let{ updatedState -> currentState.copy(componentsState = updatedState)}
-                    ?: currentState
+                    ?. let{ updatedState -> current.copy(componentsState = updatedState)}
+                    ?: current
             }
         }
     private fun updateDialog(transform: (DialogState) -> DialogState) =
@@ -91,14 +85,14 @@ class VMInitialization @Inject constructor(
                 if (updated != formState) formState = updated
             }
         }
-    private fun resetFormAndUiState() {
+    private fun resetState() {
         updateUiState { it.copy(
             dialogState = DialogState.None,
             resultInitializationState = ResultInitializationState.Idle
         ) }
         formState = FormState().validateField()
     }
-    private fun onProceedInit() {
+    private fun handleInitialization() {
         formState = formState.disableInputs()
         updateUiState { componentState -> componentState.copy(resultInitializationState = ResultInitializationState.Loading) }
         viewModelScope.launch {
@@ -114,13 +108,13 @@ class VMInitialization @Inject constructor(
                 onSuccess = { result ->
                     updateUiState { it.copy(
                         resultInitializationState = ResultInitializationState.Success(result),
-                        dialogState = DialogState.SuccessInitialization
+                        dialogState = DialogState.SuccessDialog
                     ) }
                 },
                 onFailure = { err ->
                     updateUiState { it.copy(
                         resultInitializationState = ResultInitializationState.Error(err),
-                        dialogState = DialogState.Error(err)
+                        dialogState = DialogState.ErrorDialog(err)
                     ) }
                 }
             )

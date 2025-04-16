@@ -17,7 +17,6 @@ import javax.inject.Inject
 interface DataStorePreferences {
     val instance: DataStore<Preferences>
 }
-
 class DataStorePreferencesImpl @Inject constructor(
     @ApplicationContext context: Context,
     @ApplicationScope scope: CoroutineScope,

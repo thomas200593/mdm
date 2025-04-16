@@ -12,7 +12,7 @@ class RepoUserImpl @Inject constructor(
     private val daoUser: DaoUser
 ) : RepoUser {
     override suspend fun getOrCreateUser(user: UserEntity) : Result<UserEntity> =
-        runCatching { daoUser.getUserByEmail(user.email) ?: user.takeIf { daoUser.insertUser(it) > 0 } ?: error("Error creating user.") }
+        runCatching { daoUser.getUserByEmail(user.email) ?: user.takeIf { daoUser.insertUser(it) > 0 } ?: error("ErrorDialog creating user.") }
             .fold(
                 onSuccess = { entity -> Result.success(entity) },
                 onFailure = { t -> Result.failure(t) }

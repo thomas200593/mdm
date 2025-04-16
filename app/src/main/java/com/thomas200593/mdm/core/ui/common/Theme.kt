@@ -46,7 +46,6 @@ object Theme {
                 ContrastAccent.HIGH -> lightContrastHigh
             }
         }
-
         MaterialTheme(
             colorScheme = colorScheme,
             shapes = shapes,

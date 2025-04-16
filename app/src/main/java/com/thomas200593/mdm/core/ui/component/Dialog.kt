@@ -11,11 +11,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.DialogProperties
 
 enum class DialogType {
-    CONFIRMATION,
-    ERROR,
-    INFORMATION,
-    SUCCESS,
-    WARNING;
+    CONFIRMATION, ERROR, INFORMATION, SUCCESS, WARNING;
     companion object { val defaultValue = INFORMATION }
 }
 @Composable

@@ -35,7 +35,6 @@ fun rememberStateApp(
         networkMonitor = networkMonitor
     )
 }
-
 @Stable
 class StateApp(
     coroutineScope: CoroutineScope,

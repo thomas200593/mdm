@@ -6,7 +6,6 @@ inline fun <T> List<T>.filterSort(
     crossinline filter: (T) -> Boolean = { true }, // Default : No filtering
     vararg properties: Pair<KProperty1<T, Comparable<*>?>, Boolean> // Multiple & dynamic sort properties
 ) = this.filter(filter).sortedWith(compareByMultiple(*properties)).toList()
-
 fun <T> compareByMultiple(vararg properties: Pair<KProperty1<T, Comparable<*>?>, Boolean>): Comparator<T> =
     Comparator { a, b -> properties.asSequence().map { (prop, ascending) ->
         @Suppress("UNCHECKED_CAST")

@@ -33,25 +33,21 @@ fun DestTopLevelAppBar(
         navigationIcon = {
             IconButton(
                 onClick = navBtnOnClick,
-                content = {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(navBtnIcon),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
+                content = { Icon(
+                    imageVector = ImageVector.vectorResource(navBtnIcon),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface
+                ) }
             )
         },
         actions = {
             IconButton(
                 onClick = actBtnOnClick,
-                content = {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(actBtnIcon),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
+                content = { Icon(
+                    imageVector = ImageVector.vectorResource(actBtnIcon),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface
+                ) }
             )
         },
         colors = colors

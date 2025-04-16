@@ -134,7 +134,7 @@ private fun SectionPageAuthPanel() {
                     containerColor = MaterialTheme.colorScheme.errorContainer,
                     contentColor = MaterialTheme.colorScheme.onErrorContainer
                 ),
-                content = { TxtMdBody("Error") }
+                content = { TxtMdBody("ErrorDialog") }
             )
             Button (
                 modifier = Modifier.fillMaxWidth(),
