@@ -26,7 +26,7 @@ class TxtFieldPasswordValidation : BaseValidation<String, ValidationResult> {
             append(minLen)
             append(",")
             append(maxLen)
-            append("}\$")                 // Length enforcement
+            append("}$")                  // Length enforcement
         })
         // Required Check
         if (required == true && input.isBlank()) {
