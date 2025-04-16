@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.features.conf.__language.entity.Language
 import com.thomas200593.mdm.features.conf.__language.repository.RepoConfLanguage
 import com.thomas200593.mdm.features.onboarding.domain.UCFinishOnboarding
-import com.thomas200593.mdm.features.onboarding.domain.UCGetDataOnboarding
+import com.thomas200593.mdm.features.onboarding.domain.UCGetScreenData
 import com.thomas200593.mdm.features.onboarding.ui.events.Events
 import com.thomas200593.mdm.features.onboarding.ui.state.ComponentsState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VMOnboarding @Inject constructor(
-    private val ucGetDataOnboarding: UCGetDataOnboarding,
+    private val ucGetScreenData: UCGetScreenData,
     private val ucFinishOnboarding: UCFinishOnboarding,
     private val repoConfLanguage: RepoConfLanguage
 ) : ViewModel() {
@@ -36,7 +36,7 @@ class VMOnboarding @Inject constructor(
     private fun handleOpenScreen() {
         uiState.update { it.copy(componentsState = ComponentsState.Loading) }
         viewModelScope.launch {
-            ucGetDataOnboarding.invoke().collect { result ->
+            ucGetScreenData.invoke().collect { result ->
                 uiState.update { currentState -> currentState.copy(
                     componentsState = ComponentsState.Loaded(
                         confCommon = result.confCommon,

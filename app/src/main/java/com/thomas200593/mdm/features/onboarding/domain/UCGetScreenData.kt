@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class UCGetDataOnboarding @Inject constructor(
+class UCGetScreenData @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val ucGetConfCommonCurrent: UCGetConfCommonCurrent,
     private val repoConfLanguage: RepoConfLanguage,

@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class UCGetDataInitial @Inject constructor(
+class UCGetScreenData @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatchers: CoroutineDispatcher,
     private val repoConfCommon: RepoConfCommon
 ) { operator fun invoke() = repoConfCommon.confCommon.flowOn(ioDispatchers) }

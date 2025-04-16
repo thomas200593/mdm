@@ -9,7 +9,7 @@ import com.thomas200593.mdm.core.design_system.util.update
 import com.thomas200593.mdm.features.auth.entity.AuthProvider
 import com.thomas200593.mdm.features.auth.entity.AuthType
 import com.thomas200593.mdm.features.initialization.domain.UCCreateInitialUser
-import com.thomas200593.mdm.features.initialization.domain.UCGetDataInitialization
+import com.thomas200593.mdm.features.initialization.domain.UCGetScreenData
 import com.thomas200593.mdm.features.initialization.entity.DTOInitialization
 import com.thomas200593.mdm.features.initialization.ui.events.Events
 import com.thomas200593.mdm.features.initialization.ui.state.ComponentsState
@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VMInitialization @Inject constructor(
-    private val ucGetDataInitialization: UCGetDataInitialization,
+    private val ucGetScreenData: UCGetScreenData,
     private val ucCreateDataInitialization: UCCreateInitialUser
 ) : ViewModel() {
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
@@ -55,7 +55,7 @@ class VMInitialization @Inject constructor(
     private fun handleOpenScreen() {
         uiState.update { it.copy(componentsState = ComponentsState.Loading) }
         viewModelScope.launch {
-            ucGetDataInitialization.invoke().collect { confCommon ->
+            ucGetScreenData.invoke().collect { confCommon ->
                 uiState.update { currentState -> currentState.copy(
                     componentsState = ComponentsState.Loaded(
                         confCommon = confCommon,
