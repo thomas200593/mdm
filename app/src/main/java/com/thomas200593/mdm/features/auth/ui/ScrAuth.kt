@@ -93,12 +93,11 @@ private fun SectionContent(paddingValues: PaddingValues) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp36),
+                verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
                 content = {
                     item { SectionPageLogo() }
                     item { SectionPageTitle() }
                     item { SectionPageAuthPanel() }
-                    item { SectionRecoverAccount() }
                 }
             )
         }
@@ -153,6 +152,7 @@ private fun SectionPageAuthPanel() {
                 shape = MaterialTheme.shapes.extraSmall,
                 content = { Text(text = "Sign in") }
             )
+            SectionRecoverAccount()
         }
     )
 }
