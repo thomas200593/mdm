@@ -74,11 +74,13 @@ class VMInitialization @Inject constructor(
         formState = formState.validateField()
     }
     private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
-        uiState.update { currentState ->
-            (currentState.componentsState as? ComponentsState.Loaded)
-                ?. let(transform)
-                ?. let{ updatedState -> currentState.copy(componentsState = updatedState)}
-                ?: currentState
+        viewModelScope.launch(Dispatchers.Main.immediate) {
+            uiState.update { currentState ->
+                (currentState.componentsState as? ComponentsState.Loaded)
+                    ?. let(transform)
+                    ?. let{ updatedState -> currentState.copy(componentsState = updatedState)}
+                    ?: currentState
+            }
         }
     private fun updateDialog(transform: (DialogState) -> DialogState) =
         updateUiState { it.copy(dialogState = transform(it.dialogState)) }
