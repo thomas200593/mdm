@@ -66,7 +66,6 @@ class VMInitialization @Inject constructor(
                 ) }
             }
     }
-
     private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
         viewModelScope.launch(Dispatchers.Main.immediate) {
             uiState.update { current ->
