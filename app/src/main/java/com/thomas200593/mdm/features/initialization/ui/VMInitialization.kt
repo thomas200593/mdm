@@ -53,6 +53,22 @@ class VMInitialization @Inject constructor(
     fun onBottomBarEvent(event: Events.BottomBar) = when(event) {
         is Events.BottomBar.BtnProceedInit.Clicked -> handleInitialization()
     }
+    private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
+        viewModelScope.launch(Dispatchers.Main.immediate) {
+            uiState.update { current ->
+                (current.componentsState as? ComponentsState.Loaded)
+                    ?. let(transform)
+                    ?. let{ updatedState -> current.copy(componentsState = updatedState)}
+                    ?: current
+            }
+        }
+    private fun resetState() {
+        updateUiState { it.copy(
+            dialogState = DialogState.None,
+            resultInitialization = ResultInitialization.Idle
+        ) }
+        formState = FormState().validateField()
+    }
     private fun handleOpenScreen() = viewModelScope.launch {
         ucGetScreenData.invoke()
             .onStart { formState = formState.validateField(); uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
@@ -66,15 +82,6 @@ class VMInitialization @Inject constructor(
                 ) }
             }
     }
-    private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
-        viewModelScope.launch(Dispatchers.Main.immediate) {
-            uiState.update { current ->
-                (current.componentsState as? ComponentsState.Loaded)
-                    ?. let(transform)
-                    ?. let{ updatedState -> current.copy(componentsState = updatedState)}
-                    ?: current
-            }
-        }
     private fun updateDialog(transform: (DialogState) -> DialogState) =
         updateUiState { it.copy(dialogState = transform(it.dialogState)) }
     private fun updateForm(transform: (FormState) -> FormState) =
@@ -84,13 +91,6 @@ class VMInitialization @Inject constructor(
                 if (updated != formState) formState = updated
             }
         }
-    private fun resetState() {
-        updateUiState { it.copy(
-            dialogState = DialogState.None,
-            resultInitialization = ResultInitialization.Idle
-        ) }
-        formState = FormState().validateField()
-    }
     private fun handleInitialization() {
         val frozenForm = formState.disableInputs(); formState = frozenForm
         updateUiState { componentState -> componentState.copy(resultInitialization = ResultInitialization.Loading, dialogState = DialogState.LoadingDialog) }

@@ -106,7 +106,7 @@ private fun ScreenContent(
     )
     Scaffold(
         modifier = Modifier.imePadding(),
-        topBar = { SectionTopBar(onTopBarEvent) },
+        topBar = { SectionTopBar(onTopBarEvent = onTopBarEvent) },
         content = { SectionContent(paddingValues = it, form = form, onFormEvent = onFormEvent) },
         bottomBar = { AnimatedVisibility (
             visible = form.btnProceedVisible,
@@ -137,11 +137,11 @@ private fun HandleDialogs(
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SectionTopBar(onTopAppBarEvents: (Events.TopBar) -> Unit) {
+private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) {
     TopAppBar(
         title = {}, actions = {
             IconButton(
-                onClick = { onTopAppBarEvents(Events.TopBar.BtnScrDesc.Clicked) },
+                onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Clicked) },
                 content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) }
             )
         }

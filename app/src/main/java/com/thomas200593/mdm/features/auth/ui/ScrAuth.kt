@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -48,6 +49,7 @@ import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.features.auth.ui.events.Events
 import com.thomas200593.mdm.features.auth.ui.state.ComponentsState
+import com.thomas200593.mdm.features.auth.ui.state.FormAuthState
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -56,42 +58,69 @@ fun ScrAuth(
     stateApp: StateApp = LocalStateApp.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
+    val form = vm.formState
     LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrAuth(
-        scrGraph = scrGraph, components = uiState.componentsState
+        scrGraph = scrGraph, components = uiState.componentsState,
+        form = form,
+        onTopBarEvent = vm::onTopBarEvent,
+        onFormAuthEvent = vm::onFormAuthEvent
     )
 }
 @Composable
 private fun ScrAuth(
-    scrGraph: ScrGraphs.Auth, components: ComponentsState
+    scrGraph: ScrGraphs.Auth, components: ComponentsState, form: FormAuthState,
+    onTopBarEvent: (Events.TopBar) -> Unit, onFormAuthEvent: (Events.Content.Form) -> Unit
 ) = when (components) {
     is ComponentsState.Loading -> ScrLoading()
     is ComponentsState.Loaded -> ScreenContent(
-        scrGraph = scrGraph, components = components
+        scrGraph = scrGraph, components = components, form = form,
+        onTopBarEvent = onTopBarEvent,
+        onFormAuthEvent = onFormAuthEvent
     )
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ScreenContent(scrGraph: ScrGraphs.Auth, components: ComponentsState.Loaded) = Scaffold(
-    topBar = { SectionTopBar() },
-    content = { SectionContent(paddingValues = it) },
-    bottomBar = { SectionBottomBar() }
-)
+private fun ScreenContent(
+    scrGraph: ScrGraphs.Auth,
+    components: ComponentsState.Loaded,
+    form: FormAuthState,
+    onTopBarEvent: (Events.TopBar) -> Unit,
+    onFormAuthEvent: (Events.Content.Form) -> Unit
+) {
+    HandleDialogs()
+    Scaffold(
+        topBar = { SectionTopBar(onTopBarEvent = onTopBarEvent) },
+        content = { SectionContent(
+            paddingValues = it, form = form,
+            onFormAuthEvent = onFormAuthEvent
+        ) },
+        bottomBar = { SectionBottomBar() }
+    )
+}
+@Composable
+private fun HandleDialogs() {}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SectionTopBar() {
+private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) {
     TopAppBar(
         title = {},
         actions = {
             IconButton(
-                onClick = {/*TODO*/},
+                onClick = { onTopBarEvent(Events.TopBar.BtnSetting.Clicked) },
                 content = { Icon(imageVector = Icons.Default.Settings, contentDescription = null) }
+            )
+            IconButton(
+                onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Clicked) },
+                content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) }
             )
         }
     )
 }
 @Composable
-private fun SectionContent(paddingValues: PaddingValues) {
+private fun SectionContent(
+    paddingValues: PaddingValues, form: FormAuthState, onFormAuthEvent: (Events.Content.Form) -> Unit
+) {
     Surface(
         modifier = Modifier.padding(paddingValues),
         content = {
@@ -102,7 +131,10 @@ private fun SectionContent(paddingValues: PaddingValues) {
                 content = {
                     item { SectionPageLogo() }
                     item { SectionPageTitle() }
-                    item { SectionPageAuthPanel() }
+                    item { SectionPageAuthPanel(
+                        form = form,
+                        onFormAuthEvent = onFormAuthEvent
+                    ) }
                 }
             )
         }
@@ -132,17 +164,22 @@ private fun SectionPageTitle() {
     )
 }
 @Composable
-private fun SectionPageAuthPanel() {
+private fun SectionPageAuthPanel(
+    onFormAuthEvent: (Events.Content.Form) -> Unit,
+    form: FormAuthState
+) {
     PanelCard(
         modifier = Modifier.padding(Constants.Dimens.dp16),
         content = {
             TxtFieldEmail(
-                value = "",
-                onValueChange = {}
+                value = form.fldEmail,
+                onValueChange = { onFormAuthEvent(Events.Content.Form.EmailChanged(it)) },
+                enabled = form.fldEmailEnabled
             )
             TxtFieldPassword(
-                value = "",
-                onValueChange = {}
+                value = form.fldPassword,
+                onValueChange = { onFormAuthEvent(Events.Content.Form.PasswordChanged(it)) },
+                enabled = form.fldPasswordEnabled
             )
             PanelCard(
                 colors = CardDefaults.cardColors().copy(
@@ -153,38 +190,38 @@ private fun SectionPageAuthPanel() {
             )
             Button (
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { },
+                onClick = { onFormAuthEvent(Events.Content.Form.BtnSignIn.Clicked) },
                 shape = MaterialTheme.shapes.extraSmall,
+                enabled = form.btnSignInEnabled,
                 content = { Text(text = "Sign in") }
             )
-            SectionRecoverAccount()
+            SectionRecoverAccount(onFormAuthEvent = onFormAuthEvent)
         }
     )
 }
 @Composable
-private fun SectionRecoverAccount() {
+private fun SectionRecoverAccount(
+    onFormAuthEvent : (Events.Content.Form) -> Unit
+) {
     Column (
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        content = {
-            TextButton(
-                onClick = {/*TODO*/},
-                content = { TxtMdBody("Recover my account") }
-            )
-        }
+        content = { TextButton(
+            onClick = { onFormAuthEvent(Events.Content.Form.BtnRecoverAccount.Clicked) },
+            content = { TxtMdBody("Recover my account") }
+        ) }
     )
 }
 @Composable
 private fun SectionBottomBar() {
     BottomAppBar (
         containerColor = MaterialTheme.colorScheme.surface,
-        content = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) { TxtMdBody(stringResource(R.string.app_name) + Constants.STR_APP_VERSION) }
-        }
+        content = { Row (
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            content = { TxtMdBody(stringResource(R.string.app_name) + Constants.STR_APP_VERSION) }
+        ) }
     )
 }
