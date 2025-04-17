@@ -36,12 +36,11 @@ class TimberFileFileLoggerImpl @Inject constructor(
     private val logDir: File = File(context.filesDir, "logs").apply { mkdirs() }
     private val logFile: File = File(logDir, "app_log.log")
     private val maxSizeBytes: Long = 1 * 1024 * 1024 // 1MB
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("yyyy-MM-MM'T'HH:mm:ss.SSSXXX", Locale.getDefault())
     init {
         Timber.plant(object : Timber.DebugTree() {
-            override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-                this@TimberFileFileLoggerImpl.log(priority, tag, message, t)
-            }
+            override fun log(priority: Int, tag: String?, message: String, t: Throwable?)
+            { this@TimberFileFileLoggerImpl.log(priority, tag, message, t) }
         })
         cleanupOldLogs()
     }
@@ -64,38 +63,25 @@ class TimberFileFileLoggerImpl @Inject constructor(
         }
     }
     override fun shareLogFile(context: Context) {
-        val uri: Uri = FileProvider.getUriForFile(
-            context,
-            "${context.packageName}.provider",
-            logFile
-        )
+        val uri: Uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", logFile)
         val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_STREAM, uri)
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            type = "text/plain"; putExtra(Intent.EXTRA_STREAM, uri); addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
         context.startActivity(Intent.createChooser(intent, "Share logs via"))
     }
     private fun rotateLogFileIfNeeded() {
         if (logFile.length() >= maxSizeBytes) {
             val rotated = File(logDir, "app_log_${System.currentTimeMillis()}.log")
-            logFile.copyTo(rotated, overwrite = true)
-            logFile.writeText(Constants.STR_EMPTY)
+            logFile.copyTo(rotated, overwrite = true); logFile.writeText(Constants.STR_EMPTY)
         }
     }
     private fun cleanupOldLogs(keepLast: Int = 3) {
-        val logs = logDir.listFiles { f -> f.name.startsWith("app_log_") }
-            ?.sortedByDescending { it.lastModified() }
-            ?: return
+        val logs = logDir.listFiles { f -> f.name.startsWith("app_log_") }?.sortedByDescending { it.lastModified() } ?: return
         logs.drop(keepLast).forEach { it.delete() }
     }
     private fun priorityToString(priority: Int): String = when (priority) {
-        Log.VERBOSE -> "V"
-        Log.DEBUG -> "D"
-        Log.INFO -> "I"
-        Log.WARN -> "W"
-        Log.ERROR -> "E"
-        Log.ASSERT -> "A"
+        Log.VERBOSE -> "V"; Log.DEBUG -> "D"; Log.INFO -> "I"
+        Log.WARN -> "W"; Log.ERROR -> "E"; Log.ASSERT -> "A"
         else -> priority.toString()
     }
 }
