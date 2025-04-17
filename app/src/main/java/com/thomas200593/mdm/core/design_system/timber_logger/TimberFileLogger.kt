@@ -22,16 +22,16 @@ import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface TimberLogger {
+interface TimberFileLogger {
     fun log(priority: Int, tag: String?, message: String, throwable: Throwable? = null)
     fun flush(line: String)
     fun shareLogFile(context: Context)
 }
 @Singleton
-class FileLogger @Inject constructor(
+class TimberFileFileLoggerImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher : CoroutineDispatcher,
     @ApplicationContext context: Context
-) : TimberLogger {
+) : TimberFileLogger {
     private val scope = CoroutineScope(ioDispatcher + SupervisorJob())
     private val logDir: File = File(context.filesDir, "logs").apply { mkdirs() }
     private val logFile: File = File(logDir, "app_log.log")
@@ -40,7 +40,7 @@ class FileLogger @Inject constructor(
     init {
         Timber.plant(object : Timber.DebugTree() {
             override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-                this@FileLogger.log(priority, tag, message, t)
+                this@TimberFileFileLoggerImpl.log(priority, tag, message, t)
             }
         })
         cleanupOldLogs()
@@ -54,7 +54,7 @@ class FileLogger @Inject constructor(
                     writer.append(logLine)
                     if (throwable != null) writer.append(" | ${throwable.stackTraceToString()}\n")
                 }
-            }.onFailure { Timber.tag("FileLogger").e(it, "Failed to write log") }
+            }.onFailure { Timber.tag("TimberFileFileLoggerImpl").e(it, "Failed to write log") }
         }
     }
     override fun flush(line: String) {

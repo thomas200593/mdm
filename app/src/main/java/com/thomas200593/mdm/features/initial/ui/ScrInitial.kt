@@ -12,7 +12,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
-import com.thomas200593.mdm.core.design_system.timber_logger.di.TimberLoggerEntryPoint
+import com.thomas200593.mdm.core.design_system.timber_logger.di.TimberFileLoggerEntryPoint
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.features.auth.nav.navToAuth
 import com.thomas200593.mdm.features.initial.ui.events.Events
@@ -30,8 +30,8 @@ fun ScrInitial(
     scrGraph: ScrGraphs.Initial, vm: VMInitial = hiltViewModel(), context: Context = LocalContext.current,
     stateApp: StateApp = LocalStateApp.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
-    val logger = EntryPointAccessors.fromApplication(context, TimberLoggerEntryPoint::class.java).timberLogger()
-    logger.log(Log.DEBUG, "ScrInitial", "Test Timber")
+    val logger = EntryPointAccessors.fromApplication(context, TimberFileLoggerEntryPoint::class.java).timberFileLogger()
+    logger.log(Log.DEBUG, "ScrInitial", "Called ScrInitial()")
     val uiState by vm.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrInitial(
