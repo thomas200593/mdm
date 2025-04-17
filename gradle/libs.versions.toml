@@ -25,6 +25,7 @@ googleDevToolsKsp = "2.1.10-1.0.30"
 junit = "4.13.2"
 kotlin = "2.1.10"
 kotlinxSerializationJson = "1.8.0"
+timber = "5.0.1"
 
 [libraries]
 android-material = { group = "com.google.android.material", name = "material", version.ref = "andMaterial" }
@@ -68,6 +69,7 @@ google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", versio
 google-dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "googleDaggerHiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
