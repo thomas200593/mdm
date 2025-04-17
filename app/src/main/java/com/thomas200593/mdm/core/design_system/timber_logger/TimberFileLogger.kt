@@ -28,7 +28,7 @@ interface TimberFileLogger {
     fun shareLogFile(context: Context)
 }
 @Singleton
-class TimberFileFileLoggerImpl @Inject constructor(
+class TimberFileLoggerImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher : CoroutineDispatcher,
     @ApplicationContext context: Context
 ) : TimberFileLogger {
@@ -40,7 +40,7 @@ class TimberFileFileLoggerImpl @Inject constructor(
     init {
         Timber.plant(object : Timber.DebugTree() {
             override fun log(priority: Int, tag: String?, message: String, t: Throwable?)
-            { this@TimberFileFileLoggerImpl.log(priority, tag, message, t) }
+            { this@TimberFileLoggerImpl.log(priority, tag, message, t) }
         })
         cleanupOldLogs()
     }
@@ -53,7 +53,7 @@ class TimberFileFileLoggerImpl @Inject constructor(
                     writer.append(logLine)
                     if (throwable != null) writer.append(" | ${throwable.stackTraceToString()}\n")
                 }
-            }.onFailure { Timber.tag("TimberFileFileLoggerImpl").e(it, "Failed to write log") }
+            }.onFailure { Timber.tag(this@TimberFileLoggerImpl::class.simpleName.toString()).e(it, "Failed to write log") }
         }
     }
     override fun flush(line: String) {

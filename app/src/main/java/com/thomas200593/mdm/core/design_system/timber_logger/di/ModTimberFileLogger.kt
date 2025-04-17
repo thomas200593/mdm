@@ -1,6 +1,6 @@
 package com.thomas200593.mdm.core.design_system.timber_logger.di
 
-import com.thomas200593.mdm.core.design_system.timber_logger.TimberFileFileLoggerImpl
+import com.thomas200593.mdm.core.design_system.timber_logger.TimberFileLoggerImpl
 import com.thomas200593.mdm.core.design_system.timber_logger.TimberFileLogger
 import dagger.Binds
 import dagger.Module
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 abstract class ModTimberFileLogger {
     @Binds
     @Singleton
-    abstract fun bindsModule(impl : TimberFileFileLoggerImpl) : TimberFileLogger
+    abstract fun bindsModule(impl : TimberFileLoggerImpl) : TimberFileLogger
 }
