@@ -1,5 +1,6 @@
 package com.thomas200593.mdm.core.design_system.state_app
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
@@ -14,32 +15,40 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.thomas200593.mdm.app.main.nav.DestTopLevel
 import com.thomas200593.mdm.core.design_system.network_monitor.NetworkMonitor
+import com.thomas200593.mdm.core.design_system.timber_logger.LocalTimberFileLogger
+import com.thomas200593.mdm.core.design_system.timber_logger.TimberFileLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
+private val TAG = StateApp::class.simpleName
+
 @Composable
 fun rememberStateApp(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavHostController = rememberNavController(),
-    networkMonitor: NetworkMonitor
+    networkMonitor: NetworkMonitor,
+    timberFileLogger: TimberFileLogger = LocalTimberFileLogger.current
 ): StateApp = remember(
     coroutineScope,
     navController,
-    networkMonitor
+    networkMonitor,
+    timberFileLogger
 ) {
     StateApp(
         coroutineScope = coroutineScope,
         navController = navController,
-        networkMonitor = networkMonitor
+        networkMonitor = networkMonitor,
+        timberFileLogger = timberFileLogger
     )
 }
 @Stable
 class StateApp(
     coroutineScope: CoroutineScope,
     val navController: NavHostController,
-    networkMonitor: NetworkMonitor
+    networkMonitor: NetworkMonitor,
+    val timberFileLogger: TimberFileLogger
 ) {
     val isNetworkOffline = networkMonitor.isNetworkOnline.map(Boolean::not).stateIn(
         scope = coroutineScope,
@@ -57,6 +66,7 @@ class StateApp(
             DestTopLevel.entries.firstOrNull { currentDestination?.hasRoute(route = it.route) == true }
 
     fun navToDestTopLevel(dest: DestTopLevel) {
+        timberFileLogger.log(Log.DEBUG, TAG, "${this@StateApp::class.simpleName}.navToDestTopLevel()")
         val navOptions = navOptions(
             optionsBuilder = {
                 popUpTo(
@@ -67,8 +77,12 @@ class StateApp(
             }
         )
         when (dest) {
-            DestTopLevel.DASHBOARD -> { /*TODO*/ }
-            DestTopLevel.USER_PROFILE -> { /*TODO*/ }
+            DestTopLevel.DASHBOARD -> {
+                timberFileLogger.log(Log.DEBUG, TAG, "")
+            }
+            DestTopLevel.USER_PROFILE -> {
+                timberFileLogger.log(Log.DEBUG, TAG, "")
+            }
         }
     }
 }

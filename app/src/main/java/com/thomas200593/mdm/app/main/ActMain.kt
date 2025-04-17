@@ -20,11 +20,14 @@ import com.thomas200593.mdm.app.main.ui.state.UiStateMain
 import com.thomas200593.mdm.core.design_system.network_monitor.NetworkMonitor
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.rememberStateApp
+import com.thomas200593.mdm.core.design_system.timber_logger.LocalTimberFileLogger
+import com.thomas200593.mdm.core.design_system.timber_logger.di.TimberFileLoggerEntryPoint
 import com.thomas200593.mdm.core.ui.common.Color
 import com.thomas200593.mdm.core.ui.common.Theme
 import com.thomas200593.mdm.core.ui.component.isSystemInDarkTheme
 import com.thomas200593.mdm.core.ui.component.setupSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -74,8 +77,16 @@ class ActMain : AppCompatActivity() {
         splashscreen.setKeepOnScreenCondition { vm.uiState.value.keepSplashScreenOn() }
         setupSplashScreen(splashscreen)
         setContent {
-            val appState = rememberStateApp(networkMonitor = networkMonitor)
-            CompositionLocalProvider(LocalStateApp provides appState) {
+            // Get the logger using EntryPointAccessors
+            val timberFileLogger = EntryPointAccessors.fromApplication(
+                this@ActMain.applicationContext,
+                TimberFileLoggerEntryPoint::class.java
+            ).timberFileLogger()
+            val appState = rememberStateApp(networkMonitor = networkMonitor, timberFileLogger = timberFileLogger)
+            CompositionLocalProvider(
+                LocalStateApp provides appState,
+                LocalTimberFileLogger provides timberFileLogger
+            ) {
                 Theme.AppTheme(
                     darkThemeEnabled = uiData.darkThemeEnabled,
                     dynamicColorEnabled = uiData.dynamicColorEnabled,
