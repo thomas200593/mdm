@@ -56,7 +56,7 @@ import com.thomas200593.mdm.features.initial.nav.navToInitial
 import com.thomas200593.mdm.features.initialization.ui.events.Events
 import com.thomas200593.mdm.features.initialization.ui.state.ComponentsState
 import com.thomas200593.mdm.features.initialization.ui.state.DialogState
-import com.thomas200593.mdm.features.initialization.ui.state.FormState
+import com.thomas200593.mdm.features.initialization.ui.state.FormInitializationState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -66,10 +66,10 @@ fun ScrInitialization(
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
-    val form = vm.formState
+    val formInitialization = vm.formInitialization
     LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrInitialization(
-        scrGraph = scrGraph, components = uiState.componentsState, form = form,
+        scrGraph = scrGraph, components = uiState.componentsState, formInitialization = formInitialization,
         onDialogEvent = vm::onDialogEvent, onTopBarEvent = vm::onTopBarEvent,
         onFormEvent = vm::onFormEvent, onBottomBarEvent = vm::onBottomBarEvent,
         onInitializationSuccess = { vm.onDialogEvent(Events.Dialog.SuccessDismissed)
@@ -78,14 +78,14 @@ fun ScrInitialization(
 }
 @Composable
 private fun ScrInitialization(
-    scrGraph: ScrGraphs.Initialization, components: ComponentsState, form: FormState,
+    scrGraph: ScrGraphs.Initialization, components: ComponentsState, formInitialization: FormInitializationState,
     onTopBarEvent: (Events.TopBar) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit,
     onFormEvent: (Events.Content.Form) -> Unit, onDialogEvent: (Events.Dialog) -> Unit,
     onInitializationSuccess: () -> Unit
 ) = when (components) {
     is ComponentsState.Loading -> ScrLoading()
     is ComponentsState.Loaded -> ScreenContent(
-        components = components, scrGraph = scrGraph, form = form,
+        components = components, scrGraph = scrGraph, formInitialization = formInitialization,
         onDialogEvent = onDialogEvent, onTopBarEvent = onTopBarEvent,
         onFormEvent = onFormEvent, onBottomBarEvent = onBottomBarEvent,
         onInitializationSuccess = onInitializationSuccess
@@ -94,7 +94,7 @@ private fun ScrInitialization(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
-    scrGraph: ScrGraphs.Initialization, components: ComponentsState.Loaded, form: FormState,
+    scrGraph: ScrGraphs.Initialization, components: ComponentsState.Loaded, formInitialization: FormInitializationState,
     onDialogEvent: (Events.Dialog) -> Unit, onTopBarEvent : (Events.TopBar) -> Unit,
     onFormEvent: (Events.Content.Form) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit,
     onInitializationSuccess: () -> Unit
@@ -106,11 +106,11 @@ private fun ScreenContent(
     Scaffold(
         modifier = Modifier.imePadding(),
         topBar = { SectionTopBar(onTopBarEvent = onTopBarEvent) },
-        content = { SectionContent(paddingValues = it, form = form, onFormEvent = onFormEvent) },
+        content = { SectionContent(paddingValues = it, formInitialization = formInitialization, onFormEvent = onFormEvent) },
         bottomBar = { AnimatedVisibility (
-            visible = form.btnProceedVisible,
+            visible = formInitialization.btnProceedVisible,
             enter = fadeIn() + slideInVertically(), exit = fadeOut() + slideOutVertically(),
-            content = { SectionBottomBar(btnProceedEnabled = form.btnProceedEnabled, onBottomBarEvent = onBottomBarEvent) }
+            content = { SectionBottomBar(btnProceedEnabled = formInitialization.btnProceedEnabled, onBottomBarEvent = onBottomBarEvent) }
         ) }
     )
 }
@@ -143,7 +143,7 @@ private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
     }
 )
 @Composable
-private fun SectionContent(paddingValues: PaddingValues, form: FormState, onFormEvent: (Events.Content.Form) -> Unit) = Surface(
+private fun SectionContent(paddingValues: PaddingValues, formInitialization: FormInitializationState, onFormEvent: (Events.Content.Form) -> Unit) = Surface(
     modifier = Modifier.padding(paddingValues),
     content = {
         LazyColumn(
@@ -151,7 +151,7 @@ private fun SectionContent(paddingValues: PaddingValues, form: FormState, onForm
             verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
             content = {
                 item { PartTitle() }
-                item { PartForm(form = form, onFormEvent = onFormEvent) }
+                item { PartForm(formInitialization = formInitialization, onFormEvent = onFormEvent) }
             }
         )
     }
@@ -172,7 +172,7 @@ private fun PartTitle() = Row(
     }
 )
 @Composable
-private fun PartForm(form: FormState, onFormEvent : (Events.Content.Form) -> Unit) = Card(
+private fun PartForm(formInitialization: FormInitializationState, onFormEvent : (Events.Content.Form) -> Unit) = Card(
     modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.extraSmall,
     content = {
         Column(
@@ -180,36 +180,36 @@ private fun PartForm(form: FormState, onFormEvent : (Events.Content.Form) -> Uni
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp), content =  {
                 TxtFieldPersonName(
-                    value = form.fldFirstName,
+                    value = formInitialization.fldFirstName,
                     onValueChange = { onFormEvent(Events.Content.Form.FirstNameChanged(it)) },
-                    enabled = form.fldFirstNameEnabled,
-                    isError = form.fldFirstNameError.isNotEmpty(),
-                    errorMessage = form.fldFirstNameError,
+                    enabled = formInitialization.fldFirstNameEnabled,
+                    isError = formInitialization.fldFirstNameError.isNotEmpty(),
+                    errorMessage = formInitialization.fldFirstNameError,
                     label = stringResource(R.string.str_first_name),
                     placeholder = stringResource(R.string.str_first_name)
                 )
                 TxtFieldPersonName(
-                    value = form.fldLastName,
+                    value = formInitialization.fldLastName,
                     onValueChange = { onFormEvent(Events.Content.Form.LastNameChanged(it)) },
-                    enabled = form.fldLastNameEnabled,
-                    isError = form.fldLastNameError.isNotEmpty(),
-                    errorMessage = form.fldLastNameError,
+                    enabled = formInitialization.fldLastNameEnabled,
+                    isError = formInitialization.fldLastNameError.isNotEmpty(),
+                    errorMessage = formInitialization.fldLastNameError,
                     label = stringResource(R.string.str_last_name),
                     placeholder = stringResource(R.string.str_last_name)
                 )
                 TxtFieldEmail(
-                    value = form.fldEmail,
+                    value = formInitialization.fldEmail,
                     onValueChange = { onFormEvent(Events.Content.Form.EmailChanged(it)) },
-                    enabled = form.fldEmailEnabled,
-                    isError = form.fldEmailError.isNotEmpty(),
-                    errorMessage = form.fldEmailError
+                    enabled = formInitialization.fldEmailEnabled,
+                    isError = formInitialization.fldEmailError.isNotEmpty(),
+                    errorMessage = formInitialization.fldEmailError
                 )
                 TxtFieldPassword(
-                    value = form.fldPassword,
+                    value = formInitialization.fldPassword,
                     onValueChange = { onFormEvent(Events.Content.Form.PasswordChanged(it)) },
-                    enabled = form.fldPasswordEnabled,
-                    isError = form.fldPasswordError.isNotEmpty(),
-                    errorMessage = form.fldPasswordError
+                    enabled = formInitialization.fldPasswordEnabled,
+                    isError = formInitialization.fldPasswordError.isNotEmpty(),
+                    errorMessage = formInitialization.fldPasswordError
                 )
             }
         )

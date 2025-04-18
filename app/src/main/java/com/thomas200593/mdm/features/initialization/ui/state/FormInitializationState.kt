@@ -6,7 +6,7 @@ import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldPassword
 import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldPersonNameValidation
 import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 
-data class FormState(
+data class FormInitializationState(
     val fldFirstName: String = STR_EMPTY, val fldFirstNameEnabled: Boolean = true, val fldFirstNameError: List<UiText> = emptyList(),
     val fldLastName: String = STR_EMPTY, val fldLastNameEnabled: Boolean = true, val fldLastNameError: List<UiText> = emptyList(),
     val fldEmail: String = STR_EMPTY, val fldEmailEnabled: Boolean = true, val fldEmailError: List<UiText> = emptyList(),

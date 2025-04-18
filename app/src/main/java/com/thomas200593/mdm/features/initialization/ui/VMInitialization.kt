@@ -14,7 +14,7 @@ import com.thomas200593.mdm.features.initialization.entity.DTOInitialization
 import com.thomas200593.mdm.features.initialization.ui.events.Events
 import com.thomas200593.mdm.features.initialization.ui.state.ComponentsState
 import com.thomas200593.mdm.features.initialization.ui.state.DialogState
-import com.thomas200593.mdm.features.initialization.ui.state.FormState
+import com.thomas200593.mdm.features.initialization.ui.state.FormInitializationState
 import com.thomas200593.mdm.features.initialization.ui.state.ResultInitialization
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +31,7 @@ class VMInitialization @Inject constructor(
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
     var uiState = MutableStateFlow(UiState())
         private set
-    var formState by mutableStateOf(FormState())
+    var formInitialization by mutableStateOf(FormInitializationState())
         private set
     fun onScreenEvent(event: Events.Screen) = when(event) {
         is Events.Screen.Opened -> handleOpenScreen()
@@ -67,11 +67,11 @@ class VMInitialization @Inject constructor(
             dialogState = DialogState.None,
             resultInitialization = ResultInitialization.Idle
         ) }
-        formState = FormState().validateField()
+        formInitialization = FormInitializationState().validateField()
     }
     private fun handleOpenScreen() = viewModelScope.launch {
         ucGetScreenData.invoke()
-            .onStart { formState = formState.validateField(); uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
+            .onStart { formInitialization = formInitialization.validateField(); uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
             .collect { confCommon ->
                 uiState.update { currentState -> currentState.copy(
                     componentsState = ComponentsState.Loaded(
@@ -84,15 +84,15 @@ class VMInitialization @Inject constructor(
     }
     private fun updateDialog(transform: (DialogState) -> DialogState) =
         updateUiState { it.copy(dialogState = transform(it.dialogState)) }
-    private fun updateForm(transform: (FormState) -> FormState) =
+    private fun updateForm(transform: (FormInitializationState) -> FormInitializationState) =
         viewModelScope.launch(Dispatchers.Main.immediate) {
             (uiState.value.componentsState as? ComponentsState.Loaded)?.let {
-                val updated = transform(formState)
-                if (updated != formState) formState = updated
+                val updated = transform(formInitialization)
+                if (updated != formInitialization) formInitialization = updated
             }
         }
     private fun handleInitialization() {
-        val frozenForm = formState.disableInputs(); formState = frozenForm
+        val frozenForm = formInitialization.disableInputs(); formInitialization = frozenForm
         updateUiState { componentState -> componentState.copy(resultInitialization = ResultInitialization.Loading, dialogState = DialogState.LoadingDialog) }
         viewModelScope.launch {
             val isLoaded = uiState.value.componentsState is ComponentsState.Loaded
