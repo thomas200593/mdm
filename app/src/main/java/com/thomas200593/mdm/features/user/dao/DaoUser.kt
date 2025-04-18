@@ -14,9 +14,9 @@ interface DaoUser {
     @Insert(entity = UserEntity::class, onConflict = ABORT)
     suspend fun insertUser(user : UserEntity) : Long
     @Query("SELECT * FROM user WHERE email = :email LIMIT 1")
-    fun getUserByEmail(email: String) : Flow<UserEntity?>
+    fun getOneByEmail(email: String) : Flow<UserEntity?>
 }
 class DaoUserImpl @Inject constructor(private val appDatabase: AppDatabase) : DaoUser {
     override suspend fun insertUser(user: UserEntity): Long = appDatabase.daoUser().insertUser(user)
-    override fun getUserByEmail(email: String): Flow<UserEntity?> = appDatabase.daoUser().getUserByEmail(email)
+    override fun getOneByEmail(email: String): Flow<UserEntity?> = appDatabase.daoUser().getOneByEmail(email)
 }

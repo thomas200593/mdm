@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.core.design_system.util.update
-import com.thomas200593.mdm.features.auth.domain.UCAuth
+import com.thomas200593.mdm.features.auth.domain.UCSignIn
 import com.thomas200593.mdm.features.auth.domain.UCGetScreenData
 import com.thomas200593.mdm.features.auth.entity.AuthType
 import com.thomas200593.mdm.features.auth.entity.DTOSignIn
@@ -27,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class VMAuth @Inject constructor(
     private val ucGetScreenData: UCGetScreenData,
-    private val ucAuth: UCAuth
+    private val ucSignIn: UCSignIn
 ) : ViewModel() {
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
     var uiState = MutableStateFlow(UiState())
@@ -92,7 +92,7 @@ class VMAuth @Inject constructor(
                     authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword),
                     timestamp = Instant.now().epochSecond
                 )
-                ucAuth.invoke(dto)
+                ucSignIn.invoke(dto)
             }
         }
     }
