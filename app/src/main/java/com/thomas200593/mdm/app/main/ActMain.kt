@@ -1,6 +1,7 @@
 package com.thomas200593.mdm.app.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -21,6 +22,7 @@ import com.thomas200593.mdm.core.design_system.network_monitor.NetworkMonitor
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.rememberStateApp
 import com.thomas200593.mdm.core.design_system.timber_logger.LocalTimberFileLogger
+import com.thomas200593.mdm.core.design_system.timber_logger.TimberFileLogger
 import com.thomas200593.mdm.core.design_system.timber_logger.di.TimberFileLoggerEntryPoint
 import com.thomas200593.mdm.core.ui.common.Color
 import com.thomas200593.mdm.core.ui.common.Theme
@@ -35,13 +37,19 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private val TAG = ActMain::class.simpleName
+
 @AndroidEntryPoint
 class ActMain : AppCompatActivity() {
     @Inject lateinit var networkMonitor: NetworkMonitor
+    private lateinit var timberFileLogger: TimberFileLogger
     private val vm: VMMain by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashscreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+        timberFileLogger = EntryPointAccessors
+            .fromApplication(applicationContext, TimberFileLoggerEntryPoint::class.java).timberFileLogger()
+        timberFileLogger.log(Log.DEBUG, TAG, "lifecycle:onCreate()")
         var uiData by mutableStateOf(
             UiData(
                 darkThemeEnabled = resources.configuration.isSystemInDarkTheme,
@@ -49,18 +57,20 @@ class ActMain : AppCompatActivity() {
                 contrastAccent = UiStateMain.Loading.contrastAccent,
                 fontSize = UiStateMain.Loading.fontSize
             )
-        )
+        ).also {  timberFileLogger.log(Log.DEBUG, TAG, "state:init -> ${it.value}") }
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                timberFileLogger.log(Log.DEBUG, TAG, "lifecycle:STARTED")
                 combine(flow = isSystemInDarkTheme(), flow2 = vm.uiState) { systemDark, uiState ->
                     UiData(
                         darkThemeEnabled = uiState.darkThemeEnabled(systemDark),
                         dynamicColorEnabled = uiState.dynamicColorEnabled,
                         contrastAccent = uiState.contrastAccent,
                         fontSize = uiState.fontSize
-                    )
+                    ).also { timberFileLogger.log(Log.DEBUG, TAG, "flow:combine -> darkTheme=${it.darkThemeEnabled}, contrast=${it.contrastAccent}") }
                 }.onEach { uiData = it }.map { it.darkThemeEnabled }.distinctUntilChanged()
                     .collect { darkTheme ->
+                        timberFileLogger.log(Log.DEBUG, TAG, "ui:themeChanged -> darkTheme=$darkTheme")
                         enableEdgeToEdge(
                             statusBarStyle = SystemBarStyle.auto(
                                 lightScrim = android.graphics.Color.TRANSPARENT,
@@ -74,14 +84,13 @@ class ActMain : AppCompatActivity() {
                     }
             }
         }
-        splashscreen.setKeepOnScreenCondition { vm.uiState.value.keepSplashScreenOn() }
+        splashscreen.setKeepOnScreenCondition {
+            val keepSplash = vm.uiState.value.keepSplashScreenOn()
+            timberFileLogger.log(Log.DEBUG, TAG, "splash:check -> keepSplash=$keepSplash")
+            keepSplash
+        }
         setupSplashScreen(splashscreen)
         setContent {
-            // Get the logger using EntryPointAccessors
-            val timberFileLogger = EntryPointAccessors.fromApplication(
-                this@ActMain.applicationContext,
-                TimberFileLoggerEntryPoint::class.java
-            ).timberFileLogger()
             val appState = rememberStateApp(networkMonitor = networkMonitor, timberFileLogger = timberFileLogger)
             CompositionLocalProvider(
                 LocalStateApp provides appState,
@@ -92,7 +101,10 @@ class ActMain : AppCompatActivity() {
                     dynamicColorEnabled = uiData.dynamicColorEnabled,
                     contrastAccent = uiData.contrastAccent,
                     fontSize = uiData.fontSize,
-                    content = { ScrApp() }
+                    content = {
+                        timberFileLogger.log(Log.DEBUG, TAG, "compose:launch -> ScrApp()")
+                        ScrApp()
+                    }
                 )
             }
         }

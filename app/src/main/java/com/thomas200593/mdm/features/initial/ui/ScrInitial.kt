@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
@@ -30,14 +31,29 @@ fun ScrInitial(
     scrGraph: ScrGraphs.Initial, vm: VMInitial = hiltViewModel(), stateApp: StateApp = LocalStateApp.current,
     fileLogger: TimberFileLogger = LocalTimberFileLogger.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
-    fileLogger.log(Log.DEBUG, TAG, "ScrInitial()")
+    fileLogger.log(Log.DEBUG, TAG, "compose:ScrInitial -> mounted")
     val uiState by vm.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
+    LaunchedEffect(
+        key1 = Unit,
+        block = {
+            fileLogger.log(Log.DEBUG, TAG, "event:screen -> ScrInitial.Opened")
+            vm.onScreenEvent(Events.Screen.Opened)
+        }
+    )
     ScrInitial(
         scrGraph = scrGraph, componentsState = uiState.componentsState,
-        onNavToOnboarding = { coroutineScope.launch { stateApp.navController.navToOnboarding() } },
-        onNavToInitialization = { coroutineScope.launch { stateApp.navController.navToInitialization() } },
-        onNavToAuth = { coroutineScope.launch { stateApp.navController.navToAuth() } }
+        onNavToOnboarding = {
+            fileLogger.log(Log.DEBUG, TAG, "nav:to -> Onboarding")
+            coroutineScope.launch { stateApp.navController.navToOnboarding() }
+        },
+        onNavToInitialization = {
+            fileLogger.log(Log.DEBUG, TAG, "nav:to -> Initialization")
+            coroutineScope.launch { stateApp.navController.navToInitialization() }
+        },
+        onNavToAuth = {
+            fileLogger.log(Log.DEBUG, TAG, "nav:to -> Auth")
+            coroutineScope.launch { stateApp.navController.navToAuth() }
+        }
     )
 }
 @Composable
@@ -47,11 +63,11 @@ private fun ScrInitial(
     onNavToAuth: () -> Unit
 ) = when (componentsState) {
     is ComponentsState.Loading -> {
-        fileLogger.log(Log.DEBUG, TAG, componentsState.toString())
+        fileLogger.log(Log.DEBUG, TAG, "ui:componentsState -> Loading(${stringResource(scrGraph.title)})")
         ScrLoading(label = scrGraph.title)
     }
     is ComponentsState.Loaded -> {
-        fileLogger.log(Log.DEBUG, TAG, componentsState.toString())
+        fileLogger.log(Log.DEBUG, TAG, "ui:componentsState -> Loaded")
         ScreenContent(
             components = componentsState,
             onNavToOnboarding = onNavToOnboarding,
