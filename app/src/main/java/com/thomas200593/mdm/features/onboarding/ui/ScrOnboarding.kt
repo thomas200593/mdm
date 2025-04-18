@@ -1,6 +1,5 @@
 package com.thomas200593.mdm.features.onboarding.ui
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -46,8 +45,6 @@ import com.thomas200593.mdm.R
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
-import com.thomas200593.mdm.core.design_system.timber_logger.LocalTimberFileLogger
-import com.thomas200593.mdm.core.design_system.timber_logger.TimberFileLogger
 import com.thomas200593.mdm.core.ui.component.button.BtnConfLang
 import com.thomas200593.mdm.core.ui.component.button.BtnNext
 import com.thomas200593.mdm.core.ui.component.button.BtnPrevious
@@ -64,221 +61,125 @@ import com.thomas200593.mdm.features.onboarding.ui.state.ComponentsState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-private const val TAG = "ScrOnboarding"
-
 @Composable
 fun ScrOnboarding(
-    scrGraph: ScrGraphs.Onboarding, vm: VMOnboarding = hiltViewModel(),
-    fileLogger: TimberFileLogger = LocalTimberFileLogger.current, stateApp: StateApp = LocalStateApp.current,
+    scrGraph: ScrGraphs.Onboarding, vm: VMOnboarding = hiltViewModel(), stateApp: StateApp = LocalStateApp.current,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
-    fileLogger.log(Log.DEBUG, TAG, "compose:ScrOnboarding -> mounted")
     val uiState by vm.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(
-        key1 = Unit,
-        block = {
-            fileLogger.log(Log.DEBUG, TAG, "event:screen -> ScrOnboarding.Opened")
-            vm.onScreenEvent(Events.Screen.Opened)
-        }
-    )
+    LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrOnboarding(
-        scrGraph = scrGraph, components = uiState.componentsState,
-        onTopBarEvent = {
-            fileLogger.log(Log.DEBUG, TAG, "event:topBar -> ${it::class.simpleName}")
-            vm.onTopBarEvent(it)
-        },
-        onBottomBarEvent = {
-            fileLogger.log(Log.DEBUG, TAG, "event:bottomBar -> ${it::class.simpleName}")
-            vm.onBottomBarEvent(it)
-        },
-        onOnboardingFinished = {
-            fileLogger.log(Log.DEBUG, TAG, "event:onboarding -> finished")
-            vm.onBottomBarEvent(it).also {
-                coroutineScope.launch {
-                    fileLogger.log(Log.DEBUG, TAG, "nav:to -> Initialization")
-                    stateApp.navController.navToInitialization()
-                }
-            }
-        }
+        scrGraph = scrGraph, components = uiState.componentsState, onTopBarEvent = vm::onTopBarEvent,
+        onBottomBarEvent = vm::onBottomBarEvent, onOnboardingFinished = { vm.onBottomBarEvent(it).also {
+            coroutineScope.launch { stateApp.navController.navToInitialization() }
+        } }
     )
 }
 @Composable
 private fun ScrOnboarding(
-    scrGraph: ScrGraphs.Onboarding, fileLogger: TimberFileLogger = LocalTimberFileLogger.current,
-    components: ComponentsState,
-    onTopBarEvent: (Events.TopBar) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit,
-    onOnboardingFinished: (Events.BottomBar) -> Unit
+    scrGraph: ScrGraphs.Onboarding, components: ComponentsState, onTopBarEvent: (Events.TopBar) -> Unit,
+    onBottomBarEvent: (Events.BottomBar) -> Unit, onOnboardingFinished: (Events.BottomBar) -> Unit
 ) = when (components) {
-    is ComponentsState.Loading -> {
-        fileLogger.log(Log.DEBUG, TAG, "ui:componentsState -> Loading(${stringResource(scrGraph.title)})")
-        ScrLoading(label = scrGraph.title)
-    }
-    is ComponentsState.Loaded -> {
-        fileLogger.log(Log.DEBUG, TAG, "ui:componentsState -> Loaded")
-        ScreenContent(
-            components = components,
-            onOnboardingFinished = onOnboardingFinished,
-            onTopBarEvent = onTopBarEvent,
-            onBottomBarEvent = onBottomBarEvent
-        )
-    }
+    is ComponentsState.Loading -> ScrLoading(label = scrGraph.title)
+    is ComponentsState.Loaded -> ScreenContent(
+        components = components, onTopBarEvent = onTopBarEvent, onBottomBarEvent = onBottomBarEvent,
+        onOnboardingFinished = onOnboardingFinished
+    )
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
-    fileLogger: TimberFileLogger = LocalTimberFileLogger.current,
-    components: ComponentsState.Loaded, onOnboardingFinished: (Events.BottomBar) -> Unit,
-    onTopBarEvent: (Events.TopBar) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit
-) {
-    fileLogger.log(Log.DEBUG, TAG, "compose:ScreenContent -> mounted with ${components.onboardingPages.size} pages")
-    Scaffold(
-        topBar = { SectionTopBar(confCommon = components.confCommon, languages = components.languages, onTopBarEvent = onTopBarEvent) },
-        content = { SectionContent(
-            paddingValues = it,
-            currentPage = components.onboardingPages[components.currentIndex]
-        ) },
-        bottomBar = { SectionBottomBar(
-            currentIndex = components.currentIndex, maxIndex = components.maxIndex,
-            onBottomBarEvents = onBottomBarEvent, onNavFinishEvents = onOnboardingFinished
-        ) }
-    )
-}
+    components: ComponentsState.Loaded, onTopBarEvent: (Events.TopBar) -> Unit,
+    onBottomBarEvent: (Events.BottomBar) -> Unit, onOnboardingFinished: (Events.BottomBar) -> Unit
+) = Scaffold(
+    topBar = { SectionTopBar(confCommon = components.confCommon, languages = components.languages, onTopBarEvent = onTopBarEvent) },
+    content = { SectionContent(paddingValues = it, currentPage = components.onboardingPages[components.currentIndex]) },
+    bottomBar = { SectionBottomBar(currentIndex = components.currentIndex, maxIndex = components.maxIndex, onBottomBarEvents = onBottomBarEvent, onNavFinishEvents = onOnboardingFinished) }
+)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SectionTopBar(
-    fileLogger: TimberFileLogger = LocalTimberFileLogger.current, confCommon: Common, languages: List<Language>,
-    onTopBarEvent: (Events.TopBar) -> Unit
-) {
-    fileLogger.log(Log.DEBUG, TAG, "ui:topBar -> initialized with ${languages.size} languages")
-    TopAppBar(
-        title = {}, actions = {
-            BtnConfLang(
-                languages = languages,
-                onSelectLanguage = {
-                    fileLogger.log(Log.DEBUG, TAG, "event:topBar -> BtnLanguage.Selected(${it.code})")
-                    onTopBarEvent(Events.TopBar.BtnLanguage.Selected(it))
-                },
-                languageIcon = confCommon.localization.language.country.flag
-            )
-        }
-    )
-}
+private fun SectionTopBar(confCommon: Common, languages: List<Language>, onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
+    title = {}, actions = {
+        BtnConfLang(
+            languages = languages, onSelectLanguage = { onTopBarEvent(Events.TopBar.BtnLanguage.Selected(it)) },
+            languageIcon = confCommon.localization.language.country.flag
+        )
+    }
+)
 @Composable
-private fun SectionContent(
-    fileLogger: TimberFileLogger = LocalTimberFileLogger.current, paddingValues: PaddingValues,
-    currentPage: Onboarding
-) {
-    fileLogger.log(Log.DEBUG, TAG, "ui:section -> rendering page $currentPage")
-    Surface(
-        modifier = Modifier.padding(paddingValues),
-        content = {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                content = {
-                    PartBanner(modifier = Modifier.fillMaxWidth().weight(1.0f), currentPage = currentPage)
-                    PartDetail(modifier = Modifier.weight(1.0f).padding(16.dp), currentPage = currentPage)
-                }
-            )
-        }
-    )
-}
+private fun SectionContent(paddingValues: PaddingValues, currentPage: Onboarding) = Surface(
+    modifier = Modifier.padding(paddingValues), content = {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            content = {
+                PartBanner(modifier = Modifier.fillMaxWidth().weight(1.0f), currentPage = currentPage)
+                PartDetail(modifier = Modifier.weight(1.0f).padding(16.dp), currentPage = currentPage)
+            }
+        )
+    }
+)
 @Composable
-private fun PartBanner(
-    fileLogger: TimberFileLogger = LocalTimberFileLogger.current, modifier: Modifier, currentPage: Onboarding
-) {
-    fileLogger.log(Log.DEBUG, TAG, "ui:banner -> loading image for page $currentPage")
-    Box(
-        modifier = modifier,
-        content = {
-            SubcomposeAsyncImage(
-                modifier = Modifier.fillMaxSize(),
-                model = ImageRequest.Builder(LocalContext.current).crossfade(250).data(currentPage.imageRes).build(),
-                contentDescription = null, loading = { InnerCircularProgressIndicator() },
-                contentScale = ContentScale.FillWidth
-            )
-            Box(
-                modifier = Modifier.fillMaxSize().align(Alignment.BottomCenter).graphicsLayer { alpha = 0.6f }
-                    .background(verticalGradient(colorStops = arrayOf(Pair(0.6f, Color.Transparent), Pair(1.0f, MaterialTheme.colorScheme.onSurface))))
-            )
-        }
-    )
-}
+private fun PartBanner(modifier: Modifier, currentPage: Onboarding) = Box(
+    modifier = modifier, content = {
+        SubcomposeAsyncImage(
+            modifier = Modifier.fillMaxSize(),
+            model = ImageRequest.Builder(LocalContext.current).crossfade(250).data(currentPage.imageRes).build(), contentDescription = null,
+            loading = { InnerCircularProgressIndicator() }, contentScale = ContentScale.FillWidth
+        )
+        Box(modifier = Modifier.fillMaxSize().align(Alignment.BottomCenter).graphicsLayer { alpha = 0.6f }
+            .background(verticalGradient(colorStops = arrayOf(Pair(0.6f, Color.Transparent), Pair(1.0f, MaterialTheme.colorScheme.onSurface)))))
+    }
+)
 @Composable
-private fun PartDetail(
-    modifier: Modifier, fileLogger: TimberFileLogger = LocalTimberFileLogger.current, currentPage: Onboarding
-) {
-    fileLogger.log(Log.DEBUG, TAG, "ui:detail -> displaying titleRes=${stringResource(currentPage.title)}, descRes=${stringResource(currentPage.description)}")
-    LazyColumn(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        content = {
-            item { TxtLgTitle(text = stringResource(currentPage.title)) }
-            item { TxtMdBody(text = stringResource(currentPage.description)) }
-        }
-    )
-}
+private fun PartDetail(modifier: Modifier, currentPage: Onboarding) = LazyColumn(
+    modifier = modifier.fillMaxWidth(),
+    verticalArrangement = Arrangement.spacedBy(16.dp),
+    content = {
+        item { TxtLgTitle(text = stringResource(currentPage.title)) }
+        item { TxtMdBody(text = stringResource(currentPage.description)) }
+    }
+)
 @Composable
 private fun SectionBottomBar(
-    fileLogger: TimberFileLogger = LocalTimberFileLogger.current,
-    currentIndex: Int, maxIndex: Int,
-    onBottomBarEvents: (Events.BottomBar) -> Unit, onNavFinishEvents: (Events.BottomBar) -> Unit
-) {
-    BottomAppBar (
-        content = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                content = {
-                    Row(
-                        modifier = Modifier.weight(0.5f),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically,
-                        content = {
-                            val strPrev = stringResource(R.string.str_back)
-                            val btnPrevState by remember(currentIndex, maxIndex) { derivedStateOf {
-                                if (currentIndex > 0) true to {
-                                    fileLogger.log(Log.DEBUG, TAG, "event:bottomBar -> clicked:PREV ($currentIndex → ${currentIndex - 1})")
-                                    onBottomBarEvents(Events.BottomBar.NavButton.Page(Events.Action.PREV))
-                                }
-                                else false to {}
-                            } }
-                            AnimatedVisibility(
-                                visible = btnPrevState.first,
-                                content = { BtnPrevious(onClick = btnPrevState.second, label = strPrev) }
-                            )
-                        }
-                    )
-                    Row(
-                        modifier = Modifier.weight(0.5f),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically,
-                        content = {
-                            val strNext = Pair(stringResource(R.string.str_next), stringResource(R.string.str_finish))
-                            val btnNextColor = Pair(MaterialTheme.colorScheme.tertiaryContainer, MaterialTheme.colorScheme.onTertiaryContainer)
-                            val btnNextState by remember(currentIndex, maxIndex) { derivedStateOf {
-                                if (currentIndex < maxIndex) Triple(strNext.first, Icons.AutoMirrored.Default.NavigateNext, null) to {
-                                    fileLogger.log(Log.DEBUG, TAG, "event:bottomBar -> clicked:NEXT ($currentIndex → ${currentIndex + 1})")
-                                    onBottomBarEvents(Events.BottomBar.NavButton.Page(Events.Action.NEXT))
-                                }
-                                else Triple(strNext.second, Icons.Default.Check, BorderStroke(1.dp, btnNextColor.second)) to {
-                                    fileLogger.log(Log.INFO, TAG, "event:bottomBar -> clicked:FINISH at last page ($currentIndex)")
-                                    onNavFinishEvents(Events.BottomBar.NavButton.Finish)
-                                }
-                            } }
-                            BtnNext(
-                                onClick = btnNextState.second,
-                                label = btnNextState.first.first,
-                                icon = btnNextState.first.second,
-                                border = btnNextState.first.third,
-                                colors =
-                                    if (currentIndex < maxIndex) ButtonDefaults.textButtonColors()
-                                    else ButtonDefaults.textButtonColors().copy(containerColor = btnNextColor.first, contentColor = btnNextColor.second)
-                            )
-                        }
-                    )
-                }
-            )
-        }
-    )
-}
+    currentIndex: Int, maxIndex: Int, onBottomBarEvents: (Events.BottomBar) -> Unit, onNavFinishEvents: (Events.BottomBar) -> Unit
+) = BottomAppBar (
+    content = {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
+            content = {
+                Row(
+                    modifier = Modifier.weight(0.5f),
+                    horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically,
+                    content = {
+                        val strPrev = stringResource(R.string.str_back)
+                        val btnPrevState by remember(currentIndex, maxIndex) { derivedStateOf {
+                            if (currentIndex > 0) true to { onBottomBarEvents(Events.BottomBar.NavButton.Page(Events.Action.PREV)) }
+                            else false to {}
+                        } }
+                        AnimatedVisibility(visible = btnPrevState.first, content = { BtnPrevious(onClick = btnPrevState.second, label = strPrev) })
+                    }
+                )
+                Row(
+                    modifier = Modifier.weight(0.5f),
+                    horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically,
+                    content = {
+                        val strNext = Pair(stringResource(R.string.str_next), stringResource(R.string.str_finish))
+                        val btnNextColor = Pair(MaterialTheme.colorScheme.tertiaryContainer, MaterialTheme.colorScheme.onTertiaryContainer)
+                        val btnNextState by remember(currentIndex, maxIndex) { derivedStateOf {
+                            if (currentIndex < maxIndex) Triple(strNext.first, Icons.AutoMirrored.Default.NavigateNext, null) to { onBottomBarEvents(Events.BottomBar.NavButton.Page(Events.Action.NEXT)) }
+                            else Triple(strNext.second, Icons.Default.Check, BorderStroke(1.dp, btnNextColor.second)) to { onNavFinishEvents(Events.BottomBar.NavButton.Finish) }
+                        } }
+                        BtnNext(
+                            onClick = btnNextState.second, label = btnNextState.first.first,
+                            icon = btnNextState.first.second, border = btnNextState.first.third,
+                            colors =
+                                if (currentIndex < maxIndex) ButtonDefaults.textButtonColors()
+                                else ButtonDefaults.textButtonColors().copy(containerColor = btnNextColor.first, contentColor = btnNextColor.second)
+                        )
+                    }
+                )
+            }
+        )
+    }
+)

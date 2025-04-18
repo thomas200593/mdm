@@ -1,5 +1,6 @@
 package com.thomas200593.mdm.features.initialization.ui
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -42,6 +43,8 @@ import com.thomas200593.mdm.R
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
+import com.thomas200593.mdm.core.design_system.timber_logger.LocalTimberFileLogger
+import com.thomas200593.mdm.core.design_system.timber_logger.TimberFileLogger
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
@@ -60,19 +63,42 @@ import com.thomas200593.mdm.features.initialization.ui.state.FormState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+private const val TAG = "ScrInitialization"
+
 @Composable
 fun ScrInitialization(
     scrGraph: ScrGraphs.Initialization, vm: VMInitialization = hiltViewModel(),
-    stateApp: StateApp = LocalStateApp.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
+    fileLogger: TimberFileLogger = LocalTimberFileLogger.current, stateApp: StateApp = LocalStateApp.current,
+    coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
     val form = vm.formState
-    LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
+    LaunchedEffect(
+        key1 = Unit,
+        block = {
+            fileLogger.log(Log.DEBUG, TAG, "screen:init -> opened")
+            vm.onScreenEvent(Events.Screen.Opened)
+        }
+    )
     ScrInitialization(
         scrGraph = scrGraph, components = uiState.componentsState,
         form = form,
-        onTopBarEvent = vm::onTopBarEvent, onDialogEvent = vm::onDialogEvent,
-        onFormEvent = vm::onFormEvent, onBottomBarEvent = vm::onBottomBarEvent,
+        onTopBarEvent = {
+            fileLogger.log(Log.DEBUG, TAG, "event:topBar -> $it")
+            vm.onTopBarEvent(it)
+        },
+        onDialogEvent = {
+            fileLogger.log(Log.DEBUG, TAG, "event:dialog -> $it")
+            vm.onDialogEvent(it)
+        },
+        onFormEvent = {
+            fileLogger.log(Log.DEBUG, TAG, "event:form -> $it")
+            vm.onFormEvent(it)
+        },
+        onBottomBarEvent = {
+            fileLogger.log(Log.DEBUG, TAG, "event:bottomBar -> $it")
+            vm.onBottomBarEvent(it)
+        },
         onInitializationSuccess = { vm.onDialogEvent(Events.Dialog.SuccessDismissed)
             .also { coroutineScope.launch { stateApp.navController.navToInitial() } } }
     )
