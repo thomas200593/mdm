@@ -6,23 +6,28 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.core.design_system.util.update
+import com.thomas200593.mdm.features.auth.domain.UCAuth
 import com.thomas200593.mdm.features.auth.domain.UCGetScreenData
+import com.thomas200593.mdm.features.auth.entity.AuthType
+import com.thomas200593.mdm.features.auth.entity.DTOSignIn
 import com.thomas200593.mdm.features.auth.ui.events.Events
-import com.thomas200593.mdm.features.auth.ui.state.FormAuthTypeState
 import com.thomas200593.mdm.features.auth.ui.state.ComponentsState
 import com.thomas200593.mdm.features.auth.ui.state.DialogState
 import com.thomas200593.mdm.features.auth.ui.state.FormAuthState
+import com.thomas200593.mdm.features.auth.ui.state.FormAuthTypeState
 import com.thomas200593.mdm.features.auth.ui.state.ResultSignIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import java.time.Instant
 import javax.inject.Inject
 
 @HiltViewModel
 class VMAuth @Inject constructor(
-    private val ucGetScreenData: UCGetScreenData
+    private val ucGetScreenData: UCGetScreenData,
+    private val ucAuth: UCAuth
 ) : ViewModel() {
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
     var uiState = MutableStateFlow(UiState())
@@ -53,6 +58,7 @@ class VMAuth @Inject constructor(
             }
         }
     private fun handleOpenScreen() = viewModelScope.launch {
+        /*TODO: call UC Destroy Active Session on onStart? or separate since it depends on result?*/
         ucGetScreenData.invoke()
             .onStart { uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
             .collect { confCommon ->
@@ -77,11 +83,16 @@ class VMAuth @Inject constructor(
     private fun handleSignIn(authType: FormAuthTypeState) = when (authType) {
         is FormAuthTypeState.LocalEmailPassword -> {
             val frozenForm = formAuth.disableInputs(); formAuth = frozenForm
-            updateUiState { componentState ->
-                componentState.copy(
-                    dialogState = DialogState.LoadingDialog,
-                    resultSignIn = ResultSignIn.Loading
+            updateUiState { componentState -> componentState.copy(dialogState = DialogState.LoadingDialog, resultSignIn = ResultSignIn.Loading) }
+            viewModelScope.launch {
+                val isLoaded = uiState.value.componentsState is ComponentsState.Loaded
+                if (!isLoaded) return@launch
+                val dto = DTOSignIn(
+                    email = frozenForm.fldEmail,
+                    authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword),
+                    timestamp = Instant.now().epochSecond
                 )
+                ucAuth.invoke(dto)
             }
         }
     }

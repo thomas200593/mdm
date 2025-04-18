@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.core.design_system.util.update
-import com.thomas200593.mdm.features.auth.entity.AuthProvider
 import com.thomas200593.mdm.features.auth.entity.AuthType
 import com.thomas200593.mdm.features.initialization.domain.UCCreateInitialUser
 import com.thomas200593.mdm.features.initialization.domain.UCGetScreenData
@@ -101,9 +100,7 @@ class VMInitialization @Inject constructor(
                 firstName = frozenForm.fldFirstName.toString(),
                 lastName = frozenForm.fldLastName.toString(),
                 email = frozenForm.fldEmail.toString(),
-                authType = AuthType.LocalEmailPassword(
-                    provider = AuthProvider.LOCAL_EMAIL_PASSWORD, password = frozenForm.fldPassword.toString()
-                )
+                authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword.toString())
             )
             ucCreateDataInitialization.invoke(dto).fold(
                 onSuccess = { result -> updateUiState { it.copy(
