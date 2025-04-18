@@ -54,8 +54,8 @@ import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun ScrAuth(
-    scrGraph: ScrGraphs.Auth, vm: VMAuth = hiltViewModel(),
-    stateApp: StateApp = LocalStateApp.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
+    scrGraph: ScrGraphs.Auth, vm: VMAuth = hiltViewModel(), stateApp: StateApp = LocalStateApp.current,
+    coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
     val form = vm.formState
@@ -102,44 +102,40 @@ private fun ScreenContent(
 private fun HandleDialogs() {}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) {
-    TopAppBar(
-        title = {},
-        actions = {
-            IconButton(
-                onClick = { onTopBarEvent(Events.TopBar.BtnSetting.Clicked) },
-                content = { Icon(imageVector = Icons.Default.Settings, contentDescription = null) }
-            )
-            IconButton(
-                onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Clicked) },
-                content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) }
-            )
-        }
-    )
-}
+private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
+    title = {},
+    actions = {
+        IconButton(
+            onClick = { onTopBarEvent(Events.TopBar.BtnSetting.Clicked) },
+            content = { Icon(imageVector = Icons.Default.Settings, contentDescription = null) }
+        )
+        IconButton(
+            onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Clicked) },
+            content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) }
+        )
+    }
+)
 @Composable
 private fun SectionContent(
     paddingValues: PaddingValues, form: FormAuthState, onFormAuthEvent: (Events.Content.Form) -> Unit
-) {
-    Surface(
-        modifier = Modifier.padding(paddingValues),
-        content = {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
-                content = {
-                    item { SectionPageLogo() }
-                    item { SectionPageTitle() }
-                    item { SectionPageAuthPanel(
-                        form = form,
-                        onFormAuthEvent = onFormAuthEvent
-                    ) }
-                }
-            )
-        }
-    )
-}
+) = Surface(
+    modifier = Modifier.padding(paddingValues),
+    content = {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
+            content = {
+                item { SectionPageLogo() }
+                item { SectionPageTitle() }
+                item { SectionPageAuthPanel(
+                    form = form,
+                    onFormAuthEvent = onFormAuthEvent
+                ) }
+            }
+        )
+    }
+)
 @Composable
 private fun SectionPageLogo() {
     Surface(
@@ -153,75 +149,65 @@ private fun SectionPageLogo() {
     )
 }
 @Composable
-private fun SectionPageTitle() {
-    Column (
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16, Alignment.CenterVertically),
-        content = {
-            TxtLgTitle(stringResource(R.string.str_auth))
-            TxtMdBody("To continue, please sign-in into your account.")
-        }
-    )
-}
+private fun SectionPageTitle() = Column (
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16, Alignment.CenterVertically),
+    content = {
+        TxtLgTitle(stringResource(R.string.str_auth))
+        TxtMdBody("To continue, please sign-in into your account.")
+    }
+)
 @Composable
 private fun SectionPageAuthPanel(
     onFormAuthEvent: (Events.Content.Form) -> Unit,
     form: FormAuthState
-) {
-    PanelCard(
-        modifier = Modifier.padding(Constants.Dimens.dp16),
-        content = {
-            TxtFieldEmail(
-                value = form.fldEmail,
-                onValueChange = { onFormAuthEvent(Events.Content.Form.EmailChanged(it)) },
-                enabled = form.fldEmailEnabled
-            )
-            TxtFieldPassword(
-                value = form.fldPassword,
-                onValueChange = { onFormAuthEvent(Events.Content.Form.PasswordChanged(it)) },
-                enabled = form.fldPasswordEnabled
-            )
-            PanelCard(
-                colors = CardDefaults.cardColors().copy(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer
-                ),
-                content = { TxtMdBody("ErrorDialog") }
-            )
-            Button (
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { onFormAuthEvent(Events.Content.Form.BtnSignIn.Clicked) },
-                shape = MaterialTheme.shapes.extraSmall,
-                enabled = form.btnSignInEnabled,
-                content = { Text(text = "Sign in") }
-            )
-            SectionRecoverAccount(onFormAuthEvent = onFormAuthEvent)
-        }
-    )
-}
-@Composable
-private fun SectionRecoverAccount(
-    onFormAuthEvent : (Events.Content.Form) -> Unit
-) {
-    Column (
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        content = { TextButton(
-            onClick = { onFormAuthEvent(Events.Content.Form.BtnRecoverAccount.Clicked) },
-            content = { TxtMdBody("Recover my account") }
-        ) }
-    )
-}
-@Composable
-private fun SectionBottomBar() {
-    BottomAppBar (
-        containerColor = MaterialTheme.colorScheme.surface,
-        content = { Row (
+) = PanelCard(
+    modifier = Modifier.padding(Constants.Dimens.dp16),
+    content = {
+        TxtFieldEmail(
+            value = form.fldEmail,
+            onValueChange = { onFormAuthEvent(Events.Content.Form.EmailChanged(it)) },
+            enabled = form.fldEmailEnabled
+        )
+        TxtFieldPassword(
+            value = form.fldPassword,
+            onValueChange = { onFormAuthEvent(Events.Content.Form.PasswordChanged(it)) },
+            enabled = form.fldPasswordEnabled
+        )
+        PanelCard(
+            colors = CardDefaults.cardColors().copy(
+                containerColor = MaterialTheme.colorScheme.errorContainer,
+                contentColor = MaterialTheme.colorScheme.onErrorContainer
+            ),
+            content = { TxtMdBody("ErrorDialog") }
+        )
+        Button (
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            content = { TxtMdBody(stringResource(R.string.app_name) + Constants.STR_APP_VERSION) }
-        ) }
-    )
-}
+            onClick = { onFormAuthEvent(Events.Content.Form.BtnSignIn.Clicked) },
+            shape = MaterialTheme.shapes.extraSmall,
+            enabled = form.btnSignInEnabled,
+            content = { Text(text = "Sign in") }
+        )
+        SectionRecoverAccount(onFormAuthEvent = onFormAuthEvent)
+    }
+)
+@Composable
+private fun SectionRecoverAccount(onFormAuthEvent : (Events.Content.Form) -> Unit) = Column (
+    modifier = Modifier.fillMaxWidth(),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center,
+    content = { TextButton(
+        onClick = { onFormAuthEvent(Events.Content.Form.BtnRecoverAccount.Clicked) },
+        content = { TxtMdBody("Recover my account") }
+    ) }
+)
+@Composable
+private fun SectionBottomBar() = BottomAppBar (
+    containerColor = MaterialTheme.colorScheme.surface,
+    content = { Row (
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+        content = { TxtMdBody(stringResource(R.string.app_name) + Constants.STR_APP_VERSION) }
+    ) }
+)
