@@ -59,6 +59,7 @@ fun TxtFieldPassword(
         supportingText = { if (isError && errorTexts.isNotEmpty()) ErrorSupportingText(errorTexts) },
         isError = isError,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+        singleLine = true
     )
 }
 @Composable

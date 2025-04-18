@@ -36,11 +36,20 @@ class VMAuth @Inject constructor(
         is Events.TopBar.BtnScrDesc.Dismissed -> updateDialog { DialogState.None }
     }
     fun onFormAuthEvent(event: Events.Content.Form) = when (event) {
-        is Events.Content.Form.EmailChanged -> {}
-        is Events.Content.Form.PasswordChanged -> {}
-        is Events.Content.Form.BtnSignIn.Clicked -> {}
+        is Events.Content.Form.EmailChanged -> updateForm { it.validateField(email = event.email).validateFields() }
+        is Events.Content.Form.PasswordChanged -> updateForm { it.validateField(password = event.password).validateFields() }
+        is Events.Content.Form.BtnSignIn.Clicked -> handleSignIn()
         is Events.Content.Form.BtnRecoverAccount.Clicked -> {}
     }
+    private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
+        viewModelScope.launch(Dispatchers.Main.immediate) {
+            uiState.update { current ->
+                (current.componentsState as? ComponentsState.Loaded)
+                    ?. let(transform)
+                    ?. let{ updatedState -> current.copy(componentsState = updatedState)}
+                    ?: current
+            }
+        }
     private fun handleOpenScreen() = viewModelScope.launch {
         ucGetScreenData.invoke()
             .onStart { uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
@@ -53,15 +62,16 @@ class VMAuth @Inject constructor(
                 ) }
             }
     }
-    private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
-        viewModelScope.launch(Dispatchers.Main.immediate) {
-            uiState.update { current ->
-                (current.componentsState as? ComponentsState.Loaded)
-                    ?. let(transform)
-                    ?. let{ updatedState -> current.copy(componentsState = updatedState)}
-                    ?: current
-            }
-        }
     private fun updateDialog(transform: (DialogState) -> DialogState) =
         updateUiState { it.copy(dialogState = transform(it.dialogState)) }
+    private fun updateForm(transform: (FormAuthState) -> FormAuthState) =
+        viewModelScope.launch(Dispatchers.Main.immediate) {
+            (uiState.value.componentsState as? ComponentsState.Loaded)?.let {
+                val updated = transform(formAuth)
+                if (updated != formAuth) formAuth = updated
+            }
+        }
+    private fun handleSignIn() {
+
+    }
 }
