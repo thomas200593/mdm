@@ -25,7 +25,7 @@ class VMAuth @Inject constructor(
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
     var uiState = MutableStateFlow(UiState())
         private set
-    var formState by mutableStateOf(FormAuthState())
+    var formAuth by mutableStateOf(FormAuthState())
         private set
     fun onScreenEvent(event: Events.Screen) = when(event) {
         is Events.Screen.Opened -> handleOpenScreen()

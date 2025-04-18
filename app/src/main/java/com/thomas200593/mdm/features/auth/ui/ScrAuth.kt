@@ -58,23 +58,23 @@ fun ScrAuth(
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
-    val form = vm.formState
+    val formAuth = vm.formAuth
     LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrAuth(
         scrGraph = scrGraph, components = uiState.componentsState,
-        form = form,
+        formAuth = formAuth,
         onTopBarEvent = vm::onTopBarEvent,
         onFormAuthEvent = vm::onFormAuthEvent
     )
 }
 @Composable
 private fun ScrAuth(
-    scrGraph: ScrGraphs.Auth, components: ComponentsState, form: FormAuthState,
+    scrGraph: ScrGraphs.Auth, components: ComponentsState, formAuth: FormAuthState,
     onTopBarEvent: (Events.TopBar) -> Unit, onFormAuthEvent: (Events.Content.Form) -> Unit
 ) = when (components) {
     is ComponentsState.Loading -> ScrLoading()
     is ComponentsState.Loaded -> ScreenContent(
-        scrGraph = scrGraph, components = components, form = form,
+        scrGraph = scrGraph, components = components, formAuth = formAuth,
         onTopBarEvent = onTopBarEvent,
         onFormAuthEvent = onFormAuthEvent
     )
@@ -84,7 +84,7 @@ private fun ScrAuth(
 private fun ScreenContent(
     scrGraph: ScrGraphs.Auth,
     components: ComponentsState.Loaded,
-    form: FormAuthState,
+    formAuth: FormAuthState,
     onTopBarEvent: (Events.TopBar) -> Unit,
     onFormAuthEvent: (Events.Content.Form) -> Unit
 ) {
@@ -92,7 +92,7 @@ private fun ScreenContent(
     Scaffold(
         topBar = { SectionTopBar(onTopBarEvent = onTopBarEvent) },
         content = { SectionContent(
-            paddingValues = it, form = form,
+            paddingValues = it, formAuth = formAuth,
             onFormAuthEvent = onFormAuthEvent
         ) },
         bottomBar = { SectionBottomBar() }
@@ -117,7 +117,7 @@ private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
 )
 @Composable
 private fun SectionContent(
-    paddingValues: PaddingValues, form: FormAuthState, onFormAuthEvent: (Events.Content.Form) -> Unit
+    paddingValues: PaddingValues, formAuth: FormAuthState, onFormAuthEvent: (Events.Content.Form) -> Unit
 ) = Surface(
     modifier = Modifier.padding(paddingValues),
     content = {
@@ -129,7 +129,7 @@ private fun SectionContent(
                 item { SectionPageLogo() }
                 item { SectionPageTitle() }
                 item { SectionPageAuthPanel(
-                    form = form,
+                    formAuth = formAuth,
                     onFormAuthEvent = onFormAuthEvent
                 ) }
             }
@@ -160,19 +160,19 @@ private fun SectionPageTitle() = Column (
 @Composable
 private fun SectionPageAuthPanel(
     onFormAuthEvent: (Events.Content.Form) -> Unit,
-    form: FormAuthState
+    formAuth: FormAuthState
 ) = PanelCard(
     modifier = Modifier.padding(Constants.Dimens.dp16),
     content = {
         TxtFieldEmail(
-            value = form.fldEmail,
+            value = formAuth.fldEmail,
             onValueChange = { onFormAuthEvent(Events.Content.Form.EmailChanged(it)) },
-            enabled = form.fldEmailEnabled
+            enabled = formAuth.fldEmailEnabled
         )
         TxtFieldPassword(
-            value = form.fldPassword,
+            value = formAuth.fldPassword,
             onValueChange = { onFormAuthEvent(Events.Content.Form.PasswordChanged(it)) },
-            enabled = form.fldPasswordEnabled
+            enabled = formAuth.fldPasswordEnabled
         )
         PanelCard(
             colors = CardDefaults.cardColors().copy(
@@ -185,7 +185,7 @@ private fun SectionPageAuthPanel(
             modifier = Modifier.fillMaxWidth(),
             onClick = { onFormAuthEvent(Events.Content.Form.BtnSignIn.Clicked) },
             shape = MaterialTheme.shapes.extraSmall,
-            enabled = form.btnSignInEnabled,
+            enabled = formAuth.btnSignInEnabled,
             content = { Text(text = "Sign in") }
         )
         SectionRecoverAccount(onFormAuthEvent = onFormAuthEvent)
