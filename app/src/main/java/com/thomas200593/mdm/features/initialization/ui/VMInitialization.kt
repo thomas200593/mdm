@@ -106,18 +106,14 @@ class VMInitialization @Inject constructor(
                 )
             )
             ucCreateDataInitialization.invoke(dto).fold(
-                onSuccess = { result ->
-                    updateUiState { it.copy(
-                        resultInitialization = ResultInitialization.Success(result),
-                        dialogState = DialogState.SuccessDialog
-                    ) }
-                },
-                onFailure = { err ->
-                    updateUiState { it.copy(
-                        resultInitialization = ResultInitialization.Error(err),
-                        dialogState = DialogState.ErrorDialog(err)
-                    ) }
-                }
+                onSuccess = { result -> updateUiState { it.copy(
+                    resultInitialization = ResultInitialization.Success(result),
+                    dialogState = DialogState.SuccessDialog
+                ) } },
+                onFailure = { err -> updateUiState { it.copy(
+                    resultInitialization = ResultInitialization.Error(err),
+                    dialogState = DialogState.ErrorDialog(err)
+                ) } }
             )
         }
     }

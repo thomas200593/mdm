@@ -48,6 +48,7 @@ import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.features.auth.ui.events.Events
+import com.thomas200593.mdm.features.auth.ui.state.FormAuthTypeState
 import com.thomas200593.mdm.features.auth.ui.state.ComponentsState
 import com.thomas200593.mdm.features.auth.ui.state.FormAuthState
 import kotlinx.coroutines.CoroutineScope
@@ -103,8 +104,7 @@ private fun HandleDialogs() {}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
-    title = {},
-    actions = {
+    title = {}, actions = {
         IconButton(
             onClick = { onTopBarEvent(Events.TopBar.BtnSetting.Clicked) },
             content = { Icon(imageVector = Icons.Default.Settings, contentDescription = null) }
@@ -119,8 +119,7 @@ private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
 private fun SectionContent(
     paddingValues: PaddingValues, formAuth: FormAuthState, onFormAuthEvent: (Events.Content.Form) -> Unit
 ) = Surface(
-    modifier = Modifier.padding(paddingValues),
-    content = {
+    modifier = Modifier.padding(paddingValues), content = {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -139,8 +138,7 @@ private fun SectionContent(
 @Composable
 private fun SectionPageLogo() {
     Surface(
-        modifier = Modifier.height(100.dp),
-        content = {
+        modifier = Modifier.height(100.dp), content = {
             Image(
                 painter = painterResource(R.drawable.app_icon_48x48px),
                 contentDescription = null
@@ -162,8 +160,7 @@ private fun SectionPageAuthPanel(
     onFormAuthEvent: (Events.Content.Form) -> Unit,
     formAuth: FormAuthState
 ) = PanelCard(
-    modifier = Modifier.padding(Constants.Dimens.dp16),
-    content = {
+    modifier = Modifier.padding(Constants.Dimens.dp16), content = {
         TxtFieldEmail(
             value = formAuth.fldEmail,
             onValueChange = { onFormAuthEvent(Events.Content.Form.EmailChanged(it)) },
@@ -183,7 +180,7 @@ private fun SectionPageAuthPanel(
         )
         Button (
             modifier = Modifier.fillMaxWidth(),
-            onClick = { onFormAuthEvent(Events.Content.Form.BtnSignIn.Clicked) },
+            onClick = { onFormAuthEvent(Events.Content.Form.BtnSignIn.Clicked(FormAuthTypeState.LocalEmailPassword)) },
             shape = MaterialTheme.shapes.extraSmall,
             enabled = formAuth.btnSignInEnabled,
             content = { Text(text = "Sign in") }

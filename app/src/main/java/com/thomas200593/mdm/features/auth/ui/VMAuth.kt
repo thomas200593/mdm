@@ -8,9 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.core.design_system.util.update
 import com.thomas200593.mdm.features.auth.domain.UCGetScreenData
 import com.thomas200593.mdm.features.auth.ui.events.Events
+import com.thomas200593.mdm.features.auth.ui.state.FormAuthTypeState
 import com.thomas200593.mdm.features.auth.ui.state.ComponentsState
 import com.thomas200593.mdm.features.auth.ui.state.DialogState
 import com.thomas200593.mdm.features.auth.ui.state.FormAuthState
+import com.thomas200593.mdm.features.auth.ui.state.ResultSignIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +40,7 @@ class VMAuth @Inject constructor(
     fun onFormAuthEvent(event: Events.Content.Form) = when (event) {
         is Events.Content.Form.EmailChanged -> updateForm { it.validateField(email = event.email).validateFields() }
         is Events.Content.Form.PasswordChanged -> updateForm { it.validateField(password = event.password).validateFields() }
-        is Events.Content.Form.BtnSignIn.Clicked -> handleSignIn()
+        is Events.Content.Form.BtnSignIn.Clicked -> handleSignIn(event.authType)
         is Events.Content.Form.BtnRecoverAccount.Clicked -> {}
     }
     private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
@@ -57,7 +59,8 @@ class VMAuth @Inject constructor(
                 uiState.update { currentState -> currentState.copy(
                     componentsState = ComponentsState.Loaded(
                         confCommon = confCommon,
-                        dialogState = DialogState.None
+                        dialogState = DialogState.None,
+                        resultSignIn = ResultSignIn.Idle
                     )
                 ) }
             }
@@ -71,7 +74,15 @@ class VMAuth @Inject constructor(
                 if (updated != formAuth) formAuth = updated
             }
         }
-    private fun handleSignIn() {
-
+    private fun handleSignIn(authType: FormAuthTypeState) = when (authType) {
+        is FormAuthTypeState.LocalEmailPassword -> {
+            val frozenForm = formAuth.disableInputs(); formAuth = frozenForm
+            updateUiState { componentState ->
+                componentState.copy(
+                    dialogState = DialogState.LoadingDialog,
+                    resultSignIn = ResultSignIn.Loading
+                )
+            }
+        }
     }
 }

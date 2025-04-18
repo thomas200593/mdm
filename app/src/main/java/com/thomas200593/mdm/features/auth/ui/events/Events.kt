@@ -1,5 +1,7 @@
 package com.thomas200593.mdm.features.auth.ui.events
 
+import com.thomas200593.mdm.features.auth.ui.state.FormAuthTypeState
+
 sealed interface Events {
     sealed interface Screen : Events {
         data object Opened : Screen
@@ -18,7 +20,7 @@ sealed interface Events {
             data class EmailChanged(val email: String) : Form
             data class PasswordChanged(val password: String) : Form
             sealed interface BtnSignIn : Form {
-                data object Clicked : BtnSignIn
+                data class Clicked(val authType: FormAuthTypeState) : BtnSignIn
             }
             sealed interface BtnRecoverAccount : Form {
                 data object Clicked : BtnRecoverAccount
