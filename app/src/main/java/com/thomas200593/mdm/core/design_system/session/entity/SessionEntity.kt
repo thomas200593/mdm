@@ -4,6 +4,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.thomas200593.mdm.core.data.local.database.entity_common.AuditTrail
+import com.thomas200593.mdm.core.design_system.base_class.BaseEntity
 import com.thomas200593.mdm.core.design_system.util.UUIDv7
 import com.thomas200593.mdm.features.user.entity.UserEntity
 
@@ -24,5 +26,5 @@ data class SessionEntity(
     @PrimaryKey val sessionId: String = UUIDv7.generateAsString(),
     val userId: String,
     val expiresAt: Long? = null,
-    val auditTrail: Long? = null
-)
+    override val auditTrail: AuditTrail = AuditTrail()
+) : BaseEntity
