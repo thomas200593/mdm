@@ -92,7 +92,8 @@ class VMAuth @Inject constructor(
                     authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword),
                     timestamp = Instant.now().epochSecond
                 )
-                ucSignIn.invoke(dto)
+                val result = ucSignIn.invoke(dto)
+                println("User Result : $result")
             }
         }
     }
