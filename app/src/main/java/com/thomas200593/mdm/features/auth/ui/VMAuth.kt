@@ -5,9 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.design_system.util.update
-import com.thomas200593.mdm.features.auth.domain.UCSignIn
 import com.thomas200593.mdm.features.auth.domain.UCGetScreenData
+import com.thomas200593.mdm.features.auth.domain.UCSignIn
 import com.thomas200593.mdm.features.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.auth.entity.AuthType
 import com.thomas200593.mdm.features.auth.entity.DTOSignIn
@@ -23,7 +24,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import java.time.Instant
 import javax.inject.Inject
 
 @HiltViewModel
@@ -91,7 +91,7 @@ class VMAuth @Inject constructor(
                 if (!isLoaded) return@launch
                 val dto = DTOSignIn(
                     email = frozenForm.fldEmail, authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword),
-                    timestamp = Instant.now().epochSecond
+                    timestamp = Constants.NOW_EPOCH_SECOND
                 )
                 ucSignIn.invoke(dto).fold(
                     onFailure = { err -> updateUiState { it.copy(resultSignIn = ResultSignIn.Error(err), dialogState = DialogState.None) } },

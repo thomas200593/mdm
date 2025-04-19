@@ -1,7 +1,6 @@
 package com.thomas200593.mdm.core.design_system.util
 
 import java.security.SecureRandom
-import java.time.Instant
 
 /**
  * UUIDv7 Zero Dependencies
@@ -10,7 +9,7 @@ import java.time.Instant
 object UUIDv7 {
     private val random = SecureRandom()
     fun generateAsBytes(): ByteArray {
-        val timestamp = Instant.now().toEpochMilli()
+        val timestamp = Constants.NOW_EPOCH_MILLISECOND
         val randomBytes = ByteArray(10).apply { random.nextBytes(this) }
         return byteArrayOf(
             (timestamp shr 40).toByte(), (timestamp shr 32).toByte(), (timestamp shr 24).toByte(),
