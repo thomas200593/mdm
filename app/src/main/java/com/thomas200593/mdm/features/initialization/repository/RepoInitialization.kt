@@ -32,12 +32,8 @@ class RepoInitializationImpl @Inject constructor(
     @Transaction
     override suspend fun createUserLocalEmailPassword(dto: DTOInitialization): Result<DTOInitialization> =
         repoUser.getOrCreateUser(dto.toUserEntity(UUIDv7.generateAsString())).fold(
-            onSuccess = { user ->
-                repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid)).fold(
-                    onSuccess = { Result.success(dto) },
-                    onFailure = { Result.failure(it) }
-                )
-            },
+            onSuccess = { user -> repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid))
+                .fold(onSuccess = { Result.success(dto) }, onFailure = { Result.failure(it) }) },
             onFailure = { Result.failure(it) }
         )
     override suspend fun updateFirstTimeStatus(firstTimeStatus: FirstTimeStatus) =
