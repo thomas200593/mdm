@@ -44,12 +44,14 @@ import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
+import com.thomas200593.mdm.core.ui.component.dialog.LoadingDialog
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.features.auth.ui.events.Events
 import com.thomas200593.mdm.features.auth.ui.state.FormAuthTypeState
 import com.thomas200593.mdm.features.auth.ui.state.ComponentsState
+import com.thomas200593.mdm.features.auth.ui.state.DialogState
 import com.thomas200593.mdm.features.auth.ui.state.FormAuthState
 import kotlinx.coroutines.CoroutineScope
 
@@ -89,18 +91,23 @@ private fun ScreenContent(
     onTopBarEvent: (Events.TopBar) -> Unit,
     onFormAuthEvent: (Events.Content.Form) -> Unit
 ) {
-    HandleDialogs()
+    HandleDialogs(scrGraph = scrGraph, dialog = components.dialogState)
     Scaffold(
         topBar = { SectionTopBar(onTopBarEvent = onTopBarEvent) },
         content = { SectionContent(
-            paddingValues = it, formAuth = formAuth,
+            paddingValues = it, components = components, formAuth = formAuth,
             onFormAuthEvent = onFormAuthEvent
         ) },
         bottomBar = { SectionBottomBar() }
     )
 }
 @Composable
-private fun HandleDialogs() {}
+private fun HandleDialogs(scrGraph: ScrGraphs.Auth, dialog: DialogState) = when (dialog) {
+    is DialogState.None -> Unit
+    is DialogState.ScrDescDialog -> {}
+    is DialogState.LoadingAuthDialog -> LoadingDialog(message = "Authenticating...")
+    is DialogState.LoadingSessionDialog -> LoadingDialog(message = "Creating Session...")
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
@@ -117,7 +124,8 @@ private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
 )
 @Composable
 private fun SectionContent(
-    paddingValues: PaddingValues, formAuth: FormAuthState, onFormAuthEvent: (Events.Content.Form) -> Unit
+    paddingValues: PaddingValues, components: ComponentsState.Loaded, formAuth: FormAuthState,
+    onFormAuthEvent: (Events.Content.Form) -> Unit
 ) = Surface(
     modifier = Modifier.padding(paddingValues), content = {
         LazyColumn(

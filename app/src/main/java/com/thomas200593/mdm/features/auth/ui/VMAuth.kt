@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.core.design_system.util.update
 import com.thomas200593.mdm.features.auth.domain.UCSignIn
 import com.thomas200593.mdm.features.auth.domain.UCGetScreenData
+import com.thomas200593.mdm.features.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.auth.entity.AuthType
 import com.thomas200593.mdm.features.auth.entity.DTOSignIn
 import com.thomas200593.mdm.features.auth.ui.events.Events
@@ -16,6 +17,7 @@ import com.thomas200593.mdm.features.auth.ui.state.DialogState
 import com.thomas200593.mdm.features.auth.ui.state.FormAuthState
 import com.thomas200593.mdm.features.auth.ui.state.FormAuthTypeState
 import com.thomas200593.mdm.features.auth.ui.state.ResultSignIn
+import com.thomas200593.mdm.features.user.entity.UserEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -83,18 +85,23 @@ class VMAuth @Inject constructor(
     private fun handleSignIn(authType: FormAuthTypeState) = when (authType) {
         is FormAuthTypeState.LocalEmailPassword -> {
             val frozenForm = formAuth.disableInputs(); formAuth = frozenForm
-            updateUiState { componentState -> componentState.copy(dialogState = DialogState.LoadingDialog, resultSignIn = ResultSignIn.Loading) }
+            updateUiState { componentState -> componentState.copy(dialogState = DialogState.LoadingAuthDialog, resultSignIn = ResultSignIn.Loading) }
             viewModelScope.launch {
                 val isLoaded = uiState.value.componentsState is ComponentsState.Loaded
                 if (!isLoaded) return@launch
                 val dto = DTOSignIn(
-                    email = frozenForm.fldEmail,
-                    authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword),
+                    email = frozenForm.fldEmail, authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword),
                     timestamp = Instant.now().epochSecond
                 )
-                val result = ucSignIn.invoke(dto)
-                println("User Result : $result")
+                ucSignIn.invoke(dto).fold(
+                    onFailure = { err -> updateUiState { it.copy(resultSignIn = ResultSignIn.Error(err), dialogState = DialogState.None) } },
+                    onSuccess = { createSession(it) }
+                )
             }
         }
+    }
+    private fun createSession(data: Pair<UserEntity, AuthEntity>) {
+        updateUiState { componentState -> componentState.copy(dialogState = DialogState.LoadingSessionDialog) }
+        /*TODO : Save last session to session history, if error clean up current session, insert new session, if success return dialog, if error reset ui*/
     }
 }
