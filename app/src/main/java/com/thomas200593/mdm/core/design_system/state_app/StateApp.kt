@@ -50,32 +50,21 @@ class StateApp(
     networkMonitor: NetworkMonitor,
     val timberFileLogger: TimberFileLogger
 ) {
-    val isNetworkOffline = networkMonitor.isNetworkOnline.map(Boolean::not).stateIn(
-        scope = coroutineScope,
-        started = SharingStarted.WhileSubscribed(1_000),
-        initialValue = false
-    )
+    val isNetworkOffline = networkMonitor.isNetworkOnline.map(Boolean::not)
+        .stateIn(scope = coroutineScope, started = SharingStarted.WhileSubscribed(1_000), initialValue = false)
     val destTopLevel: List<DestTopLevel> = DestTopLevel.entries
     private val previousDestination = mutableStateOf<NavDestination?>(null)
-    val currentDestination: NavDestination?
-        @Composable get() = navController
-            .currentBackStackEntryFlow.collectAsState(initial = null).value?.destination
+    val currentDestination: NavDestination? @Composable get() =
+        navController.currentBackStackEntryFlow.collectAsState(initial = null).value?.destination
             .also { if (it != null) previousDestination.value = it } ?: previousDestination.value
-    val currentTopLevelDestination: DestTopLevel?
-        @Composable get() =
-            DestTopLevel.entries.firstOrNull { currentDestination?.hasRoute(route = it.route) == true }
-
+    val currentTopLevelDestination: DestTopLevel? @Composable get() =
+        DestTopLevel.entries.firstOrNull { currentDestination?.hasRoute(route = it.route) == true }
     fun navToDestTopLevel(dest: DestTopLevel) {
         timberFileLogger.log(Log.DEBUG, TAG, "${this@StateApp::class.simpleName}.navToDestTopLevel()")
-        val navOptions = navOptions(
-            optionsBuilder = {
-                popUpTo(
-                    id = navController.graph.findStartDestination().id,
-                    popUpToBuilder = { saveState = true }
-                )
-                launchSingleTop = true; restoreState = true
-            }
-        )
+        val navOptions = navOptions(optionsBuilder = {
+            popUpTo(id = navController.graph.findStartDestination().id, popUpToBuilder = { saveState = true })
+            launchSingleTop = true; restoreState = true
+        })
         when (dest) {
             DestTopLevel.DASHBOARD -> {
                 timberFileLogger.log(Log.DEBUG, TAG, "")
