@@ -12,7 +12,7 @@ sealed interface AuthType {
     data class LocalEmailPassword(val provider: AuthProvider = AuthProvider.LOCAL_EMAIL_PASSWORD, val password: String) : AuthType
 }
 class TypeConverterAuthType {
-    private val json = Json { ignoreUnknownKeys = true }
+    private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
     @TypeConverter fun toJson(authType: AuthType): String? =
         runCatching { json.encodeToString(authType) }.getOrNull()
     @TypeConverter fun fromJson(authTypeString: String): AuthType? =
