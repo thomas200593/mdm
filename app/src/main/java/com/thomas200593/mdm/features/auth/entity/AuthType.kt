@@ -13,8 +13,8 @@ sealed interface AuthType {
 }
 class TypeConverterAuthType {
     private val json = Json { ignoreUnknownKeys = true }
-    @TypeConverter
-    fun toJson(authType: AuthType): String? = runCatching { json.encodeToString(authType) }.getOrNull()
-    @TypeConverter
-    fun fromJson(authTypeString: String): AuthType? = runCatching { json.decodeFromString<AuthType>(authTypeString) }.getOrNull()
+    @TypeConverter fun toJson(authType: AuthType): String? =
+        runCatching { json.encodeToString(authType) }.getOrNull()
+    @TypeConverter fun fromJson(authTypeString: String): AuthType? =
+        runCatching { json.decodeFromString<AuthType>(authTypeString) }.getOrNull()
 }

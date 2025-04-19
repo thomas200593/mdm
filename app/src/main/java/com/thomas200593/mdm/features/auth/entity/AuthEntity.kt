@@ -1,9 +1,12 @@
 package com.thomas200593.mdm.features.auth.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.thomas200593.mdm.core.data.local.database.entity_common.AuditTrail
+import com.thomas200593.mdm.core.design_system.base_class.BaseEntity
 import com.thomas200593.mdm.features.user.entity.UserEntity
 
 @Entity(
@@ -22,5 +25,7 @@ import com.thomas200593.mdm.features.user.entity.UserEntity
 data class AuthEntity(
     @PrimaryKey(autoGenerate = true) val seqId : Long = 0,
     val userId: String,
-    val authType: AuthType
-)
+    val authType: AuthType,
+    @ColumnInfo(name = "audit_trail")
+    override val auditTrail: AuditTrail = AuditTrail()
+) : BaseEntity

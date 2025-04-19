@@ -1,8 +1,11 @@
 package com.thomas200593.mdm.features.user.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.thomas200593.mdm.core.data.local.database.entity_common.AuditTrail
+import com.thomas200593.mdm.core.design_system.base_class.BaseEntity
 
 @Entity(
     tableName = "user",
@@ -10,5 +13,7 @@ import androidx.room.PrimaryKey
 )
 data class UserEntity(
     @PrimaryKey val uid: String,
-    val email: String
-)
+    val email: String,
+    @ColumnInfo(name = "audit_trail")
+    override val auditTrail: AuditTrail = AuditTrail()
+) : BaseEntity
