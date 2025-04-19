@@ -3,6 +3,7 @@ package com.thomas200593.mdm.features.user.repository
 import com.thomas200593.mdm.features.user.dao.DaoUser
 import com.thomas200593.mdm.features.user.entity.UserEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -15,9 +16,11 @@ interface RepoUser {
 class RepoUserImpl @Inject constructor(
     private val daoUser: DaoUser
 ) : RepoUser {
-    override fun getOneByEmail(email: String) : Flow<Result<UserEntity>> =
-        runCatching { daoUser.getOneByEmail(email) }.getOrElse { return flowOf(Result.failure(it)) }
-            .map { entity -> entity?.let { Result.success(it) } ?: Result.failure(NoSuchElementException("User not found with e-mail: $email")) }
+    override fun getOneByEmail(email: String) : Flow<Result<UserEntity>> = email.takeIf { it.isNotBlank() }
+        ?.let { validEmail -> daoUser.getOneByEmail(validEmail)
+            .map { user -> runCatching { requireNotNull(user) { "User not found with email: $validEmail" } } }
+            .catch { e -> emit(Result.failure(e)) }
+        } ?: flowOf(Result.failure(IllegalArgumentException("Email cannot be blank")))
     override suspend fun getOrCreateUser(user: UserEntity) : Result<UserEntity> =
         runCatching { daoUser.getOneByEmail(user.email).first() ?: user.takeIf { daoUser.insertUser(it) > 0 } ?: error("ErrorDialog creating user.") }
             .fold(
