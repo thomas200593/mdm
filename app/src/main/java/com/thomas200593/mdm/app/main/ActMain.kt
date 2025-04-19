@@ -44,52 +44,36 @@ class ActMain : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashscreen = installSplashScreen()
         super.onCreate(savedInstanceState)
-        timberFileLogger = EntryPointAccessors
-            .fromApplication(applicationContext, TimberFileLoggerEntryPoint::class.java).timberFileLogger()
+        timberFileLogger = EntryPointAccessors.fromApplication(applicationContext, TimberFileLoggerEntryPoint::class.java).timberFileLogger()
         var uiData by mutableStateOf(UiData(
-            darkThemeEnabled = resources.configuration.isSystemInDarkTheme,
-            dynamicColorEnabled = UiStateMain.Loading.dynamicColorEnabled,
-            contrastAccent = UiStateMain.Loading.contrastAccent,
-            fontSize = UiStateMain.Loading.fontSize
+            darkThemeEnabled = resources.configuration.isSystemInDarkTheme, dynamicColorEnabled = UiStateMain.Loading.dynamicColorEnabled,
+            contrastAccent = UiStateMain.Loading.contrastAccent, fontSize = UiStateMain.Loading.fontSize
         ))
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 combine(flow = isSystemInDarkTheme(), flow2 = vm.uiState) { systemDark, uiState ->
                     UiData(
-                        darkThemeEnabled = uiState.darkThemeEnabled(systemDark),
-                        dynamicColorEnabled = uiState.dynamicColorEnabled,
-                        contrastAccent = uiState.contrastAccent,
-                        fontSize = uiState.fontSize
+                        darkThemeEnabled = uiState.darkThemeEnabled(systemDark), dynamicColorEnabled = uiState.dynamicColorEnabled,
+                        contrastAccent = uiState.contrastAccent, fontSize = uiState.fontSize
                     )
-                }.onEach { uiData = it }.map { it.darkThemeEnabled }.distinctUntilChanged()
-                    .collect { darkTheme ->
-                        enableEdgeToEdge(
-                            statusBarStyle = SystemBarStyle.auto(
-                                lightScrim = android.graphics.Color.TRANSPARENT,
-                                darkScrim = android.graphics.Color.TRANSPARENT,
-                            ) { darkTheme },
-                            navigationBarStyle = SystemBarStyle.auto(
-                                lightScrim = Color.Light.scrimARGB,
-                                darkScrim = Color.Dark.scrimARGB,
-                            ) { darkTheme }
-                        )
-                    }
+                }.onEach { uiData = it }.map { it.darkThemeEnabled }.distinctUntilChanged().collect { darkTheme -> enableEdgeToEdge(
+                    statusBarStyle = SystemBarStyle.auto(
+                        lightScrim = android.graphics.Color.TRANSPARENT, darkScrim = android.graphics.Color.TRANSPARENT,
+                    ) { darkTheme },
+                    navigationBarStyle = SystemBarStyle.auto(
+                        lightScrim = Color.Light.scrimARGB, darkScrim = Color.Dark.scrimARGB,
+                    ) { darkTheme }
+                ) }
             }
         }
         splashscreen.setKeepOnScreenCondition { vm.uiState.value.keepSplashScreenOn() }
         setupSplashScreen(splashscreen)
         setContent {
             val appState = rememberStateApp(networkMonitor = networkMonitor, timberFileLogger = timberFileLogger)
-            CompositionLocalProvider(
-                LocalStateApp provides appState,
-                LocalTimberFileLogger provides timberFileLogger
-            ) {
+            CompositionLocalProvider(LocalStateApp provides appState, LocalTimberFileLogger provides timberFileLogger) {
                 Theme.AppTheme(
-                    darkThemeEnabled = uiData.darkThemeEnabled,
-                    dynamicColorEnabled = uiData.dynamicColorEnabled,
-                    contrastAccent = uiData.contrastAccent,
-                    fontSize = uiData.fontSize,
-                    content = { ScrApp() }
+                    darkThemeEnabled = uiData.darkThemeEnabled, dynamicColorEnabled = uiData.dynamicColorEnabled,
+                    contrastAccent = uiData.contrastAccent, fontSize = uiData.fontSize, content = { ScrApp() }
                 )
             }
         }
