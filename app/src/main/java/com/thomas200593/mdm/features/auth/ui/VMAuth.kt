@@ -40,7 +40,7 @@ class VMAuth @Inject constructor(
         is Events.Screen.Opened -> handleOpenScreen()
     }
     fun onTopBarEvent(events: Events.TopBar) = when (events) {
-        is Events.TopBar.BtnSetting.Clicked -> {}
+        is Events.TopBar.BtnSetting.Clicked -> {/*TODO*/}
         is Events.TopBar.BtnScrDesc.Clicked -> updateDialog { DialogState.ScrDescDialog }
         is Events.TopBar.BtnScrDesc.Dismissed -> updateDialog { DialogState.None }
     }
@@ -48,7 +48,7 @@ class VMAuth @Inject constructor(
         is Events.Content.Form.EmailChanged -> updateForm { it.validateField(email = event.email).validateFields() }
         is Events.Content.Form.PasswordChanged -> updateForm { it.validateField(password = event.password).validateFields() }
         is Events.Content.Form.BtnSignIn.Clicked -> handleSignIn(event.authType)
-        is Events.Content.Form.BtnRecoverAccount.Clicked -> {}
+        is Events.Content.Form.BtnRecoverAccount.Clicked -> {/*TODO*/}
     }
     private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
         viewModelScope.launch(Dispatchers.Main.immediate) {
