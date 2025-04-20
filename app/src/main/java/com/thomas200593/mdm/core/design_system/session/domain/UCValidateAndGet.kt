@@ -16,7 +16,7 @@ class UCValidateAndGet @Inject constructor(
     private val repoSession : RepoSession,
     private val repoUser: RepoUser
 ) { operator fun invoke() = repoSession.getCurrent().flowOn(ioDispatcher).map {
-        val session = it.getOrThrow()
-        if(repoSession.isValid(session).getOrThrow()) session to repoUser.getOneByUid(session.userId).first().getOrThrow()
-        else throw Throwable("Session Invalid")
+    val session = it.getOrThrow()
+    if(repoSession.isValid(session).getOrThrow()) session to repoUser.getOneByUid(session.userId).first().getOrThrow()
+    else throw Throwable("Session Invalid")
 }.catch { repoSession.delete(); it } }
