@@ -30,12 +30,14 @@ class RepoInitializationImpl @Inject constructor(
     private val dataStore: DataStorePreferences
 ) : RepoInitialization {
     @Transaction
-    override suspend fun createUserLocalEmailPassword(dto: DTOInitialization): Result<DTOInitialization> =
-        repoUser.getOrCreateUser(dto.toUserEntity(UUIDv7.generateAsString())).fold(
+    override suspend fun createUserLocalEmailPassword(dto: DTOInitialization): Result<DTOInitialization> = withContext (ioDispatcher) {
+        val result = repoUser.getOrCreateUser(dto.toUserEntity(UUIDv7.generateAsString())).fold(
             onSuccess = { user -> repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid))
                 .fold(onSuccess = { Result.success(dto) }, onFailure = { Result.failure(it) }) },
             onFailure = { Result.failure(it) }
         )
+        result
+    }
     override suspend fun updateFirstTimeStatus(firstTimeStatus: FirstTimeStatus) =
-        withContext(ioDispatcher){ dataStore.instance.edit { it[DataStorePreferencesKeys.dsKeyFirstTimeStatus] = firstTimeStatus.name } }
+        withContext (ioDispatcher) { dataStore.instance.edit { it[DataStorePreferencesKeys.dsKeyFirstTimeStatus] = firstTimeStatus.name } }
 }
