@@ -102,6 +102,7 @@ class VMInitialization @Inject constructor(
                 email = frozenForm.fldEmail.toString(),
                 authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword.toString())
             )
+            /*TODO : to UserProfile */
             ucCreateDataInitialization.invoke(dto).fold(
                 onSuccess = { result -> updateUiState { it.copy(
                     resultInitialization = ResultInitialization.Success(result),
