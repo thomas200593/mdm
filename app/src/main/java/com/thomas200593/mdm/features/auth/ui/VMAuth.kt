@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.thomas200593.mdm.core.design_system.session.repository.RepoSession
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.design_system.util.update
 import com.thomas200593.mdm.features.auth.domain.UCGetScreenData
@@ -29,7 +30,8 @@ import javax.inject.Inject
 @HiltViewModel
 class VMAuth @Inject constructor(
     private val ucGetScreenData: UCGetScreenData,
-    private val ucSignIn: UCSignIn
+    private val ucSignIn: UCSignIn,
+    private val repoSession: RepoSession
 ) : ViewModel() {
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
     var uiState = MutableStateFlow(UiState())
@@ -60,9 +62,8 @@ class VMAuth @Inject constructor(
             }
         }
     private fun handleOpenScreen() = viewModelScope.launch {
-        /*TODO: call UC Destroy Active Session on onStart? or separate since it depends on result?*/
         ucGetScreenData.invoke()
-            .onStart { uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
+            .onStart { repoSession.delete(); uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
             .collect { confCommon ->
                 uiState.update { currentState -> currentState.copy(
                     componentsState = ComponentsState.Loaded(
@@ -75,13 +76,10 @@ class VMAuth @Inject constructor(
     }
     private fun updateDialog(transform: (DialogState) -> DialogState) =
         updateUiState { it.copy(dialogState = transform(it.dialogState)) }
-    private fun updateForm(transform: (FormAuthState) -> FormAuthState) =
-        viewModelScope.launch(Dispatchers.Main.immediate) {
-            (uiState.value.componentsState as? ComponentsState.Loaded)?.let {
-                val updated = transform(formAuth)
-                if (updated != formAuth) formAuth = updated
-            }
-        }
+    private fun updateForm(transform: (FormAuthState) -> FormAuthState) = viewModelScope.launch(Dispatchers.Main.immediate) {
+        (uiState.value.componentsState as? ComponentsState.Loaded)
+            ?.let { val updated = transform(formAuth); if (updated != formAuth) formAuth = updated }
+    }
     private fun handleSignIn(authType: FormAuthTypeState) = when (authType) {
         is FormAuthTypeState.LocalEmailPassword -> {
             val frozenForm = formAuth.disableInputs(); formAuth = frozenForm
