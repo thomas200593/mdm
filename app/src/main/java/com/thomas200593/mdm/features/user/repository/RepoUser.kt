@@ -34,8 +34,5 @@ class RepoUserImpl @Inject constructor(
         } ?: flowOf(Result.failure(IllegalArgumentException("Email cannot be blank")))
     override suspend fun getOrCreateUser(user: UserEntity) : Result<UserEntity> =
         runCatching { daoUser.getOneByEmail(user.email).flowOn(ioDispatcher).first() ?: user.takeIf { daoUser.insertUser(it) > 0 } ?: error("ErrorDialog creating user.") }
-            .fold(
-                onSuccess = { entity -> Result.success(entity) },
-                onFailure = { t -> Result.failure(t) }
-            )
+            .fold(onSuccess = { entity -> Result.success(entity) }, onFailure = { t -> Result.failure(t) })
 }
