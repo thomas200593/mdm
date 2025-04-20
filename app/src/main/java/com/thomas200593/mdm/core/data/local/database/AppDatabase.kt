@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.thomas200593.mdm.core.data.local.database.entity_common.TypeConverterAuditTrail
+import com.thomas200593.mdm.core.design_system.session.dao.DaoSession
 import com.thomas200593.mdm.core.design_system.session.entity.SessionEntity
 import com.thomas200593.mdm.features.auth.dao.DaoAuth
 import com.thomas200593.mdm.features.auth.entity.AuthEntity
@@ -26,6 +27,7 @@ import javax.inject.Singleton
     ]
 )
 abstract class AppDatabase : RoomDatabase() {
+    abstract fun daoSession() : DaoSession
     abstract fun daoUser() : DaoUser
     abstract fun daoAuth() : DaoAuth
 }

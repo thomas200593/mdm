@@ -2,6 +2,10 @@ package com.thomas200593.mdm.core.design_system.session.di
 
 import com.thomas200593.mdm.core.design_system.session.SessionManager
 import com.thomas200593.mdm.core.design_system.session.SessionManagerImpl
+import com.thomas200593.mdm.core.design_system.session.dao.DaoSession
+import com.thomas200593.mdm.core.design_system.session.dao.DaoSessionImpl
+import com.thomas200593.mdm.core.design_system.session.repository.RepoSession
+import com.thomas200593.mdm.core.design_system.session.repository.RepoSessionImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,4 +18,10 @@ abstract class ModSessionManager {
     @Binds
     @Singleton
     internal abstract fun bindsImplementation(impl : SessionManagerImpl) : SessionManager
+    @Binds
+    @Singleton
+    internal abstract fun bindsRepository(impl : RepoSessionImpl) : RepoSession
+    @Binds
+    @Singleton
+    internal abstract fun bindsDao(impl : DaoSessionImpl) : DaoSession
 }
