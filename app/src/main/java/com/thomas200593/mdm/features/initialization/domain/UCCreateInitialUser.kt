@@ -14,6 +14,7 @@ class UCCreateInitialUser @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val repoInitialization: RepoInitialization
 ) { suspend operator fun invoke(dto : DTOInitialization) : Result<DTOInitialization> = when(dto.authType) {
+    /*TODO : to UserProfile */
     is AuthType.LocalEmailPassword -> withContext (ioDispatcher) {
         val result = repoInitialization.createUserLocalEmailPassword(dto).fold(
             onSuccess = { repoInitialization.updateFirstTimeStatus(FirstTimeStatus.NO) ; Result.success(it) },
