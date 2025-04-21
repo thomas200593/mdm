@@ -19,4 +19,4 @@ class UCValidateAndGet @Inject constructor(
     val session = it.getOrThrow()
     if(repoSession.isValid(session).getOrThrow()) session to repoUser.getOneByUid(session.userId).first().getOrThrow()
     else throw Throwable("Session Invalid")
-}.catch { repoSession.delete(); it } }
+}.catch { repoSession.archive(); repoSession.delete(); it } }

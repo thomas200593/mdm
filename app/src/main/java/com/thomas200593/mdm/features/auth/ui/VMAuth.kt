@@ -5,7 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.thomas200593.mdm.core.design_system.session.repository.RepoSession
+import com.thomas200593.mdm.core.design_system.session.SessionManager
+import com.thomas200593.mdm.core.design_system.session.domain.UCArchiveAndCleanUpSession
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.design_system.util.update
 import com.thomas200593.mdm.features.auth.domain.UCGetScreenData
@@ -31,7 +32,8 @@ import javax.inject.Inject
 class VMAuth @Inject constructor(
     private val ucGetScreenData: UCGetScreenData,
     private val ucSignIn: UCSignIn,
-    private val repoSession: RepoSession
+    private val sessionManager: SessionManager,
+    private val ucArchiveAndCleanUpSession: UCArchiveAndCleanUpSession
 ) : ViewModel() {
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
     var uiState = MutableStateFlow(UiState())
@@ -63,7 +65,7 @@ class VMAuth @Inject constructor(
         }
     private fun handleOpenScreen() = viewModelScope.launch {
         ucGetScreenData.invoke()
-            .onStart { repoSession.delete(); uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
+            .onStart { ucArchiveAndCleanUpSession.invoke(); uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
             .collect { confCommon ->
                 uiState.update { currentState -> currentState.copy(
                     componentsState = ComponentsState.Loaded(

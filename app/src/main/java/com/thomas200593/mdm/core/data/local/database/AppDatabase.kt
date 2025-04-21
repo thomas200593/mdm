@@ -6,6 +6,8 @@ import androidx.room.TypeConverters
 import com.thomas200593.mdm.core.data.local.database.entity_common.TypeConverterAuditTrail
 import com.thomas200593.mdm.core.design_system.session.dao.DaoSession
 import com.thomas200593.mdm.core.design_system.session.entity.SessionEntity
+import com.thomas200593.mdm.core.design_system.session.entity.SessionHistoryEntity
+import com.thomas200593.mdm.core.design_system.session.entity.TypeConverterSession
 import com.thomas200593.mdm.features.auth.dao.DaoAuth
 import com.thomas200593.mdm.features.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.auth.entity.TypeConverterAuthType
@@ -16,14 +18,14 @@ import javax.inject.Singleton
 @Singleton
 @Database(
     entities = [
-        UserEntity::class, AuthEntity::class, SessionEntity::class
+        UserEntity::class, AuthEntity::class, SessionEntity::class, SessionHistoryEntity::class
     ],
     version = 1,
     exportSchema = false
 )
 @TypeConverters(
     value = [
-        TypeConverterAuditTrail::class, TypeConverterAuthType::class
+        TypeConverterAuditTrail::class, TypeConverterAuthType::class, TypeConverterSession::class
     ]
 )
 abstract class AppDatabase : RoomDatabase() {
