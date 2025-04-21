@@ -8,6 +8,7 @@ import java.time.Instant
 object Constants {
     val NOW_EPOCH_SECOND = Instant.now().epochSecond
     val NOW_EPOCH_MILLISECOND = Instant.now().toEpochMilli()
+    const val WEEK_IN_SECOND = 604_800
     const val ID = "ID"
     const val STR_EMPTY = ""
     const val STR_SYSTEM = "SYSTEM"

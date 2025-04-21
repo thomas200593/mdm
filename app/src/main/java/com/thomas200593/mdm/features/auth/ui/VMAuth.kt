@@ -6,12 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.core.design_system.session.SessionManager
-import com.thomas200593.mdm.core.design_system.session.domain.UCArchiveAndCleanUpSession
+import com.thomas200593.mdm.core.design_system.session.entity.SessionEntity
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.design_system.util.update
 import com.thomas200593.mdm.features.auth.domain.UCGetScreenData
 import com.thomas200593.mdm.features.auth.domain.UCSignIn
-import com.thomas200593.mdm.features.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.auth.entity.AuthType
 import com.thomas200593.mdm.features.auth.entity.DTOSignIn
 import com.thomas200593.mdm.features.auth.ui.events.Events
@@ -20,7 +19,6 @@ import com.thomas200593.mdm.features.auth.ui.state.DialogState
 import com.thomas200593.mdm.features.auth.ui.state.FormAuthState
 import com.thomas200593.mdm.features.auth.ui.state.FormAuthTypeState
 import com.thomas200593.mdm.features.auth.ui.state.ResultSignIn
-import com.thomas200593.mdm.features.user.entity.UserEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,8 +30,7 @@ import javax.inject.Inject
 class VMAuth @Inject constructor(
     private val ucGetScreenData: UCGetScreenData,
     private val ucSignIn: UCSignIn,
-    private val sessionManager: SessionManager,
-    private val ucArchiveAndCleanUpSession: UCArchiveAndCleanUpSession
+    private val sessionManager: SessionManager
 ) : ViewModel() {
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
     var uiState = MutableStateFlow(UiState())
@@ -65,7 +62,7 @@ class VMAuth @Inject constructor(
         }
     private fun handleOpenScreen() = viewModelScope.launch {
         ucGetScreenData.invoke()
-            .onStart { ucArchiveAndCleanUpSession.invoke(); uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
+            .onStart { sessionManager.archiveAndCleanUp(); uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
             .collect { confCommon ->
                 uiState.update { currentState -> currentState.copy(
                     componentsState = ComponentsState.Loaded(
@@ -95,13 +92,19 @@ class VMAuth @Inject constructor(
                 )
                 ucSignIn.invoke(dto).fold(
                     onFailure = { err -> updateUiState { it.copy(resultSignIn = ResultSignIn.Error(err), dialogState = DialogState.None) } },
-                    onSuccess = { createSession(it) }
+                    onSuccess = { createSession(it.first.uid, (dto.timestamp + Constants.WEEK_IN_SECOND)) }
                 )
             }
         }
     }
-    private fun createSession(data: Pair<UserEntity, AuthEntity>) {
+    private fun createSession(userId: String, expiresAt: Long) {
         updateUiState { componentState -> componentState.copy(dialogState = DialogState.LoadingSessionDialog) }
-        /*TODO : Save last session to session history, if error clean up current session, insert new session, if success return dialog, if error reset ui*/
+        viewModelScope.launch {
+            sessionManager.archiveAndCleanUp()
+            sessionManager.createSession(SessionEntity(userId = userId, expiresAt = expiresAt)).fold(
+                onFailure = { err -> updateUiState { it.copy(resultSignIn = ResultSignIn.Error(err), dialogState = DialogState.None) } },
+                onSuccess = { updateUiState { it.copy(resultSignIn = ResultSignIn.Success, dialogState = DialogState.None) } }
+            )
+        }
     }
 }

@@ -25,6 +25,8 @@ interface DaoSession {
     suspend fun deleteAll()
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertAllSessionHistory(sessions: List<SessionHistoryEntity>)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun create(session: SessionEntity)
 }
 class DaoSessionImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher : CoroutineDispatcher,
@@ -35,4 +37,5 @@ class DaoSessionImpl @Inject constructor(
     override suspend fun deleteAll() = withContext (ioDispatcher) { appDatabase.daoSession().deleteAll() }
     override suspend fun insertAllSessionHistory(sessions: List<SessionHistoryEntity>) =
         withContext (ioDispatcher) { appDatabase.daoSession().insertAllSessionHistory(sessions) }
+    override suspend fun create(session: SessionEntity) = withContext (ioDispatcher) { appDatabase.daoSession().create(session) }
 }

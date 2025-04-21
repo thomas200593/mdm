@@ -1,6 +1,5 @@
 package com.thomas200593.mdm.core.design_system.session.repository
 
-import androidx.room.Transaction
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
 import com.thomas200593.mdm.core.design_system.session.dao.DaoSession
@@ -21,8 +20,9 @@ import javax.inject.Inject
 interface RepoSession {
     fun getCurrent(): Flow<Result<SessionEntity>>
     suspend fun isValid(session: SessionEntity): Result<Boolean>
-    suspend fun delete()
-    suspend fun archive()
+    suspend fun deleteAll()
+    suspend fun archiveAll()
+    suspend fun create(sessionEntity: SessionEntity) : Result<SessionEntity>
 }
 class RepoSessionImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
@@ -32,11 +32,14 @@ class RepoSessionImpl @Inject constructor(
         .catch { Result.failure<Throwable>(it) }.map { runCatching { requireNotNull(it) { "No session found" } } }
     override suspend fun isValid(session: SessionEntity) = withContext (ioDispatcher) { runCatching { (
         (UUIDv7.extractTimestamp(UUIDv7.fromUUIDString(session.sessionId)) > 0) &&
-        (session.expiresAt?.let { it >= Constants.NOW_EPOCH_MILLISECOND } == true)) }
+        (session.expiresAt?.let { it >= Constants.NOW_EPOCH_SECOND } == true)) }
         .fold(onSuccess = { Result.success(true) }, onFailure = { Result.success(false) }) }
-    override suspend fun delete() = withContext (ioDispatcher) { daoSession.deleteAll() }
-    override suspend fun archive() = withContext (ioDispatcher) {
+    override suspend fun deleteAll() = withContext (ioDispatcher) { daoSession.deleteAll() }
+    override suspend fun archiveAll() = withContext (ioDispatcher) {
         val sessions = daoSession.getAll().filterNotNull().first().map { SessionHistoryEntity(session = it) }
         daoSession.insertAllSessionHistory(sessions)
+    }
+    override suspend fun create(sessionEntity: SessionEntity): Result<SessionEntity> = withContext (ioDispatcher) {
+        runCatching { daoSession.create(sessionEntity) }.fold(onSuccess = { Result.success(sessionEntity) }, onFailure = { Result.failure(it)})
     }
 }

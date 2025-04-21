@@ -4,9 +4,10 @@ import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDi
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
 import com.thomas200593.mdm.core.design_system.session.repository.RepoSession
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class UCCreateSession @Inject constructor(
+class UCArchiveAndCleanUp @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher : CoroutineDispatcher,
     private val repoSession : RepoSession
-) { operator fun invoke() {} }
+) { suspend operator fun invoke() = withContext (ioDispatcher) { repoSession.archiveAll(); repoSession.deleteAll() } }
