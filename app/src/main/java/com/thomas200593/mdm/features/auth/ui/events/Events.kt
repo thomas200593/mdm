@@ -26,5 +26,8 @@ sealed interface Events {
                 data object Clicked : BtnRecoverAccount
             }
         }
+        sealed interface SignInCallback : Content {
+            data object Success : SignInCallback
+        }
     }
 }

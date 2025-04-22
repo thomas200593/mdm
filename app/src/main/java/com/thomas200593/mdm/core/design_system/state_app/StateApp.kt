@@ -59,12 +59,12 @@ class StateApp(
             .also { if (it != null) previousDestination.value = it } ?: previousDestination.value
     val currentTopLevelDestination: DestTopLevel? @Composable get() =
         DestTopLevel.entries.firstOrNull { currentDestination?.hasRoute(route = it.route) == true }
+    val topLevelDestNavOptions = navOptions(optionsBuilder = {
+        popUpTo(id = navController.graph.findStartDestination().id, popUpToBuilder = { saveState = true })
+        launchSingleTop = true; restoreState = true
+    })
     fun navToDestTopLevel(dest: DestTopLevel) {
         timberFileLogger.log(Log.DEBUG, TAG, "${this@StateApp::class.simpleName}.navToDestTopLevel()")
-        val navOptions = navOptions(optionsBuilder = {
-            popUpTo(id = navController.graph.findStartDestination().id, popUpToBuilder = { saveState = true })
-            launchSingleTop = true; restoreState = true
-        })
         when (dest) {
             DestTopLevel.DASHBOARD -> {
                 timberFileLogger.log(Log.DEBUG, TAG, "")

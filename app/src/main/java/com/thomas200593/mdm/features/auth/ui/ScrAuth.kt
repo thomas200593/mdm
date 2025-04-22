@@ -51,10 +51,10 @@ import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.features.auth.ui.events.Events
-import com.thomas200593.mdm.features.auth.ui.state.FormAuthTypeState
 import com.thomas200593.mdm.features.auth.ui.state.ComponentsState
 import com.thomas200593.mdm.features.auth.ui.state.DialogState
 import com.thomas200593.mdm.features.auth.ui.state.FormAuthState
+import com.thomas200593.mdm.features.auth.ui.state.FormAuthTypeState
 import com.thomas200593.mdm.features.auth.ui.state.ResultSignIn
 import kotlinx.coroutines.CoroutineScope
 
@@ -70,45 +70,49 @@ fun ScrAuth(
         scrGraph = scrGraph, components = uiState.componentsState,
         formAuth = formAuth,
         onTopBarEvent = vm::onTopBarEvent,
-        onFormAuthEvent = vm::onFormAuthEvent
+        onFormAuthEvent = vm::onFormAuthEvent,
+        onSignInCallback = {}//vm::onSignInCallBackEvent.also { coroutineScope.launch { stateApp.navController.navToOnboarding() } }
     )
 }
 @Composable
 private fun ScrAuth(
     scrGraph: ScrGraphs.Auth, components: ComponentsState, formAuth: FormAuthState,
-    onTopBarEvent: (Events.TopBar) -> Unit, onFormAuthEvent: (Events.Content.Form) -> Unit
+    onTopBarEvent: (Events.TopBar) -> Unit, onFormAuthEvent: (Events.Content.Form) -> Unit,
+    onSignInCallback: (Events.Content.SignInCallback) -> Unit
 ) = when (components) {
     is ComponentsState.Loading -> ScrLoading()
     is ComponentsState.Loaded -> ScreenContent(
         scrGraph = scrGraph, components = components, formAuth = formAuth,
         onTopBarEvent = onTopBarEvent,
-        onFormAuthEvent = onFormAuthEvent
+        onFormAuthEvent = onFormAuthEvent,
+        onSignInCallback = onSignInCallback
     )
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
-    scrGraph: ScrGraphs.Auth,
-    components: ComponentsState.Loaded,
-    formAuth: FormAuthState,
-    onTopBarEvent: (Events.TopBar) -> Unit,
-    onFormAuthEvent: (Events.Content.Form) -> Unit
+    scrGraph: ScrGraphs.Auth, components: ComponentsState.Loaded, formAuth: FormAuthState,
+    onTopBarEvent: (Events.TopBar) -> Unit, onFormAuthEvent: (Events.Content.Form) -> Unit,
+    onSignInCallback: (Events.Content.SignInCallback) -> Unit
 ) {
-    HandleDialogs(scrGraph = scrGraph, dialog = components.dialogState)
+    HandleDialogs(dialog = components.dialogState, scrGraph = scrGraph, onTopBarEvent = onTopBarEvent)
     Scaffold(
         topBar = { SectionTopBar(onTopBarEvent = onTopBarEvent) },
         content = { SectionContent(
             paddingValues = it, components = components, formAuth = formAuth,
-            onFormAuthEvent = onFormAuthEvent
+            onFormAuthEvent = onFormAuthEvent, onSignInCallback = onSignInCallback
         ) },
         bottomBar = { SectionBottomBar() }
     )
 }
 @Composable
-private fun HandleDialogs(scrGraph: ScrGraphs.Auth, dialog: DialogState) = when (dialog) {
+private fun HandleDialogs(
+    dialog: DialogState, scrGraph: ScrGraphs.Auth,
+    onTopBarEvent: (Events.TopBar) -> Unit
+) = when (dialog) {
     is DialogState.None -> Unit
     is DialogState.ScrDescDialog -> ScrInfoDialog(
-        onDismissRequest = { /*TODO*/ },
+        onDismissRequest = { onTopBarEvent(Events.TopBar.BtnScrDesc.Dismissed) },
         title = stringResource(scrGraph.title), description = stringResource(scrGraph.description)
     )
     is DialogState.LoadingAuthDialog -> LoadingDialog(message = "Authenticating...")
@@ -131,7 +135,7 @@ private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
 @Composable
 private fun SectionContent(
     paddingValues: PaddingValues, components: ComponentsState.Loaded, formAuth: FormAuthState,
-    onFormAuthEvent: (Events.Content.Form) -> Unit
+    onFormAuthEvent: (Events.Content.Form) -> Unit, onSignInCallback: (Events.Content.SignInCallback) -> Unit
 ) = Surface(
     modifier = Modifier.padding(paddingValues), content = {
         LazyColumn(
@@ -144,7 +148,8 @@ private fun SectionContent(
                 item { SectionPageAuthPanel(
                     components = components,
                     formAuth = formAuth,
-                    onFormAuthEvent = onFormAuthEvent
+                    onFormAuthEvent = onFormAuthEvent,
+                    onSignInCallback = onSignInCallback
                 ) }
             }
         )
@@ -174,7 +179,8 @@ private fun SectionPageTitle() = Column (
 private fun SectionPageAuthPanel(
     components: ComponentsState.Loaded,
     formAuth: FormAuthState,
-    onFormAuthEvent: (Events.Content.Form) -> Unit
+    onFormAuthEvent: (Events.Content.Form) -> Unit,
+    onSignInCallback: (Events.Content.SignInCallback) -> Unit
 ) = PanelCard(
     modifier = Modifier.padding(Constants.Dimens.dp16), content = {
         TxtFieldEmail(
@@ -187,6 +193,7 @@ private fun SectionPageAuthPanel(
             onValueChange = { onFormAuthEvent(Events.Content.Form.PasswordChanged(it)) },
             enabled = formAuth.fldPasswordEnabled
         )
+        (components.resultSignIn as? ResultSignIn.Success)?.let { onSignInCallback(Events.Content.SignInCallback.Success) }
         (components.resultSignIn as? ResultSignIn.Error)?.let { error ->
             AnimatedVisibility(
                 visible = true,

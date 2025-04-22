@@ -51,6 +51,9 @@ class VMAuth @Inject constructor(
         is Events.Content.Form.BtnSignIn.Clicked -> handleSignIn(event.authType)
         is Events.Content.Form.BtnRecoverAccount.Clicked -> {/*TODO*/}
     }
+    fun onSignInCallBackEvent(event: Events.Content.SignInCallback) = when (event) {
+        Events.Content.SignInCallback.Success -> handleSIgnInCallbackSuccess()
+    }
     private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
         viewModelScope.launch(Dispatchers.Main.immediate) {
             uiState.update { current ->
@@ -91,7 +94,10 @@ class VMAuth @Inject constructor(
                     timestamp = Constants.NOW_EPOCH_SECOND
                 )
                 ucSignIn.invoke(dto).fold(
-                    onFailure = { err -> updateUiState { it.copy(resultSignIn = ResultSignIn.Error(err), dialogState = DialogState.None) } },
+                    onFailure = { err ->
+                        updateUiState { it.copy(resultSignIn = ResultSignIn.Error(err), dialogState = DialogState.None) }
+                        formAuth = FormAuthState()
+                    },
                     onSuccess = { createSession(it.first.uid, (dto.timestamp + Constants.WEEK_IN_SECOND)) }
                 )
             }
@@ -106,5 +112,9 @@ class VMAuth @Inject constructor(
                 onSuccess = { updateUiState { it.copy(resultSignIn = ResultSignIn.Success, dialogState = DialogState.None) } }
             )
         }
+    }
+    private fun handleSIgnInCallbackSuccess() {
+        updateUiState { componentState -> componentState.copy(resultSignIn = ResultSignIn.Idle, dialogState = DialogState.None) }
+        formAuth = FormAuthState()
     }
 }
