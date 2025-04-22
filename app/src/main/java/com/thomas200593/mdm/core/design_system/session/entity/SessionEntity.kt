@@ -1,5 +1,6 @@
 package com.thomas200593.mdm.core.design_system.session.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
@@ -9,26 +10,29 @@ import com.thomas200593.mdm.core.data.local.database.entity_common.AuditTrail
 import com.thomas200593.mdm.core.design_system.base_class.BaseEntity
 import com.thomas200593.mdm.core.design_system.util.UUIDv7
 import com.thomas200593.mdm.features.user.entity.UserEntity
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
+@Serializable
 @Entity(
     tableName = "session",
     foreignKeys = [
         ForeignKey(
             entity = UserEntity::class,
             parentColumns = ["uid"],
-            childColumns = ["userId"],
+            childColumns = ["user_id"],
             onUpdate = ForeignKey.CASCADE,
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["userId"])]
+    indices = [Index(value = ["user_id"])]
 )
 data class SessionEntity(
-    @PrimaryKey val sessionId: String = UUIDv7.generateAsString(),
-    val userId: String,
-    val expiresAt: Long? = null,
-    override val auditTrail: AuditTrail = AuditTrail()
+    @PrimaryKey
+    @ColumnInfo(name = "session_id") val sessionId: String = UUIDv7.generateAsString(),
+    @ColumnInfo(name = "user_id") val userId: String,
+    @ColumnInfo(name = "expires_at") val expiresAt: Long? = null,
+    @ColumnInfo(name = "audit_trail") override val auditTrail: AuditTrail = AuditTrail()
 ) : BaseEntity
 class TypeConverterSession {
     private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }

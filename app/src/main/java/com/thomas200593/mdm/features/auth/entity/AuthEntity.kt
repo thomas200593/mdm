@@ -15,17 +15,17 @@ import com.thomas200593.mdm.features.user.entity.UserEntity
         ForeignKey(
             entity = UserEntity::class,
             parentColumns = ["uid"],
-            childColumns = ["userId"],
+            childColumns = ["user_id"],
             onUpdate = ForeignKey.CASCADE,
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["userId"], unique = true)], // ✅ Ensure one auth method per user
+    indices = [Index(value = ["user_id"], unique = true)], // ✅ Ensure one auth method per user
 )
 data class AuthEntity(
-    @PrimaryKey(autoGenerate = true) val seqId : Long = 0,
-    val userId: String,
-    val authType: AuthType,
-    @ColumnInfo(name = "audit_trail")
-    override val auditTrail: AuditTrail = AuditTrail()
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "seq_id") val seqId : Long = 0,
+    @ColumnInfo(name = "user_id") val userId: String,
+    @ColumnInfo(name = "auth_type") val authType: AuthType,
+    @ColumnInfo(name = "audit_trail") override val auditTrail: AuditTrail = AuditTrail()
 ) : BaseEntity

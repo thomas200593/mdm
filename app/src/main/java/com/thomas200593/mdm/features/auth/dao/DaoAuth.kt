@@ -18,9 +18,9 @@ import javax.inject.Inject
 interface DaoAuth {
     @Insert(entity = AuthEntity::class, onConflict = REPLACE)
     suspend fun insertAuth(authEntity: AuthEntity)
-    @Query("SELECT * FROM auth WHERE userId = :userId LIMIT 1;")
+    @Query("SELECT * FROM auth WHERE user_id = :userId LIMIT 1;")
     fun getAuthByUserId(userId: String) : Flow<AuthEntity?>
-    @Query("DELETE FROM auth WHERE userId = :userId")
+    @Query("DELETE FROM auth WHERE user_id = :userId")
     suspend fun deleteAuthByUserId(userId: String)
 }
 class DaoAuthImpl @Inject constructor(

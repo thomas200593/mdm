@@ -10,8 +10,7 @@ import com.thomas200593.mdm.core.design_system.util.UUIDv7
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -35,11 +34,8 @@ class RepoSessionImpl @Inject constructor(
         (session.expiresAt?.let { it >= Constants.NOW_EPOCH_SECOND } == true)) }
         .fold(onSuccess = { Result.success(true) }, onFailure = { Result.success(false) }) }
     override suspend fun deleteAll() = withContext (ioDispatcher) { daoSession.deleteAll() }
-    override suspend fun archiveAll() = withContext (ioDispatcher) {
-        val sessions = daoSession.getAll().filterNotNull().first().map { SessionHistoryEntity(session = it) }
-        daoSession.insertAllSessionHistory(sessions)
-    }
-    override suspend fun create(sessionEntity: SessionEntity): Result<SessionEntity> = withContext (ioDispatcher) {
-        runCatching { daoSession.create(sessionEntity) }.fold(onSuccess = { Result.success(sessionEntity) }, onFailure = { Result.failure(it)})
-    }
+    override suspend fun archiveAll(): Unit = withContext (ioDispatcher) { daoSession.getAll().firstOrNull()
+        ?.takeIf { it.isNotEmpty() }?.map { SessionHistoryEntity(session = it) }?.let { sessions -> daoSession.insertAllSessionHistory(sessions) } }
+    override suspend fun create(sessionEntity: SessionEntity): Result<SessionEntity> = withContext (ioDispatcher)
+        { runCatching { daoSession.create(sessionEntity) }.fold(onSuccess = { Result.success(sessionEntity) }, onFailure = { Result.failure(it)}) }
 }

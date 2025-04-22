@@ -46,6 +46,7 @@ import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.dialog.LoadingDialog
+import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
@@ -54,6 +55,7 @@ import com.thomas200593.mdm.features.auth.ui.state.FormAuthTypeState
 import com.thomas200593.mdm.features.auth.ui.state.ComponentsState
 import com.thomas200593.mdm.features.auth.ui.state.DialogState
 import com.thomas200593.mdm.features.auth.ui.state.FormAuthState
+import com.thomas200593.mdm.features.auth.ui.state.ResultSignIn
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -105,7 +107,10 @@ private fun ScreenContent(
 @Composable
 private fun HandleDialogs(scrGraph: ScrGraphs.Auth, dialog: DialogState) = when (dialog) {
     is DialogState.None -> Unit
-    is DialogState.ScrDescDialog -> {}
+    is DialogState.ScrDescDialog -> ScrInfoDialog(
+        onDismissRequest = { /*TODO*/ },
+        title = stringResource(scrGraph.title), description = stringResource(scrGraph.description)
+    )
     is DialogState.LoadingAuthDialog -> LoadingDialog(message = "Authenticating...")
     is DialogState.LoadingSessionDialog -> LoadingDialog(message = "Creating Session...")
 }
@@ -137,6 +142,7 @@ private fun SectionContent(
                 item { SectionPageLogo() }
                 item { SectionPageTitle() }
                 item { SectionPageAuthPanel(
+                    components = components,
                     formAuth = formAuth,
                     onFormAuthEvent = onFormAuthEvent
                 ) }
@@ -166,8 +172,9 @@ private fun SectionPageTitle() = Column (
 )
 @Composable
 private fun SectionPageAuthPanel(
-    onFormAuthEvent: (Events.Content.Form) -> Unit,
-    formAuth: FormAuthState
+    components: ComponentsState.Loaded,
+    formAuth: FormAuthState,
+    onFormAuthEvent: (Events.Content.Form) -> Unit
 ) = PanelCard(
     modifier = Modifier.padding(Constants.Dimens.dp16), content = {
         TxtFieldEmail(
@@ -180,13 +187,20 @@ private fun SectionPageAuthPanel(
             onValueChange = { onFormAuthEvent(Events.Content.Form.PasswordChanged(it)) },
             enabled = formAuth.fldPasswordEnabled
         )
-        PanelCard(
-            colors = CardDefaults.cardColors().copy(
-                containerColor = MaterialTheme.colorScheme.errorContainer,
-                contentColor = MaterialTheme.colorScheme.onErrorContainer
-            ),
-            content = { TxtMdBody("ErrorDialog") }
-        )
+        (components.resultSignIn as? ResultSignIn.Error)?.let { error ->
+            AnimatedVisibility(
+                visible = true,
+                content = {
+                    PanelCard(
+                        colors = CardDefaults.cardColors().copy(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+                        ),
+                        content = { TxtMdBody(error.t.toString()) }
+                    )
+                }
+            )
+        }
         Button (
             modifier = Modifier.fillMaxWidth(),
             onClick = { onFormAuthEvent(Events.Content.Form.BtnSignIn.Clicked(FormAuthTypeState.LocalEmailPassword)) },

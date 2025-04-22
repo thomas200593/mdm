@@ -12,8 +12,8 @@ import com.thomas200593.mdm.core.design_system.base_class.BaseEntity
     indices = [Index(value = ["email"], unique = true)] // Ensures email is unique
 )
 data class UserEntity(
-    @PrimaryKey val uid: String,
-    val email: String,
-    @ColumnInfo(name = "audit_trail")
-    override val auditTrail: AuditTrail = AuditTrail()
+    @PrimaryKey
+    @ColumnInfo(name = "uid") val uid: String,
+    @ColumnInfo(name = "email") val email: String,
+    @ColumnInfo(name = "audit_trail") override val auditTrail: AuditTrail = AuditTrail()
 ) : BaseEntity

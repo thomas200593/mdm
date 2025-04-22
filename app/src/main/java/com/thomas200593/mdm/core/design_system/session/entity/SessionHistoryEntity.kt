@@ -11,5 +11,5 @@ data class SessionHistoryEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "seq_id") val seqId: Long = 0,
     @ColumnInfo(name = "session") val session: SessionEntity,
-    override val auditTrail: AuditTrail = AuditTrail()
+    @ColumnInfo(name = "audit_trail") override val auditTrail: AuditTrail = AuditTrail()
 ) : BaseEntity
