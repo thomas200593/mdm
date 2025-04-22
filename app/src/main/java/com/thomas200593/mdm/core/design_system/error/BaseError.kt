@@ -1,7 +1,5 @@
 package com.thomas200593.mdm.core.design_system.error
 
-import java.sql.SQLException
-
 sealed interface BaseError {
     val code: String
     val emoji: String
