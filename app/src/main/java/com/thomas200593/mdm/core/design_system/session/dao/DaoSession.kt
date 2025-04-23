@@ -20,7 +20,7 @@ interface DaoSession {
     @Query("SELECT * FROM session")
     fun getAll() : Flow<List<SessionEntity>>
     @Query("SELECT * FROM session LIMIT 1")
-    fun getCurrentSession() : Flow<SessionEntity>
+    fun getCurrentSession() : Flow<SessionEntity?>
     @Query("DELETE FROM session")
     suspend fun deleteAll()
     @Insert(onConflict = OnConflictStrategy.ABORT)

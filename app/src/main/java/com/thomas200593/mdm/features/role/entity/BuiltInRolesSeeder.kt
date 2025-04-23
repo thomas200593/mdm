@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.firstOrNull
 object BuiltInRolesSeeder {
     val roles = listOf(
         RoleEntity(
-            roleCode = Constants.STR_SYSTEM + Constants.STR_UNDERSCORE + "OWNER",
+            roleCode = Constants.SYSTEM_OWNER,
             roleType = RoleType.BuiltIn,
             label = "System Owner",
             description = "Role that own system",

@@ -13,11 +13,12 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 interface RepoSession {
-    fun getCurrent(): Flow<Result<SessionEntity>>
+    fun getCurrent(): Flow<Result<SessionEntity?>>
     suspend fun isValid(session: SessionEntity): Result<Boolean>
     suspend fun deleteAll()
     suspend fun archiveAll()
@@ -27,9 +28,8 @@ class RepoSessionImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val daoSession: DaoSession
 ) : RepoSession {
-    /*TODO: FIX THIS to ERROR GRACEFULLY*/
-    override fun getCurrent() = daoSession.getCurrentSession().flowOn(ioDispatcher)
-        .catch { Result.failure<Throwable>(it) }.map { runCatching { requireNotNull(it) { "No session found" } } }
+    override fun getCurrent() = daoSession.getCurrentSession().flowOn(ioDispatcher).map { Result.success(it) }
+        .onEmpty { emit(Result.failure(NoSuchElementException("No Session Found"))) }.catch { emit(Result.failure(it)) }
     override suspend fun isValid(session: SessionEntity) = withContext (ioDispatcher) { runCatching {
         val timestampValid = UUIDv7.extractTimestamp(UUIDv7.fromUUIDString(session.sessionId)) > 0
         val expiresAtValid = session.expiresAt?.let { it >= Constants.NOW_EPOCH_SECOND } == true

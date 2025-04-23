@@ -1,5 +1,6 @@
 package com.thomas200593.mdm.core.design_system.session.domain
 
+import androidx.compose.runtime.Stable
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
 import com.thomas200593.mdm.core.design_system.session.entity.SessionEntity
@@ -13,13 +14,17 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+@Stable
 class UCValidateAndGet @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher : CoroutineDispatcher,
     private val ucArchiveAndCleanUp: UCArchiveAndCleanUp,
     private val repoSession: RepoSession,
     private val repoUser: RepoUser
-) { operator fun invoke() = repoSession.getCurrent().flowOn(ioDispatcher).map {
-    val session = it.getOrThrow()
-    if(repoSession.isValid(session).getOrDefault(false)) Result.success(session to repoUser.getOneByUid(session.userId).first().getOrThrow())
-    else Result.failure<Pair<SessionEntity, UserEntity>>(Throwable("Session Invalid"))
-}.catch { ucArchiveAndCleanUp.invoke(); emit(Result.failure<Pair<SessionEntity, UserEntity>>(it)) } }
+) { operator fun invoke() = repoSession.getCurrent().flowOn(ioDispatcher).map { result ->
+    result.fold(
+        onSuccess = { session -> session?.takeIf { repoSession.isValid(it).getOrDefault(false) }
+            ?.let { validSession -> repoUser.getOneByUid(validSession.userId).first()
+                .fold(onSuccess = { Result.success(validSession to it) }, onFailure = { Result.failure(it) }) }
+            ?: Result.failure<Pair<SessionEntity, UserEntity>>(Throwable("Session Invalid or Not Found")) },
+        onFailure = { Result.failure<Pair<SessionEntity, UserEntity>>(it) }
+    ) }.catch { ucArchiveAndCleanUp.invoke(); emit(Result.failure<Pair<SessionEntity, UserEntity>>(it)) } }
