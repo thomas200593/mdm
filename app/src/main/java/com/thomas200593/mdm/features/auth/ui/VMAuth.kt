@@ -65,7 +65,7 @@ class VMAuth @Inject constructor(
         }
     private fun handleOpenScreen() = viewModelScope.launch {
         ucGetScreenData.invoke()
-            .onStart { sessionManager.archiveAndCleanUp(); uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
+            .onStart { sessionManager.archiveAndCleanUpSession(); uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
             .collect { confCommon ->
                 uiState.update { currentState -> currentState.copy(
                     componentsState = ComponentsState.Loaded(
@@ -106,8 +106,8 @@ class VMAuth @Inject constructor(
     private fun createSession(userId: String, expiresAt: Long) {
         updateUiState { componentState -> componentState.copy(dialogState = DialogState.LoadingSessionDialog) }
         viewModelScope.launch {
-            sessionManager.archiveAndCleanUp()
-            sessionManager.createSession(SessionEntity(userId = userId, expiresAt = expiresAt)).fold(
+            sessionManager.archiveAndCleanUpSession()
+            sessionManager.startSession(SessionEntity(userId = userId, expiresAt = expiresAt)).fold(
                 onFailure = { err -> updateUiState { it.copy(resultSignIn = ResultSignIn.Error(err), dialogState = DialogState.None) } },
                 onSuccess = { updateUiState { it.copy(resultSignIn = ResultSignIn.Success, dialogState = DialogState.None) } }
             )

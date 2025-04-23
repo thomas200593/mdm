@@ -11,6 +11,9 @@ import com.thomas200593.mdm.core.design_system.session.entity.TypeConverterSessi
 import com.thomas200593.mdm.features.auth.dao.DaoAuth
 import com.thomas200593.mdm.features.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.auth.entity.TypeConverterAuthType
+import com.thomas200593.mdm.features.role.dao.DaoRole
+import com.thomas200593.mdm.features.role.entity.RoleEntity
+import com.thomas200593.mdm.features.role.entity.TypeConverterRoleType
 import com.thomas200593.mdm.features.user.dao.DaoUser
 import com.thomas200593.mdm.features.user.entity.UserEntity
 import javax.inject.Singleton
@@ -18,18 +21,21 @@ import javax.inject.Singleton
 @Singleton
 @Database(
     entities = [
-        UserEntity::class, AuthEntity::class, SessionEntity::class, SessionHistoryEntity::class
+        UserEntity::class, AuthEntity::class, SessionEntity::class, SessionHistoryEntity::class,
+        RoleEntity::class
     ],
     version = 1,
     exportSchema = false
 )
 @TypeConverters(
     value = [
-        TypeConverterAuditTrail::class, TypeConverterAuthType::class, TypeConverterSession::class
+        TypeConverterAuditTrail::class, TypeConverterAuthType::class, TypeConverterSession::class,
+        TypeConverterRoleType::class
     ]
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun daoSession() : DaoSession
     abstract fun daoUser() : DaoUser
     abstract fun daoAuth() : DaoAuth
+    abstract fun daoRole() : DaoRole
 }

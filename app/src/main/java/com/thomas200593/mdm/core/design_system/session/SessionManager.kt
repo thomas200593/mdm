@@ -16,9 +16,10 @@ import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 interface SessionManager {
-    val validateAndGet : Flow<SessionState.Valid>
-    suspend fun archiveAndCleanUp()
-    suspend fun createSession(sessionEntity: SessionEntity): Result<SessionEntity>
+    /*TODO Call Injected Session to ActMain*/
+    val currentSession : Flow<SessionState.Valid>
+    suspend fun archiveAndCleanUpSession()
+    suspend fun startSession(sessionEntity: SessionEntity): Result<SessionEntity>
 }
 class SessionManagerImpl @Inject constructor (
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
@@ -26,8 +27,8 @@ class SessionManagerImpl @Inject constructor (
     private val ucArchiveAndCleanUp: UCArchiveAndCleanUp,
     private val ucCreate: UCCreate
 ) : SessionManager {
-    override val validateAndGet = ucValidateAndGet.invoke().flowOn(ioDispatcher).onStart { SessionState.Loading }
+    override val currentSession = ucValidateAndGet.invoke().flowOn(ioDispatcher).onStart { SessionState.Loading }
         .catch { SessionState.Invalid(it) }.map { SessionState.Valid(it) }
-    override suspend fun archiveAndCleanUp() = ucArchiveAndCleanUp.invoke()
-    override suspend fun createSession(sessionEntity: SessionEntity) = ucCreate.invoke(sessionEntity = sessionEntity)
+    override suspend fun archiveAndCleanUpSession() = ucArchiveAndCleanUp.invoke()
+    override suspend fun startSession(sessionEntity: SessionEntity) = ucCreate.invoke(sessionEntity = sessionEntity)
 }

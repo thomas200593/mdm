@@ -12,7 +12,7 @@ object Constants {
     const val ID = "ID"
     const val STR_EMPTY = ""
     const val STR_SYSTEM = "SYSTEM"
-    private const val STR_UNDERSCORE = "_"
+    const val STR_UNDERSCORE = "_"
     const val STR_APP_VERSION = "$STR_UNDERSCORE${BuildConfig.VERSION_NAME}$STR_UNDERSCORE${BuildConfig.BUILD_TYPE}"
     object Dimens {
         val dp8 = 8.dp
