@@ -6,20 +6,12 @@ import com.thomas200593.mdm.features.role.dao.DaoRole
 import kotlinx.coroutines.flow.firstOrNull
 
 object BuiltInRolesSeeder {
-    /*TODO : to test, later add built in and see it dupe or not*/
     val roles = listOf(
         RoleEntity(
             roleCode = Constants.STR_SYSTEM + Constants.STR_UNDERSCORE + "OWNER",
             roleType = RoleType.BuiltIn,
             label = "System Owner",
             description = "Role that own system",
-            auditTrail = AuditTrail()
-        ),
-        RoleEntity(
-            roleCode = Constants.STR_SYSTEM + Constants.STR_UNDERSCORE + "ADMIN",
-            roleType = RoleType.BuiltIn,
-            label = "System Administrator",
-            description = "Role that manage system",
             auditTrail = AuditTrail()
         )
     )
