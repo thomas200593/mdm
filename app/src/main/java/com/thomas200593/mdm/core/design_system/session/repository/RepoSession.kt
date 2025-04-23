@@ -29,10 +29,11 @@ class RepoSessionImpl @Inject constructor(
 ) : RepoSession {
     override fun getCurrent() = daoSession.getCurrentSession().flowOn(ioDispatcher)
         .catch { Result.failure<Throwable>(it) }.map { runCatching { requireNotNull(it) { "No session found" } } }
-    override suspend fun isValid(session: SessionEntity) = withContext (ioDispatcher) { runCatching { (
-        (UUIDv7.extractTimestamp(UUIDv7.fromUUIDString(session.sessionId)) > 0) &&
-        (session.expiresAt?.let { it >= Constants.NOW_EPOCH_SECOND } == true)) }
-        .fold(onSuccess = { Result.success(true) }, onFailure = { Result.success(false) }) }
+    override suspend fun isValid(session: SessionEntity) = withContext (ioDispatcher) { runCatching {
+        val timestampValid = UUIDv7.extractTimestamp(UUIDv7.fromUUIDString(session.sessionId)) > 0
+        val expiresAtValid = session.expiresAt?.let { it >= Constants.NOW_EPOCH_SECOND } == true
+        timestampValid && expiresAtValid
+    }.fold(onSuccess = { Result.success(it) }, onFailure = { Result.failure(it) }) }
     override suspend fun deleteAll() = withContext (ioDispatcher) { daoSession.deleteAll() }
     override suspend fun archiveAll(): Unit = withContext (ioDispatcher) { daoSession.getAll().firstOrNull()
         ?.takeIf { it.isNotEmpty() }?.map { SessionHistoryEntity(session = it) }?.let { sessions -> daoSession.insertAllSessionHistory(sessions) } }

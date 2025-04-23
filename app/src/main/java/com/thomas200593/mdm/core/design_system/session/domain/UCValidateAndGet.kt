@@ -2,7 +2,9 @@ package com.thomas200593.mdm.core.design_system.session.domain
 
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
+import com.thomas200593.mdm.core.design_system.session.entity.SessionEntity
 import com.thomas200593.mdm.core.design_system.session.repository.RepoSession
+import com.thomas200593.mdm.features.user.entity.UserEntity
 import com.thomas200593.mdm.features.user.repository.RepoUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.catch
@@ -18,6 +20,6 @@ class UCValidateAndGet @Inject constructor(
     private val repoUser: RepoUser
 ) { operator fun invoke() = repoSession.getCurrent().flowOn(ioDispatcher).map {
     val session = it.getOrThrow()
-    if(repoSession.isValid(session).getOrThrow()) session to repoUser.getOneByUid(session.userId).first().getOrThrow()
-    else throw Throwable("Session Invalid")
-}.catch { ucArchiveAndCleanUp.invoke(); it } }
+    if(repoSession.isValid(session).getOrDefault(false)) Result.success(session to repoUser.getOneByUid(session.userId).first().getOrThrow())
+    else Result.failure<Pair<SessionEntity, UserEntity>>(Throwable("Session Invalid"))
+}.catch { ucArchiveAndCleanUp.invoke(); emit(Result.failure<Pair<SessionEntity, UserEntity>>(it)) } }
