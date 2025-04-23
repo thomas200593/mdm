@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 interface SessionManager {
-    /*TODO Call Injected Session to ActMain*/
     val currentSession: Flow<SessionState>
     suspend fun archiveAndCleanUpSession()
     suspend fun startSession(sessionEntity: SessionEntity): Result<SessionEntity>
