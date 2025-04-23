@@ -27,6 +27,7 @@ class RepoSessionImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val daoSession: DaoSession
 ) : RepoSession {
+    /*TODO: FIX THIS to ERROR GRACEFULLY*/
     override fun getCurrent() = daoSession.getCurrentSession().flowOn(ioDispatcher)
         .catch { Result.failure<Throwable>(it) }.map { runCatching { requireNotNull(it) { "No session found" } } }
     override suspend fun isValid(session: SessionEntity) = withContext (ioDispatcher) { runCatching {
