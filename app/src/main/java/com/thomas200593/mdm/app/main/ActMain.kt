@@ -18,6 +18,7 @@ import com.thomas200593.mdm.app.main.ui.ScrApp
 import com.thomas200593.mdm.app.main.ui.state.UiData
 import com.thomas200593.mdm.app.main.ui.state.UiStateMain
 import com.thomas200593.mdm.core.design_system.network_monitor.NetworkMonitor
+import com.thomas200593.mdm.core.design_system.session.SessionManager
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.rememberStateApp
 import com.thomas200593.mdm.core.design_system.timber_logger.LocalTimberFileLogger
@@ -39,6 +40,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ActMain : AppCompatActivity() {
     @Inject lateinit var networkMonitor: NetworkMonitor
+    @Inject lateinit var sessionManager: SessionManager
     private lateinit var timberFileLogger: TimberFileLogger
     private val vm: VMMain by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +71,7 @@ class ActMain : AppCompatActivity() {
         splashscreen.setKeepOnScreenCondition { vm.uiState.value.keepSplashScreenOn() }
         setupSplashScreen(splashscreen)
         setContent {
-            val appState = rememberStateApp(networkMonitor = networkMonitor, timberFileLogger = timberFileLogger)
+            val appState = rememberStateApp(networkMonitor = networkMonitor, timberFileLogger = timberFileLogger, sessionManager = sessionManager)
             CompositionLocalProvider(LocalStateApp provides appState, LocalTimberFileLogger provides timberFileLogger) {
                 Theme.AppTheme(
                     darkThemeEnabled = uiData.darkThemeEnabled, dynamicColorEnabled = uiData.dynamicColorEnabled,

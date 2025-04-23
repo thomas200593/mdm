@@ -15,6 +15,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.thomas200593.mdm.app.main.nav.DestTopLevel
 import com.thomas200593.mdm.core.design_system.network_monitor.NetworkMonitor
+import com.thomas200593.mdm.core.design_system.session.SessionManager
+import com.thomas200593.mdm.core.design_system.session.entity.SessionState
 import com.thomas200593.mdm.core.design_system.timber_logger.LocalTimberFileLogger
 import com.thomas200593.mdm.core.design_system.timber_logger.TimberFileLogger
 import kotlinx.coroutines.CoroutineScope
@@ -29,18 +31,21 @@ fun rememberStateApp(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavHostController = rememberNavController(),
     networkMonitor: NetworkMonitor,
-    timberFileLogger: TimberFileLogger = LocalTimberFileLogger.current
+    timberFileLogger: TimberFileLogger = LocalTimberFileLogger.current,
+    sessionManager: SessionManager
 ): StateApp = remember(
     coroutineScope,
     navController,
     networkMonitor,
-    timberFileLogger
+    timberFileLogger,
+    sessionManager
 ) {
     StateApp(
         coroutineScope = coroutineScope,
         navController = navController,
         networkMonitor = networkMonitor,
-        timberFileLogger = timberFileLogger
+        timberFileLogger = timberFileLogger,
+        sessionManager = sessionManager
     )
 }
 @Stable
@@ -48,10 +53,12 @@ class StateApp(
     coroutineScope: CoroutineScope,
     val navController: NavHostController,
     networkMonitor: NetworkMonitor,
-    val timberFileLogger: TimberFileLogger
+    val timberFileLogger: TimberFileLogger,
+    sessionManager: SessionManager
 ) {
     val isNetworkOffline = networkMonitor.isNetworkOnline.map(Boolean::not)
         .stateIn(scope = coroutineScope, started = SharingStarted.WhileSubscribed(1_000), initialValue = false)
+    val isSessionValid = sessionManager.currentSession.stateIn(scope = coroutineScope, initialValue = SessionState.Loading, started = SharingStarted.Eagerly)
     val destTopLevel: List<DestTopLevel> = DestTopLevel.entries
     private val previousDestination = mutableStateOf<NavDestination?>(null)
     val currentDestination: NavDestination? @Composable get() =
