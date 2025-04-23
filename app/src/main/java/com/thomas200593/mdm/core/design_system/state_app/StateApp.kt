@@ -58,7 +58,8 @@ class StateApp(
 ) {
     val isNetworkOffline = networkMonitor.isNetworkOnline.map(Boolean::not)
         .stateIn(scope = coroutineScope, started = SharingStarted.WhileSubscribed(1_000), initialValue = false)
-    //val isSessionValid = sessionManager.currentSession.stateIn(scope = coroutineScope, initialValue = SessionState.Loading, started = SharingStarted.Eagerly)
+    val isSessionValid = sessionManager.currentSession
+        .stateIn(scope = coroutineScope, started = SharingStarted.Eagerly, initialValue = SessionState.Loading)
     val destTopLevel: List<DestTopLevel> = DestTopLevel.entries
     private val previousDestination = mutableStateOf<NavDestination?>(null)
     val currentDestination: NavDestination? @Composable get() =
