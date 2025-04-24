@@ -2,7 +2,7 @@ package com.thomas200593.mdm.features.auth.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy.Companion.REPLACE
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.thomas200593.mdm.core.data.local.database.AppDatabase
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
@@ -16,8 +16,8 @@ import javax.inject.Inject
 
 @Dao
 interface DaoAuth {
-    @Insert(entity = AuthEntity::class, onConflict = REPLACE)
-    suspend fun insertAuth(authEntity: AuthEntity)
+    @Insert(entity = AuthEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAuth(auth: AuthEntity)
     @Query("SELECT * FROM auth WHERE 1=1 AND user_id = :userId LIMIT 1")
     fun getAuthByUserId(userId : String) : Flow<List<AuthEntity>>
     @Query("DELETE FROM auth WHERE user_id = :userId")
@@ -27,7 +27,7 @@ class DaoAuthImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val appDatabase: AppDatabase
 ) : DaoAuth {
-    override suspend fun insertAuth(authEntity: AuthEntity) = withContext (ioDispatcher) { appDatabase.daoAuth().insertAuth(authEntity) }
+    override suspend fun insertAuth(auth: AuthEntity) = withContext (ioDispatcher) { appDatabase.daoAuth().insertAuth(auth) }
     override fun getAuthByUserId(userId: String) = appDatabase.daoAuth().getAuthByUserId(userId).flowOn(ioDispatcher)
     override suspend fun deleteAuthByUserId(userId: String) = withContext (ioDispatcher) { appDatabase.daoAuth().deleteAuthByUserId(userId) }
 }
