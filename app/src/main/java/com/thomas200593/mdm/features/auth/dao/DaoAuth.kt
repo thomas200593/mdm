@@ -18,10 +18,10 @@ import javax.inject.Inject
 interface DaoAuth {
     @Insert(entity = AuthEntity::class, onConflict = REPLACE)
     suspend fun insertAuth(authEntity: AuthEntity)
-    @Query("SELECT * FROM auth WHERE user_id = :userId LIMIT 1;")
-    fun getAuthByUserId(userId: String) : Flow<AuthEntity?>
+    @Query("SELECT * FROM auth WHERE 1=1 AND user_id = :userId LIMIT 1")
+    fun getAuthByUserId(userId : String) : Flow<List<AuthEntity>>
     @Query("DELETE FROM auth WHERE user_id = :userId")
-    suspend fun deleteAuthByUserId(userId: String)
+    suspend fun deleteAuthByUserId(userId : String)
 }
 class DaoAuthImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
