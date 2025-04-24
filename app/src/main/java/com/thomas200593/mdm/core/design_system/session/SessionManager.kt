@@ -26,7 +26,6 @@ class SessionManagerImpl @Inject constructor (
     private val ucArchiveAndCleanUp: UCArchiveAndCleanUp,
     private val ucCreate: UCCreate
 ) : SessionManager {
-    /*ENSURE NON NULLABLE*/
     override val currentSession = ucValidateAndGet.invoke().flowOn(ioDispatcher).onStart { SessionState.Loading }
         .catch { SessionState.Invalid(it) }.map { SessionState.Valid(it.getOrThrow()) }
     override suspend fun archiveAndCleanUpSession() = ucArchiveAndCleanUp.invoke()

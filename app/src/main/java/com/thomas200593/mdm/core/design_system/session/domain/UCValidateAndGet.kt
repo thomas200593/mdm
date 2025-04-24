@@ -17,9 +17,9 @@ import javax.inject.Inject
 @Stable
 class UCValidateAndGet @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher : CoroutineDispatcher,
-    private val ucArchiveAndCleanUp: UCArchiveAndCleanUp,
-    private val repoSession: RepoSession,
-    private val repoUser: RepoUser
+    private val ucArchiveAndCleanUp : UCArchiveAndCleanUp,
+    private val repoSession : RepoSession,
+    private val repoUser : RepoUser
 ) { operator fun invoke() = repoSession.getCurrent().flowOn(ioDispatcher).map { result ->
     result.fold(
         onSuccess = { session -> session.takeIf { repoSession.isValid(it).getOrDefault(false) }
