@@ -22,7 +22,7 @@ class UCValidateAndGet @Inject constructor(
     private val repoUser: RepoUser
 ) { operator fun invoke() = repoSession.getCurrent().flowOn(ioDispatcher).map { result ->
     result.fold(
-        onSuccess = { session -> session?.takeIf { repoSession.isValid(it).getOrDefault(false) }
+        onSuccess = { session -> session.takeIf { repoSession.isValid(it).getOrDefault(false) }
             ?.let { validSession -> repoUser.getOneByUid(validSession.userId).first()
                 .fold(onSuccess = { Result.success(validSession to it) }, onFailure = { Result.failure(it) }) }
             ?: Result.failure<Pair<SessionEntity, UserEntity>>(Throwable("Session Invalid or Not Found")) },

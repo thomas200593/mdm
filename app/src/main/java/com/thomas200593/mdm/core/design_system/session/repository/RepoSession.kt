@@ -13,31 +13,28 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 interface RepoSession {
-    fun getCurrent(): Flow<Result<SessionEntity?>>
-    suspend fun isValid(session: SessionEntity): Result<Boolean>
+    fun getCurrent(): Flow<Result<SessionEntity>>
+    suspend fun isValid(session : SessionEntity) : Result<Boolean>
     suspend fun deleteAll()
     suspend fun archiveAll()
-    suspend fun create(sessionEntity: SessionEntity) : Result<SessionEntity>
+    suspend fun create(sessionEntity : SessionEntity) : Result<SessionEntity>
 }
 class RepoSessionImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val daoSession: DaoSession
 ) : RepoSession {
-    override fun getCurrent() = daoSession.getCurrentSession().flowOn(ioDispatcher).map { Result.success(it) }
-        .onEmpty { emit(Result.failure(NoSuchElementException("No Session Found"))) }.catch { emit(Result.failure(it)) }
-    override suspend fun isValid(session: SessionEntity) = withContext (ioDispatcher) { runCatching {
-        val timestampValid = UUIDv7.extractTimestamp(UUIDv7.fromUUIDString(session.sessionId)) > 0
-        val expiresAtValid = session.expiresAt?.let { it >= Constants.NOW_EPOCH_SECOND } == true
-        timestampValid && expiresAtValid
-    }.fold(onSuccess = { Result.success(it) }, onFailure = { Result.failure(it) }) }
+    override fun getCurrent() = daoSession.getCurrentSession().flowOn(ioDispatcher)
+        .map { sessions -> sessions.firstOrNull()?.let { Result.success(it) } ?: Result.failure(NoSuchElementException("No session found!")) }
+        .catch { emit(Result.failure(it)) }
+    override suspend fun isValid(session: SessionEntity) = withContext (ioDispatcher)
+        { runCatching { UUIDv7.extractTimestamp(UUIDv7.fromUUIDString(session.sessionId)) > 0 && session.expiresAt?.let { it >= Constants.NOW_EPOCH_SECOND } == true } }
     override suspend fun deleteAll() = withContext (ioDispatcher) { daoSession.deleteAll() }
-    override suspend fun archiveAll(): Unit = withContext (ioDispatcher) { daoSession.getAll().firstOrNull()
-        ?.takeIf { it.isNotEmpty() }?.map { SessionHistoryEntity(session = it) }?.let { sessions -> daoSession.insertAllSessionHistory(sessions) } }
+    override suspend fun archiveAll(): Unit = withContext (ioDispatcher)
+        { daoSession.getAll().firstOrNull()?.takeIf { it.isNotEmpty() }?.map { SessionHistoryEntity(session = it) }?.let { daoSession.insertAllSessionHistory(it) } }
     override suspend fun create(sessionEntity: SessionEntity): Result<SessionEntity> = withContext (ioDispatcher)
         { runCatching { daoSession.create(sessionEntity) }.fold(onSuccess = { Result.success(sessionEntity) }, onFailure = { Result.failure(it)}) }
 }
