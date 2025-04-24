@@ -28,7 +28,7 @@ class RepoSessionImpl @Inject constructor(
     private val daoSession: DaoSession
 ) : RepoSession {
     override fun getCurrent() = daoSession.getCurrentSession().flowOn(ioDispatcher)
-        .map { sessions -> sessions.firstOrNull()?.let { Result.success(it) } ?: Result.failure(NoSuchElementException("No session found!")) }
+        .map { it.firstOrNull()?.let { Result.success(it) } ?: Result.failure(NoSuchElementException("No session found!")) }
         .catch { emit(Result.failure(it)) }
     override suspend fun isValid(session: SessionEntity) = withContext (ioDispatcher)
         { runCatching { UUIDv7.extractTimestamp(UUIDv7.fromUUIDString(session.sessionId)) > 0 && session.expiresAt?.let { it >= Constants.NOW_EPOCH_SECOND } == true } }

@@ -9,7 +9,6 @@ import com.thomas200593.mdm.core.design_system.session.entity.SessionEntity
 import com.thomas200593.mdm.core.design_system.session.entity.SessionState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -26,8 +25,9 @@ class SessionManagerImpl @Inject constructor (
     private val ucArchiveAndCleanUp: UCArchiveAndCleanUp,
     private val ucCreate: UCCreate
 ) : SessionManager {
-    override val currentSession = ucValidateAndGet.invoke().flowOn(ioDispatcher).onStart { SessionState.Loading }
-        .catch { SessionState.Invalid(it) }.map { SessionState.Valid(it.getOrThrow()) }
+    override val currentSession = ucValidateAndGet.invoke().flowOn(ioDispatcher)
+        .map { it.fold(onSuccess = { SessionState.Valid(it) }, onFailure = { SessionState.Invalid(it) }) }
+        .onStart { emit(SessionState.Loading) }
     override suspend fun archiveAndCleanUpSession() = ucArchiveAndCleanUp.invoke()
     override suspend fun startSession(session: SessionEntity) = ucCreate.invoke(session = session)
 }
