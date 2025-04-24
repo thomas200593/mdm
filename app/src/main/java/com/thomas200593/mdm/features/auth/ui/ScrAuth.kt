@@ -199,11 +199,9 @@ private fun SectionPageAuthPanel(
                 visible = true,
                 content = {
                     PanelCard(
-                        colors = CardDefaults.cardColors().copy(
-                            containerColor = MaterialTheme.colorScheme.errorContainer,
-                            contentColor = MaterialTheme.colorScheme.onErrorContainer
-                        ),
-                        content = { TxtMdBody(error.t.toString()) }
+                        colors = CardDefaults.cardColors()
+                            .copy(containerColor = MaterialTheme.colorScheme.errorContainer, contentColor = MaterialTheme.colorScheme.onErrorContainer),
+                        content = { error.t.message?.let { TxtMdBody(text = it, modifier = Modifier.fillMaxWidth()) } }
                     )
                 }
             )
