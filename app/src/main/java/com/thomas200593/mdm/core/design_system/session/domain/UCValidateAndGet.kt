@@ -25,6 +25,6 @@ class UCValidateAndGet @Inject constructor(
         onSuccess = { session -> session.takeIf { repoSession.isValid(it).getOrDefault(false) }
             ?.let { validSession -> repoUser.getOneByUid(validSession.userId).first()
                 .fold(onSuccess = { Result.success(validSession to it) }, onFailure = { Result.failure(it) }) }
-            ?: Result.failure<Pair<SessionEntity, UserEntity>>(Throwable("Session Invalid or Not Found")) },
+            ?: Result.failure<Pair<SessionEntity, UserEntity>>(NoSuchElementException("Session Invalid or Not Found")) },
         onFailure = { Result.failure<Pair<SessionEntity, UserEntity>>(it) }
     ) }.catch { ucArchiveAndCleanUp.invoke(); emit(Result.failure<Pair<SessionEntity, UserEntity>>(it)) } }
