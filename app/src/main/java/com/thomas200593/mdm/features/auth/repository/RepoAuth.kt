@@ -36,6 +36,6 @@ class RepoAuthImpl @Inject constructor(
         }.fold(onSuccess = { Result.success(it) }, onFailure = { Result.failure(it) })
     }
     override fun getAuthByUser(user : UserEntity) = daoAuth.getAuthByUserId(userId = user.uid).flowOn(ioDispatcher)
-        .map { it.firstOrNull()?.let { Result.success(it) } ?: Result.failure(NoSuchElementException()) }
+        .map { it.firstOrNull()?.let { Result.success(it) } ?: Result.failure(NoSuchElementException("Auth for user ${user.email} not found!")) }
         .catch { e -> emit(Result.failure(e)) }
 }
