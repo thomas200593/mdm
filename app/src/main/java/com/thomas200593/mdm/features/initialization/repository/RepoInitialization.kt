@@ -15,7 +15,6 @@ import com.thomas200593.mdm.features.initialization.entity.FirstTimeStatus
 import com.thomas200593.mdm.features.initialization.entity.toAuthEntity
 import com.thomas200593.mdm.features.initialization.entity.toUserEntity
 import com.thomas200593.mdm.features.initialization.entity.toUserProfileEntity
-import com.thomas200593.mdm.features.role.entity.RoleEntity
 import com.thomas200593.mdm.features.user.repository.RepoUser
 import com.thomas200593.mdm.features.user_profile.repository.RepoUserProfile
 import kotlinx.coroutines.CoroutineDispatcher
@@ -23,7 +22,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 interface RepoInitialization {
-    suspend fun createUserLocalEmailPassword(dto: DTOInitialization, assignedRoles: Set<RoleEntity>): Result<DTOInitialization>
+    suspend fun createUserLocalEmailPassword(dto: DTOInitialization): Result<DTOInitialization>
     suspend fun updateFirstTimeStatus(firstTimeStatus: FirstTimeStatus): Preferences
 }
 class RepoInitializationImpl @Inject constructor(
@@ -33,16 +32,16 @@ class RepoInitializationImpl @Inject constructor(
     private val repoAuth: RepoAuth<AuthType>,
     private val dataStore: DataStorePreferences
 ) : RepoInitialization {
-    /*TODO : to UserProfile, UserRole */
     @Transaction
-    override suspend fun createUserLocalEmailPassword(dto: DTOInitialization, assignedRoles: Set<RoleEntity>): Result<DTOInitialization> = withContext (ioDispatcher) {
+    override suspend fun createUserLocalEmailPassword(dto: DTOInitialization): Result<DTOInitialization> = withContext (ioDispatcher) {
         val result = repoUser.getOrCreateUser(dto.toUserEntity(UUIDv7.generateAsString()))
             .fold(
                 onSuccess = { user ->
-                    val auth = repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid))
                     val userProfile = repoUserProfile.insertUserProfile(dto.toUserProfileEntity(user.uid))
-                    if (auth.isSuccess && userProfile.isSuccess) Result.success(dto)
-                    else Result.failure(auth.exceptionOrNull() ?: userProfile.exceptionOrNull() ?: IllegalStateException("Error creating subsequent data"))
+                    val auth = repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid))
+                    /*TODO Roles*/
+                    if (userProfile.isSuccess && auth.isSuccess) Result.success(dto)
+                    else Result.failure(userProfile.exceptionOrNull() ?: auth.exceptionOrNull() ?: IllegalStateException("Error creating subsequent data"))
                 },
                 onFailure = { Result.failure(it) }
             )

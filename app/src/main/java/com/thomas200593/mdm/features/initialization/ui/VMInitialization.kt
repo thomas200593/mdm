@@ -71,11 +71,12 @@ class VMInitialization @Inject constructor(
     private fun handleOpenScreen() = viewModelScope.launch {
         ucGetScreenData.invoke()
             .onStart { formInitialization = formInitialization.validateField(); uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
-            .collect { confCommon ->
+            .collect { screenData ->
                 uiState.update { currentState -> currentState.copy(
                     componentsState = ComponentsState.Loaded(
-                        confCommon = confCommon,
+                        confCommon = screenData.first,
                         dialogState = DialogState.None,
+                        initialSetOfRoles = screenData.second,
                         resultInitialization = ResultInitialization.Idle
                     )
                 ) }
@@ -94,13 +95,13 @@ class VMInitialization @Inject constructor(
         val frozenForm = formInitialization.disableInputs(); formInitialization = frozenForm
         updateUiState { componentState -> componentState.copy(resultInitialization = ResultInitialization.Loading, dialogState = DialogState.LoadingDialog) }
         viewModelScope.launch {
-            val isLoaded = uiState.value.componentsState is ComponentsState.Loaded
-            if (!isLoaded) return@launch
+            val componentsState = uiState.value.componentsState as? ComponentsState.Loaded ?: return@launch
             val dto = DTOInitialization(
                 firstName = frozenForm.fldFirstName.toString(),
                 lastName = frozenForm.fldLastName.toString(),
                 email = frozenForm.fldEmail.toString(),
-                authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword.toString())
+                authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword.toString()),
+                initialSetOfRoles = componentsState.initialSetOfRoles
             )
             ucCreateDataInitialization.invoke(dto).fold(
                 onSuccess = { result -> updateUiState { it.copy(

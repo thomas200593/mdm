@@ -2,6 +2,7 @@ package com.thomas200593.mdm.features.initialization.entity
 
 import com.thomas200593.mdm.features.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.auth.entity.AuthType
+import com.thomas200593.mdm.features.role.entity.RoleEntity
 import com.thomas200593.mdm.features.user.entity.UserEntity
 import com.thomas200593.mdm.features.user_profile.entity.UserProfileEntity
 import kotlinx.serialization.Serializable
@@ -11,7 +12,8 @@ data class DTOInitialization(
     val firstName: String,
     val lastName: String,
     val email: String,
-    val authType: AuthType
+    val authType: AuthType,
+    val initialSetOfRoles: Set<RoleEntity>
 )
 fun DTOInitialization.toUserEntity(uid: String) = UserEntity(
     uid = uid,
