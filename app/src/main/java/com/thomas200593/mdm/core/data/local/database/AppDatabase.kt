@@ -17,14 +17,15 @@ import com.thomas200593.mdm.features.role.entity.RoleEntity
 import com.thomas200593.mdm.features.role.entity.TypeConverterRoleType
 import com.thomas200593.mdm.features.user.dao.DaoUser
 import com.thomas200593.mdm.features.user.entity.UserEntity
+import com.thomas200593.mdm.features.user_profile.dao.DaoUserProfile
 import com.thomas200593.mdm.features.user_profile.entity.UserProfileEntity
 import javax.inject.Singleton
 
 @Singleton
 @Database(
     entities = [
-        UserEntity::class, AuthEntity::class, SessionEntity::class, SessionHistoryEntity::class,
-        RoleEntity::class, UserProfileEntity::class
+        UserEntity::class, UserProfileEntity::class, AuthEntity::class, RoleEntity::class,
+        SessionEntity::class, SessionHistoryEntity::class
     ],
     version = 1,
     exportSchema = false
@@ -39,6 +40,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun daoSession() : DaoSession
     abstract fun daoSessionHistory() : DaoSessionHistory
     abstract fun daoUser() : DaoUser
+    abstract fun daoUserProfile() : DaoUserProfile
     abstract fun daoAuth() : DaoAuth
     abstract fun daoRole() : DaoRole
 }
