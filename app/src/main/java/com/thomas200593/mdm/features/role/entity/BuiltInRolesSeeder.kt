@@ -16,10 +16,10 @@ object BuiltInRolesSeeder {
         )
     )
     suspend fun patchBuiltInRolesIfMissing(dao: DaoRole) {
-        val typeConverter = TypeConverterRoleType()
-        val builtInJson = typeConverter.toJson(RoleType.BuiltIn) ?: return
-        val existingRoleCodes = dao.getBuiltInRoles(builtInJson).firstOrNull()?.map { it.roleCode }?.toSet() ?: emptySet()
-        val missingRoles = roles.filterNot { it.roleCode in existingRoleCodes }
-        if (missingRoles.isNotEmpty()) dao.seedsBuiltInRoles(missingRoles)
+        TypeConverterRoleType().toJson(RoleType.BuiltIn)
+            ?.let { json -> dao.getBuiltInRoles(json).firstOrNull()?.map { it.roleCode }?.toSet().orEmpty()
+                .let { existingRoleCodes -> roles.filterNot { it.roleCode in existingRoleCodes } }
+                .takeIf { it.isNotEmpty() }?.let { missingRoles -> dao.seedsBuiltInRoles(missingRoles) }
+            }
     }
 }

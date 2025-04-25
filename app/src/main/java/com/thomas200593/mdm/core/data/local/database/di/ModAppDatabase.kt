@@ -32,9 +32,7 @@ object ModAppDatabase {
                         AppDatabase::class.java,
                         BuildConfig.APP_LOCAL_DATABASE_FILENAME
                     ).build()
-                    runBlocking {
-                        BuiltInRolesSeeder.patchBuiltInRolesIfMissing(dbInstance.daoRole())
-                    }
+                    runBlocking { BuiltInRolesSeeder.patchBuiltInRolesIfMissing(dbInstance.daoRole()) }
                 }
             }
         })

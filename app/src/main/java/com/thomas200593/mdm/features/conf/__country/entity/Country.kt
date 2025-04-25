@@ -26,10 +26,8 @@ data class Country(
             'W' to getEmojiByUnicode(0x1F1FC), 'X' to getEmojiByUnicode(0x1F1FD),
             'Y' to getEmojiByUnicode(0x1F1FE), 'Z' to getEmojiByUnicode(0x1F1FF)
         )
-
         private fun getEmojiByUnicode(unicode: Int) = String(Character.toChars(unicode))
-        private fun getCodeByCharacter(character: Char): String = emojiMap[character.uppercaseChar()] ?: STR_EMPTY
-
+        private fun getCodeByCharacter(character: Char): String = emojiMap[character.uppercaseChar()].orEmpty()
         val defaultValue: Country = Country(
             iso2 = Constants.ID,
             iso3 = Locale(STR_EMPTY, Constants.ID).isO3Country,
@@ -42,7 +40,6 @@ data class Country(
             name = Locale.US.displayName,
             flag = getFlagByISOCode(Locale.US.country)
         )
-
         fun getFlagByISOCode(countryCode: String): String =
             if (countryCode.length == 2) getCodeByCharacter(countryCode[0]) + getCodeByCharacter(countryCode[1])
             else STR_EMPTY
