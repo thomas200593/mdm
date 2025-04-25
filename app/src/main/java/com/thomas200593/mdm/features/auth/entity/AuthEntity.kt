@@ -20,7 +20,7 @@ import com.thomas200593.mdm.features.user.entity.UserEntity
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["user_id"], unique = true)], // ✅ Ensure one auth method per user
+    indices = [Index(value = ["user_id"], unique = true)],
 )
 data class AuthEntity(
     @PrimaryKey(autoGenerate = true)

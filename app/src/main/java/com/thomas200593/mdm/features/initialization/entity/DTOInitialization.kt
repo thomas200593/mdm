@@ -28,3 +28,4 @@ fun DTOInitialization.toUserProfileEntity(uid: String) = UserProfileEntity(
     firstName = this.firstName,
     lastName = this.lastName
 )
+fun DTOInitialization.toUserRoleEntity(uid: String, roles: Set<RoleEntity>) = 1

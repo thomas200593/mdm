@@ -15,6 +15,7 @@ import com.thomas200593.mdm.features.initialization.entity.FirstTimeStatus
 import com.thomas200593.mdm.features.initialization.entity.toAuthEntity
 import com.thomas200593.mdm.features.initialization.entity.toUserEntity
 import com.thomas200593.mdm.features.initialization.entity.toUserProfileEntity
+import com.thomas200593.mdm.features.initialization.entity.toUserRoleEntity
 import com.thomas200593.mdm.features.user.repository.RepoUser
 import com.thomas200593.mdm.features.user_profile.repository.RepoUserProfile
 import kotlinx.coroutines.CoroutineDispatcher
@@ -39,7 +40,7 @@ class RepoInitializationImpl @Inject constructor(
                 onSuccess = { user ->
                     val userProfile = repoUserProfile.insertUserProfile(dto.toUserProfileEntity(user.uid))
                     val auth = repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid))
-                    /*TODO Roles*/
+                    val setOfUserRoles = dto.toUserRoleEntity(user.uid, dto.initialSetOfRoles)
                     if (userProfile.isSuccess && auth.isSuccess) Result.success(dto)
                     else Result.failure(userProfile.exceptionOrNull() ?: auth.exceptionOrNull() ?: IllegalStateException("Error creating subsequent data"))
                 },
