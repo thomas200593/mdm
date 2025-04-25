@@ -19,12 +19,12 @@ interface DaoRole {
     @Query("SELECT * FROM role WHERE role_type = :builtIn")
     fun getBuiltInRoles(builtIn: String?): Flow<List<RoleEntity>>
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertBuiltInRoles(roles: List<RoleEntity>)
+    suspend fun seedsBuiltInRoles(roles: List<RoleEntity>)
 }
 class DaoRoleImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val appDatabase: AppDatabase
 ) : DaoRole {
     override fun getBuiltInRoles(builtIn: String?): Flow<List<RoleEntity>> = appDatabase.daoRole().getBuiltInRoles(builtIn).flowOn(ioDispatcher)
-    override suspend fun insertBuiltInRoles(roles: List<RoleEntity>) = withContext (ioDispatcher) { appDatabase.daoRole().insertBuiltInRoles(roles) }
+    override suspend fun seedsBuiltInRoles(roles: List<RoleEntity>) = withContext (ioDispatcher) { appDatabase.daoRole().seedsBuiltInRoles(roles) }
 }

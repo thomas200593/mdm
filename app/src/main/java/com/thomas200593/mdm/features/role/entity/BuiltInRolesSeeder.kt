@@ -20,6 +20,6 @@ object BuiltInRolesSeeder {
         val builtInJson = typeConverter.toJson(RoleType.BuiltIn) ?: return
         val existingRoleCodes = dao.getBuiltInRoles(builtInJson).firstOrNull()?.map { it.roleCode }?.toSet() ?: emptySet()
         val missingRoles = roles.filterNot { it.roleCode in existingRoleCodes }
-        if (missingRoles.isNotEmpty()) dao.insertBuiltInRoles(missingRoles)
+        if (missingRoles.isNotEmpty()) dao.seedsBuiltInRoles(missingRoles)
     }
 }
