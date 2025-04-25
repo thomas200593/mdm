@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @Dao
 interface DaoUserProfile {
-    @Insert(entity = UserProfileEntity::class, onConflict = OnConflictStrategy.ABORT)
+    @Insert(entity = UserProfileEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUserProfile(userProfile: UserProfileEntity) : Long
 }
 class DaoUserProfileImpl @Inject constructor(
