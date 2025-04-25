@@ -14,8 +14,10 @@ import com.thomas200593.mdm.features.initialization.entity.DTOInitialization
 import com.thomas200593.mdm.features.initialization.entity.FirstTimeStatus
 import com.thomas200593.mdm.features.initialization.entity.toAuthEntity
 import com.thomas200593.mdm.features.initialization.entity.toUserEntity
+import com.thomas200593.mdm.features.initialization.entity.toUserProfileEntity
 import com.thomas200593.mdm.features.role.entity.RoleEntity
 import com.thomas200593.mdm.features.user.repository.RepoUser
+import com.thomas200593.mdm.features.user_profile.repository.RepoUserProfile
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -28,6 +30,7 @@ interface RepoInitialization {
 class RepoInitializationImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val repoUser: RepoUser,
+    private val repoUserProfile: RepoUserProfile,
     private val repoAuth: RepoAuth<AuthType>,
     private val dataStore: DataStorePreferences
 ) : RepoInitialization {
@@ -45,16 +48,14 @@ class RepoInitializationImpl @Inject constructor(
         val result = repoUser.getOrCreateUser(dto.toUserEntity(UUIDv7.generateAsString()))
             .fold(
                 onSuccess = { user ->
-                    val auth = repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid)).getOrNull()
-
-                    //Later
-                    if(auth != null) Result.success(dto)
-                    else Result.failure(IllegalStateException("Error creating subsequent data"))
+                    val auth = repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid))
+                    val userProfile = repoUserProfile.insertUserProfile(dto.toUserProfileEntity(user.uid))
+                    if (auth.isSuccess && userProfile.isSuccess) Result.success(dto)
+                    else Result.failure(auth.exceptionOrNull() ?: userProfile.exceptionOrNull() ?: IllegalStateException("Error creating subsequent data"))
                 },
                 onFailure = { Result.failure(it) }
             )
         result
-        ///** Dummy */ Result.success(dto)
     }
     override suspend fun updateFirstTimeStatus(firstTimeStatus: FirstTimeStatus) =
         withContext (ioDispatcher) { dataStore.instance.edit { it[DataStorePreferencesKeys.dsKeyFirstTimeStatus] = firstTimeStatus.name } }

@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 interface DaoRole {
     @Query("SELECT * FROM role WHERE role_type = :builtIn")
     fun getBuiltInRoles(builtIn: String?): Flow<List<RoleEntity>>
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(entity = RoleEntity::class, onConflict = OnConflictStrategy.IGNORE)
     suspend fun seedsBuiltInRoles(roles: List<RoleEntity>)
 }
 class DaoRoleImpl @Inject constructor(

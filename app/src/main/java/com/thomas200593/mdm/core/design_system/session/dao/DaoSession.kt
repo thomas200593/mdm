@@ -22,7 +22,7 @@ interface DaoSession {
     fun getCurrentSession() : Flow<List<SessionEntity>>
     @Query("DELETE FROM session")
     suspend fun deleteAll()
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(entity = SessionEntity::class, onConflict = OnConflictStrategy.ABORT)
     suspend fun create(session: SessionEntity)
 }
 class DaoSessionImpl @Inject constructor(

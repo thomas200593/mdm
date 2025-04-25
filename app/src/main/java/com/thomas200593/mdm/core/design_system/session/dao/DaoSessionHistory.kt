@@ -18,7 +18,7 @@ import javax.inject.Inject
 interface DaoSessionHistory {
     @Query("SELECT * FROM session_history")
     fun getAll() : Flow<List<SessionHistoryEntity>>
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(entity = SessionHistoryEntity::class, onConflict = OnConflictStrategy.ABORT)
     suspend fun insertAll(sessions : List<SessionHistoryEntity>)
 }
 class DaoSessionHistoryImpl @Inject constructor(
