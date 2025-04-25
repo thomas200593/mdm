@@ -19,9 +19,8 @@ class UCCreateInitialUser @Inject constructor(
     private val repoRole: RepoRole
 ) { suspend operator fun invoke(dto : DTOInitialization) : Result<DTOInitialization> = when(dto.authType) {
     is AuthType.LocalEmailPassword -> withContext (ioDispatcher) {
-        val builtInRoles = repoRole.getBuiltInRoles().first().getOrDefault(emptyList())
-        val assignedRolesCode = setOf<String>(BuiltInRolesSeeder.SYSTEM_OWNER, BuiltInRolesSeeder.SYSTEM_IT)
-        val assignedRoles = builtInRoles.filter { it.roleCode in assignedRolesCode }.toSet()
+        val assignedRoles = repoRole.getBuiltInRoles().first().getOrDefault(emptyList())
+            .filter { it.roleCode in setOf(BuiltInRolesSeeder.SYSTEM_OWNER, BuiltInRolesSeeder.SYSTEM_IT) }.toSet()
         val result = repoInitialization.createUserLocalEmailPassword(dto, assignedRoles).fold(
             onSuccess = { repoInitialization.updateFirstTimeStatus(FirstTimeStatus.NO) ; Result.success(it) },
             onFailure = { Result.failure(it) }

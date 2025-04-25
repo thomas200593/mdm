@@ -54,6 +54,8 @@ class RepoInitializationImpl @Inject constructor(
             .fold(
                 onSuccess = { user ->
                     val auth = repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid)).getOrNull()
+
+                    //Later
                     if(auth != null) Result.success(dto)
                     else Result.failure(IllegalStateException("Error creating subsequent data"))
                 },

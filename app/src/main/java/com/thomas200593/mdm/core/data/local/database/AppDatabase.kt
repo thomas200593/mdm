@@ -17,13 +17,14 @@ import com.thomas200593.mdm.features.role.entity.RoleEntity
 import com.thomas200593.mdm.features.role.entity.TypeConverterRoleType
 import com.thomas200593.mdm.features.user.dao.DaoUser
 import com.thomas200593.mdm.features.user.entity.UserEntity
+import com.thomas200593.mdm.features.user_profile.entity.UserProfileEntity
 import javax.inject.Singleton
 
 @Singleton
 @Database(
     entities = [
         UserEntity::class, AuthEntity::class, SessionEntity::class, SessionHistoryEntity::class,
-        RoleEntity::class
+        RoleEntity::class, UserProfileEntity::class
     ],
     version = 1,
     exportSchema = false
