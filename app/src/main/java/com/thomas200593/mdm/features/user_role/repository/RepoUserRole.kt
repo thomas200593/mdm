@@ -16,7 +16,10 @@ class RepoUserRoleImpl @Inject constructor(
     private val daoUserRole: DaoUserRole
 ) : RepoUserRole {
     override suspend fun insertAll(userRole: Set<UserRoleEntity>): Result<Set<UserRoleEntity>> = withContext (ioDispatcher) {
-        runCatching { userRole.takeIf { daoUserRole.insertAll(it.toList()).isNotEmpty() } ?: throw IllegalStateException("Cannot add user roles to database!") }
-            .fold(onSuccess = { Result.success(it) }, onFailure = { Result.failure(it) })
+        runCatching {
+            val result = daoUserRole.insertAll(userRole.toList())
+            if (result.size == userRole.size && result.all { it > 0 }) userRole
+            else throw IllegalStateException("One or more user roles failed to insert!")
+        }.fold(onSuccess = { Result.success(it) }, onFailure = { Result.failure(it) })
     }
 }
