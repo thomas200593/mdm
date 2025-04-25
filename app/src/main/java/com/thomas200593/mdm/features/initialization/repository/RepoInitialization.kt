@@ -19,7 +19,6 @@ import com.thomas200593.mdm.features.role.entity.RoleEntity
 import com.thomas200593.mdm.features.user.repository.RepoUser
 import com.thomas200593.mdm.features.user_profile.repository.RepoUserProfile
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -35,14 +34,6 @@ class RepoInitializationImpl @Inject constructor(
     private val dataStore: DataStorePreferences
 ) : RepoInitialization {
     /*TODO : to UserProfile, UserRole */
-    /*@Transaction
-    override suspend fun createUserLocalEmailPassword(dto: DTOInitialization): Result<DTOInitialization> = withContext (ioDispatcher) {
-        val result = repoUser.getOrCreateUser(dto.toUserEntity(UUIDv7.generateAsString())).fold(
-            onSuccess = { user -> repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid)).fold(onSuccess = { Result.success(dto) }, onFailure = { Result.failure(it) })},
-            onFailure = { Result.failure(it) }
-        )
-        result
-    }*/
     @Transaction
     override suspend fun createUserLocalEmailPassword(dto: DTOInitialization, assignedRoles: Set<RoleEntity>): Result<DTOInitialization> = withContext (ioDispatcher) {
         val result = repoUser.getOrCreateUser(dto.toUserEntity(UUIDv7.generateAsString()))
