@@ -19,6 +19,7 @@ import com.thomas200593.mdm.features.user.dao.DaoUser
 import com.thomas200593.mdm.features.user.entity.UserEntity
 import com.thomas200593.mdm.features.user_profile.dao.DaoUserProfile
 import com.thomas200593.mdm.features.user_profile.entity.UserProfileEntity
+import com.thomas200593.mdm.features.user_role.dao.DaoUserRole
 import com.thomas200593.mdm.features.user_role.entity.UserRoleEntity
 import javax.inject.Singleton
 
@@ -42,6 +43,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun daoSessionHistory() : DaoSessionHistory
     abstract fun daoUser() : DaoUser
     abstract fun daoUserProfile() : DaoUserProfile
+    abstract fun daoUserRole() : DaoUserRole
     abstract fun daoAuth() : DaoAuth
     abstract fun daoRole() : DaoRole
 }

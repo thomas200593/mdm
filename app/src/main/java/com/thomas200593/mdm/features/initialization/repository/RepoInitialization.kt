@@ -18,6 +18,7 @@ import com.thomas200593.mdm.features.initialization.entity.toUserProfileEntity
 import com.thomas200593.mdm.features.initialization.entity.toUserRoleEntity
 import com.thomas200593.mdm.features.user.repository.RepoUser
 import com.thomas200593.mdm.features.user_profile.repository.RepoUserProfile
+import com.thomas200593.mdm.features.user_role.repository.RepoUserRole
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -30,9 +31,11 @@ class RepoInitializationImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val repoUser: RepoUser,
     private val repoUserProfile: RepoUserProfile,
+    private val repoUserRole: RepoUserRole,
     private val repoAuth: RepoAuth<AuthType>,
     private val dataStore: DataStorePreferences
 ) : RepoInitialization {
+    /*TODO EVEN IF MARKED AS TRANSACTION IT STILL INSERTED PARTIALLY*/
     @Transaction
     override suspend fun createUserLocalEmailPassword(dto: DTOInitialization): Result<DTOInitialization> = withContext (ioDispatcher) {
         val result = repoUser.getOrCreateUser(dto.toUserEntity(UUIDv7.generateAsString()))
@@ -40,8 +43,9 @@ class RepoInitializationImpl @Inject constructor(
                 onSuccess = { user ->
                     val userProfile = repoUserProfile.insertUserProfile(dto.toUserProfileEntity(user.uid))
                     val auth = repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid))
-                    val setOfUserRoles = dto.toUserRoleEntity(user.uid, dto.initialSetOfRoles)
-                    if (userProfile.isSuccess && auth.isSuccess) Result.success(dto)
+                    val roles = dto.toUserRoleEntity(user.uid, dto.initialSetOfRoles).getOrElse { return@withContext Result.failure(it) }
+                    val userRoles = repoUserRole.insertAll(roles)
+                    if (userProfile.isSuccess && auth.isSuccess && userRoles.isSuccess) Result.success(dto)
                     else Result.failure(userProfile.exceptionOrNull() ?: auth.exceptionOrNull() ?: IllegalStateException("Error creating subsequent data"))
                 },
                 onFailure = { Result.failure(it) }

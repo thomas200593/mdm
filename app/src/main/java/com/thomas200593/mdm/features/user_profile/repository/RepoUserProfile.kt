@@ -16,7 +16,7 @@ class RepoUserProfileImpl @Inject constructor(
     private val daoUserProfile: DaoUserProfile
 ) : RepoUserProfile {
     override suspend fun insertUserProfile(userProfile: UserProfileEntity): Result<UserProfileEntity> = withContext (ioDispatcher) {
-        runCatching { userProfile.takeIf { daoUserProfile.insertUserProfile(it) > 0 } ?: throw IllegalStateException("Cannot create User Profile!") }
+        runCatching { userProfile.takeIf { daoUserProfile.insertUserProfile(it) > 0 } ?: throw IllegalStateException("Cannot create User Profile to database!") }
             .fold(onSuccess = { Result.success(it) }, onFailure = { Result.failure(it) })
     }
 }

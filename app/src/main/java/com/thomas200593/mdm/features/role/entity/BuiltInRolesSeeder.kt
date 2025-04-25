@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.firstOrNull
 object BuiltInRolesSeeder {
     const val SYSTEM_OWNER = Constants.STR_SYSTEM + Constants.STR_UNDERSCORE + "OWNER"
     const val SYSTEM_ADMIN = Constants.STR_SYSTEM + Constants.STR_UNDERSCORE + "ADMIN"
-    const val SYSTEM_IT = Constants.STR_SYSTEM + Constants.STR_UNDERSCORE + "IT"
     val roles = listOf(
         RoleEntity(
             roleCode = SYSTEM_OWNER,

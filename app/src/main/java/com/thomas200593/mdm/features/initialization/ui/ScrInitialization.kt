@@ -126,7 +126,8 @@ private fun HandleDialogs(
     )
     is DialogState.LoadingDialog -> LoadingDialog()
     is DialogState.ErrorDialog -> ErrorDialog(
-        onDismissRequest = { onDialogEvent(Events.Dialog.ErrorDismissed) }, message = "Initialization Failed!"
+        onDismissRequest = { onDialogEvent(Events.Dialog.ErrorDismissed) },
+        message = "Initialization Failed!"
     )
     is DialogState.SuccessDialog -> SuccessDialog(
         onDismissRequest = { onInitializationSuccess() }, message = "Initialization Success!"

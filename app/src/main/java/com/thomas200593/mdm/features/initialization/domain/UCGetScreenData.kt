@@ -15,4 +15,4 @@ class UCGetScreenData @Inject constructor(
     private val ucGetConfCommonCurrent: UCGetConfCommonCurrent,
     private val repoRole: RepoRole
 ) { operator fun invoke() = combine(flow = ucGetConfCommonCurrent.invoke().flowOn(ioDispatcher), flow2 = repoRole.getBuiltInRoles().flowOn(ioDispatcher))
-    { a, b -> a to b.getOrDefault(emptyList()).filter { it.roleCode in setOf(BuiltInRolesSeeder.SYSTEM_OWNER, BuiltInRolesSeeder.SYSTEM_IT) }.toSet() }.flowOn(ioDispatcher) }
+    { a, b -> a to b.getOrDefault(emptyList()).filter { it.roleCode in setOf(BuiltInRolesSeeder.SYSTEM_OWNER) }.toSet() }.flowOn(ioDispatcher) }
