@@ -6,7 +6,9 @@ import androidx.room.PrimaryKey
 import com.thomas200593.mdm.core.data.local.database.entity_common.AuditTrail
 import com.thomas200593.mdm.core.design_system.base_class.BaseEntity
 import com.thomas200593.mdm.core.design_system.util.Constants
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(tableName = "role")
 data class RoleEntity (
     @PrimaryKey
