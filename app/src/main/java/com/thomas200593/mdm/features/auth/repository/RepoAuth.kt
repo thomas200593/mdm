@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 interface RepoAuth<T: AuthType> {
-    suspend fun registerAuthLocalEmailPassword(authEntity: AuthEntity): Result<AuthEntity>
+    suspend fun registerAuthLocalEmailPassword(auth: AuthEntity): Result<AuthEntity>
     fun getAuthByUser(user: UserEntity): Flow<Result<AuthEntity>>
 }
 class RepoAuthImpl @Inject constructor(
@@ -26,11 +26,11 @@ class RepoAuthImpl @Inject constructor(
     private val bCrypt: BCrypt
 ) : RepoAuth<AuthType> {
     @Transaction
-    override suspend fun registerAuthLocalEmailPassword(authEntity: AuthEntity): Result<AuthEntity> = withContext (ioDispatcher) {
+    override suspend fun registerAuthLocalEmailPassword(auth: AuthEntity): Result<AuthEntity> = withContext (ioDispatcher) {
         runCatching {
-            daoAuth.deleteAuthByUserId(authEntity.userId)
-            val hashedAuthEntity = authEntity.copy(authType = (authEntity.authType as AuthType.LocalEmailPassword)
-                .copy(password = bCrypt.hash(authEntity.authType.password)))
+            daoAuth.deleteAuthByUserId(auth.userId)
+            val hashedAuthEntity = auth.copy(authType = (auth.authType as AuthType.LocalEmailPassword)
+                .copy(password = bCrypt.hash(auth.authType.password)))
             daoAuth.insertAuth(hashedAuthEntity)
             hashedAuthEntity
         }.fold(onSuccess = { Result.success(it) }, onFailure = { Result.failure(it) })
