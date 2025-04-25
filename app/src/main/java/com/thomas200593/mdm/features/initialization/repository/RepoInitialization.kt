@@ -14,6 +14,7 @@ import com.thomas200593.mdm.features.initialization.entity.DTOInitialization
 import com.thomas200593.mdm.features.initialization.entity.FirstTimeStatus
 import com.thomas200593.mdm.features.initialization.entity.toAuthEntity
 import com.thomas200593.mdm.features.initialization.entity.toUserEntity
+import com.thomas200593.mdm.features.role.repository.RepoRole
 import com.thomas200593.mdm.features.user.repository.RepoUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -27,16 +28,25 @@ class RepoInitializationImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val repoUser: RepoUser,
     private val repoAuth: RepoAuth<AuthType>,
+    private val repoRole: RepoRole,
     private val dataStore: DataStorePreferences
 ) : RepoInitialization {
+    /*TODO : to UserProfile, UserRole */
     @Transaction
     override suspend fun createUserLocalEmailPassword(dto: DTOInitialization): Result<DTOInitialization> = withContext (ioDispatcher) {
-        val result = repoUser.getOrCreateUser(dto.toUserEntity(UUIDv7.generateAsString())).fold(
-            onSuccess = { user -> repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid))
-                .fold(onSuccess = { Result.success(dto) }, onFailure = { Result.failure(it) }) },
-            onFailure = { Result.failure(it) }
-        )
+        val result = repoUser.getOrCreateUser(dto.toUserEntity(UUIDv7.generateAsString()))
+            .fold(
+                onSuccess = { user ->
+                    repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid))
+                        .fold(
+                            onSuccess = { Result.success(dto) },
+                            onFailure = { Result.failure(it) }
+                        )
+                },
+                onFailure = { Result.failure(it) }
+            )
         result
+        ///** Dummy */ Result.success(dto)
     }
     override suspend fun updateFirstTimeStatus(firstTimeStatus: FirstTimeStatus) =
         withContext (ioDispatcher) { dataStore.instance.edit { it[DataStorePreferencesKeys.dsKeyFirstTimeStatus] = firstTimeStatus.name } }
