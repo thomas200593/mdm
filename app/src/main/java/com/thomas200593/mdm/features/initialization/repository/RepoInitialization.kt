@@ -2,7 +2,6 @@ package com.thomas200593.mdm.features.initialization.repository
 
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.room.Transaction
 import com.thomas200593.mdm.core.data.local.datastore.DataStorePreferences
 import com.thomas200593.mdm.core.data.local.datastore.DataStorePreferencesKeys
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
@@ -36,7 +35,6 @@ class RepoInitializationImpl @Inject constructor(
     private val dataStore: DataStorePreferences
 ) : RepoInitialization {
     /*TODO EVEN IF MARKED AS TRANSACTION IT STILL INSERTED PARTIALLY*/
-    @Transaction
     override suspend fun createUserLocalEmailPassword(dto: DTOInitialization): Result<DTOInitialization> = withContext (ioDispatcher) {
         val result = repoUser.getOrCreateUser(dto.toUserEntity(UUIDv7.generateAsString()))
             .fold(
