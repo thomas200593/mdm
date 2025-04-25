@@ -61,7 +61,12 @@ private fun ScreenContent(
                 when(session) {
                     is SessionState.Loading -> Unit
                     is SessionState.Invalid -> onNavToAuth()
-                    is SessionState.Valid -> {/*TODO*/}
+                    is SessionState.Valid -> {
+                        /** TODO
+                         *  get current user session role,
+                         *      if role is not decided to role selection
+                         *      otherwise to dashboard with respected role
+                         **/}
                 }
             }
         }
