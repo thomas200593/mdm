@@ -13,13 +13,16 @@ import javax.inject.Inject
 class UCCreateInitialUser @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val repoInitialization: RepoInitialization
-) { suspend operator fun invoke(dto : DTOInitialization) : Result<DTOInitialization> = when(dto.authType) {
-    is AuthType.LocalEmailPassword -> withContext (ioDispatcher) {
-        /*TODO clean input here*/
-        val result = repoInitialization.createUserLocalEmailPassword(dto).fold(
-            onSuccess = { repoInitialization.updateFirstTimeStatus(FirstTimeStatus.NO) ; Result.success(it) },
-            onFailure = { it.printStackTrace() ; Result.failure(it) }
-        )
-        result
+) {
+    suspend operator fun invoke(dto : DTOInitialization) : Result<DTOInitialization> {
+        return when(dto.authType) {
+            is AuthType.LocalEmailPassword -> withContext (ioDispatcher) {
+                val result = repoInitialization.createUserLocalEmailPassword(dto).fold(
+                    onSuccess = { repoInitialization.updateFirstTimeStatus(FirstTimeStatus.NO) ; Result.success(it) },
+                    onFailure = { it.printStackTrace() ; Result.failure(it) }
+                )
+                result
+            }
+        }
     }
-} }
+}
