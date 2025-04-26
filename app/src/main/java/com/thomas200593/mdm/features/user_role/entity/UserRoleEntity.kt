@@ -34,7 +34,7 @@ import com.thomas200593.mdm.features.user.entity.UserEntity
     ]
 )
 data class UserRoleEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "seq_id") val seqId : Long = 0,
     @ColumnInfo(name = "user_id") val userId: String,
     @ColumnInfo(name = "role_code") val roleCode: String,

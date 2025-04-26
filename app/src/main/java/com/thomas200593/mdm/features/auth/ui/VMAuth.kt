@@ -52,7 +52,7 @@ class VMAuth @Inject constructor(
         is Events.Content.Form.BtnRecoverAccount.Clicked -> {/*TODO*/}
     }
     fun onSignInCallBackEvent(event: Events.Content.SignInCallback) = when (event) {
-        Events.Content.SignInCallback.Success -> handleSIgnInCallbackSuccess()
+        Events.Content.SignInCallback.Success -> handleSignInCallbackSuccess()
     }
     private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
         viewModelScope.launch(Dispatchers.Main.immediate) {
@@ -113,7 +113,7 @@ class VMAuth @Inject constructor(
             )
         }
     }
-    private fun handleSIgnInCallbackSuccess() {
+    private fun handleSignInCallbackSuccess() {
         updateUiState { componentState -> componentState.copy(resultSignIn = ResultSignIn.Idle, dialogState = DialogState.None) }
         formAuth = FormAuthState()
     }

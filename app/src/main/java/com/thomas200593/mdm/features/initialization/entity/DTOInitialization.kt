@@ -22,4 +22,4 @@ fun DTOInitialization.toUserProfileEntity(uid: String) = UserProfileEntity(userI
 fun DTOInitialization.toUserRoleEntity(uid: String, roles: Set<RoleEntity>) : Result<Set<UserRoleEntity>> = runCatching {
     if(roles.isEmpty()) throw NoSuchElementException("Cannot assign any Role!")
     roles.map { role -> UserRoleEntity(userId = uid, roleCode = role.roleCode, isActive = true) }.toSet()
-}.fold(onSuccess = { Result.success(it) }, onFailure = { Result.failure(it) })
+}.fold(onSuccess = { Result.success(it) }, onFailure = { it.printStackTrace(); Result.failure(it) })

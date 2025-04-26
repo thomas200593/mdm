@@ -20,6 +20,6 @@ class RepoUserRoleImpl @Inject constructor(
             val result = daoUserRole.insertAll(userRole.toList())
             if (result.size == userRole.size && result.all { it > 0 }) userRole
             else throw IllegalStateException("One or more user roles failed to insert!")
-        }.fold(onSuccess = { Result.success(it) }, onFailure = { Result.failure(it) })
+        }.fold(onSuccess = { Result.success(it) }, onFailure = { it.printStackTrace(); Result.failure(it) })
     }
 }

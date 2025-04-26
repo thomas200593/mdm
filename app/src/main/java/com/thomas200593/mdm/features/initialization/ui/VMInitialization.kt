@@ -108,7 +108,7 @@ class VMInitialization @Inject constructor(
                     resultInitialization = ResultInitialization.Success(result),
                     dialogState = DialogState.SuccessDialog
                 ) } },
-                onFailure = { err -> updateUiState { it.copy(
+                onFailure = { err -> err.printStackTrace(); updateUiState { it.copy(
                     resultInitialization = ResultInitialization.Error(err),
                     dialogState = DialogState.ErrorDialog(err)
                 ) } }

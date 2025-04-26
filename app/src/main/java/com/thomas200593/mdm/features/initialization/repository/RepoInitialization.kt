@@ -41,12 +41,12 @@ class RepoInitializationImpl @Inject constructor(
                 onSuccess = { user ->
                     val userProfile = repoUserProfile.insertUserProfile(dto.toUserProfileEntity(user.uid))
                     val auth = repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid))
-                    val roles = dto.toUserRoleEntity(user.uid, dto.initialSetOfRoles).getOrElse { return@withContext Result.failure(it) }
+                    val roles = dto.toUserRoleEntity(user.uid, dto.initialSetOfRoles).getOrElse { it.printStackTrace(); return@withContext Result.failure(it) }
                     val userRoles = repoUserRole.insertAll(roles)
                     if (userProfile.isSuccess && auth.isSuccess && userRoles.isSuccess) Result.success(dto)
-                    else Result.failure(userProfile.exceptionOrNull() ?: auth.exceptionOrNull() ?: IllegalStateException("Error creating subsequent data"))
+                    else Result.failure(userProfile.exceptionOrNull() ?: auth.exceptionOrNull() ?: IllegalStateException("Error creating subsequent data") )
                 },
-                onFailure = { Result.failure(it) }
+                onFailure = { it.printStackTrace(); Result.failure(it) }
             )
         result
     }

@@ -17,7 +17,7 @@ class UCCreateInitialUser @Inject constructor(
     is AuthType.LocalEmailPassword -> withContext (ioDispatcher) {
         val result = repoInitialization.createUserLocalEmailPassword(dto).fold(
             onSuccess = { repoInitialization.updateFirstTimeStatus(FirstTimeStatus.NO) ; Result.success(it) },
-            onFailure = { Result.failure(it) }
+            onFailure = { it.printStackTrace() ; Result.failure(it) }
         )
         result
     }

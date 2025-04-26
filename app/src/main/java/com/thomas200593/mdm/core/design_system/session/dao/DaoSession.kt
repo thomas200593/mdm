@@ -4,15 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.thomas200593.mdm.core.data.local.database.AppDatabase
-import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
-import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
 import com.thomas200593.mdm.core.design_system.session.entity.SessionEntity
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 @Dao
 interface DaoSession {
@@ -24,13 +17,4 @@ interface DaoSession {
     suspend fun deleteAll()
     @Insert(entity = SessionEntity::class, onConflict = OnConflictStrategy.ABORT)
     suspend fun create(session: SessionEntity)
-}
-class DaoSessionImpl @Inject constructor(
-    @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher : CoroutineDispatcher,
-    private val appDatabase: AppDatabase
-) : DaoSession {
-    override fun getAll(): Flow<List<SessionEntity>> = appDatabase.daoSession().getAll().flowOn(ioDispatcher)
-    override fun getCurrentSession() = appDatabase.daoSession().getCurrentSession().flowOn(ioDispatcher)
-    override suspend fun deleteAll() = withContext (ioDispatcher) { appDatabase.daoSession().deleteAll() }
-    override suspend fun create(session: SessionEntity) = withContext (ioDispatcher) { appDatabase.daoSession().create(session) }
 }

@@ -1,7 +1,5 @@
 package com.thomas200593.mdm.features.user_role.di
 
-import com.thomas200593.mdm.features.user_role.dao.DaoUserRole
-import com.thomas200593.mdm.features.user_role.dao.DaoUserRoleImpl
 import com.thomas200593.mdm.features.user_role.repository.RepoUserRole
 import com.thomas200593.mdm.features.user_role.repository.RepoUserRoleImpl
 import dagger.Binds
@@ -16,7 +14,4 @@ abstract class ModUserRole {
     @Binds
     @Singleton
     abstract fun bindsRepository(impl: RepoUserRoleImpl) : RepoUserRole
-    @Binds
-    @Singleton
-    abstract fun bindsDao(impl: DaoUserRoleImpl) : DaoUserRole
 }

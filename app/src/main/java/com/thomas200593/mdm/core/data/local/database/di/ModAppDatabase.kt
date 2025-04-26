@@ -27,11 +27,7 @@ object ModAppDatabase {
             override fun onOpen(db: SupportSQLiteDatabase) {
                 super.onOpen(db)
                 Executors.newSingleThreadExecutor().execute {
-                    val dbInstance = Room.databaseBuilder(
-                        context,
-                        AppDatabase::class.java,
-                        BuildConfig.APP_LOCAL_DATABASE_FILENAME
-                    ).build()
+                    val dbInstance = Room.databaseBuilder(context, AppDatabase::class.java, BuildConfig.APP_LOCAL_DATABASE_FILENAME).build()
                     runBlocking { BuiltInRolesSeeder.patchBuiltInRolesIfMissing(dbInstance.daoRole()) }
                 }
             }

@@ -1,7 +1,5 @@
 package com.thomas200593.mdm.core.design_system.session.di
 
-import com.thomas200593.mdm.core.design_system.session.dao.DaoSessionHistory
-import com.thomas200593.mdm.core.design_system.session.dao.DaoSessionHistoryImpl
 import com.thomas200593.mdm.core.design_system.session.repository.RepoSessionHistory
 import com.thomas200593.mdm.core.design_system.session.repository.RepoSessionHistoryImpl
 import dagger.Binds
@@ -16,7 +14,4 @@ abstract class ModSessionHistory {
     @Binds
     @Singleton
     internal abstract fun bindsRepository(impl: RepoSessionHistoryImpl): RepoSessionHistory
-    @Binds
-    @Singleton
-    internal abstract fun bindsDao(impl : DaoSessionHistoryImpl) : DaoSessionHistory
 }
