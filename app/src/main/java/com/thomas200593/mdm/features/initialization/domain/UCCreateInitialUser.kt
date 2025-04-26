@@ -15,6 +15,7 @@ class UCCreateInitialUser @Inject constructor(
     private val repoInitialization: RepoInitialization
 ) {
     suspend operator fun invoke(dto : DTOInitialization) : Result<DTOInitialization> {
+        if(dto.initialSetOfRoles.isEmpty()) return Result.failure(IllegalArgumentException("Initial user cannot have 0 roles"))
         return when(dto.authType) {
             is AuthType.LocalEmailPassword -> withContext (ioDispatcher) {
                 val result = repoInitialization.createUserLocalEmailPassword(dto).fold(

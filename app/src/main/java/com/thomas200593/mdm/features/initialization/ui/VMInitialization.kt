@@ -71,24 +71,23 @@ class VMInitialization @Inject constructor(
     private fun handleOpenScreen() = viewModelScope.launch {
         ucGetScreenData.invoke()
             .onStart { formInitialization = formInitialization.validateField(); uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
-            .collect { screenData ->
+            .collect { (confCommon, initialSetOfRoles) ->
                 uiState.update { currentState -> currentState.copy(
                     componentsState = ComponentsState.Loaded(
-                        confCommon = screenData.first,
+                        confCommon = confCommon,
                         dialogState = DialogState.None,
-                        initialSetOfRoles = screenData.second,
+                        initialSetOfRoles = initialSetOfRoles,
                         resultInitialization = ResultInitialization.Idle
                     )
                 ) }
             }
     }
-    private fun updateDialog(transform: (DialogState) -> DialogState) =
-        updateUiState { it.copy(dialogState = transform(it.dialogState)) }
+    private fun updateDialog(transform: (DialogState) -> DialogState) = updateUiState { it.copy(dialogState = transform(it.dialogState)) }
     private fun updateForm(transform: (FormInitializationState) -> FormInitializationState) =
         viewModelScope.launch(Dispatchers.Main.immediate) {
             (uiState.value.componentsState as? ComponentsState.Loaded)?.let {
                 val updated = transform(formInitialization)
-                if (updated != formInitialization) formInitialization = updated
+                formInitialization.takeIf { it != updated }?.let { formInitialization = updated }
             }
         }
     private fun handleInitialization() {
@@ -97,21 +96,15 @@ class VMInitialization @Inject constructor(
         viewModelScope.launch {
             val componentsState = uiState.value.componentsState as? ComponentsState.Loaded ?: return@launch
             val dto = DTOInitialization(
-                firstName = frozenForm.fldFirstName.toString(),
-                lastName = frozenForm.fldLastName.toString(),
-                email = frozenForm.fldEmail.toString(),
-                authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword.toString()),
+                firstName = frozenForm.fldFirstName.toString().trim(),
+                lastName = frozenForm.fldLastName.toString().trim(),
+                email = frozenForm.fldEmail.toString().trim(),
+                authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword.toString().trim()),
                 initialSetOfRoles = componentsState.initialSetOfRoles
             )
             ucCreateDataInitialization.invoke(dto).fold(
-                onSuccess = { result -> updateUiState { it.copy(
-                    resultInitialization = ResultInitialization.Success(result),
-                    dialogState = DialogState.SuccessDialog
-                ) } },
-                onFailure = { err -> err.printStackTrace(); updateUiState { it.copy(
-                    resultInitialization = ResultInitialization.Error(err),
-                    dialogState = DialogState.ErrorDialog(err)
-                ) } }
+                onSuccess =  { result -> updateUiState { it.copy(resultInitialization = ResultInitialization.Success(result), dialogState = DialogState.SuccessDialog) } },
+                onFailure =  { err -> err.printStackTrace(); updateUiState { it.copy(resultInitialization = ResultInitialization.Error(err), dialogState = DialogState.ErrorDialog(err)) } }
             )
         }
     }
