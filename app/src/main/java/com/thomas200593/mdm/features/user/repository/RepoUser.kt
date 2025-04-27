@@ -2,6 +2,7 @@ package com.thomas200593.mdm.features.user.repository
 
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
+import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.features.user.dao.DaoUser
 import com.thomas200593.mdm.features.user.entity.UserEntity
 import kotlinx.coroutines.CoroutineDispatcher
@@ -27,20 +28,20 @@ class RepoUserImpl @Inject constructor(
             daoUser.getOneByUid(validUser).flowOn(ioDispatcher)
                 .map { user ->
                     user.firstOrNull()
-                        ?.let { Result.success(it) }
-                        ?: Result.failure(NoSuchElementException("User not found!")) }
-                .catch { emit(Result.failure(it)) }
-        } ?: flowOf(Result.failure(IllegalArgumentException("Uid cannot be blank")))
+                        ?. let { Result.success(it) }
+                        ?: Result.failure(Error.Database.DaoQueryNoDataError(message = "User not found with UID : $uid")) }
+                .catch { emit(Result.failure(Error.Database.DaoQueryError(cause = it))) }
+        } ?: flowOf(Result.failure(Error.Input.EmptyError(message = "UID Cannot be blank!")))
     override fun getOneByEmail(email: String) : Flow<Result<UserEntity>> = email.takeIf { it.isNotBlank() }
-        ?.let { validEmail ->
+        ?. let { validEmail ->
             daoUser.getOneByEmail(validEmail).flowOn(ioDispatcher)
                 .map { user ->
                     user.firstOrNull()
-                        ?.let { Result.success(it) }
-                        ?: Result.failure(NoSuchElementException("User not found!"))
+                        ?. let { Result.success(it) }
+                        ?: Result.failure(Error.Database.DaoQueryNoDataError(message = "User not found with email : $email"))
                 }
-                .catch { emit(Result.failure(it)) }
-        } ?: flowOf(Result.failure(IllegalArgumentException("Email cannot be blank!")))
+                .catch { emit(Result.failure(Error.Database.DaoQueryError(cause = it))) }
+        } ?: flowOf(Result.failure(Error.Input.EmptyError(message = "Email cannot be blank!")))
     override suspend fun getOrCreateUser(user: UserEntity) : Result<UserEntity> = runCatching {
         daoUser.getOneByEmail(user.email).flowOn(ioDispatcher).firstOrNull()?.firstOrNull()
             ?: user.takeIf { daoUser.insertUser(it) > 0 }

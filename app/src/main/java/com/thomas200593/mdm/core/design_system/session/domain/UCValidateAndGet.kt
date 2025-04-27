@@ -2,9 +2,8 @@ package com.thomas200593.mdm.core.design_system.session.domain
 
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
-import com.thomas200593.mdm.core.design_system.session.entity.SessionEntity
+import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.core.design_system.session.repository.RepoSession
-import com.thomas200593.mdm.features.user.entity.UserEntity
 import com.thomas200593.mdm.features.user.repository.RepoUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.catch
@@ -18,11 +17,12 @@ class UCValidateAndGet @Inject constructor(
     private val ucArchiveAndCleanUp : UCArchiveAndCleanUp,
     private val repoSession : RepoSession,
     private val repoUser : RepoUser
-) { operator fun invoke() = repoSession.getCurrent().flowOn(ioDispatcher).map { result ->
-    result.fold(
-        onSuccess = { session -> session.takeIf { repoSession.isValid(it).getOrDefault(false) }
-            ?.let { validSession -> repoUser.getOneByUid(validSession.userId).first()
-                .fold(onSuccess = { Result.success(validSession to it) }, onFailure = { Result.failure(it) }) }
-            ?: Result.failure<Pair<SessionEntity, UserEntity>>(NoSuchElementException("Session Invalid or Not Found")) },
-        onFailure = { Result.failure<Pair<SessionEntity, UserEntity>>(it) }
-    ) }.catch { ucArchiveAndCleanUp.invoke(); emit(Result.failure<Pair<SessionEntity, UserEntity>>(it)) } }
+) { operator fun invoke() = repoSession.getCurrent().flowOn(ioDispatcher)
+    .map { result ->
+        result.fold(
+            onSuccess = { session -> session.takeIf { repoSession.isValid(it).getOrDefault(false) }
+                ?. let { validSession -> repoUser.getOneByUid(validSession.userId).first()
+                    .fold(onSuccess = { Result.success(validSession to it) }, onFailure = { Result.failure(it) }) }
+                ?: Result.failure(Error.Data.NotFoundError(message = "Session is invalid / not found")) },
+            onFailure = { Result.failure(it) })
+    }.catch { ucArchiveAndCleanUp.invoke(); emit(Result.failure(it)) } }
