@@ -29,21 +29,13 @@ class TxtFieldPasswordValidation : BaseValidation<String, ValidationResult> {
             append("}$")                  // Length enforcement
         })
         // Required Check
-        if (required == true && input.isBlank()) {
-            errors.add(UiText.DynamicString("This field is required!"))
-        }
+        if (required == true && input.isBlank()) errors.add(UiText.DynamicString("This field is required!"))
         // Min Length Check
-        if (input.length < (minLength ?: minLen)) {
-            errors.add(UiText.DynamicString("This field requires a minimum of ${minLength ?: minLen} character(s)."))
-        }
+        if (input.length < (minLength ?: minLen)) errors.add(UiText.DynamicString("This field requires a minimum of ${minLength ?: minLen} character(s)."))
         // Max Length Check
-        if (input.length > (maxLength ?: maxLen)) {
-            errors.add(UiText.DynamicString("This field requires a maximum of ${maxLength ?: maxLen} character(s)."))
-        }
+        if (input.length > (maxLength ?: maxLen)) errors.add(UiText.DynamicString("This field requires a maximum of ${maxLength ?: maxLen} character(s)."))
         // Pattern Matching
-        if (!passwordPattern.matches(input)) {
-            errors.add(UiText.DynamicString("Password must contain at least 1 uppercase letter, 1 digit, and 1 special symbol."))
-        }
+        if (!passwordPattern.matches(input)) errors.add(UiText.DynamicString("Password must contain at least 1 uppercase letter, 1 digit, and 1 special symbol."))
         return ValidationResult(errorMessages = errors)
     }
 }

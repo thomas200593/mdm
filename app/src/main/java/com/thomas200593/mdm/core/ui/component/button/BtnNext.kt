@@ -16,8 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 
-@Composable
-fun BtnNext(
+@Composable fun BtnNext(
     modifier: Modifier = Modifier, onClick: () -> Unit,
     icon: ImageVector = Icons.AutoMirrored.Default.NavigateNext, label: String, enabled: Boolean = true,
     shape: Shape = ButtonDefaults.textShape, colors: ButtonColors = ButtonDefaults.textButtonColors(),

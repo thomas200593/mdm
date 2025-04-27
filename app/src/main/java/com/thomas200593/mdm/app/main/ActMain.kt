@@ -37,8 +37,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class ActMain : AppCompatActivity() {
+@AndroidEntryPoint class ActMain : AppCompatActivity() {
     @Inject lateinit var networkMonitor: NetworkMonitor
     @Inject lateinit var sessionManager: SessionManager
     private lateinit var timberFileLogger: TimberFileLogger

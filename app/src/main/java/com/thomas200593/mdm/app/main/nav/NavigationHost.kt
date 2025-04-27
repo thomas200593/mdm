@@ -6,8 +6,7 @@ import androidx.navigation.compose.NavHost
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.features.initial.nav.navGraphInitial
 
-@Composable
-fun NavigationHost(
+@Composable fun NavigationHost(
     modifier: Modifier = Modifier,
     stateApp: StateApp,
     onShowSnackBar: suspend (String, String?) -> Boolean

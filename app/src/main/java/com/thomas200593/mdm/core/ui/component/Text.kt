@@ -9,8 +9,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 
-@Composable
-fun TxtLgTitle(
+@Composable fun TxtLgTitle(
     text: String, modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.onSurface,
     textAlign: TextAlign = MaterialTheme.typography.titleLarge.textAlign,
     overflow: TextOverflow = TextOverflow.Clip, maxLines: Int = Int.MAX_VALUE,
@@ -21,8 +20,7 @@ fun TxtLgTitle(
         maxLines = maxLines, style = style
     )
 }
-@Composable
-fun TxtMdTitle(
+@Composable fun TxtMdTitle(
     text: String, modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.onSurface,
     textAlign: TextAlign = MaterialTheme.typography.titleMedium.textAlign,
     overflow: TextOverflow = TextOverflow.Clip, maxLines: Int = Int.MAX_VALUE,
@@ -33,8 +31,7 @@ fun TxtMdTitle(
         maxLines = maxLines, style = style
     )
 }
-@Composable
-fun TxtMdLabel(
+@Composable fun TxtMdLabel(
     text: String, modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.onSurface,
     textAlign: TextAlign = MaterialTheme.typography.labelMedium.textAlign,
     overflow: TextOverflow = TextOverflow.Clip, maxLines: Int = Int.MAX_VALUE,
@@ -45,8 +42,7 @@ fun TxtMdLabel(
         maxLines = maxLines, style = style
     )
 }
-@Composable
-fun TxtMdBody(
+@Composable fun TxtMdBody(
     text: String, modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.onSurface,
     textAlign: TextAlign = MaterialTheme.typography.bodyMedium.textAlign,
     overflow: TextOverflow = TextOverflow.Clip, maxLines: Int = Int.MAX_VALUE,

@@ -14,8 +14,7 @@ enum class DialogType {
     CONFIRMATION, ERROR, INFORMATION, SUCCESS, WARNING;
     companion object { val defaultValue = INFORMATION }
 }
-@Composable
-fun BaseAlertDialog (
+@Composable fun BaseAlertDialog (
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     dialogType: DialogType = DialogType.defaultValue,
@@ -49,16 +48,14 @@ fun BaseAlertDialog (
         properties = properties,
     )
 }
-@Composable
-private fun getContainerColor(dialogType: DialogType) = when(dialogType) {
+@Composable private fun getContainerColor(dialogType: DialogType) = when(dialogType) {
     DialogType.CONFIRMATION -> MaterialTheme.colorScheme.secondaryContainer
     DialogType.ERROR -> MaterialTheme.colorScheme.errorContainer
     DialogType.INFORMATION -> MaterialTheme.colorScheme.primaryContainer
     DialogType.SUCCESS -> MaterialTheme.colorScheme.tertiaryContainer
     DialogType.WARNING -> MaterialTheme.colorScheme.errorContainer
 }
-@Composable
-private fun getContentColor(dialogType: DialogType) = when (dialogType) {
+@Composable private fun getContentColor(dialogType: DialogType) = when (dialogType) {
     DialogType.CONFIRMATION -> MaterialTheme.colorScheme.onSecondaryContainer
     DialogType.ERROR -> MaterialTheme.colorScheme.onErrorContainer
     DialogType.INFORMATION -> MaterialTheme.colorScheme.onPrimaryContainer

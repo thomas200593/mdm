@@ -8,10 +8,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class ModNetworkMonitor {
-    @Binds
-    @Singleton
-    internal abstract fun bindsImplementation(impl: NetworkMonitorImpl): NetworkMonitor
+@Module @InstallIn(SingletonComponent::class) abstract class ModNetworkMonitor {
+    @Binds @Singleton internal abstract fun bindsImplementation(impl: NetworkMonitorImpl): NetworkMonitor
 }

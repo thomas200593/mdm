@@ -13,8 +13,7 @@ import com.thomas200593.mdm.features.user.entity.UserEntity
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-@Serializable
-@Entity(
+@Serializable @Entity(
     tableName = "session",
     foreignKeys = [
         ForeignKey(

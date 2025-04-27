@@ -10,8 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
 import com.thomas200593.mdm.R
 
-@Composable
-fun SuccessDialog(
+@Composable fun SuccessDialog(
     onDismissRequest: () -> Unit,
     title: String = stringResource(R.string.str_success),
     message: String = stringResource(R.string.str_success),

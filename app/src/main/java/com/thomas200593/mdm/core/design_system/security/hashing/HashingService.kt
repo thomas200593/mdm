@@ -10,8 +10,7 @@ interface HashingService {
     fun hash(string: String, algorithm: HashingAlgorithm): String
     fun verify(string: String, hash: String, algorithm: HashingAlgorithm): Boolean
 }
-@Singleton
-class HashingServiceImpl @Inject constructor(
+@Singleton class HashingServiceImpl @Inject constructor(
     private val bCrypt: BCrypt
 ) : HashingService {
     override fun hash(string: String, algorithm: HashingAlgorithm) : String = when(algorithm) {

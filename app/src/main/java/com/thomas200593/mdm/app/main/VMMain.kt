@@ -11,8 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
-@HiltViewModel
-class VMMain @Inject constructor(ucGetDataMain: UCGetDataMain) : ViewModel() {
+@HiltViewModel class VMMain @Inject constructor(ucGetDataMain: UCGetDataMain) : ViewModel() {
     val uiState: StateFlow<UiStateMain> = ucGetDataMain.invoke().map { UiStateMain.Loaded(it) }
         .stateIn(scope = viewModelScope, initialValue = UiStateMain.Loading, started = SharingStarted.Eagerly)
 }

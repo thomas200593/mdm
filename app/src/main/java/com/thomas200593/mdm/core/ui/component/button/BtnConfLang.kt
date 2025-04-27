@@ -29,9 +29,7 @@ import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.component.TxtMdLabel
 import com.thomas200593.mdm.features.conf.__language.entity.Language
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BtnConfLang(
+@OptIn(ExperimentalMaterial3Api::class) @Composable fun BtnConfLang(
     modifier: Modifier = Modifier,
     languages: List<Language>, languageIcon: String, languageName: String? = null, onSelectLanguage: (Language) -> Unit,
     enabled: Boolean = true, shape: Shape = MaterialTheme.shapes.medium, colors: ButtonColors = ButtonDefaults.textButtonColors(),

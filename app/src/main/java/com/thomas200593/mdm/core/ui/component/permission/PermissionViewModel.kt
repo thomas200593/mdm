@@ -5,9 +5,4 @@ import com.thomas200593.mdm.core.ui.component.permission.repository.RepoPermissi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-@HiltViewModel
-class PermissionViewModel @Inject constructor(
-    private val repoPermissionHandler: RepoPermissionHandler
-) : ViewModel() {
-    
-}
+@HiltViewModel class PermissionViewModel @Inject constructor(private val repoPermissionHandler: RepoPermissionHandler) : ViewModel()

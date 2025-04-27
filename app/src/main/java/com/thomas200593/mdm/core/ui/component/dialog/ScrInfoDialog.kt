@@ -9,8 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.thomas200593.mdm.R
 
-@Composable
-fun ScrInfoDialog(onDismissRequest: () -> Unit, title: String, description: String) {
+@Composable fun ScrInfoDialog(onDismissRequest: () -> Unit, title: String, description: String) {
     BaseAlertDialog(
         onDismissRequest = onDismissRequest, icon = { Icon(Icons.Default.PermDeviceInformation, null) },
         title = { Text(title) }, text = { Text(description) },

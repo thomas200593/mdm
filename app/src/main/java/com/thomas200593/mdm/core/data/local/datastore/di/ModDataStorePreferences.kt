@@ -8,10 +8,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class ModDataStorePreferences {
-    @Binds
-    @Singleton
-    abstract fun bindsDataStorePreferences(impl: DataStorePreferencesImpl): DataStorePreferences
+@Module @InstallIn(SingletonComponent::class) abstract class ModDataStorePreferences {
+    @Binds @Singleton abstract fun bindsImplementation(impl: DataStorePreferencesImpl): DataStorePreferences
 }

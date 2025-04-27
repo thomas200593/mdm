@@ -8,10 +8,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class ModHashing {
-    @Binds
-    @Singleton
-    abstract fun bindsHashService(impl: HashingServiceImpl) : HashingService
+@Module @InstallIn(SingletonComponent::class) abstract class ModHashing {
+    @Binds @Singleton abstract fun bindsImplementation(impl: HashingServiceImpl) : HashingService
 }

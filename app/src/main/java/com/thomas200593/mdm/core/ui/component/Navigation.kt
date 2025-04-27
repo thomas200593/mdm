@@ -24,8 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-@Composable
-fun RowScope.NavBarItem(
+@Composable fun RowScope.NavBarItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     enabled: Boolean = true,
@@ -50,9 +49,7 @@ fun RowScope.NavBarItem(
         indicatorColor = NavDefaults.navIndicatorColor()
     )
 )
-
-@Composable
-fun NavBar(
+@Composable fun NavBar(
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit
 ) = NavigationBar(
@@ -61,9 +58,7 @@ fun NavBar(
     tonalElevation = 0.dp,
     content = content
 )
-
-@Composable
-fun NavRailItem(
+@Composable fun NavRailItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     enabled: Boolean = true,
@@ -88,9 +83,7 @@ fun NavRailItem(
         indicatorColor = NavDefaults.navIndicatorColor()
     )
 )
-
-@Composable
-fun NavRail(
+@Composable fun NavRail(
     modifier: Modifier = Modifier,
     header: @Composable (ColumnScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
@@ -101,9 +94,7 @@ fun NavRail(
     header = header,
     content = content
 )
-
-@Composable
-fun AppNavSuiteScaffold(
+@Composable fun AppNavSuiteScaffold(
     modifier: Modifier = Modifier,
     navSuiteItems: NavSuiteScope.() -> Unit,
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
@@ -147,7 +138,6 @@ fun AppNavSuiteScaffold(
         state = rememberNavigationSuiteScaffoldState(state)
     )
 }
-
 class NavSuiteScope internal constructor(
     private val navigationSuiteScope: NavigationSuiteScope,
     private val navSuiteItemColors: NavigationSuiteItemColors
@@ -168,7 +158,6 @@ class NavSuiteScope internal constructor(
         modifier = modifier
     )
 }
-
 object NavDefaults {
     @Composable fun navContentColor() = MaterialTheme.colorScheme.onSurfaceVariant
     @Composable fun navSelectedItemColor() = MaterialTheme.colorScheme.onPrimaryContainer

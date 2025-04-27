@@ -6,8 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-@Serializable
-data class AuditTrail(
+@Serializable data class AuditTrail(
     @SerialName("created_by") val createdBy: String = Constants.STR_SYSTEM,
     @SerialName("created_at") val createdAt: Long = Constants.NOW_EPOCH_SECOND,
     @SerialName("modifier_by") val modifiedBy: String = Constants.STR_SYSTEM,

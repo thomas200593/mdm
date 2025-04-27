@@ -16,11 +16,9 @@ import kotlinx.coroutines.runBlocking
 import java.util.concurrent.Executors
 import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
+@Module @InstallIn(SingletonComponent::class)
 object ModAppDatabase {
-    @Provides
-    @Singleton
+    @Provides @Singleton
     fun providesAppDatabase(@ApplicationContext context: Context) = Room
         .databaseBuilder(context = context, klass = AppDatabase::class.java, name = BuildConfig.APP_LOCAL_DATABASE_FILENAME)
         .addCallback(object : RoomDatabase.Callback() {

@@ -20,8 +20,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.thomas200593.mdm.R
 import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 
-@Composable
-fun TxtFieldEmail(
+@Composable fun TxtFieldEmail(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,

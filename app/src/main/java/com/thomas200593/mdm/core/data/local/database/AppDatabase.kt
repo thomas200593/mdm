@@ -23,8 +23,7 @@ import com.thomas200593.mdm.features.user_role.dao.DaoUserRole
 import com.thomas200593.mdm.features.user_role.entity.UserRoleEntity
 import javax.inject.Singleton
 
-@Singleton
-@Database(
+@Singleton @Database(
     entities = [
         UserEntity::class, UserProfileEntity::class, UserRoleEntity::class, AuthEntity::class,
         RoleEntity::class, SessionEntity::class, SessionHistoryEntity::class

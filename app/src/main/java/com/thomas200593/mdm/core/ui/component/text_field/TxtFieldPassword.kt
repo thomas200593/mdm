@@ -27,8 +27,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import com.thomas200593.mdm.R
 import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 
-@Composable
-fun TxtFieldPassword(
+@Composable fun TxtFieldPassword(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
@@ -62,8 +61,7 @@ fun TxtFieldPassword(
         singleLine = true
     )
 }
-@Composable
-private fun PasswordVisibilityToggleIcon(
+@Composable private fun PasswordVisibilityToggleIcon(
     passwordVisible: Boolean,
     onTogglePasswordVisibility: () -> Unit
 ) {

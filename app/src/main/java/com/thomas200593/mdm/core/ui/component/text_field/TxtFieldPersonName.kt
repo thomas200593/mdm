@@ -18,8 +18,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 
-@Composable
-fun TxtFieldPersonName(
+@Composable fun TxtFieldPersonName(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,

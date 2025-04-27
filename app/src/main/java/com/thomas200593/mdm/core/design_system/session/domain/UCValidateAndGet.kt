@@ -1,6 +1,5 @@
 package com.thomas200593.mdm.core.design_system.session.domain
 
-import androidx.compose.runtime.Stable
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
 import com.thomas200593.mdm.core.design_system.session.entity.SessionEntity
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-@Stable
 class UCValidateAndGet @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher : CoroutineDispatcher,
     private val ucArchiveAndCleanUp : UCArchiveAndCleanUp,

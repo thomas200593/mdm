@@ -44,8 +44,7 @@ import com.thomas200593.mdm.core.ui.component.AppNavSuiteScaffold
 import com.thomas200593.mdm.core.ui.component.DestTopLevelAppBar
 import kotlin.reflect.KClass
 
-@Composable
-fun ScrApp(
+@Composable fun ScrApp(
     stateApp: StateApp = LocalStateApp.current,
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo()
 ) {
@@ -62,10 +61,7 @@ fun ScrApp(
         snackBarHostState = snackBarHostState
     )
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ScrApp(
+@OptIn(ExperimentalMaterial3Api::class) @Composable private fun ScrApp(
     modifier: Modifier = Modifier,
     stateApp: StateApp,
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
@@ -156,6 +152,5 @@ private fun ScrApp(
         }
     )
 }
-
 private fun NavDestination?.isRouteInHierarchy(route: KClass<*>) =
     this?.hierarchy?.any { it.hasRoute(route) } == true

@@ -19,7 +19,6 @@ interface RepoPermissionHandler {
     val deniedAppPermissions: Flow<DeniedAppPermissions>
     suspend fun updateDeniedPermissions(permissions: Set<String>): Preferences
 }
-
 class RepoPermissionHandlerImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatchers: CoroutineDispatcher,
     private val dataStore: DataStorePreferences

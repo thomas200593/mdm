@@ -13,8 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import com.thomas200593.mdm.core.design_system.util.Constants
 
-@Composable
-fun PanelCard(
+@Composable fun PanelCard(
     modifier: Modifier = Modifier,
     title: (@Composable () -> Unit)? = null,
     content: (@Composable () -> Unit),

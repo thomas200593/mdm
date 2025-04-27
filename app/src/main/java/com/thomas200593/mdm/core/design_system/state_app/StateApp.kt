@@ -26,8 +26,7 @@ import kotlinx.coroutines.flow.stateIn
 
 private val TAG = StateApp::class.simpleName
 
-@Composable
-fun rememberStateApp(
+@Composable fun rememberStateApp(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavHostController = rememberNavController(),
     networkMonitor: NetworkMonitor,

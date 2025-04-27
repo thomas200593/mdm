@@ -32,11 +32,8 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.shouldShowRationale
 
-
 /*Is it work if the permission changed runtime?*/
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-fun PermissionHandler(
+@OptIn(ExperimentalPermissionsApi::class) @Composable fun PermissionHandler(
     permissions: List<String>,
     vm: PermissionViewModel = hiltViewModel(),
     onPermissionsResult: (Map<String, Boolean>) -> Unit,
@@ -45,7 +42,6 @@ fun PermissionHandler(
     val context = LocalContext.current
     val sharedPrefs = remember { context.getSharedPreferences("permissions_prefs", Context.MODE_PRIVATE) }
     val deniedPermissions = sharedPrefs.getStringSet("denied_permissions", emptySet()) ?: emptySet()
-
     val permissionsToRequest = permissions
         .filter { it !in deniedPermissions && ContextCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED }
     val permissionState = rememberMultiplePermissionsState(
@@ -97,9 +93,7 @@ fun PermissionHandler(
         )
     }
 }
-
-@Composable
-fun PermissionSettingsDialog(
+@Composable fun PermissionSettingsDialog(
     grantedPermissions: Map<String, Boolean>,
     onDismiss: () -> Unit,
     onOpenSettings: () -> Unit
@@ -124,7 +118,6 @@ fun PermissionSettingsDialog(
         dismissButton = { Button(onClick = onDismiss, content = { Text("Cancel") }) }
     )
 }
-
 fun getRationaleMessage(missingPermissions: List<String>): String {
     return when {
         Manifest.permission.CAMERA in missingPermissions -> "📷 Camera access is needed to take photos."
@@ -133,9 +126,7 @@ fun getRationaleMessage(missingPermissions: List<String>): String {
         else -> "This app requires permissions to function properly."
     }
 }
-
-@Composable
-fun AnimatedPermissionStatus(permission: String, isGranted: Boolean) {
+@Composable fun AnimatedPermissionStatus(permission: String, isGranted: Boolean) {
     var visible by remember { mutableStateOf(false) }
     LaunchedEffect(key1 = isGranted, block = { visible = true })
     AnimatedVisibility (visible) {

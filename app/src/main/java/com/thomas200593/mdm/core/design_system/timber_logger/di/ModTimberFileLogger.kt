@@ -11,7 +11,5 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class ModTimberFileLogger {
-    @Binds
-    @Singleton
-    abstract fun bindsModule(impl : TimberFileLoggerImpl) : TimberFileLogger
+    @Binds @Singleton abstract fun bindsImplementation(impl : TimberFileLoggerImpl) : TimberFileLogger
 }

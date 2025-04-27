@@ -16,9 +16,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DestTopLevelAppBar(
+@OptIn(ExperimentalMaterial3Api::class) @Composable fun DestTopLevelAppBar(
     modifier: Modifier = Modifier,
     colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     @StringRes title: Int? = null,

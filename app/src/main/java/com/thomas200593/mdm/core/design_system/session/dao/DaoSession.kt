@@ -7,8 +7,7 @@ import androidx.room.Query
 import com.thomas200593.mdm.core.design_system.session.entity.SessionEntity
 import kotlinx.coroutines.flow.Flow
 
-@Dao
-interface DaoSession {
+@Dao interface DaoSession {
     @Query("SELECT * FROM session")
     fun getAll() : Flow<List<SessionEntity>>
     @Query("SELECT * FROM session LIMIT 1")

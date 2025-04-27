@@ -27,8 +27,7 @@ interface TimberFileLogger {
     fun flush(line: String)
     fun shareLogFile(context: Context)
 }
-@Singleton
-class TimberFileLoggerImpl @Inject constructor(
+@Singleton class TimberFileLoggerImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher : CoroutineDispatcher,
     @ApplicationContext context: Context
 ) : TimberFileLogger {

@@ -19,8 +19,7 @@ object Theme {
     private val darkContrastMedium = Color.Dark.ContrastMedium.colorScheme
     private val darkContrastHigh = Color.Dark.ContrastHigh.colorScheme
     private val shapes = Shapes()
-    @Composable
-    fun AppTheme(
+    @Composable fun AppTheme(
         darkThemeEnabled: Boolean = isSystemInDarkTheme(),
         dynamicColorEnabled: Boolean, // Dynamic color is available on Android 12+
         contrastAccent: ContrastAccent,
