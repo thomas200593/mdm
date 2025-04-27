@@ -11,6 +11,14 @@ sealed class Error(
     override val message: String? = Constants.STR_EMPTY,
     override val cause: Throwable? = null
 ) : Throwable(message = message, cause = cause) {
+    // **Generic Unknown Error
+    data class UnknownError(
+        override val code: String = "ERR_UNKNOWN",
+        override val emoji: String = "❓",
+        override val localizedMessage: Int? = null,
+        override val message: String? = "Unknown error occurred",
+        override val cause: Throwable? = null
+    ) : Input(code, emoji, localizedMessage, message, cause)
     // **DB Operation Errors** (DAO or SQL errors)
     sealed class Database(
         override val code: String,
@@ -42,11 +50,11 @@ sealed class Error(
         override val message: String? = "Input error",
         override val cause: Throwable? = null
     ) : Error (code, emoji, localizedMessage, message, cause) {
-        data class EmptyError(
-            override val code: String = "ERR_INPUT_EMPTY",
+        data class MalformedError(
+            override val code: String = "ERR_INPUT_MALFORMED",
             override val emoji: String = "❌️",
             override val localizedMessage: Int? = null,
-            override val message: String? = "Input cannot be empty",
+            override val message: String? = "Input data is malformed",
             override val cause: Throwable? = IllegalArgumentException()
         ) : Input(code, emoji, localizedMessage, message, cause)
     }
@@ -63,6 +71,13 @@ sealed class Error(
             override val emoji: String = "❌️",
             override val localizedMessage: Int? = null,
             override val message: String? = "Data not found",
+            override val cause: Throwable? = null
+        ) : Data(code, emoji, localizedMessage, message, cause)
+        data class DuplicateError(
+            override val code: String = "ERR_DATA_DUPLICATE",
+            override val emoji: String = "🔁",
+            override val localizedMessage: Int? = null,
+            override val message: String? = "Duplicate data found",
             override val cause: Throwable? = null
         ) : Data(code, emoji, localizedMessage, message, cause)
     }
