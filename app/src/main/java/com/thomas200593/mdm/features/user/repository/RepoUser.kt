@@ -25,18 +25,25 @@ class RepoUserImpl @Inject constructor(
     override fun getOneByUid(uid: String): Flow<Result<UserEntity>> = uid.takeIf { it.isNotBlank() }
         ?.let { validUser ->
             daoUser.getOneByUid(validUser).flowOn(ioDispatcher)
-                .map { user -> user.firstOrNull()?.let { Result.success(it) } ?: Result.failure(NoSuchElementException("User not found!")) }
+                .map { user ->
+                    user.firstOrNull()
+                        ?.let { Result.success(it) }
+                        ?: Result.failure(NoSuchElementException("User not found!")) }
                 .catch { emit(Result.failure(it)) }
         } ?: flowOf(Result.failure(IllegalArgumentException("Uid cannot be blank")))
     override fun getOneByEmail(email: String) : Flow<Result<UserEntity>> = email.takeIf { it.isNotBlank() }
         ?.let { validEmail ->
             daoUser.getOneByEmail(validEmail).flowOn(ioDispatcher)
-                .map { user -> user.firstOrNull()?.let { Result.success(it) } ?: Result.failure(NoSuchElementException("User not found!")) }
+                .map { user ->
+                    user.firstOrNull()
+                        ?.let { Result.success(it) }
+                        ?: Result.failure(NoSuchElementException("User not found!"))
+                }
                 .catch { emit(Result.failure(it)) }
         } ?: flowOf(Result.failure(IllegalArgumentException("Email cannot be blank!")))
     override suspend fun getOrCreateUser(user: UserEntity) : Result<UserEntity> = runCatching {
-        daoUser.getOneByEmail(user.email).flowOn(ioDispatcher).firstOrNull()
-            ?.firstOrNull() ?: user.takeIf { daoUser.insertUser(it) > 0 }
-        ?: throw IllegalStateException("Error creating user!")
+        daoUser.getOneByEmail(user.email).flowOn(ioDispatcher).firstOrNull()?.firstOrNull()
+            ?: user.takeIf { daoUser.insertUser(it) > 0 }
+            ?: throw IllegalStateException("Error creating user!")
     }.fold(onSuccess = { Result.success(it) }, onFailure = { Result.failure(it) })
 }
