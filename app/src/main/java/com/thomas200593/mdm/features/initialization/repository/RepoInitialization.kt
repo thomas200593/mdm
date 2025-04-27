@@ -1,54 +1,37 @@
 package com.thomas200593.mdm.features.initialization.repository
 
+import android.database.sqlite.SQLiteAbortException
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.thomas200593.mdm.core.data.local.datastore.DataStorePreferences
 import com.thomas200593.mdm.core.data.local.datastore.DataStorePreferencesKeys
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
-import com.thomas200593.mdm.core.design_system.util.UUIDv7
-import com.thomas200593.mdm.features.auth.entity.AuthType
-import com.thomas200593.mdm.features.auth.repository.RepoAuth
-import com.thomas200593.mdm.features.initialization.entity.DTOInitialization
+import com.thomas200593.mdm.core.design_system.error.Error
+import com.thomas200593.mdm.features.auth.entity.AuthEntity
+import com.thomas200593.mdm.features.initialization.dao.DaoInitialization
+import com.thomas200593.mdm.features.initialization.entity.DTOInitializationResult
 import com.thomas200593.mdm.features.initialization.entity.FirstTimeStatus
-import com.thomas200593.mdm.features.initialization.entity.toAuthEntity
-import com.thomas200593.mdm.features.initialization.entity.toUserEntity
-import com.thomas200593.mdm.features.initialization.entity.toUserProfileEntity
-import com.thomas200593.mdm.features.initialization.entity.toUserRoleEntity
-import com.thomas200593.mdm.features.user.repository.RepoUser
-import com.thomas200593.mdm.features.user_profile.repository.RepoUserProfile
-import com.thomas200593.mdm.features.user_role.repository.RepoUserRole
+import com.thomas200593.mdm.features.user.entity.UserEntity
+import com.thomas200593.mdm.features.user_profile.entity.UserProfileEntity
+import com.thomas200593.mdm.features.user_role.entity.UserRoleEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 interface RepoInitialization {
-    suspend fun createUserLocalEmailPassword(dto: DTOInitialization): Result<DTOInitialization>
+    suspend fun createUserLocalEmailPassword(user: UserEntity, profile: UserProfileEntity, auth: AuthEntity, roles: Set<UserRoleEntity>): Result<DTOInitializationResult>
     suspend fun updateFirstTimeStatus(firstTimeStatus: FirstTimeStatus): Preferences
 }
 class RepoInitializationImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
-    private val repoUser: RepoUser,
-    private val repoUserProfile: RepoUserProfile,
-    private val repoUserRole: RepoUserRole,
-    private val repoAuth: RepoAuth<AuthType>,
+    private val daoInitialization: DaoInitialization,
     private val dataStore: DataStorePreferences
 ) : RepoInitialization {
-    /*TODO EVEN IF MARKED AS TRANSACTION IT STILL INSERTED PARTIALLY*/
-    override suspend fun createUserLocalEmailPassword(dto: DTOInitialization): Result<DTOInitialization> = withContext (ioDispatcher) {
-        val result = repoUser.getOrCreateUser(dto.toUserEntity(UUIDv7.generateAsString()))
-            .fold(
-                onSuccess = { user ->
-                    val userProfile = repoUserProfile.insertUserProfile(dto.toUserProfileEntity(user.uid))
-                    val auth = repoAuth.registerAuthLocalEmailPassword(dto.toAuthEntity(user.uid))
-                    //val roles = dto.toUserRoleEntity(user.uid, dto.initialSetOfRoles).getOrElse { it.printStackTrace(); return@withContext Result.failure(it) }
-                    //val userRoles = repoUserRole.insertAll(roles)
-                    if (userProfile.isSuccess && auth.isSuccess /*&& userRoles.isSuccess*/) Result.success(dto)
-                    else Result.failure(userProfile.exceptionOrNull() ?: auth.exceptionOrNull() ?: IllegalStateException("Error creating subsequent data") )
-                },
-                onFailure = { it.printStackTrace(); Result.failure(it) }
-            )
-        result
+    override suspend fun createUserLocalEmailPassword(user: UserEntity, profile: UserProfileEntity, auth: AuthEntity, roles: Set<UserRoleEntity>) = withContext (ioDispatcher) {
+        daoInitialization.insertInitialization(user, profile, auth, roles.toList())
+            .takeIf { it.userId > 0 && it.profileId > 0 && it.authId > 0 && it.rolesIds.all { id -> id > 0 } }?. let { Result.success(it) }
+            ?: run { daoInitialization.rollback(user); Result.failure(Error.Database.DaoInsertError(message = "Initialization failed for user ${user.email}, rolling back", cause = SQLiteAbortException())) }
     }
     override suspend fun updateFirstTimeStatus(firstTimeStatus: FirstTimeStatus) =
         withContext (ioDispatcher) { dataStore.instance.edit { it[DataStorePreferencesKeys.dsKeyFirstTimeStatus] = firstTimeStatus.name } }

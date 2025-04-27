@@ -9,6 +9,7 @@ import javax.inject.Singleton
 
 @Module @InstallIn(SingletonComponent::class)
 object ModDaoProviders {
+    @Provides @Singleton fun daoInitialization(db : AppDatabase) = db.daoInitialization()
     @Provides @Singleton fun daoSession(db : AppDatabase) = db.daoSession()
     @Provides @Singleton fun daoSessionHistory(db : AppDatabase) = db.daoSessionHistory()
     @Provides @Singleton fun daoUser(db : AppDatabase) = db.daoUser()

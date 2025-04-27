@@ -17,7 +17,6 @@ import javax.inject.Inject
 interface RepoUser {
     fun getOneByUid(uid : String) : Flow<Result<UserEntity>>
     fun getOneByEmail(email : String) : Flow<Result<UserEntity>>
-    suspend fun getOrCreateUser(user : UserEntity) : Result<UserEntity>
 }
 class RepoUserImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
@@ -33,10 +32,4 @@ class RepoUserImpl @Inject constructor(
             .map { user -> user.firstOrNull()?. let { Result.success(it) } ?: Result.failure(Error.Database.DaoQueryNoDataError(message = "User not found with email : $email")) }
             .catch { emit(Result.failure(Error.Database.DaoQueryError(cause = it))) } }
         ?: flowOf(Result.failure(Error.Input.MalformedError(message = "Email cannot be blank!")))
-    //TODO Will be deleted later
-    override suspend fun getOrCreateUser(user: UserEntity) : Result<UserEntity> = runCatching {
-        daoUser.getOneByEmail(user.email).flowOn(ioDispatcher).firstOrNull()?.firstOrNull()
-            ?: user.takeIf { daoUser.insertUser(it) > 0 }
-            ?: throw IllegalStateException("Error creating user!")
-    }.fold(onSuccess = { Result.success(it) }, onFailure = { Result.failure(it) })
 }

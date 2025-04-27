@@ -12,6 +12,7 @@ import com.thomas200593.mdm.core.design_system.session.entity.TypeConverterSessi
 import com.thomas200593.mdm.features.auth.dao.DaoAuth
 import com.thomas200593.mdm.features.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.auth.entity.TypeConverterAuthType
+import com.thomas200593.mdm.features.initialization.dao.DaoInitialization
 import com.thomas200593.mdm.features.role.dao.DaoRole
 import com.thomas200593.mdm.features.role.entity.RoleEntity
 import com.thomas200593.mdm.features.role.entity.TypeConverterRoleType
@@ -38,6 +39,7 @@ import javax.inject.Singleton
     ]
 )
 abstract class AppDatabase : RoomDatabase() {
+    abstract fun daoInitialization() : DaoInitialization
     abstract fun daoSession() : DaoSession
     abstract fun daoSessionHistory() : DaoSessionHistory
     abstract fun daoUser() : DaoUser

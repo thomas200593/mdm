@@ -14,7 +14,7 @@ sealed class Error(
     // **Generic Unknown Error
     data class UnknownError(
         override val code: String = "ERR_UNKNOWN",
-        override val emoji: String = "❓",
+        override val emoji: String = "❓❌️",
         override val localizedMessage: Int? = null,
         override val message: String? = "Unknown error occurred",
         override val cause: Throwable? = null
@@ -29,17 +29,24 @@ sealed class Error(
     ) : Error(code, emoji, localizedMessage, message, cause) {
         data class DaoQueryError(
             override val code: String = "ERROR_DB_DAO_QUERY",
-            override val emoji: String = "📛",
+            override val emoji: String = "💾❌️",
             override val localizedMessage: Int? = null,
             override val message: String? = "Database query operation failed",
             override val cause: Throwable? = SQLiteException()
         ) : Database(code, emoji, localizedMessage, message, cause)
         data class DaoQueryNoDataError(
             override val code: String = "ERROR_DB_DAO_QUERY_NO_DATA",
-            override val emoji: String = "🛑",
+            override val emoji: String = "💾❌️",
             override val localizedMessage: Int? = null,
             override val message: String? = "Database query returned no data",
             override val cause: Throwable? = NoSuchElementException(),
+        ) : Database(code, emoji, localizedMessage, message, cause)
+        data class DaoInsertError(
+            override val code: String = "ERROR_DB_DAO_INSERT",
+            override val emoji: String = "💾❌️",
+            override val localizedMessage: Int? = null,
+            override val message: String? = "Database insert operation failed",
+            override val cause: Throwable? = SQLiteException()
         ) : Database(code, emoji, localizedMessage, message, cause)
     }
     // **Input Errors**
@@ -52,7 +59,7 @@ sealed class Error(
     ) : Error (code, emoji, localizedMessage, message, cause) {
         data class MalformedError(
             override val code: String = "ERR_INPUT_MALFORMED",
-            override val emoji: String = "❌️",
+            override val emoji: String = "📝❌️",
             override val localizedMessage: Int? = null,
             override val message: String? = "Input data is malformed",
             override val cause: Throwable? = IllegalArgumentException()
@@ -68,14 +75,14 @@ sealed class Error(
     ) : Error (code, emoji, localizedMessage, message, cause) {
         data class NotFoundError(
             override val code: String = "ERR_DATA_NOT_FOUND",
-            override val emoji: String = "❌️",
+            override val emoji: String = "🗃️❌️",
             override val localizedMessage: Int? = null,
             override val message: String? = "Data not found",
             override val cause: Throwable? = null
         ) : Data(code, emoji, localizedMessage, message, cause)
         data class DuplicateError(
             override val code: String = "ERR_DATA_DUPLICATE",
-            override val emoji: String = "🔁",
+            override val emoji: String = "🗃️❌️",
             override val localizedMessage: Int? = null,
             override val message: String? = "Duplicate data found",
             override val cause: Throwable? = null

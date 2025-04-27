@@ -20,5 +20,4 @@ fun DTOInitialization.toUserEntity(uid: String) = UserEntity(uid = uid, email = 
 fun DTOInitialization.toAuthEntity(uid: String) = AuthEntity(userId = uid, authType = this.authType)
 fun DTOInitialization.toUserProfileEntity(uid: String) = UserProfileEntity(userId = uid, firstName = this.firstName, lastName = this.lastName)
 fun DTOInitialization.toUserRoleEntity(uid: String, roles: Set<RoleEntity>) : Set<UserRoleEntity> =
-    roles.takeIf { it.isNotEmpty() } ?.let { roles.map { UserRoleEntity(userId = uid, roleCode = it.roleCode, isActive = true) }.toSet() }
-        ?: emptySet()
+    roles.map { UserRoleEntity(userId = uid, roleCode = it.roleCode, isActive = true) }.toSet()

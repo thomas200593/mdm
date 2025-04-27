@@ -1,9 +1,7 @@
 package com.thomas200593.mdm.features.auth.repository
 
-import androidx.room.Transaction
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
-import com.thomas200593.mdm.core.design_system.security.hashing.BCrypt
 import com.thomas200593.mdm.features.auth.dao.DaoAuth
 import com.thomas200593.mdm.features.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.auth.entity.AuthType
@@ -13,28 +11,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 interface RepoAuth<T: AuthType> {
-    suspend fun registerAuthLocalEmailPassword(auth: AuthEntity): Result<AuthEntity>
     fun getAuthByUser(user: UserEntity): Flow<Result<AuthEntity>>
 }
 class RepoAuthImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
-    private val daoAuth: DaoAuth,
-    private val bCrypt: BCrypt
+    private val daoAuth: DaoAuth
 ) : RepoAuth<AuthType> {
-    @Transaction
-    override suspend fun registerAuthLocalEmailPassword(auth: AuthEntity): Result<AuthEntity> = withContext (ioDispatcher) {
-        runCatching {
-            daoAuth.deleteAuthByUserId(auth.userId)
-            val hashedAuthEntity = auth.copy(authType = (auth.authType as AuthType.LocalEmailPassword)
-                .copy(password = bCrypt.hash(auth.authType.password)))
-            daoAuth.insertAuth(hashedAuthEntity)
-            hashedAuthEntity
-        }.fold(onSuccess = { Result.success(it) }, onFailure = { it.printStackTrace(); Result.failure(it) })
-    }
     override fun getAuthByUser(user : UserEntity) = daoAuth.getAuthByUserId(userId = user.uid).flowOn(ioDispatcher)
         .map { it.firstOrNull()?.let { Result.success(it) } ?: Result.failure(NoSuchElementException("Auth for user ${user.email} not found!")) }
         .catch { e -> e.printStackTrace(); emit(Result.failure(e)) }
