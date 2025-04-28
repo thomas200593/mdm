@@ -4,25 +4,30 @@ import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDi
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
 import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.core.design_system.session.repository.RepoSession
-import com.thomas200593.mdm.features.user.repository.RepoUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class UCValidateAndGet @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher : CoroutineDispatcher,
     private val ucArchiveAndCleanUp : UCArchiveAndCleanUp,
-    private val repoSession : RepoSession,
-    private val repoUser : RepoUser
-) { operator fun invoke() = repoSession.getCurrent().flowOn(ioDispatcher)
-    .map { result ->
+    private val repoSession : RepoSession
+) {
+    operator fun invoke() = repoSession.getCurrent().flowOn(ioDispatcher).map { result ->
         result.fold(
-            onSuccess = { session -> session.takeIf { repoSession.isValid(it).getOrDefault(false) }
-                ?. let { validSession -> repoUser.getOneByUid(validSession.userId).first()
-                    .fold(onSuccess = { Result.success(validSession to it) }, onFailure = { Result.failure(it) }) }
-                ?: Result.failure(Error.Data.NotFoundError(message = "Session is invalid / not found")) },
-            onFailure = { Result.failure(it) })
-    }.catch { ucArchiveAndCleanUp.invoke(); emit(Result.failure(it)) } }
+            onSuccess = { list -> when {
+                list.size == 1 ->
+                    if(repoSession.isValid(list.first().session).getOrDefault(false)) Result.success(list.first())
+                    else Result.failure(Error.Data.ValidationError(message = "Session validation failed"))
+                list.isEmpty() -> Result.failure(Error.Database.DaoQueryNoDataError(message = "No session data found"))
+                else -> Result.failure(Error.Database.DaoQueryError(message = "Unexpected multiple session data entries"))
+            } },
+            onFailure = { error -> Result.failure(error) }
+        )
+    }
+    .onEach { if (it.isFailure) ucArchiveAndCleanUp.invoke() }
+    .catch { exception -> ucArchiveAndCleanUp.invoke(); emit(Result.failure(Error.Database.DaoQueryError(message = exception.message, cause = exception))) }
+}

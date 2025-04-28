@@ -32,22 +32,26 @@ import kotlinx.coroutines.launch
         scrGraph = scrGraph, componentsState = uiState.componentsState, sessionState = stateApp.isSessionValid,
         onNavToOnboarding = { coroutineScope.launch { stateApp.navController.navToOnboarding() } },
         onNavToInitialization = { coroutineScope.launch { stateApp.navController.navToInitialization() } },
-        onNavToAuth = { coroutineScope.launch { stateApp.navController.navToAuth() } }
+        onNavToAuth = { coroutineScope.launch { stateApp.navController.navToAuth() } },
+        onNavToRoleSelection = {  }, onNavToDashboard = {  }
     )
 }
 @Composable private fun ScrInitial(
     scrGraph: ScrGraphs.Initial, componentsState: ComponentsState, sessionState: StateFlow<SessionState>,
-    onNavToOnboarding: () -> Unit, onNavToInitialization: () -> Unit, onNavToAuth: () -> Unit
+    onNavToOnboarding: () -> Unit, onNavToInitialization: () -> Unit, onNavToAuth: () -> Unit,
+    onNavToRoleSelection: () -> Unit, onNavToDashboard: () -> Unit
 ) = when (componentsState) {
     is ComponentsState.Loading -> ScrLoading(label = scrGraph.title)
     is ComponentsState.Loaded -> ScreenContent(
         components = componentsState, sessionState = sessionState,
-        onNavToOnboarding = onNavToOnboarding, onNavToInitialization = onNavToInitialization, onNavToAuth = onNavToAuth
+        onNavToOnboarding = onNavToOnboarding, onNavToInitialization = onNavToInitialization,
+        onNavToAuth = onNavToAuth, onNavToRoleSelection = onNavToRoleSelection, onNavToDashboard = onNavToDashboard
     )
 }
 @Composable private fun ScreenContent(
     components: ComponentsState.Loaded, sessionState: StateFlow<SessionState>,
-    onNavToOnboarding: () -> Unit, onNavToInitialization: () -> Unit, onNavToAuth: () -> Unit
+    onNavToOnboarding: () -> Unit, onNavToInitialization: () -> Unit, onNavToAuth: () -> Unit,
+    onNavToRoleSelection: () -> Unit, onNavToDashboard: () -> Unit
 ) = when (components.confCommon.onboardingStatus) {
     OnboardingStatus.SHOW -> onNavToOnboarding()
     OnboardingStatus.HIDE -> when (components.confCommon.firstTimeStatus) {
@@ -58,13 +62,9 @@ import kotlinx.coroutines.launch
                 when(session) {
                     is SessionState.Loading -> Unit
                     is SessionState.Invalid -> onNavToAuth()
-                    is SessionState.Valid -> {
-                        /** TODO
-                         *  get current user session role,
-                         *      if role is not decided to role selection
-                         *      otherwise to dashboard with respected role
-                         **/
-                    }
+                    is SessionState.Valid ->
+                        if(null == session.data.currentRole) onNavToRoleSelection()
+                        else onNavToDashboard()
                 }
             }
         }
