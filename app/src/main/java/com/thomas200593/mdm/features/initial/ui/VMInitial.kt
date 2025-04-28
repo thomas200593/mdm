@@ -11,10 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class VMInitial @Inject constructor(
-    private val ucGetScreenData: UCGetScreenData
-) : ViewModel() {
+@HiltViewModel class VMInitial @Inject constructor(private val ucGetScreenData: UCGetScreenData) : ViewModel() {
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
     var uiState = MutableStateFlow(UiState())
         private set

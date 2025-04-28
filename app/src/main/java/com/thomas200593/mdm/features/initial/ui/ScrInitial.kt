@@ -22,8 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-@Composable
-fun ScrInitial(
+@Composable fun ScrInitial(
     scrGraph: ScrGraphs.Initial, vm: VMInitial = hiltViewModel(), stateApp: StateApp = LocalStateApp.current,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
@@ -36,8 +35,7 @@ fun ScrInitial(
         onNavToAuth = { coroutineScope.launch { stateApp.navController.navToAuth() } }
     )
 }
-@Composable
-private fun ScrInitial(
+@Composable private fun ScrInitial(
     scrGraph: ScrGraphs.Initial, componentsState: ComponentsState, sessionState: StateFlow<SessionState>,
     onNavToOnboarding: () -> Unit, onNavToInitialization: () -> Unit, onNavToAuth: () -> Unit
 ) = when (componentsState) {
@@ -47,8 +45,7 @@ private fun ScrInitial(
         onNavToOnboarding = onNavToOnboarding, onNavToInitialization = onNavToInitialization, onNavToAuth = onNavToAuth
     )
 }
-@Composable
-private fun ScreenContent(
+@Composable private fun ScreenContent(
     components: ComponentsState.Loaded, sessionState: StateFlow<SessionState>,
     onNavToOnboarding: () -> Unit, onNavToInitialization: () -> Unit, onNavToAuth: () -> Unit
 ) = when (components.confCommon.onboardingStatus) {

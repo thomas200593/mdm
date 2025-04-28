@@ -60,8 +60,7 @@ import com.thomas200593.mdm.features.initialization.ui.state.FormInitializationS
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Composable
-fun ScrInitialization(
+@Composable fun ScrInitialization(
     scrGraph: ScrGraphs.Initialization, vm: VMInitialization = hiltViewModel(), stateApp: StateApp = LocalStateApp.current,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
@@ -76,8 +75,7 @@ fun ScrInitialization(
             .also { coroutineScope.launch { stateApp.navController.navToInitial() } } }
     )
 }
-@Composable
-private fun ScrInitialization(
+@Composable private fun ScrInitialization(
     scrGraph: ScrGraphs.Initialization, components: ComponentsState, formInitialization: FormInitializationState,
     onTopBarEvent: (Events.TopBar) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit,
     onFormEvent: (Events.Content.Form) -> Unit, onDialogEvent: (Events.Dialog) -> Unit,
@@ -91,9 +89,7 @@ private fun ScrInitialization(
         onInitializationSuccess = onInitializationSuccess
     )
 }
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ScreenContent(
+@OptIn(ExperimentalMaterial3Api::class) @Composable private fun ScreenContent(
     scrGraph: ScrGraphs.Initialization, components: ComponentsState.Loaded, formInitialization: FormInitializationState,
     onDialogEvent: (Events.Dialog) -> Unit, onTopBarEvent : (Events.TopBar) -> Unit,
     onFormEvent: (Events.Content.Form) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit,
@@ -114,8 +110,7 @@ private fun ScreenContent(
         ) }
     )
 }
-@Composable
-private fun HandleDialogs(
+@Composable private fun HandleDialogs(
     dialog: DialogState, scrGraph: ScrGraphs.Initialization, onDialogEvent: (Events.Dialog) -> Unit,
     onTopBarEvent: (Events.TopBar) -> Unit, onInitializationSuccess: () -> Unit
 ) = when(dialog) {
@@ -133,9 +128,7 @@ private fun HandleDialogs(
         onDismissRequest = { onInitializationSuccess() }, message = "Initialization Success!"
     )
 }
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
+@OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
     title = {}, actions = {
         IconButton(
             onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Clicked) },
@@ -143,8 +136,7 @@ private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
         )
     }
 )
-@Composable
-private fun SectionContent(paddingValues: PaddingValues, formInitialization: FormInitializationState, onFormEvent: (Events.Content.Form) -> Unit) = Surface(
+@Composable private fun SectionContent(paddingValues: PaddingValues, formInitialization: FormInitializationState, onFormEvent: (Events.Content.Form) -> Unit) = Surface(
     modifier = Modifier.padding(paddingValues),
     content = {
         LazyColumn(
@@ -157,8 +149,7 @@ private fun SectionContent(paddingValues: PaddingValues, formInitialization: For
         )
     }
 )
-@Composable
-private fun PartTitle() = Row(
+@Composable private fun PartTitle() = Row(
     modifier = Modifier.fillMaxWidth(),
     verticalAlignment = Alignment.Top,
     content = {
@@ -172,8 +163,7 @@ private fun PartTitle() = Row(
         )
     }
 )
-@Composable
-private fun PartForm(formInitialization: FormInitializationState, onFormEvent : (Events.Content.Form) -> Unit) = Card(
+@Composable private fun PartForm(formInitialization: FormInitializationState, onFormEvent : (Events.Content.Form) -> Unit) = Card(
     modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.extraSmall,
     content = {
         Column(
@@ -216,8 +206,7 @@ private fun PartForm(formInitialization: FormInitializationState, onFormEvent : 
         )
     }
 )
-@Composable
-private fun SectionBottomBar(btnProceedEnabled: Boolean, onBottomBarEvent: (Events.BottomBar) -> Unit) = BottomAppBar(
+@Composable private fun SectionBottomBar(btnProceedEnabled: Boolean, onBottomBarEvent: (Events.BottomBar) -> Unit) = BottomAppBar(
     content = { Button (
         modifier = Modifier.fillMaxWidth(),
         onClick = { onBottomBarEvent(Events.BottomBar.BtnProceedInit.Clicked) },
