@@ -56,7 +56,9 @@ import com.thomas200593.mdm.features.auth.ui.state.DialogState
 import com.thomas200593.mdm.features.auth.ui.state.FormAuthState
 import com.thomas200593.mdm.features.auth.ui.state.FormAuthTypeState
 import com.thomas200593.mdm.features.auth.ui.state.ResultSignIn
+import com.thomas200593.mdm.features.initial.nav.navToInitial
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun ScrAuth(
@@ -69,9 +71,9 @@ fun ScrAuth(
     ScrAuth(
         scrGraph = scrGraph, components = uiState.componentsState,
         formAuth = formAuth,
-        onTopBarEvent = vm::onTopBarEvent,
-        onFormAuthEvent = vm::onFormAuthEvent,
-        onSignInCallback = {}//vm::onSignInCallBackEvent.also { coroutineScope.launch { stateApp.navController.navToOnboarding() } }
+        onTopBarEvent = { vm.onTopBarEvent(it) },
+        onFormAuthEvent = { vm.onFormAuthEvent(it) },
+        onSignInCallback = { vm.onSignInCallBackEvent(it).also { coroutineScope.launch { stateApp.navController.navToInitial() } } }
     )
 }
 @Composable

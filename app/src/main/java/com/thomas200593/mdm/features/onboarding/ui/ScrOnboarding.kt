@@ -69,8 +69,8 @@ fun ScrOnboarding(
     val uiState by vm.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrOnboarding(
-        scrGraph = scrGraph, components = uiState.componentsState, onTopBarEvent = vm::onTopBarEvent,
-        onBottomBarEvent = vm::onBottomBarEvent, onOnboardingFinished = { vm.onBottomBarEvent(it).also {
+        scrGraph = scrGraph, components = uiState.componentsState, onTopBarEvent = { vm.onTopBarEvent(it) },
+        onBottomBarEvent = { vm.onBottomBarEvent(it) }, onOnboardingFinished = { vm.onBottomBarEvent(it).also {
             coroutineScope.launch { stateApp.navController.navToInitialization() }
         } }
     )

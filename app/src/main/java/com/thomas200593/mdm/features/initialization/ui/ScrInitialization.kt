@@ -69,8 +69,8 @@ import kotlinx.coroutines.launch
     LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrInitialization(
         scrGraph = scrGraph, components = uiState.componentsState, formInitialization = formInitialization,
-        onDialogEvent = vm::onDialogEvent, onTopBarEvent = vm::onTopBarEvent,
-        onFormEvent = vm::onFormEvent, onBottomBarEvent = vm::onBottomBarEvent,
+        onDialogEvent = { vm.onDialogEvent(it) }, onTopBarEvent = { vm.onTopBarEvent(it) },
+        onFormEvent = { vm.onFormEvent(it) }, onBottomBarEvent = { vm.onBottomBarEvent(it) },
         onInitializationSuccess = { vm.onDialogEvent(Events.Dialog.SuccessDismissed)
             .also { coroutineScope.launch { stateApp.navController.navToInitial() } } }
     )
