@@ -90,7 +90,7 @@ class VMAuth @Inject constructor(
                 val isLoaded = uiState.value.componentsState is ComponentsState.Loaded
                 if (!isLoaded) return@launch
                 val dto = DTOSignIn(
-                    email = frozenForm.fldEmail, authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword),
+                    email = frozenForm.fldEmail.trim(), authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword.trim()),
                     timestamp = Constants.NOW_EPOCH_SECOND
                 )
                 ucSignIn.invoke(dto).fold(
