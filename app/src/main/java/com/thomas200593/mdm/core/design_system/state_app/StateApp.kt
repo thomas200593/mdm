@@ -2,11 +2,14 @@ package com.thomas200593.mdm.core.design_system.state_app
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -16,6 +19,8 @@ import androidx.navigation.navOptions
 import com.thomas200593.mdm.app.main.nav.DestTopLevel
 import com.thomas200593.mdm.core.design_system.network_monitor.NetworkMonitor
 import com.thomas200593.mdm.core.design_system.session.SessionManager
+import com.thomas200593.mdm.core.design_system.session.entity.DTOSessionUserData
+import com.thomas200593.mdm.core.design_system.session.entity.SessionEvent
 import com.thomas200593.mdm.core.design_system.session.entity.SessionState
 import com.thomas200593.mdm.core.design_system.timber_logger.LocalTimberFileLogger
 import com.thomas200593.mdm.core.design_system.timber_logger.TimberFileLogger
@@ -81,4 +86,23 @@ class StateApp(
             }
         }
     }
+}
+@Composable fun StateApp.SessionHandler(
+    onSessionEvent: (ev: SessionEvent, data: DTOSessionUserData?, throwable: Throwable?) -> Unit
+) {
+    val sessionState by isSessionValid.collectAsStateWithLifecycle()
+    LaunchedEffect(
+        key1 = sessionState,
+        block = {
+            when(sessionState) {
+                SessionState.Loading -> onSessionEvent(SessionEvent.Loading, null, null)
+                is SessionState.Invalid -> onSessionEvent(SessionEvent.Invalid, null, (sessionState as SessionState.Invalid).t)
+                is SessionState.Valid -> {
+                    val data = (sessionState as SessionState.Valid).data
+                    if(data.currentRole?.roleCode.isNullOrEmpty()) onSessionEvent(SessionEvent.NoRole, data, null)
+                    else onSessionEvent(SessionEvent.Valid, data, null)
+                }
+            }
+        }
+    )
 }
