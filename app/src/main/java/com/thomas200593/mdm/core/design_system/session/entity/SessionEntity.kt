@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import com.thomas200593.mdm.core.data.local.database.entity_common.AuditTrail
 import com.thomas200593.mdm.core.design_system.base_class.BaseEntity
+import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.design_system.util.UUIDv7
 import com.thomas200593.mdm.features.user.entity.UserEntity
 import kotlinx.serialization.Serializable
@@ -30,7 +31,7 @@ data class SessionEntity(
     @PrimaryKey
     @ColumnInfo(name = "session_id") val sessionId: String = UUIDv7.generateAsString(),
     @ColumnInfo(name = "user_id") val userId: String,
-    @ColumnInfo(name = "current_role_code") val currentRoleCode: String,
+    @ColumnInfo(name = "current_role_code") val currentRoleCode: String = Constants.STR_EMPTY,
     @ColumnInfo(name = "expires_at") val expiresAt: Long? = null,
     @ColumnInfo(name = "audit_trail") override val auditTrail: AuditTrail = AuditTrail()
 ) : BaseEntity

@@ -107,7 +107,7 @@ class VMAuth @Inject constructor(
         updateUiState { componentState -> componentState.copy(dialogState = DialogState.LoadingSessionDialog) }
         viewModelScope.launch {
             sessionManager.archiveAndCleanUpSession()
-            sessionManager.startSession(SessionEntity(userId = userId, currentRoleCode = Constants.STR_EMPTY, expiresAt = expiresAt)).fold(
+            sessionManager.startSession(SessionEntity(userId = userId, expiresAt = expiresAt)).fold(
                 onFailure = { err -> updateUiState { it.copy(resultSignIn = ResultSignIn.Error(err), dialogState = DialogState.None) } },
                 onSuccess = { updateUiState { it.copy(resultSignIn = ResultSignIn.Success, dialogState = DialogState.None) } }
             )
