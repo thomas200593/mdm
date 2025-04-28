@@ -1,5 +1,6 @@
 package com.thomas200593.mdm.features.role_selection.nav
 
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
@@ -15,3 +16,10 @@ fun NavGraphBuilder.navGraphRoleSelection() {
         }
     )
 }
+fun NavController.navToRoleSelection() = this.navigate(
+    route = NavigationGraph.GraphRoleSelection,
+    builder = {
+        launchSingleTop = true; restoreState = true
+        popUpTo(route = NavigationGraph.GraphInitial, popUpToBuilder = { inclusive = true })
+    }
+)

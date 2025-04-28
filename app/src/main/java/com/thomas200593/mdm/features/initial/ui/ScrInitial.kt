@@ -18,6 +18,7 @@ import com.thomas200593.mdm.features.initialization.entity.FirstTimeStatus
 import com.thomas200593.mdm.features.initialization.nav.navToInitialization
 import com.thomas200593.mdm.features.onboarding.entity.OnboardingStatus
 import com.thomas200593.mdm.features.onboarding.nav.navToOnboarding
+import com.thomas200593.mdm.features.role_selection.nav.navToRoleSelection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -33,7 +34,8 @@ import kotlinx.coroutines.launch
         onNavToOnboarding = { coroutineScope.launch { stateApp.navController.navToOnboarding() } },
         onNavToInitialization = { coroutineScope.launch { stateApp.navController.navToInitialization() } },
         onNavToAuth = { coroutineScope.launch { stateApp.navController.navToAuth() } },
-        onNavToRoleSelection = {  }, onNavToDashboard = {  }
+        onNavToRoleSelection = { coroutineScope.launch { stateApp.navController.navToRoleSelection() } },
+        onNavToDashboard = {  }
     )
 }
 @Composable private fun ScrInitial(
