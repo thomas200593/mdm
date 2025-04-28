@@ -23,6 +23,10 @@ import kotlinx.serialization.Serializable
         @StringRes val title: Int = R.string.str_auth,
         @StringRes val description: Int = R.string.str_auth
     )
+    @Serializable data class RoleSelection(
+        @StringRes val title: Int = 1,
+        @StringRes val description: Int = 1
+    )
     @Serializable sealed class DestTopLevel(
         @DrawableRes val iconRes: Int,
         @StringRes val title: Int,

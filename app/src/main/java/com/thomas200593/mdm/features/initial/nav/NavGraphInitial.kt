@@ -8,17 +8,19 @@ import com.thomas200593.mdm.app.main.nav.NavigationGraph
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.features.auth.nav.navGraphAuth
 import com.thomas200593.mdm.features.initial.ui.ScrInitial
-import com.thomas200593.mdm.features.initialization.ui.ScrInitialization
+import com.thomas200593.mdm.features.initialization.nav.navGraphInitialization
 import com.thomas200593.mdm.features.onboarding.nav.navGraphOnboarding
+import com.thomas200593.mdm.features.role_selection.nav.navGraphRoleSelection
 
 fun NavGraphBuilder.navGraphInitial() {
     navigation<NavigationGraph.GraphInitial>(
         startDestination = ScrGraphs.Initial(),
         builder = {
             composable<ScrGraphs.Initial>(content = { ScrInitial(scrGraph = ScrGraphs.Initial()) })
-            composable<ScrGraphs.Initialization>(content = { ScrInitialization(scrGraph = ScrGraphs.Initialization()) })
             navGraphOnboarding()
+            navGraphInitialization()
             navGraphAuth()
+            navGraphRoleSelection()
         }
     )
 }
