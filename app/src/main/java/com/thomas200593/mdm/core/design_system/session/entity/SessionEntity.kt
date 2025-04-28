@@ -30,6 +30,7 @@ data class SessionEntity(
     @PrimaryKey
     @ColumnInfo(name = "session_id") val sessionId: String = UUIDv7.generateAsString(),
     @ColumnInfo(name = "user_id") val userId: String,
+    @ColumnInfo(name = "current_role_code") val currentRoleCode: String,
     @ColumnInfo(name = "expires_at") val expiresAt: Long? = null,
     @ColumnInfo(name = "audit_trail") override val auditTrail: AuditTrail = AuditTrail()
 ) : BaseEntity
