@@ -20,5 +20,11 @@ import kotlinx.coroutines.launch
     scrGraph: ScrGraphs.RoleSelection, vm: VMRoleSelection = hiltViewModel(), stateApp: StateApp = LocalStateApp.current,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
-
+    stateApp.SessionHandler { event, data, error ->
+        when(event) {
+            is SessionEvent.Invalid -> {/*vm.event.Screen.Session.Invalid.also.navigateToAuth*/}
+            is SessionEvent.Loading -> {/*vm.event.Screen.Session.Loading*/}
+            is SessionEvent.NoRole, is SessionEvent.Valid -> { /*vm.onOpenEvent*/ }
+        }
+    }
 }
