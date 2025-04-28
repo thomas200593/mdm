@@ -90,22 +90,20 @@ class VMInitialization @Inject constructor(
                 formInitialization.takeIf { it != updated }?.let { formInitialization = updated }
             }
         }
-    private fun handleInitialization() {
+    private fun handleInitialization() = viewModelScope.launch {
         val frozenForm = formInitialization.disableInputs(); formInitialization = frozenForm
         updateUiState { componentState -> componentState.copy(resultInitialization = ResultInitialization.Loading, dialogState = DialogState.LoadingDialog) }
-        viewModelScope.launch {
-            val componentsState = uiState.value.componentsState as? ComponentsState.Loaded ?: return@launch
-            val dto = DTOInitialization(
-                firstName = frozenForm.fldFirstName.toString().trim(),
-                lastName = frozenForm.fldLastName.toString().trim(),
-                email = frozenForm.fldEmail.toString().trim(),
-                authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword.toString().trim()),
-                initialSetOfRoles = componentsState.initialSetOfRoles
-            )
-            ucCreateDataInitialization.invoke(dto).fold(
-                onSuccess =  { result -> updateUiState { it.copy(resultInitialization = ResultInitialization.Success(result), dialogState = DialogState.SuccessDialog) } },
-                onFailure =  { err -> err.printStackTrace(); updateUiState { it.copy(resultInitialization = ResultInitialization.Error(err), dialogState = DialogState.ErrorDialog(err)) } }
-            )
-        }
+        val componentsState = uiState.value.componentsState as? ComponentsState.Loaded ?: return@launch
+        val dto = DTOInitialization(
+            firstName = frozenForm.fldFirstName.toString().trim(),
+            lastName = frozenForm.fldLastName.toString().trim(),
+            email = frozenForm.fldEmail.toString().trim(),
+            authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword.toString().trim()),
+            initialSetOfRoles = componentsState.initialSetOfRoles
+        )
+        ucCreateDataInitialization.invoke(dto).fold(
+            onSuccess =  { result -> updateUiState { it.copy(resultInitialization = ResultInitialization.Success(result), dialogState = DialogState.SuccessDialog) } },
+            onFailure =  { err -> err.printStackTrace(); updateUiState { it.copy(resultInitialization = ResultInitialization.Error(err), dialogState = DialogState.ErrorDialog(err)) } }
+        )
     }
 }
