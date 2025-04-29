@@ -10,6 +10,7 @@ import com.thomas200593.mdm.features.role_selection.ui.state.ComponentsState
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
 import com.thomas200593.mdm.features.role_selection.ui.state.ResultGetUserRole
 import com.thomas200593.mdm.features.role_selection.ui.state.ResultSetUserRole
+import com.thomas200593.mdm.features.user_role.domain.UCGetUserRole
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onStart
@@ -18,7 +19,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel class VMRoleSelection @Inject constructor(
-    private val ucGetScreenData: UCGetScreenData
+    private val ucGetScreenData: UCGetScreenData,
+    private val ucGetUserRole: UCGetUserRole
 ) : ViewModel() {
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
     var uiState = MutableStateFlow(UiState())
