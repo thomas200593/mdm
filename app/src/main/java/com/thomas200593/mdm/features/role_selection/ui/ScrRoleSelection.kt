@@ -3,8 +3,7 @@ package com.thomas200593.mdm.features.role_selection.ui
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -23,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
-import com.thomas200593.mdm.core.design_system.session.entity.SessionEvent
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.SessionHandler
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
@@ -39,19 +37,12 @@ import kotlinx.coroutines.CoroutineScope
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.OnOpen) })
+    LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrRoleSelection(
         scrGraph = scrGraph,
         components = uiState.componentsState
     )
-    stateApp.SessionHandler { event, data, error ->
-        when(event) {
-            //update to component state via vm
-            is SessionEvent.Loading -> Unit
-            is SessionEvent.Invalid -> {  }
-            is SessionEvent.NoRole, is SessionEvent.Valid -> {  }
-        }
-    }
+    stateApp.SessionHandler { event, data, error -> vm.onSessionEvent(event = event, data = data, error = error) }
 }
 @Composable private fun ScrRoleSelection(
     scrGraph: ScrGraphs.RoleSelection, components: ComponentsState
@@ -68,12 +59,12 @@ import kotlinx.coroutines.CoroutineScope
     )
 }
 @Composable private fun HandleDialogs(dialog: DialogState, scrGraph: ScrGraphs.RoleSelection) = when (dialog) {
-    DialogState.None -> Unit
-    DialogState.ScrDescDialog -> ScrInfoDialog(
+    is DialogState.None -> Unit
+    is DialogState.ScrDescDialog -> ScrInfoDialog(
         onDismissRequest = {},
         title = stringResource(scrGraph.title), description = stringResource(scrGraph.description)
     )
-    DialogState.SessionInvalidDialog -> {}
+    is DialogState.SessionInvalidDialog -> {/*TODO Show Error data with Throwable*/}
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(scrGraph: ScrGraphs.RoleSelection) = TopAppBar(
     title = { Text(stringResource(scrGraph.title)) }, actions = {
@@ -83,7 +74,7 @@ import kotlinx.coroutines.CoroutineScope
         )
         IconButton(
             onClick = { },
-            content = { Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
+            content = { Icon(imageVector = Icons.AutoMirrored.Filled.Logout, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
         )
     }
 )
@@ -92,7 +83,5 @@ import kotlinx.coroutines.CoroutineScope
     components: ComponentsState.Loaded
 ) = Surface (
     modifier = Modifier.padding(paddingValues),
-    content = {
-        Text(components.toString())
-    }
+    content = { Text(components.toString()) }
 )

@@ -2,10 +2,14 @@ package com.thomas200593.mdm.features.role_selection.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.thomas200593.mdm.core.design_system.session.entity.DTOSessionUserData
+import com.thomas200593.mdm.core.design_system.session.entity.SessionEvent
 import com.thomas200593.mdm.features.role_selection.domain.UCGetScreenData
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.ComponentsState
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
+import com.thomas200593.mdm.features.role_selection.ui.state.ResultGetUserRole
+import com.thomas200593.mdm.features.role_selection.ui.state.ResultSetUserRole
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onStart
@@ -20,7 +24,12 @@ import javax.inject.Inject
     var uiState = MutableStateFlow(UiState())
         private set
     fun onScreenEvent(event: Events.Screen) = when (event) {
-        Events.Screen.OnOpen -> handleOnOpenEvent()
+        Events.Screen.Opened -> handleOnOpenEvent()
+    }
+    fun onSessionEvent(event: SessionEvent, data: DTOSessionUserData?, error: Throwable?) = when (event) {
+        is SessionEvent.Loading -> handleSessionLoading(event)
+        is SessionEvent.Invalid -> handleSessionInvalid(event, error)
+        is SessionEvent.NoRole, is SessionEvent.Valid -> handleSessionValid(event, data)
     }
     private fun handleOnOpenEvent() = viewModelScope.launch {
         ucGetScreenData.invoke()
@@ -29,9 +38,14 @@ import javax.inject.Inject
                 uiState.update { currentState -> currentState.copy(
                     componentsState = ComponentsState.Loaded(
                         confCommon = confCommon,
-                        dialogState = DialogState.None
+                        dialogState = DialogState.None,
+                        resultGetUserRole = ResultGetUserRole.Loading,
+                        resultSetUserRole = ResultSetUserRole.Idle
                     )
                 ) }
             }
     }
+    private fun handleSessionLoading(event: SessionEvent) {}
+    private fun handleSessionInvalid(event: SessionEvent, throwable: Throwable?) {}
+    private fun handleSessionValid(event: SessionEvent, data: DTOSessionUserData?) {}
 }

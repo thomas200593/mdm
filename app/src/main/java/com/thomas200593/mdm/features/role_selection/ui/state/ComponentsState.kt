@@ -5,7 +5,9 @@ import com.thomas200593.mdm.features.conf.common.entity.Common
 sealed interface ComponentsState {
     data object Loading : ComponentsState
     data class Loaded(
-        val confCommon: Common,
-        val dialogState: DialogState
+        val confCommon : Common,
+        val dialogState : DialogState,
+        val resultGetUserRole : ResultGetUserRole,
+        val resultSetUserRole : ResultSetUserRole
     ) : ComponentsState
 }
