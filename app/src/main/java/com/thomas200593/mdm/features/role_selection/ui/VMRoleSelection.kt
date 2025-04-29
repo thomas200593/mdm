@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.core.design_system.session.entity.DTOSessionUserData
 import com.thomas200593.mdm.core.design_system.session.entity.SessionEvent
+import com.thomas200593.mdm.core.design_system.session.repository.RepoSession
 import com.thomas200593.mdm.features.role_selection.domain.UCGetScreenData
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.ComponentsState
@@ -22,7 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel class VMRoleSelection @Inject constructor(
     private val ucGetScreenData: UCGetScreenData,
-    private val ucGetUserRole: UCGetUserRole
+    private val ucGetUserRole: UCGetUserRole,
+    private val repoSession: RepoSession
 ) : ViewModel() {
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
     var uiState = MutableStateFlow(UiState())
@@ -53,23 +55,33 @@ import javax.inject.Inject
                         confCommon = confCommon,
                         dialogState = DialogState.None,
                         resultGetUserRole = ResultGetUserRole.Loading,
-                        resultSetUserRole = ResultSetUserRole.Idle
+                        resultSetUserRole = ResultSetUserRole.Idle,
+                        sessionEvent = SessionEvent.Loading
                     )
                 ) }
             }
     }
     private fun updateDialog(transform: (DialogState) -> DialogState) = updateUiState { it.copy(dialogState = transform(it.dialogState)) }
-    private fun handleSessionLoading(event: SessionEvent) {}
-    private fun handleSessionInvalid(event: SessionEvent, throwable: Throwable?) {}
+    private fun handleSessionLoading(event: SessionEvent) = updateUiState { it.copy(dialogState = DialogState.None, resultGetUserRole = ResultGetUserRole.Loading, sessionEvent = event) }
+    private fun handleSessionInvalid(event: SessionEvent, throwable: Throwable?) {
+        updateUiState { it.copy(
+            sessionEvent = event,
+            resultGetUserRole = ResultGetUserRole.Error(throwable)
+        ) }
+        updateDialog { DialogState.SessionInvalidDialog(throwable) }
+    }
     private fun handleSessionValid(event: SessionEvent, data: DTOSessionUserData?) {
-        updateUiState { it.copy(dialogState = DialogState.None, resultGetUserRole = ResultGetUserRole.Loading) }
+        updateUiState { it.copy(dialogState = DialogState.None, resultGetUserRole = ResultGetUserRole.Loading, sessionEvent = event) }
         data?.let { data ->
             viewModelScope.launch {
                 ucGetUserRole.invoke(data.user).collect { result -> result
-                    .onSuccess { roles -> updateUiState { it.copy(resultGetUserRole = ResultGetUserRole.Success(roles)) } }
-                    .onFailure { err -> updateUiState { it.copy(resultGetUserRole = ResultGetUserRole.Error(err)) } }
+                    .onSuccess { roles -> updateUiState { it.copy(resultGetUserRole = ResultGetUserRole.Success(roles), sessionEvent = event) } }
+                    .onFailure { err -> updateUiState { it.copy(resultGetUserRole = ResultGetUserRole.Error(err), sessionEvent = event) } }
                 }
             } }
-            ?: updateUiState { it.copy(resultGetUserRole = ResultGetUserRole.Error(Error.Input.MalformedError(message = "Cannot get empty user"))) }
+            ?: updateUiState { it.copy(resultGetUserRole = ResultGetUserRole.Error(Error.Input.MalformedError(message = "Cannot get empty user")), sessionEvent = event) }
+    }
+    fun testDeleteSession() = viewModelScope.launch {
+        repoSession.deleteAll()
     }
 }

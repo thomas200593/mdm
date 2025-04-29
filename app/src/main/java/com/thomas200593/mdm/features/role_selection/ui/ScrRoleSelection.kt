@@ -25,6 +25,7 @@ import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.SessionHandler
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
+import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
@@ -40,21 +41,24 @@ import kotlinx.coroutines.CoroutineScope
     LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrRoleSelection(
         scrGraph = scrGraph,
-        components = uiState.componentsState
+        components = uiState.componentsState,
+        testDeleteSession = {
+            vm.testDeleteSession()
+        }
     )
     stateApp.SessionHandler { event, data, error -> vm.onSessionEvent(event = event, data = data, error = error) }
 }
 @Composable private fun ScrRoleSelection(
-    scrGraph: ScrGraphs.RoleSelection, components: ComponentsState
+    scrGraph: ScrGraphs.RoleSelection, components: ComponentsState, testDeleteSession: () -> Unit
 ) = when (components) {
     is ComponentsState.Loading -> ScrLoading()
-    is ComponentsState.Loaded -> ScreenContent(scrGraph = scrGraph, components = components)
+    is ComponentsState.Loaded -> ScreenContent(scrGraph = scrGraph, components = components, testDeleteSession = testDeleteSession)
 }
-@Composable private fun ScreenContent(scrGraph: ScrGraphs.RoleSelection, components: ComponentsState.Loaded) {
+@Composable private fun ScreenContent(scrGraph: ScrGraphs.RoleSelection, components: ComponentsState.Loaded, testDeleteSession: () -> Unit) {
     HandleDialogs(dialog = components.dialogState, scrGraph = scrGraph)
     Scaffold(
         modifier = Modifier,
-        topBar = { SectionTopBar(scrGraph = scrGraph) },
+        topBar = { SectionTopBar(scrGraph = scrGraph, testDeleteSession = testDeleteSession) },
         content = { SectionContent(paddingValues = it, components) }
     )
 }
@@ -64,16 +68,23 @@ import kotlinx.coroutines.CoroutineScope
         onDismissRequest = {},
         title = stringResource(scrGraph.title), description = stringResource(scrGraph.description)
     )
-    is DialogState.SessionInvalidDialog -> {/*TODO Show Error data with Throwable*/}
+    is DialogState.SessionInvalidDialog -> ErrorDialog(
+        onDismissRequest = {},
+        title = "Something was wrong",
+        message = "Error : ${dialog.t?.message.orEmpty()}; Stacktrace : ${dialog.t?.cause.toString()}"
+    )
 }
-@OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(scrGraph: ScrGraphs.RoleSelection) = TopAppBar(
+@OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
+    scrGraph: ScrGraphs.RoleSelection,
+    testDeleteSession : () -> Unit
+) = TopAppBar(
     title = { Text(stringResource(scrGraph.title)) }, actions = {
         IconButton(
             onClick = { },
             content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) }
         )
         IconButton(
-            onClick = { },
+            onClick = { testDeleteSession() },
             content = { Icon(imageVector = Icons.AutoMirrored.Filled.Logout, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
         )
     }
