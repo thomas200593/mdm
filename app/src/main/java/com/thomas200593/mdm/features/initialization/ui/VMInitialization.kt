@@ -22,8 +22,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class VMInitialization @Inject constructor(
+@HiltViewModel class VMInitialization @Inject constructor(
     private val ucGetScreenData: UCGetScreenData,
     private val ucCreateDataInitialization: UCCreateInitialUser
 ) : ViewModel() {

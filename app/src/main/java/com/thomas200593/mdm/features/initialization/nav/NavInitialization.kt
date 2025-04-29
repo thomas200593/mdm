@@ -11,9 +11,7 @@ import com.thomas200593.mdm.features.initialization.ui.ScrInitialization
 fun NavGraphBuilder.navGraphInitialization() {
     navigation <NavigationGraph.GraphInitialization>(
         startDestination = ScrGraphs.Initialization(),
-        builder = {
-            composable<ScrGraphs.Initialization>(content = { ScrInitialization(scrGraph = ScrGraphs.Initialization()) })
-        }
+        builder = { composable<ScrGraphs.Initialization>(content = { ScrInitialization(scrGraph = ScrGraphs.Initialization()) }) }
     )
 }
 fun NavController.navToInitialization() = this.navigate(

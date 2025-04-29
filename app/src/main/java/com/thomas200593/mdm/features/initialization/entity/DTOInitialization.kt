@@ -8,12 +8,8 @@ import com.thomas200593.mdm.features.user_profile.entity.UserProfileEntity
 import com.thomas200593.mdm.features.user_role.entity.UserRoleEntity
 import kotlinx.serialization.Serializable
 
-@Serializable
-data class DTOInitialization(
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    val authType: AuthType,
+@Serializable data class DTOInitialization(
+    val firstName: String, val lastName: String, val email: String, val authType: AuthType,
     val initialSetOfRoles: Set<RoleEntity>
 )
 fun DTOInitialization.toUserEntity(uid: String) = UserEntity(uid = uid, email = this.email)

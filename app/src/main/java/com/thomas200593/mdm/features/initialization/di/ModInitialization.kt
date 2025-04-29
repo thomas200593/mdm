@@ -8,10 +8,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class ModInitialization {
-    @Binds
-    @Singleton
-    abstract fun bindsRepository(impl: RepoInitializationImpl): RepoInitialization
+@Module @InstallIn(SingletonComponent::class) abstract class ModInitialization {
+    @Binds @Singleton abstract fun bindsRepository(impl: RepoInitializationImpl): RepoInitialization
 }
