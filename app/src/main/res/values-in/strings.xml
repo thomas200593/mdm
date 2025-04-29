@@ -23,4 +23,5 @@
     <string name="str_user_profile_desc">Deskripsi Profil Pengguna</string>
     <string name="str_auth">Authentication</string>
     <string name="str_ok">OK</string>
+    <string name="str_role_selection">Pemilihan Role</string>
 </resources>
