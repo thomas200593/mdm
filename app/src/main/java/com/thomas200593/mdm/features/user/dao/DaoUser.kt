@@ -11,4 +11,6 @@ interface DaoUser {
     fun getOneByUid(uid: String) : Flow<List<UserEntity>>
     @Query("SELECT * FROM user WHERE 1=1 AND email = :email LIMIT 1")
     fun getOneByEmail(email: String) : Flow<List<UserEntity>>
+    @Query("DELETE FROM session")
+    suspend fun deleteAll()
 }

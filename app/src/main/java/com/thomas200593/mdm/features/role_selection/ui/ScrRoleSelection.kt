@@ -44,21 +44,24 @@ import kotlinx.coroutines.CoroutineScope
         components = uiState.componentsState,
         testDeleteSession = {
             vm.testDeleteSession()
+        },
+        testDeleteUser = {
+            vm.testDeleteUser()
         }
     )
     stateApp.SessionHandler { event, data, error -> vm.onSessionEvent(event = event, data = data, error = error) }
 }
 @Composable private fun ScrRoleSelection(
-    scrGraph: ScrGraphs.RoleSelection, components: ComponentsState, testDeleteSession: () -> Unit
+    scrGraph: ScrGraphs.RoleSelection, components: ComponentsState, testDeleteSession: () -> Unit, testDeleteUser : () -> Unit
 ) = when (components) {
     is ComponentsState.Loading -> ScrLoading()
-    is ComponentsState.Loaded -> ScreenContent(scrGraph = scrGraph, components = components, testDeleteSession = testDeleteSession)
+    is ComponentsState.Loaded -> ScreenContent(scrGraph = scrGraph, components = components, testDeleteSession = testDeleteSession, testDeleteUser = testDeleteUser)
 }
-@Composable private fun ScreenContent(scrGraph: ScrGraphs.RoleSelection, components: ComponentsState.Loaded, testDeleteSession: () -> Unit) {
+@Composable private fun ScreenContent(scrGraph: ScrGraphs.RoleSelection, components: ComponentsState.Loaded, testDeleteSession: () -> Unit, testDeleteUser : () -> Unit) {
     HandleDialogs(dialog = components.dialogState, scrGraph = scrGraph)
     Scaffold(
         modifier = Modifier,
-        topBar = { SectionTopBar(scrGraph = scrGraph, testDeleteSession = testDeleteSession) },
+        topBar = { SectionTopBar(scrGraph = scrGraph, testDeleteSession = testDeleteSession, testDeleteUser = testDeleteUser) },
         content = { SectionContent(paddingValues = it, components) }
     )
 }
@@ -76,11 +79,12 @@ import kotlinx.coroutines.CoroutineScope
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
     scrGraph: ScrGraphs.RoleSelection,
-    testDeleteSession : () -> Unit
+    testDeleteSession : () -> Unit,
+    testDeleteUser : () -> Unit
 ) = TopAppBar(
     title = { Text(stringResource(scrGraph.title)) }, actions = {
         IconButton(
-            onClick = { },
+            onClick = { testDeleteUser() },
             content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) }
         )
         IconButton(

@@ -12,6 +12,7 @@ import com.thomas200593.mdm.features.role_selection.ui.state.ComponentsState
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
 import com.thomas200593.mdm.features.role_selection.ui.state.ResultGetUserRole
 import com.thomas200593.mdm.features.role_selection.ui.state.ResultSetUserRole
+import com.thomas200593.mdm.features.user.repository.RepoUser
 import com.thomas200593.mdm.features.user_role.domain.UCGetUserRole
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel class VMRoleSelection @Inject constructor(
     private val ucGetScreenData: UCGetScreenData,
     private val ucGetUserRole: UCGetUserRole,
-    private val repoSession: RepoSession
+    private val repoSession: RepoSession,
+    private val repoUser: RepoUser
 ) : ViewModel() {
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
     var uiState = MutableStateFlow(UiState())
@@ -80,6 +82,9 @@ import javax.inject.Inject
                 }
             } }
             ?: updateUiState { it.copy(resultGetUserRole = ResultGetUserRole.Error(Error.Input.MalformedError(message = "Cannot get empty user")), sessionEvent = event) }
+    }
+    fun testDeleteUser() = viewModelScope.launch {
+        repoUser.deleteAll()
     }
     fun testDeleteSession() = viewModelScope.launch {
         repoSession.deleteAll()
