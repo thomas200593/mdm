@@ -42,14 +42,10 @@ import kotlinx.coroutines.CoroutineScope
     ScrRoleSelection(
         scrGraph = scrGraph,
         components = uiState.componentsState,
-        testDeleteSession = {
-            vm.testDeleteSession()
-        },
-        testDeleteUser = {
-            vm.testDeleteUser()
-        }
+        testDeleteSession = { vm.testDeleteSession() },
+        testDeleteUser = { vm.testDeleteUser() }
     )
-    //stateApp.SessionHandler { e, d, t -> }
+    stateApp.SessionHandler()
 }
 @Composable private fun ScrRoleSelection(
     scrGraph: ScrGraphs.RoleSelection, components: ComponentsState, testDeleteSession: () -> Unit, testDeleteUser : () -> Unit
