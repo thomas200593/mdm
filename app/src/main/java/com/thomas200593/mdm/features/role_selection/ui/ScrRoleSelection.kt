@@ -1,10 +1,17 @@
 package com.thomas200593.mdm.features.role_selection.ui
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -17,21 +24,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.SessionHandler
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
+import com.thomas200593.mdm.core.ui.component.TxtMdBody
+import com.thomas200593.mdm.core.ui.component.TxtMdTitle
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
+import com.thomas200593.mdm.core.ui.component.screen.InnerCircularProgressIndicator
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.features.auth.nav.navToAuth
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.ComponentsState
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
+import com.thomas200593.mdm.features.role_selection.ui.state.ResultGetUserRole
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -116,6 +129,39 @@ import kotlinx.coroutines.launch
     paddingValues: PaddingValues,
     components: ComponentsState.Loaded
 ) = Surface (
-    modifier = Modifier.padding(paddingValues),
-    content = { Text(components.toString()) }
+    modifier = Modifier.padding(paddingValues).fillMaxSize(),
+    content = {
+        Column (
+            modifier = Modifier.padding(16.dp).fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            content = {
+                when (components.resultGetUserRole) {
+                    is ResultGetUserRole.Loading -> InnerCircularProgressIndicator()
+                    is ResultGetUserRole.Error -> {}
+                    is ResultGetUserRole.Success -> SectionRoleSelection()
+                }
+            }
+        )
+    }
+)
+@Composable private fun SectionRoleSelection() = Card (
+    modifier = Modifier.fillMaxWidth().padding(16.dp),
+    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+    shape = RoundedCornerShape(12.dp),
+    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+    content = {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            content = {
+                TxtMdTitle("To continue, please select your role")
+                TxtMdBody("Role list")
+                /*RoleDropdown(
+                roles = components.roles,
+                selectedRole = components.selectedRole,
+                onRoleSelected = components.onRoleSelected
+                )*/
+            }
+        )
+    }
 )
