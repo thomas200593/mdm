@@ -4,14 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.core.design_system.session.entity.DTOSessionUserData
 import com.thomas200593.mdm.core.design_system.session.entity.SessionEvent
-import com.thomas200593.mdm.core.design_system.session.repository.RepoSession
 import com.thomas200593.mdm.features.role_selection.domain.UCGetScreenData
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.ComponentsState
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
 import com.thomas200593.mdm.features.role_selection.ui.state.ResultGetUserRole
 import com.thomas200593.mdm.features.role_selection.ui.state.ResultSetUserRole
-import com.thomas200593.mdm.features.user.repository.RepoUser
 import com.thomas200593.mdm.features.user_role.domain.UCGetUserRole
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,9 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel class VMRoleSelection @Inject constructor(
     private val ucGetScreenData: UCGetScreenData,
-    private val ucGetUserRole: UCGetUserRole,
-    private val repoSession: RepoSession,
-    private val repoUser: RepoUser
+    private val ucGetUserRole: UCGetUserRole
 ) : ViewModel() {
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
     var uiState = MutableStateFlow(UiState())
@@ -39,6 +35,13 @@ import javax.inject.Inject
         is Events.Session.NoCurrentRole -> handleSessionValid(event = event.ev, data = event.data)
         is Events.Session.Valid -> handleSessionValid(event = event.ev, data = event.data)
     }
+    fun onTopBarEvent(event: Events.TopBar) = when (event) {
+        is Events.TopBar.BtnScrDesc.Clicked -> updateDialog { DialogState.ScrDescDialog }
+        is Events.TopBar.BtnScrDesc.Dismissed -> updateDialog { DialogState.None }
+    }
+    fun onDialogEvent(event: Events.Dialog) = when (event) {
+        Events.Dialog.ErrorDismissed -> updateDialog { DialogState.None }
+    }
     private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
         viewModelScope.launch(Dispatchers.Main.immediate) {
             uiState.update { current ->
@@ -48,6 +51,7 @@ import javax.inject.Inject
                     ?: current
             }
         }
+    private fun updateDialog(transform: (DialogState) -> DialogState) = updateUiState { it.copy(dialogState = transform(it.dialogState)) }
     private fun handleOnOpenEvent() = viewModelScope.launch {
         ucGetScreenData.invoke()
             .onStart { uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
@@ -56,28 +60,26 @@ import javax.inject.Inject
                     componentsState = ComponentsState.Loaded(
                         confCommon = confCommon,
                         dialogState = DialogState.None,
+                        sessionEvent = SessionEvent.Loading,
+                        sessionData = null,
                         resultGetUserRole = ResultGetUserRole.Loading,
-                        resultSetUserRole = ResultSetUserRole.Idle,
-                        sessionEvent = SessionEvent.Loading
+                        resultSetUserRole = ResultSetUserRole.Idle
                     )
                 ) }
             }
     }
-    private fun updateDialog(transform: (DialogState) -> DialogState) = updateUiState { it.copy(dialogState = transform(it.dialogState)) }
-    private fun handleSessionLoading(event: SessionEvent.Loading) = updateUiState { it.copy(dialogState = DialogState.None, resultGetUserRole = ResultGetUserRole.Loading, sessionEvent = event) }
+    private fun handleSessionLoading(event: SessionEvent.Loading) = updateUiState { it.copy(dialogState = DialogState.None, resultGetUserRole = ResultGetUserRole.Loading, sessionEvent = event, sessionData = null) }
     private fun handleSessionInvalid(event: SessionEvent.Invalid, t: Throwable) {
-        updateUiState { it.copy(sessionEvent = event, resultGetUserRole = ResultGetUserRole.Error(t)) }
+        updateUiState { it.copy(sessionEvent = event, sessionData = null, resultGetUserRole = ResultGetUserRole.Error(t)) }
         updateDialog { DialogState.SessionInvalidDialog(t) }
     }
     private fun handleSessionValid(event: SessionEvent, data: DTOSessionUserData) {
-        updateUiState { it.copy(dialogState = DialogState.None, resultGetUserRole = ResultGetUserRole.Loading, sessionEvent = event) }
+        updateUiState { it.copy(dialogState = DialogState.None, resultGetUserRole = ResultGetUserRole.Loading, sessionEvent = event, sessionData = data.session) }
         viewModelScope.launch {
             ucGetUserRole.invoke(data.user).collect { result -> result
-                .onSuccess { roles -> updateUiState { it.copy(resultGetUserRole = ResultGetUserRole.Success(roles), sessionEvent = event) } }
+                .onSuccess { roles -> updateUiState { it.copy(resultGetUserRole = ResultGetUserRole.Success(roles), sessionEvent = event, sessionData = data.session) } }
                 .onFailure { err -> updateUiState { it.copy(resultGetUserRole = ResultGetUserRole.Error(err), sessionEvent = event) } }
             }
         }
     }
-    fun testDeleteUser() = viewModelScope.launch { repoUser.deleteAll() }
-    fun testDeleteSession() = viewModelScope.launch { repoSession.deleteAll() }
 }

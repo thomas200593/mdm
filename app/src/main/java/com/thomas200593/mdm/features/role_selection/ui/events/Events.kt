@@ -13,6 +13,9 @@ sealed interface Events {
         data class NoCurrentRole(val ev: SessionEvent, val data: DTOSessionUserData) : Session
         data class Valid(val ev: SessionEvent, val data: DTOSessionUserData) : Session
     }
+    sealed interface Dialog : Events {
+        data object ErrorDismissed : Dialog
+    }
     sealed interface TopBar : Events {
         sealed interface BtnScrDesc : TopBar {
             data object Clicked : BtnScrDesc

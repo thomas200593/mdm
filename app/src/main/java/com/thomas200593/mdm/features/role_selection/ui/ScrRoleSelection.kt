@@ -28,10 +28,12 @@ import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
+import com.thomas200593.mdm.features.auth.nav.navToAuth
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.ComponentsState
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable fun ScrRoleSelection(
     scrGraph: ScrGraphs.RoleSelection, vm: VMRoleSelection = hiltViewModel(), stateApp: StateApp = LocalStateApp.current,
@@ -42,8 +44,9 @@ import kotlinx.coroutines.CoroutineScope
     ScrRoleSelection(
         scrGraph = scrGraph,
         components = uiState.componentsState,
-        testDeleteSession = { vm.testDeleteSession() },
-        testDeleteUser = { vm.testDeleteUser() }
+        onTopBarEvent = { vm.onTopBarEvent(it) },
+        onSignOutEvent = { vm.onDialogEvent(it)
+            .also { coroutineScope.launch { stateApp.navController.navToAuth() } } }
     )
     stateApp.SessionHandler(
         onLoading = { ev -> vm.onSessionEvent(event = Events.Session.Loading(ev = ev)) },
@@ -53,44 +56,59 @@ import kotlinx.coroutines.CoroutineScope
     )
 }
 @Composable private fun ScrRoleSelection(
-    scrGraph: ScrGraphs.RoleSelection, components: ComponentsState, testDeleteSession: () -> Unit, testDeleteUser : () -> Unit
+    scrGraph: ScrGraphs.RoleSelection, components: ComponentsState, onTopBarEvent: (Events.TopBar) -> Unit,
+    onSignOutEvent: (Events.Dialog.ErrorDismissed) -> Unit
 ) = when (components) {
     is ComponentsState.Loading -> ScrLoading()
-    is ComponentsState.Loaded -> ScreenContent(scrGraph = scrGraph, components = components, testDeleteSession = testDeleteSession, testDeleteUser = testDeleteUser)
+    is ComponentsState.Loaded -> ScreenContent(
+        scrGraph = scrGraph,
+        components = components,
+        onTopBarEvent = onTopBarEvent,
+        onSignOutEvent = onSignOutEvent
+    )
 }
-@Composable private fun ScreenContent(scrGraph: ScrGraphs.RoleSelection, components: ComponentsState.Loaded, testDeleteSession: () -> Unit, testDeleteUser : () -> Unit) {
-    HandleDialogs(dialog = components.dialogState, scrGraph = scrGraph)
+@Composable private fun ScreenContent(
+    scrGraph: ScrGraphs.RoleSelection, components: ComponentsState.Loaded, onTopBarEvent: (Events.TopBar) -> Unit,
+    onSignOutEvent: (Events.Dialog.ErrorDismissed) -> Unit
+) {
+    HandleDialogs(
+        dialog = components.dialogState, scrGraph = scrGraph, onTopBarEvent = onTopBarEvent,
+        onSignOutEvent = onSignOutEvent
+    )
     Scaffold(
         modifier = Modifier,
-        topBar = { SectionTopBar(scrGraph = scrGraph, testDeleteSession = testDeleteSession, testDeleteUser = testDeleteUser) },
+        topBar = { SectionTopBar(scrGraph = scrGraph, onTopBarEvent = onTopBarEvent, onSignOutEvent = onSignOutEvent) },
         content = { SectionContent(paddingValues = it, components) }
     )
 }
-@Composable private fun HandleDialogs(dialog: DialogState, scrGraph: ScrGraphs.RoleSelection) = when (dialog) {
+@Composable private fun HandleDialogs(
+    dialog: DialogState, scrGraph: ScrGraphs.RoleSelection, onTopBarEvent: (Events.TopBar) -> Unit,
+    onSignOutEvent: (Events.Dialog.ErrorDismissed) -> Unit
+) = when (dialog) {
     is DialogState.None -> Unit
     is DialogState.ScrDescDialog -> ScrInfoDialog(
-        onDismissRequest = {},
+        onDismissRequest = { onTopBarEvent(Events.TopBar.BtnScrDesc.Dismissed) },
         title = stringResource(scrGraph.title), description = stringResource(scrGraph.description)
     )
     is DialogState.SessionInvalidDialog -> ErrorDialog(
-        onDismissRequest = {},
+        onDismissRequest = { onSignOutEvent(Events.Dialog.ErrorDismissed) },
         title = "Something was wrong",
         message = "Error : ${dialog.t?.message.orEmpty()}; Stacktrace : ${dialog.t?.cause.toString()}"
     )
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
     scrGraph: ScrGraphs.RoleSelection,
-    testDeleteSession : () -> Unit,
-    testDeleteUser : () -> Unit
+    onTopBarEvent : (Events.TopBar) -> Unit, onSignOutEvent: (Events.Dialog.ErrorDismissed) -> Unit
 ) = TopAppBar(
     title = { Text(stringResource(scrGraph.title)) }, actions = {
         IconButton(
-            onClick = { testDeleteUser() },
+            onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Clicked) },
             content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) }
         )
         IconButton(
-            onClick = { testDeleteSession() },
-            content = { Icon(imageVector = Icons.AutoMirrored.Filled.Logout, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
+            onClick = { onSignOutEvent(Events.Dialog.ErrorDismissed) },
+            content = { Icon(imageVector = Icons.AutoMirrored.Filled.Logout, contentDescription = null,
+                tint = MaterialTheme.colorScheme.error) }
         )
     }
 )
