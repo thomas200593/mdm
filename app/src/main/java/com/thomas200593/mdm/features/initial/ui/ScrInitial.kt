@@ -8,7 +8,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
-import com.thomas200593.mdm.core.design_system.session.entity.SessionEvent
 import com.thomas200593.mdm.core.design_system.state_app.SessionHandler
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
@@ -59,19 +58,11 @@ import kotlinx.coroutines.launch
     OnboardingStatus.HIDE -> when (components.confCommon.firstTimeStatus) {
         FirstTimeStatus.YES -> onNavToInitialization()
         FirstTimeStatus.NO -> {
-            /*stateApp.SessionHandler { event, data, error ->
-                when(event) {
-                    SessionEvent.Loading -> Unit
-                    SessionEvent.Invalid -> onNavToAuth()
-                    SessionEvent.NoRole -> onNavToRoleSelection()
-                    SessionEvent.Valid -> onNavToDashboard()
-                }
-            }*/
             stateApp.SessionHandler(
-                onLoadingSessionEvent = {},
-                onInvalidSessionEvent = { _, _ -> onNavToAuth() },
-                onNoRolesSessionEvent = { _, _ -> onNavToRoleSelection() },
-                onValidSessionEvent = { _, _ -> onNavToDashboard() }
+                onLoading = { _ -> },
+                onInvalid = { _, _ -> onNavToAuth() },
+                onNoCurrentRole = { _, _ -> onNavToRoleSelection() },
+                onValid = { _, _ -> onNavToDashboard() }
             )
         }
     }

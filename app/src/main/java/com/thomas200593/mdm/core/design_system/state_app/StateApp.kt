@@ -89,26 +89,22 @@ class StateApp(
 }
 @Composable fun StateApp.SessionHandler(
     //onSessionEvent: (ev: SessionEvent, data: DTOSessionUserData?, throwable: Throwable?) -> Unit
-    onLoadingSessionEvent : (ev: SessionEvent.Loading) -> Unit = { ev -> },
-    onInvalidSessionEvent : (ev: SessionEvent.Invalid, t : Throwable) -> Unit = { ev, t -> },
-    onNoRolesSessionEvent : (ev : SessionEvent.NoRole, data : DTOSessionUserData) -> Unit = { ev, data -> },
-    onValidSessionEvent : (ev : SessionEvent.Valid, data : DTOSessionUserData) -> Unit = { ev, data -> }
+    onLoading : (ev: SessionEvent.Loading) -> Unit = { ev -> },
+    onInvalid : (ev: SessionEvent.Invalid, t : Throwable) -> Unit = { ev, t -> },
+    onNoCurrentRole : (ev : SessionEvent.NoCurrentRole, data : DTOSessionUserData) -> Unit = { ev, data -> },
+    onValid : (ev : SessionEvent.Valid, data : DTOSessionUserData) -> Unit = { ev, data -> }
 ) {
     val sessionState by isSessionValid.collectAsStateWithLifecycle()
     LaunchedEffect(
         key1 = sessionState,
         block = {
             when(sessionState) {
-                SessionState.Loading -> onLoadingSessionEvent(SessionEvent.Loading)
-//                    onSessionEvent(SessionEvent.Loading, null, null)
-                is SessionState.Invalid -> onInvalidSessionEvent(SessionEvent.Invalid, (sessionState as SessionState.Invalid).t)
-//                    onSessionEvent(SessionEvent.Invalid, null, (sessionState as SessionState.Invalid).t)
+                SessionState.Loading -> onLoading(SessionEvent.Loading)
+                is SessionState.Invalid -> onInvalid(SessionEvent.Invalid, (sessionState as SessionState.Invalid).t)
                 is SessionState.Valid -> {
                     val data = (sessionState as SessionState.Valid).data
-                    if(data.currentRole?.roleCode.isNullOrEmpty()) onNoRolesSessionEvent(SessionEvent.NoRole, data)
-//                        onSessionEvent(SessionEvent.NoRole, data, null)
-                    else onValidSessionEvent(SessionEvent.Valid, data)
-//                        onSessionEvent(SessionEvent.Valid, data, null)
+                    if(data.currentRole?.roleCode.isNullOrEmpty()) onNoCurrentRole(SessionEvent.NoCurrentRole, data)
+                    else onValid(SessionEvent.Valid, data)
                 }
             }
         }
