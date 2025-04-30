@@ -2,7 +2,6 @@ package com.thomas200593.mdm.features.role_selection.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.core.design_system.session.entity.DTOSessionUserData
 import com.thomas200593.mdm.core.design_system.session.entity.SessionEvent
 import com.thomas200593.mdm.core.design_system.session.repository.RepoSession
@@ -34,6 +33,12 @@ import javax.inject.Inject
     fun onScreenEvent(event: Events.Screen) = when (event) {
         is Events.Screen.Opened -> handleOnOpenEvent()
     }
+    fun onSessionEvent(event: Events.Session) = when (event) {
+        is Events.Session.Loading -> handleSessionLoading(event = event.ev)
+        is Events.Session.Invalid -> handleSessionInvalid(event = event.ev, t = event.t)
+        is Events.Session.NoCurrentRole -> handleSessionValid(event = event.ev, data = event.data)
+        is Events.Session.Valid -> handleSessionValid(event = event.ev, data = event.data)
+    }
     private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
         viewModelScope.launch(Dispatchers.Main.immediate) {
             uiState.update { current ->
@@ -59,29 +64,20 @@ import javax.inject.Inject
             }
     }
     private fun updateDialog(transform: (DialogState) -> DialogState) = updateUiState { it.copy(dialogState = transform(it.dialogState)) }
-    private fun handleSessionLoading(event: SessionEvent) = updateUiState { it.copy(dialogState = DialogState.None, resultGetUserRole = ResultGetUserRole.Loading, sessionEvent = event) }
-    private fun handleSessionInvalid(event: SessionEvent, throwable: Throwable?) {
-        updateUiState { it.copy(
-            sessionEvent = event,
-            resultGetUserRole = ResultGetUserRole.Error(throwable)
-        ) }
-        updateDialog { DialogState.SessionInvalidDialog(throwable) }
+    private fun handleSessionLoading(event: SessionEvent.Loading) = updateUiState { it.copy(dialogState = DialogState.None, resultGetUserRole = ResultGetUserRole.Loading, sessionEvent = event) }
+    private fun handleSessionInvalid(event: SessionEvent.Invalid, t: Throwable) {
+        updateUiState { it.copy(sessionEvent = event, resultGetUserRole = ResultGetUserRole.Error(t)) }
+        updateDialog { DialogState.SessionInvalidDialog(t) }
     }
-    private fun handleSessionValid(event: SessionEvent, data: DTOSessionUserData?) {
+    private fun handleSessionValid(event: SessionEvent, data: DTOSessionUserData) {
         updateUiState { it.copy(dialogState = DialogState.None, resultGetUserRole = ResultGetUserRole.Loading, sessionEvent = event) }
-        data?.let { data ->
-            viewModelScope.launch {
-                ucGetUserRole.invoke(data.user).collect { result -> result
-                    .onSuccess { roles -> updateUiState { it.copy(resultGetUserRole = ResultGetUserRole.Success(roles), sessionEvent = event) } }
-                    .onFailure { err -> updateUiState { it.copy(resultGetUserRole = ResultGetUserRole.Error(err), sessionEvent = event) } }
-                }
-            } }
-            ?: updateUiState { it.copy(resultGetUserRole = ResultGetUserRole.Error(Error.Input.MalformedError(message = "Cannot get empty user")), sessionEvent = event) }
+        viewModelScope.launch {
+            ucGetUserRole.invoke(data.user).collect { result -> result
+                .onSuccess { roles -> updateUiState { it.copy(resultGetUserRole = ResultGetUserRole.Success(roles), sessionEvent = event) } }
+                .onFailure { err -> updateUiState { it.copy(resultGetUserRole = ResultGetUserRole.Error(err), sessionEvent = event) } }
+            }
+        }
     }
-    fun testDeleteUser() = viewModelScope.launch {
-        repoUser.deleteAll()
-    }
-    fun testDeleteSession() = viewModelScope.launch {
-        repoSession.deleteAll()
-    }
+    fun testDeleteUser() = viewModelScope.launch { repoUser.deleteAll() }
+    fun testDeleteSession() = viewModelScope.launch { repoSession.deleteAll() }
 }

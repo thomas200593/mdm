@@ -88,11 +88,10 @@ class StateApp(
     }
 }
 @Composable fun StateApp.SessionHandler(
-    //onSessionEvent: (ev: SessionEvent, data: DTOSessionUserData?, throwable: Throwable?) -> Unit
-    onLoading : (ev: SessionEvent.Loading) -> Unit = { ev -> },
-    onInvalid : (ev: SessionEvent.Invalid, t : Throwable) -> Unit = { ev, t -> },
-    onNoCurrentRole : (ev : SessionEvent.NoCurrentRole, data : DTOSessionUserData) -> Unit = { ev, data -> },
-    onValid : (ev : SessionEvent.Valid, data : DTOSessionUserData) -> Unit = { ev, data -> }
+    onLoading : (event: SessionEvent.Loading) -> Unit,
+    onInvalid : (event: SessionEvent.Invalid, t : Throwable) -> Unit,
+    onNoCurrentRole : (event : SessionEvent.NoCurrentRole, data : DTOSessionUserData) -> Unit,
+    onValid : (event : SessionEvent.Valid, data : DTOSessionUserData) -> Unit
 ) {
     val sessionState by isSessionValid.collectAsStateWithLifecycle()
     LaunchedEffect(

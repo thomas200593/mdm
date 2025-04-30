@@ -45,7 +45,12 @@ import kotlinx.coroutines.CoroutineScope
         testDeleteSession = { vm.testDeleteSession() },
         testDeleteUser = { vm.testDeleteUser() }
     )
-    stateApp.SessionHandler()
+    stateApp.SessionHandler(
+        onLoading = { ev -> vm.onSessionEvent(event = Events.Session.Loading(ev = ev)) },
+        onInvalid = { ev, t -> vm.onSessionEvent(event = Events.Session.Invalid(ev = ev, t = t)) },
+        onNoCurrentRole = { ev, data -> vm.onSessionEvent(event = Events.Session.NoCurrentRole(ev = ev, data = data)) },
+        onValid = { ev, data -> vm.onSessionEvent(event = Events.Session.Valid(ev = ev, data = data)) }
+    )
 }
 @Composable private fun ScrRoleSelection(
     scrGraph: ScrGraphs.RoleSelection, components: ComponentsState, testDeleteSession: () -> Unit, testDeleteUser : () -> Unit
