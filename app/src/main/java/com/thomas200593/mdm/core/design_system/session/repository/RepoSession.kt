@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 interface RepoSession {
     fun getAll() : Flow<Result<List<SessionEntity>>>
-    fun getCurrent(): Flow<Result<List<DTOSessionUserData>>>
+    fun getCurrent(): Flow<Result<DTOSessionUserData>>
     suspend fun isValid(session : SessionEntity) : Result<Boolean>
     suspend fun deleteAll()
     suspend fun create(sessionEntity : SessionEntity) : Result<SessionEntity>
@@ -29,7 +29,7 @@ class RepoSessionImpl @Inject constructor(
 ) : RepoSession {
     override fun getAll() = daoSession.getAll().flowOn(ioDispatcher).map { Result.success(it) }.catch { emit(Result.failure(it)) }
     override fun getCurrent() = daoSession.getCurrent().flowOn(ioDispatcher)
-        .map { if(it.isNotEmpty()) Result.success(it) else Result.failure(Error.Database.DaoQueryNoDataError("No session found!")) }
+        .map { if(it.isNotEmpty()) Result.success(it.first()) else Result.failure(Error.Database.DaoQueryNoDataError(message = "No session found!")) }
         .catch { e -> emit(Result.failure(Error.Database.DaoQueryError(message = e.message, cause = e))) }
     override suspend fun isValid(session: SessionEntity) = withContext (ioDispatcher)
         { runCatching { UUIDv7.extractTimestamp(UUIDv7.fromUUIDString(session.sessionId)) > 0 && session.expiresAt?.let { it >= Constants.NOW_EPOCH_SECOND } == true } }

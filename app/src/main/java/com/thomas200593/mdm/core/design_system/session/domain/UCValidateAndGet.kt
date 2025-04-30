@@ -18,13 +18,10 @@ class UCValidateAndGet @Inject constructor(
 ) {
     operator fun invoke() = repoSession.getCurrent().flowOn(ioDispatcher).map { result ->
         result.fold(
-            onSuccess = { list -> when {
-                list.size == 1 ->
-                    if(repoSession.isValid(list.first().session).getOrDefault(false)) Result.success(list.first())
-                    else Result.failure(Error.Data.ValidationError(message = "Session validation failed"))
-                list.isEmpty() -> Result.failure(Error.Database.DaoQueryNoDataError(message = "No session data found"))
-                else -> Result.failure(Error.Database.DaoQueryError(message = "Unexpected multiple session data entries"))
-            } },
+            onSuccess = { data ->
+                if(repoSession.isValid(data.session).getOrDefault(false)) Result.success(data)
+                else Result.failure(Error.Data.ValidationError(message = "Session validation failed"))
+            },
             onFailure = { error -> Result.failure(error) }
         )
     }
