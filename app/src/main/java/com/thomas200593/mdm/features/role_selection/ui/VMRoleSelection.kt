@@ -11,6 +11,7 @@ import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
 import com.thomas200593.mdm.features.role_selection.ui.state.ResultGetUserRole
 import com.thomas200593.mdm.features.role_selection.ui.state.ResultSetUserRole
 import com.thomas200593.mdm.features.user_role.domain.UCGetUserRole
+import com.thomas200593.mdm.features.user_role.repository.RepoUserRole
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel class VMRoleSelection @Inject constructor(
     private val ucGetScreenData: UCGetScreenData,
-    private val ucGetUserRole: UCGetUserRole
+    private val ucGetUserRole: UCGetUserRole,
+    private val repoUserRole: RepoUserRole
 ) : ViewModel() {
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
     var uiState = MutableStateFlow(UiState())
@@ -82,4 +84,5 @@ import javax.inject.Inject
             }
         }
     }
+    fun testDeleteUserRole() = viewModelScope.launch { repoUserRole.deleteAll() }
 }

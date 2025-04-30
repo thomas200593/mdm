@@ -17,4 +17,6 @@ interface DaoUserRole {
         WHERE 1 = 1 
         AND u.uid = :userId""")
     fun getUserRoles(userId: String): Flow<List<RoleEntity>>
+    @Query("""DELETE FROM user_role WHERE 1 = 1""")
+    suspend fun deleteAll()
 }

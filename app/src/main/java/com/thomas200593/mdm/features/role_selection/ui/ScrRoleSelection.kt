@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
+import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.SessionHandler
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
@@ -41,6 +42,7 @@ import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.screen.InnerCircularProgressIndicator
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.features.auth.nav.navToAuth
+import com.thomas200593.mdm.features.role.entity.RoleEntity
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.ComponentsState
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
@@ -67,6 +69,7 @@ import kotlinx.coroutines.launch
         onNoCurrentRole = { ev, data -> vm.onSessionEvent(event = Events.Session.NoCurrentRole(ev = ev, data = data)) },
         onValid = { ev, data -> vm.onSessionEvent(event = Events.Session.Valid(ev = ev, data = data)) }
     )
+    vm.testDeleteUserRole()
 }
 @Composable private fun ScrRoleSelection(
     scrGraph: ScrGraphs.RoleSelection, components: ComponentsState, onTopBarEvent: (Events.TopBar) -> Unit,
@@ -91,7 +94,8 @@ import kotlinx.coroutines.launch
     Scaffold(
         modifier = Modifier,
         topBar = { SectionTopBar(scrGraph = scrGraph, onTopBarEvent = onTopBarEvent, onSignOutEvent = onSignOutEvent) },
-        content = { SectionContent(paddingValues = it, components) }
+        content = { SectionContent(paddingValues = it, components = components) },
+        bottomBar = { SectionBottomBar() }
     )
 }
 @Composable private fun HandleDialogs(
@@ -110,8 +114,8 @@ import kotlinx.coroutines.launch
     )
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
-    scrGraph: ScrGraphs.RoleSelection,
-    onTopBarEvent : (Events.TopBar) -> Unit, onSignOutEvent: (Events.Dialog.ErrorDismissed) -> Unit
+    scrGraph: ScrGraphs.RoleSelection, onTopBarEvent : (Events.TopBar) -> Unit,
+    onSignOutEvent: (Events.Dialog.ErrorDismissed) -> Unit
 ) = TopAppBar(
     title = { Text(stringResource(scrGraph.title)) }, actions = {
         IconButton(
@@ -125,10 +129,7 @@ import kotlinx.coroutines.launch
         )
     }
 )
-@Composable private fun SectionContent(
-    paddingValues: PaddingValues,
-    components: ComponentsState.Loaded
-) = Surface (
+@Composable private fun SectionContent(paddingValues: PaddingValues, components: ComponentsState.Loaded) = Surface (
     modifier = Modifier.padding(paddingValues).fillMaxSize(),
     content = {
         Column (
@@ -136,16 +137,22 @@ import kotlinx.coroutines.launch
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             content = {
-                when (components.resultGetUserRole) {
+                when(components.resultGetUserRole) {
                     is ResultGetUserRole.Loading -> InnerCircularProgressIndicator()
-                    is ResultGetUserRole.Error -> {}
-                    is ResultGetUserRole.Success -> SectionRoleSelection()
+                    is ResultGetUserRole.Error -> when (components.resultGetUserRole.t) {
+                        is Error.Database.DaoQueryNoDataError -> SectionRoleSelectionNoData(components.resultGetUserRole.t)
+                        is Error.Database.DaoQueryError -> SectionRoleSelectionError(components.resultGetUserRole.t)
+                        else -> SectionRoleSelectionError(components.resultGetUserRole.t)
+                    }
+                    is ResultGetUserRole.Success -> SectionRoleSelection(components.resultGetUserRole.data)
                 }
             }
         )
     }
 )
-@Composable private fun SectionRoleSelection() = Card (
+@Composable private fun SectionRoleSelectionError(throwable: Throwable) {/*TODO*/}
+@Composable private fun SectionRoleSelectionNoData(throwable: Error.Database.DaoQueryNoDataError) {/*TODO*/}
+@Composable private fun SectionRoleSelection(data: List<RoleEntity>) = Card (
     modifier = Modifier.fillMaxWidth().padding(16.dp),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
     shape = RoundedCornerShape(12.dp),
@@ -156,12 +163,14 @@ import kotlinx.coroutines.launch
             content = {
                 TxtMdTitle("To continue, please select your role")
                 TxtMdBody("Role list")
+                /*TODO*/
                 /*RoleDropdown(
-                roles = components.roles,
-                selectedRole = components.selectedRole,
-                onRoleSelected = components.onRoleSelected
+                    roles = components.roles,
+                    selectedRole = components.selectedRole,
+                    onRoleSelected = components.onRoleSelected
                 )*/
             }
         )
     }
 )
+@Composable private fun SectionBottomBar() {/*TODO*/}
