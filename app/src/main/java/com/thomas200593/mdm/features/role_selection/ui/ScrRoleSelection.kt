@@ -49,7 +49,7 @@ import kotlinx.coroutines.CoroutineScope
             vm.testDeleteUser()
         }
     )
-    stateApp.SessionHandler { event, data, error -> vm.onSessionEvent(event = event, data = data, error = error) }
+    //stateApp.SessionHandler { e, d, t -> }
 }
 @Composable private fun ScrRoleSelection(
     scrGraph: ScrGraphs.RoleSelection, components: ComponentsState, testDeleteSession: () -> Unit, testDeleteUser : () -> Unit

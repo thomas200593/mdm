@@ -59,14 +59,20 @@ import kotlinx.coroutines.launch
     OnboardingStatus.HIDE -> when (components.confCommon.firstTimeStatus) {
         FirstTimeStatus.YES -> onNavToInitialization()
         FirstTimeStatus.NO -> {
-            stateApp.SessionHandler { event, data, error ->
+            /*stateApp.SessionHandler { event, data, error ->
                 when(event) {
                     SessionEvent.Loading -> Unit
                     SessionEvent.Invalid -> onNavToAuth()
                     SessionEvent.NoRole -> onNavToRoleSelection()
                     SessionEvent.Valid -> onNavToDashboard()
                 }
-            }
+            }*/
+            stateApp.SessionHandler(
+                onLoadingSessionEvent = {},
+                onInvalidSessionEvent = { _, _ -> onNavToAuth() },
+                onNoRolesSessionEvent = { _, _ -> onNavToRoleSelection() },
+                onValidSessionEvent = { _, _ -> onNavToDashboard() }
+            )
         }
     }
 }

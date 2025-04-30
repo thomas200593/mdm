@@ -32,12 +32,7 @@ import javax.inject.Inject
     var uiState = MutableStateFlow(UiState())
         private set
     fun onScreenEvent(event: Events.Screen) = when (event) {
-        Events.Screen.Opened -> handleOnOpenEvent()
-    }
-    fun onSessionEvent(event: SessionEvent, data: DTOSessionUserData?, error: Throwable?) = when (event) {
-        is SessionEvent.Loading -> handleSessionLoading(event)
-        is SessionEvent.Invalid -> handleSessionInvalid(event, error)
-        is SessionEvent.NoRole, is SessionEvent.Valid -> handleSessionValid(event, data)
+        is Events.Screen.Opened -> handleOnOpenEvent()
     }
     private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
         viewModelScope.launch(Dispatchers.Main.immediate) {
