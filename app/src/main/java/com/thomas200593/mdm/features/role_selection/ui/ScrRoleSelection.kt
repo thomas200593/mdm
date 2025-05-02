@@ -154,7 +154,7 @@ import kotlinx.coroutines.launch
     shape = RoundedCornerShape(12.dp),
     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     content = { Column(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
         content = {
             TxtMdTitle("Oops! You don’t have any roles assigned yet, please contact your System Administrator.")
         }
@@ -166,7 +166,7 @@ import kotlinx.coroutines.launch
     shape = RoundedCornerShape(12.dp),
     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     content = { Column(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
         content = {
             TxtMdTitle("To continue, please select your role")
             TxtMdBody("Role list")
