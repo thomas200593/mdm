@@ -27,7 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.component.TxtMdLabel
-import com.thomas200593.mdm.features.conf.__language.entity.Language
+import com.thomas200593.mdm.features.cnf_localization_language.entity.Language
 
 @OptIn(ExperimentalMaterial3Api::class) @Composable fun BtnConfLang(
     modifier: Modifier = Modifier,

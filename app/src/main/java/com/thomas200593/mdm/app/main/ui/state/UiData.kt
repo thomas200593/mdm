@@ -1,7 +1,7 @@
 package com.thomas200593.mdm.app.main.ui.state
 
-import com.thomas200593.mdm.features.conf.__contrast_accent.entity.ContrastAccent
-import com.thomas200593.mdm.features.conf.__font_size.entity.FontSize
+import com.thomas200593.mdm.features.cnf_ui_contrast_accent.entity.ContrastAccent
+import com.thomas200593.mdm.features.cnf_ui_font_size.entity.FontSize
 
 data class UiData(
     val darkThemeEnabled: Boolean,
