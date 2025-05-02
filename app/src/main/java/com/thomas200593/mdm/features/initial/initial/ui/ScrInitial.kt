@@ -14,11 +14,11 @@ import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.features.initial.initial.ui.events.Events
 import com.thomas200593.mdm.features.initial.initial.ui.state.ComponentsState
 import com.thomas200593.mdm.features.security.auth.nav.navToAuth
-import com.thomas200593.mdm.features.initial._initialization.entity.FirstTimeStatus
-import com.thomas200593.mdm.features.initial._initialization.nav.navToInitialization
-import com.thomas200593.mdm.features.initial._onboarding.entity.OnboardingStatus
-import com.thomas200593.mdm.features.initial._onboarding.nav.navToOnboarding
-import com.thomas200593.mdm.features.role._role_selection.nav.navToRoleSelection
+import com.thomas200593.mdm.features.user.initialization.entity.FirstTimeStatus
+import com.thomas200593.mdm.features.user.initialization.nav.navToInitialization
+import com.thomas200593.mdm.features.initial.onboarding.entity.OnboardingStatus
+import com.thomas200593.mdm.features.initial.onboarding.nav.navToOnboarding
+import com.thomas200593.mdm.features.user.user_role.nav.navToRoleSelection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

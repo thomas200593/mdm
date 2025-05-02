@@ -12,7 +12,7 @@ import com.thomas200593.mdm.core.design_system.session.entity.TypeConverterSessi
 import com.thomas200593.mdm.features.security.auth.dao.DaoAuth
 import com.thomas200593.mdm.features.security.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.security.auth.entity.TypeConverterAuthType
-import com.thomas200593.mdm.features.initial._initialization.dao.DaoInitialization
+import com.thomas200593.mdm.features.user.initialization.dao.DaoInitialization
 import com.thomas200593.mdm.features.role.role.dao.DaoRole
 import com.thomas200593.mdm.features.role.role.entity.RoleEntity
 import com.thomas200593.mdm.features.role.role.entity.TypeConverterRoleType
