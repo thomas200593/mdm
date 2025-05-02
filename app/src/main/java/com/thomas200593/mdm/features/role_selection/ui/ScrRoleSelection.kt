@@ -41,8 +41,7 @@ import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.screen.InnerCircularProgressIndicator
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
-import com.thomas200593.mdm.features.auth.nav.navToAuth
-import com.thomas200593.mdm.features.role.entity.RoleEntity
+import com.thomas200593.mdm.features.security.auth.nav.navToAuth
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.ComponentsState
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
