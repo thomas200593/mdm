@@ -20,6 +20,6 @@ fun NavController.navToAuth() = this.navigate(
     route = NavigationGraph.GraphAuth,
     builder = {
         launchSingleTop = true; restoreState = true
-        popUpTo(route = NavigationGraph.GraphInitial, popUpToBuilder = { inclusive = true })
+        popUpTo(route = NavigationGraph.GraphBootstrap, popUpToBuilder = { inclusive = true })
     }
 )

@@ -18,6 +18,6 @@ fun NavController.navToInitialization() = this.navigate(
     route = ScrGraphs.Initialization(),
     builder = {
         launchSingleTop = true; restoreState = true
-        popUpTo(NavigationGraph.GraphInitial, popUpToBuilder = { inclusive = true })
+        popUpTo(NavigationGraph.GraphBootstrap, popUpToBuilder = { inclusive = true })
     }
 )

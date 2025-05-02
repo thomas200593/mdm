@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.initial.domain
+package com.thomas200593.mdm.features.bootstrap.domain
 
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher

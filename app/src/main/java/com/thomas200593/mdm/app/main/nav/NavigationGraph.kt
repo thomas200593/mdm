@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable sealed interface NavigationGraph {
     @Serializable data object GraphRoot
-    @Serializable data object GraphInitial
+    @Serializable data object GraphBootstrap
     @Serializable data object GraphOnboarding
     @Serializable data object GraphAuth
     @Serializable data object GraphRoleSelection

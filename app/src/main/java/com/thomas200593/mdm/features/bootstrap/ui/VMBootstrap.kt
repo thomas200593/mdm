@@ -1,17 +1,17 @@
-package com.thomas200593.mdm.features.initial.ui
+package com.thomas200593.mdm.features.bootstrap.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.core.design_system.util.update
-import com.thomas200593.mdm.features.initial.domain.UCGetScreenData
-import com.thomas200593.mdm.features.initial.ui.events.Events
-import com.thomas200593.mdm.features.initial.ui.state.ComponentsState
+import com.thomas200593.mdm.features.bootstrap.domain.UCGetScreenData
+import com.thomas200593.mdm.features.bootstrap.ui.events.Events
+import com.thomas200593.mdm.features.bootstrap.ui.state.ComponentsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel class VMInitial @Inject constructor(
+@HiltViewModel class VMBootstrap @Inject constructor(
     private val ucGetScreenData: UCGetScreenData
 ) : ViewModel() {
     data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)

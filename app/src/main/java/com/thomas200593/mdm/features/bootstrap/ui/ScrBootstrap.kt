@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.initial.ui
+package com.thomas200593.mdm.features.bootstrap.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,8 +11,8 @@ import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.SessionHandler
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
-import com.thomas200593.mdm.features.initial.ui.events.Events
-import com.thomas200593.mdm.features.initial.ui.state.ComponentsState
+import com.thomas200593.mdm.features.bootstrap.ui.events.Events
+import com.thomas200593.mdm.features.bootstrap.ui.state.ComponentsState
 import com.thomas200593.mdm.features.auth.nav.navToAuth
 import com.thomas200593.mdm.features.initialization.entity.FirstTimeStatus
 import com.thomas200593.mdm.features.initialization.nav.navToInitialization
@@ -22,13 +22,13 @@ import com.thomas200593.mdm.features.user_role.nav.navToRoleSelection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Composable fun ScrInitial(
-    scrGraph: ScrGraphs.Initial, vm: VMInitial = hiltViewModel(), stateApp: StateApp = LocalStateApp.current,
+@Composable fun ScrBootstrap(
+    scrGraph: ScrGraphs.Bootstrap, vm: VMBootstrap = hiltViewModel(), stateApp: StateApp = LocalStateApp.current,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
-    ScrInitial(
+    ScrBootstrap(
         scrGraph = scrGraph, componentsState = uiState.componentsState,
         onNavToOnboarding = { coroutineScope.launch { stateApp.navController.navToOnboarding() } },
         onNavToInitialization = { coroutineScope.launch { stateApp.navController.navToInitialization() } },
@@ -37,8 +37,8 @@ import kotlinx.coroutines.launch
         onNavToDashboard = {  }
     )
 }
-@Composable private fun ScrInitial(
-    scrGraph: ScrGraphs.Initial, componentsState: ComponentsState,
+@Composable private fun ScrBootstrap(
+    scrGraph: ScrGraphs.Bootstrap, componentsState: ComponentsState,
     onNavToOnboarding: () -> Unit, onNavToInitialization: () -> Unit, onNavToAuth: () -> Unit,
     onNavToRoleSelection: () -> Unit, onNavToDashboard: () -> Unit
 ) = when (componentsState) {

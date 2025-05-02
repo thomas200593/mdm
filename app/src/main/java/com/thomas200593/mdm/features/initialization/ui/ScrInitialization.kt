@@ -56,7 +56,7 @@ import com.thomas200593.mdm.features.initialization.ui.events.Events
 import com.thomas200593.mdm.features.initialization.ui.state.ComponentsState
 import com.thomas200593.mdm.features.initialization.ui.state.DialogState
 import com.thomas200593.mdm.features.initialization.ui.state.FormInitializationState
-import com.thomas200593.mdm.features.initial.nav.navToInitial
+import com.thomas200593.mdm.features.bootstrap.nav.navToBootstrap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -72,7 +72,7 @@ import kotlinx.coroutines.launch
         onDialogEvent = { vm.onDialogEvent(it) }, onTopBarEvent = { vm.onTopBarEvent(it) },
         onFormEvent = { vm.onFormEvent(it) }, onBottomBarEvent = { vm.onBottomBarEvent(it) },
         onInitializationSuccess = { vm.onDialogEvent(Events.Dialog.SuccessDismissed)
-            .also { coroutineScope.launch { stateApp.navController.navToInitial() } } }
+            .also { coroutineScope.launch { stateApp.navController.navToBootstrap() } } }
     )
 }
 @Composable private fun ScrInitialization(

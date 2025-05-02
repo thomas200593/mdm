@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.initial.nav
+package com.thomas200593.mdm.features.bootstrap.nav
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -7,16 +7,16 @@ import androidx.navigation.navigation
 import com.thomas200593.mdm.app.main.nav.NavigationGraph
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.features.auth.nav.navGraphAuth
-import com.thomas200593.mdm.features.initial.ui.ScrInitial
+import com.thomas200593.mdm.features.bootstrap.ui.ScrBootstrap
 import com.thomas200593.mdm.features.initialization.nav.navGraphInitialization
 import com.thomas200593.mdm.features.onboarding.nav.navGraphOnboarding
 import com.thomas200593.mdm.features.user_role.nav.navGraphRoleSelection
 
-fun NavGraphBuilder.navGraphInitial() {
-    navigation<NavigationGraph.GraphInitial>(
-        startDestination = ScrGraphs.Initial(),
+fun NavGraphBuilder.navGraphBootstrap() {
+    navigation<NavigationGraph.GraphBootstrap>(
+        startDestination = ScrGraphs.Bootstrap(),
         builder = {
-            composable<ScrGraphs.Initial>(content = { ScrInitial(scrGraph = ScrGraphs.Initial()) })
+            composable<ScrGraphs.Bootstrap>(content = { ScrBootstrap(scrGraph = ScrGraphs.Bootstrap()) })
             navGraphOnboarding()
             navGraphInitialization()
             navGraphAuth()
@@ -24,10 +24,10 @@ fun NavGraphBuilder.navGraphInitial() {
         }
     )
 }
-fun NavController.navToInitial() = this.navigate(
-    route = NavigationGraph.GraphInitial,
+fun NavController.navToBootstrap() = this.navigate(
+    route = NavigationGraph.GraphBootstrap,
     builder = {
         launchSingleTop = true; restoreState = true
-        popUpTo(route = NavigationGraph.GraphInitial, popUpToBuilder = { inclusive = true })
+        popUpTo(route = NavigationGraph.GraphBootstrap, popUpToBuilder = { inclusive = true })
     }
 )

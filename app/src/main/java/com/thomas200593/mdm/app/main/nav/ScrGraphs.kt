@@ -7,7 +7,7 @@ import com.thomas200593.mdm.core.ui.common.AppIcons
 import kotlinx.serialization.Serializable
 
 @Serializable object ScrGraphs {
-    @Serializable data class Initial(
+    @Serializable data class Bootstrap(
         @StringRes val title: Int = R.string.str_initial,
         @StringRes val description: Int = R.string.str_initial
     )

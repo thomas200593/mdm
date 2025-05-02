@@ -20,6 +20,6 @@ fun NavController.navToOnboarding() = this.navigate(
     route = NavigationGraph.GraphOnboarding,
     builder = {
         launchSingleTop = true; restoreState = true
-        popUpTo(route = NavigationGraph.GraphInitial, popUpToBuilder = { inclusive = true })
+        popUpTo(route = NavigationGraph.GraphBootstrap, popUpToBuilder = { inclusive = true })
     }
 )

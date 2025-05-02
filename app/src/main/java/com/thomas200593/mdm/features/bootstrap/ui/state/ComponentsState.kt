@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.initial.ui.state
+package com.thomas200593.mdm.features.bootstrap.ui.state
 
 import com.thomas200593.mdm.features.cnf_common.entity.Common
 
