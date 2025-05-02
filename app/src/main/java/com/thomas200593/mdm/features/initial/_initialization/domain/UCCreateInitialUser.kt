@@ -13,7 +13,7 @@ import com.thomas200593.mdm.features.initial._initialization.entity.toUserProfil
 import com.thomas200593.mdm.features.initial._initialization.entity.toUserRoleEntity
 import com.thomas200593.mdm.features.initial._initialization.repository.RepoInitialization
 import com.thomas200593.mdm.features.security.auth.entity.AuthType
-import com.thomas200593.mdm.features.user.repository.RepoUser
+import com.thomas200593.mdm.features.user.user.repository.RepoUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn

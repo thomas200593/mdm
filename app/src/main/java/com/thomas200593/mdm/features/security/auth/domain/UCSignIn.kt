@@ -6,7 +6,7 @@ import com.thomas200593.mdm.core.design_system.security.hashing.BCrypt
 import com.thomas200593.mdm.features.security.auth.entity.AuthType
 import com.thomas200593.mdm.features.security.auth.entity.DTOSignIn
 import com.thomas200593.mdm.features.security.auth.repository.RepoAuth
-import com.thomas200593.mdm.features.user.repository.RepoUser
+import com.thomas200593.mdm.features.user.user.repository.RepoUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn

@@ -10,7 +10,7 @@ import com.thomas200593.mdm.features.security.auth.nav.navGraphAuth
 import com.thomas200593.mdm.features.initial.initial.ui.ScrInitial
 import com.thomas200593.mdm.features.initial._initialization.nav.navGraphInitialization
 import com.thomas200593.mdm.features.initial._onboarding.nav.navGraphOnboarding
-import com.thomas200593.mdm.features.role_selection.nav.navGraphRoleSelection
+import com.thomas200593.mdm.features.role._role_selection.nav.navGraphRoleSelection
 
 fun NavGraphBuilder.navGraphInitial() {
     navigation<NavigationGraph.GraphInitial>(

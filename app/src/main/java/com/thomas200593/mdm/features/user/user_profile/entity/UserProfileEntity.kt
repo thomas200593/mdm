@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.security.auth.entity
+package com.thomas200593.mdm.features.user.user_profile.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -10,7 +10,7 @@ import com.thomas200593.mdm.core.design_system.base_class.BaseEntity
 import com.thomas200593.mdm.features.user.user.entity.UserEntity
 
 @Entity(
-    tableName = "auth",
+    tableName = "user_profile",
     foreignKeys = [
         ForeignKey(
             entity = UserEntity::class,
@@ -20,12 +20,13 @@ import com.thomas200593.mdm.features.user.user.entity.UserEntity
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["user_id"], unique = true)],
+    indices = [Index(value = ["user_id"], unique = true)]
 )
-data class AuthEntity(
+data class UserProfileEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "seq_id") val seqId : Long = 0,
     @ColumnInfo(name = "user_id") val userId: String,
-    @ColumnInfo(name = "auth_type") val authType: AuthType,
+    @ColumnInfo(name = "first_name") val firstName: String,
+    @ColumnInfo(name = "last_name") val lastName: String,
     @ColumnInfo(name = "audit_trail") override val auditTrail: AuditTrail = AuditTrail()
 ) : BaseEntity

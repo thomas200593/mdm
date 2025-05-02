@@ -13,15 +13,15 @@ import com.thomas200593.mdm.features.security.auth.dao.DaoAuth
 import com.thomas200593.mdm.features.security.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.security.auth.entity.TypeConverterAuthType
 import com.thomas200593.mdm.features.initial._initialization.dao.DaoInitialization
-import com.thomas200593.mdm.features.role.dao.DaoRole
-import com.thomas200593.mdm.features.role.entity.RoleEntity
-import com.thomas200593.mdm.features.role.entity.TypeConverterRoleType
-import com.thomas200593.mdm.features.user.dao.DaoUser
-import com.thomas200593.mdm.features.user.entity.UserEntity
-import com.thomas200593.mdm.features.user_profile.dao.DaoUserProfile
-import com.thomas200593.mdm.features.user_profile.entity.UserProfileEntity
-import com.thomas200593.mdm.features.user_role.dao.DaoUserRole
-import com.thomas200593.mdm.features.user_role.entity.UserRoleEntity
+import com.thomas200593.mdm.features.role.role.dao.DaoRole
+import com.thomas200593.mdm.features.role.role.entity.RoleEntity
+import com.thomas200593.mdm.features.role.role.entity.TypeConverterRoleType
+import com.thomas200593.mdm.features.user.user.dao.DaoUser
+import com.thomas200593.mdm.features.user.user.entity.UserEntity
+import com.thomas200593.mdm.features.user.user_profile.dao.DaoUserProfile
+import com.thomas200593.mdm.features.user.user_profile.entity.UserProfileEntity
+import com.thomas200593.mdm.features.user.user_role.dao.DaoUserRole
+import com.thomas200593.mdm.features.user.user_role.entity.UserRoleEntity
 import javax.inject.Singleton
 
 @Singleton @Database(

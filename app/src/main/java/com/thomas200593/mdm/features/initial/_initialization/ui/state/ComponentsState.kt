@@ -1,7 +1,7 @@
 package com.thomas200593.mdm.features.initial._initialization.ui.state
 
 import com.thomas200593.mdm.features.conf.common.entity.Common
-import com.thomas200593.mdm.features.role.entity.RoleEntity
+import com.thomas200593.mdm.features.role.role.entity.RoleEntity
 
 sealed interface ComponentsState {
     data object Loading : ComponentsState

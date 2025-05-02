@@ -10,7 +10,7 @@ import com.thomas200593.mdm.core.data.local.database.entity_common.AuditTrail
 import com.thomas200593.mdm.core.design_system.base_class.BaseEntity
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.design_system.util.UUIDv7
-import com.thomas200593.mdm.features.user.entity.UserEntity
+import com.thomas200593.mdm.features.user.user.entity.UserEntity
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 

@@ -2,9 +2,9 @@ package com.thomas200593.mdm.core.design_system.session.entity
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.thomas200593.mdm.features.role.entity.RoleEntity
-import com.thomas200593.mdm.features.user.entity.UserEntity
-import com.thomas200593.mdm.features.user_profile.entity.UserProfileEntity
+import com.thomas200593.mdm.features.role.role.entity.RoleEntity
+import com.thomas200593.mdm.features.user.user.entity.UserEntity
+import com.thomas200593.mdm.features.user.user_profile.entity.UserProfileEntity
 
 data class DTOSessionUserData(
     @Embedded val session: SessionEntity,

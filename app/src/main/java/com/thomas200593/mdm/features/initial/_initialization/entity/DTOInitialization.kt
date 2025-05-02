@@ -2,10 +2,10 @@ package com.thomas200593.mdm.features.initial._initialization.entity
 
 import com.thomas200593.mdm.features.security.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.security.auth.entity.AuthType
-import com.thomas200593.mdm.features.role.entity.RoleEntity
-import com.thomas200593.mdm.features.user.entity.UserEntity
-import com.thomas200593.mdm.features.user_profile.entity.UserProfileEntity
-import com.thomas200593.mdm.features.user_role.entity.UserRoleEntity
+import com.thomas200593.mdm.features.role.role.entity.RoleEntity
+import com.thomas200593.mdm.features.user.user.entity.UserEntity
+import com.thomas200593.mdm.features.user.user_profile.entity.UserProfileEntity
+import com.thomas200593.mdm.features.user.user_role.entity.UserRoleEntity
 import kotlinx.serialization.Serializable
 
 @Serializable data class DTOInitialization(

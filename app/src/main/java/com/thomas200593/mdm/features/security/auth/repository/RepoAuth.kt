@@ -5,7 +5,7 @@ import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
 import com.thomas200593.mdm.features.security.auth.dao.DaoAuth
 import com.thomas200593.mdm.features.security.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.security.auth.entity.AuthType
-import com.thomas200593.mdm.features.user.entity.UserEntity
+import com.thomas200593.mdm.features.user.user.entity.UserEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
