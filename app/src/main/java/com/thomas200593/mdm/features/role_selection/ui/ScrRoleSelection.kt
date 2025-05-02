@@ -131,27 +131,33 @@ import kotlinx.coroutines.launch
 )
 @Composable private fun SectionContent(paddingValues: PaddingValues, components: ComponentsState.Loaded) = Surface (
     modifier = Modifier.padding(paddingValues).fillMaxSize(),
-    content = {
-        Column (
-            modifier = Modifier.padding(16.dp).fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            content = {
-                when(components.resultGetUserRole) {
-                    is ResultGetUserRole.Loading -> InnerCircularProgressIndicator()
-                    is ResultGetUserRole.Error -> when (components.resultGetUserRole.t) {
-                        is Error.Database.DaoQueryNoDataError -> SectionRoleSelectionNoData(components.resultGetUserRole.t)
-                        is Error.Database.DaoQueryError -> SectionRoleSelectionError(components.resultGetUserRole.t)
-                        else -> SectionRoleSelectionError(components.resultGetUserRole.t)
-                    }
-                    is ResultGetUserRole.Success -> SectionRoleSelection(components)
+    content = { Column (
+        modifier = Modifier.padding(16.dp).fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        content = {
+            when(components.resultGetUserRole) {
+                is ResultGetUserRole.Loading -> InnerCircularProgressIndicator()
+                is ResultGetUserRole.Error -> when (components.resultGetUserRole.t) {
+                    is Error.Database.DaoQueryNoDataError -> SectionRoleSelectionNoData(components.resultGetUserRole.t)
+                    is Error.Database.DaoQueryError -> SectionRoleSelectionError(components.resultGetUserRole.t)
+                    else -> SectionRoleSelectionError(components.resultGetUserRole.t)
                 }
+                is ResultGetUserRole.Success -> SectionRoleSelection(components)
             }
-        )
-    }
+        }
+    ) }
 )
 @Composable private fun SectionRoleSelectionError(throwable: Throwable) {/*TODO*/}
-@Composable private fun SectionRoleSelectionNoData(throwable: Error.Database.DaoQueryNoDataError) {/*TODO*/}
+@Composable private fun SectionRoleSelectionNoData(throwable: Error.Database.DaoQueryNoDataError) = Card(
+    modifier = Modifier.fillMaxWidth().padding(16.dp),
+    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+    shape = RoundedCornerShape(12.dp),
+    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+    content = {
+        TxtMdTitle("Oops! You don’t have any roles assigned yet.")
+    }
+)
 @Composable private fun SectionRoleSelection(components: ComponentsState.Loaded) = Card (
     modifier = Modifier.fillMaxWidth().padding(16.dp),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
