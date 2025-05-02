@@ -144,7 +144,7 @@ import kotlinx.coroutines.launch
                         is Error.Database.DaoQueryError -> SectionRoleSelectionError(components.resultGetUserRole.t)
                         else -> SectionRoleSelectionError(components.resultGetUserRole.t)
                     }
-                    is ResultGetUserRole.Success -> SectionRoleSelection(components.resultGetUserRole.data)
+                    is ResultGetUserRole.Success -> SectionRoleSelection(components)
                 }
             }
         )
@@ -152,25 +152,23 @@ import kotlinx.coroutines.launch
 )
 @Composable private fun SectionRoleSelectionError(throwable: Throwable) {/*TODO*/}
 @Composable private fun SectionRoleSelectionNoData(throwable: Error.Database.DaoQueryNoDataError) {/*TODO*/}
-@Composable private fun SectionRoleSelection(data: List<RoleEntity>) = Card (
+@Composable private fun SectionRoleSelection(components: ComponentsState.Loaded) = Card (
     modifier = Modifier.fillMaxWidth().padding(16.dp),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
     shape = RoundedCornerShape(12.dp),
     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-    content = {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            content = {
-                TxtMdTitle("To continue, please select your role")
-                TxtMdBody("Role list")
-                /*TODO*/
-                /*RoleDropdown(
-                    roles = components.roles,
-                    selectedRole = components.selectedRole,
-                    onRoleSelected = components.onRoleSelected
-                )*/
-            }
-        )
-    }
+    content = { Column(
+        modifier = Modifier.padding(16.dp),
+        content = {
+            TxtMdTitle("To continue, please select your role")
+            TxtMdBody("Role list")
+            /*TODO*/
+            /*RoleDropdown(
+                roles = components.roles,
+                selectedRole = components.selectedRole,
+                onRoleSelected = components.onRoleSelected
+            )*/
+        }
+    ) }
 )
 @Composable private fun SectionBottomBar() {/*TODO*/}
