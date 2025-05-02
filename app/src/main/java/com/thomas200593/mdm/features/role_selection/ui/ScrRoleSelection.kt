@@ -151,12 +151,14 @@ import kotlinx.coroutines.launch
 @Composable private fun SectionRoleSelectionError(throwable: Throwable) {/*TODO*/}
 @Composable private fun SectionRoleSelectionNoData(throwable: Error.Database.DaoQueryNoDataError) = Card(
     modifier = Modifier.fillMaxWidth().padding(16.dp),
-    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
     shape = RoundedCornerShape(12.dp),
     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-    content = {
-        TxtMdTitle("Oops! You don’t have any roles assigned yet.")
-    }
+    content = { Column(
+        modifier = Modifier.padding(16.dp),
+        content = {
+            TxtMdTitle("Oops! You don’t have any roles assigned yet, please contact your System Administrator.")
+        }
+    ) }
 )
 @Composable private fun SectionRoleSelection(components: ComponentsState.Loaded) = Card (
     modifier = Modifier.fillMaxWidth().padding(16.dp),
