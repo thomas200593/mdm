@@ -129,25 +129,21 @@ import kotlinx.coroutines.launch
     )
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
-    title = {}, actions = {
-        IconButton(
-            onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Clicked) },
-            content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) }
-        )
-    }
+    title = {}, actions = { IconButton(
+        onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Clicked) },
+        content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) }
+    ) }
 )
 @Composable private fun SectionContent(paddingValues: PaddingValues, formInitialization: FormInitializationState, onFormEvent: (Events.Content.Form) -> Unit) = Surface(
     modifier = Modifier.padding(paddingValues),
-    content = {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
-            verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
-            content = {
-                item { PartTitle() }
-                item { PartForm(formInitialization = formInitialization, onFormEvent = onFormEvent) }
-            }
-        )
-    }
+    content = { LazyColumn(
+        modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
+        verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
+        content = {
+            item { PartTitle() }
+            item { PartForm(formInitialization = formInitialization, onFormEvent = onFormEvent) }
+        }
+    ) }
 )
 @Composable private fun PartTitle() = Row(
     modifier = Modifier.fillMaxWidth(),
@@ -165,46 +161,44 @@ import kotlinx.coroutines.launch
 )
 @Composable private fun PartForm(formInitialization: FormInitializationState, onFormEvent : (Events.Content.Form) -> Unit) = Card(
     modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.extraSmall,
-    content = {
-        Column(
-            modifier = Modifier.padding(Constants.Dimens.dp16),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp), content =  {
-                TxtFieldPersonName(
-                    value = formInitialization.fldFirstName,
-                    onValueChange = { onFormEvent(Events.Content.Form.FirstNameChanged(it)) },
-                    enabled = formInitialization.fldFirstNameEnabled,
-                    isError = formInitialization.fldFirstNameError.isNotEmpty(),
-                    errorMessage = formInitialization.fldFirstNameError,
-                    label = stringResource(R.string.str_first_name),
-                    placeholder = stringResource(R.string.str_first_name)
-                )
-                TxtFieldPersonName(
-                    value = formInitialization.fldLastName,
-                    onValueChange = { onFormEvent(Events.Content.Form.LastNameChanged(it)) },
-                    enabled = formInitialization.fldLastNameEnabled,
-                    isError = formInitialization.fldLastNameError.isNotEmpty(),
-                    errorMessage = formInitialization.fldLastNameError,
-                    label = stringResource(R.string.str_last_name),
-                    placeholder = stringResource(R.string.str_last_name)
-                )
-                TxtFieldEmail(
-                    value = formInitialization.fldEmail,
-                    onValueChange = { onFormEvent(Events.Content.Form.EmailChanged(it)) },
-                    enabled = formInitialization.fldEmailEnabled,
-                    isError = formInitialization.fldEmailError.isNotEmpty(),
-                    errorMessage = formInitialization.fldEmailError
-                )
-                TxtFieldPassword(
-                    value = formInitialization.fldPassword,
-                    onValueChange = { onFormEvent(Events.Content.Form.PasswordChanged(it)) },
-                    enabled = formInitialization.fldPasswordEnabled,
-                    isError = formInitialization.fldPasswordError.isNotEmpty(),
-                    errorMessage = formInitialization.fldPasswordError
-                )
-            }
-        )
-    }
+    content = { Column(
+        modifier = Modifier.padding(Constants.Dimens.dp16),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp), content =  {
+            TxtFieldPersonName(
+                value = formInitialization.fldFirstName,
+                onValueChange = { onFormEvent(Events.Content.Form.FirstNameChanged(it)) },
+                enabled = formInitialization.fldFirstNameEnabled,
+                isError = formInitialization.fldFirstNameError.isNotEmpty(),
+                errorMessage = formInitialization.fldFirstNameError,
+                label = stringResource(R.string.str_first_name),
+                placeholder = stringResource(R.string.str_first_name)
+            )
+            TxtFieldPersonName(
+                value = formInitialization.fldLastName,
+                onValueChange = { onFormEvent(Events.Content.Form.LastNameChanged(it)) },
+                enabled = formInitialization.fldLastNameEnabled,
+                isError = formInitialization.fldLastNameError.isNotEmpty(),
+                errorMessage = formInitialization.fldLastNameError,
+                label = stringResource(R.string.str_last_name),
+                placeholder = stringResource(R.string.str_last_name)
+            )
+            TxtFieldEmail(
+                value = formInitialization.fldEmail,
+                onValueChange = { onFormEvent(Events.Content.Form.EmailChanged(it)) },
+                enabled = formInitialization.fldEmailEnabled,
+                isError = formInitialization.fldEmailError.isNotEmpty(),
+                errorMessage = formInitialization.fldEmailError
+            )
+            TxtFieldPassword(
+                value = formInitialization.fldPassword,
+                onValueChange = { onFormEvent(Events.Content.Form.PasswordChanged(it)) },
+                enabled = formInitialization.fldPasswordEnabled,
+                isError = formInitialization.fldPasswordError.isNotEmpty(),
+                errorMessage = formInitialization.fldPasswordError
+            )
+        }
+    ) }
 )
 @Composable private fun SectionBottomBar(btnProceedEnabled: Boolean, onBottomBarEvent: (Events.BottomBar) -> Unit) = BottomAppBar(
     content = { Button (
