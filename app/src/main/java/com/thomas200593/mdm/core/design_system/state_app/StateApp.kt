@@ -18,10 +18,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.thomas200593.mdm.app.main.nav.DestTopLevel
 import com.thomas200593.mdm.core.design_system.network_monitor.NetworkMonitor
-import com.thomas200593.mdm.features.session.SessionManager
-import com.thomas200593.mdm.features.session.entity.DTOSessionUserData
-import com.thomas200593.mdm.features.session.entity.SessionEvent
-import com.thomas200593.mdm.features.session.entity.SessionState
+import com.thomas200593.mdm.features.user_management.security.session.SessionManager
+import com.thomas200593.mdm.features.user_management.security.session.entity.DTOSessionUserData
+import com.thomas200593.mdm.features.user_management.security.session.entity.SessionEvent
+import com.thomas200593.mdm.features.user_management.security.session.entity.SessionState
 import com.thomas200593.mdm.core.design_system.timber_logger.LocalTimberFileLogger
 import com.thomas200593.mdm.core.design_system.timber_logger.TimberFileLogger
 import kotlinx.coroutines.CoroutineScope

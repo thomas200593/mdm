@@ -8,8 +8,8 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.thomas200593.mdm.features.cnf_ui_contrast_accent.entity.ContrastAccent
-import com.thomas200593.mdm.features.cnf_ui_font_size.entity.FontSize
+import com.thomas200593.mdm.features.common.cnf_ui_contrast_accent.entity.ContrastAccent
+import com.thomas200593.mdm.features.common.cnf_ui_font_size.entity.FontSize
 
 object Theme {
     private val lightContrastDefault = Color.Light.ContrastDefault.colorScheme

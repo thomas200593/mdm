@@ -1,10 +1,10 @@
 package com.thomas200593.mdm.app.main.ui.state
 
-import com.thomas200593.mdm.features.cnf_ui_contrast_accent.entity.ContrastAccent
-import com.thomas200593.mdm.features.cnf_ui_dynamic_color.entity.DynamicColor
-import com.thomas200593.mdm.features.cnf_ui_font_size.entity.FontSize
-import com.thomas200593.mdm.features.cnf_ui_theme.entity.Theme
-import com.thomas200593.mdm.features.cnf_common.entity.Common
+import com.thomas200593.mdm.features.common.cnf_ui_contrast_accent.entity.ContrastAccent
+import com.thomas200593.mdm.features.common.cnf_ui_dynamic_color.entity.DynamicColor
+import com.thomas200593.mdm.features.common.cnf_ui_font_size.entity.FontSize
+import com.thomas200593.mdm.features.common.cnf_ui_theme.entity.Theme
+import com.thomas200593.mdm.features.common.cnf_common.entity.Common
 
 sealed interface UiStateMain {
     data object Loading : UiStateMain

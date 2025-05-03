@@ -18,7 +18,7 @@ import com.thomas200593.mdm.app.main.ui.ScrApp
 import com.thomas200593.mdm.app.main.ui.state.UiData
 import com.thomas200593.mdm.app.main.ui.state.UiStateMain
 import com.thomas200593.mdm.core.design_system.network_monitor.NetworkMonitor
-import com.thomas200593.mdm.features.session.SessionManager
+import com.thomas200593.mdm.features.user_management.security.session.SessionManager
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.rememberStateApp
 import com.thomas200593.mdm.core.design_system.timber_logger.LocalTimberFileLogger
