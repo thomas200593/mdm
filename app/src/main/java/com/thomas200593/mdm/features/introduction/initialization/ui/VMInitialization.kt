@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.introduction.initialization.ui_2
+package com.thomas200593.mdm.features.introduction.initialization.ui
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,11 +10,11 @@ import com.thomas200593.mdm.features.user_management.security.auth.entity.AuthTy
 import com.thomas200593.mdm.features.introduction.initialization.domain.UCCreateInitialUser
 import com.thomas200593.mdm.features.introduction.initialization.domain.UCGetScreenData
 import com.thomas200593.mdm.features.introduction.initialization.entity.DTOInitialization
-import com.thomas200593.mdm.features.introduction.initialization.ui_2.events.Events
-import com.thomas200593.mdm.features.introduction.initialization.ui_2.state.ComponentsState
-import com.thomas200593.mdm.features.introduction.initialization.ui_2.state.DialogState
-import com.thomas200593.mdm.features.introduction.initialization.ui_2.state.FormInitializationState
-import com.thomas200593.mdm.features.introduction.initialization.ui_2.state.ResultInitialization
+import com.thomas200593.mdm.features.introduction.initialization.ui.events.Events
+import com.thomas200593.mdm.features.introduction.initialization.ui.state.ComponentsState
+import com.thomas200593.mdm.features.introduction.initialization.ui.state.DialogState
+import com.thomas200593.mdm.features.introduction.initialization.ui.state.FormInitializationState
+import com.thomas200593.mdm.features.introduction.initialization.ui.state.ResultInitialization
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

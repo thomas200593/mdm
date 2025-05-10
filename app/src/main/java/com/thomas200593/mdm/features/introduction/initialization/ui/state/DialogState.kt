@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.introduction.initialization.ui_2.state
+package com.thomas200593.mdm.features.introduction.initialization.ui.state
 
 sealed interface DialogState {
     data object None : DialogState

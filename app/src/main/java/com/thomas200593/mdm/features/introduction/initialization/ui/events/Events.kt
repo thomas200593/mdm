@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.introduction.initialization.ui_2.events
+package com.thomas200593.mdm.features.introduction.initialization.ui.events
 
 sealed interface Events {
     sealed interface Screen : Events {

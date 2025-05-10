@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.introduction.initialization.ui_2.state
+package com.thomas200593.mdm.features.introduction.initialization.ui.state
 
 import com.thomas200593.mdm.features.introduction.initialization.entity.DTOInitialization
 
