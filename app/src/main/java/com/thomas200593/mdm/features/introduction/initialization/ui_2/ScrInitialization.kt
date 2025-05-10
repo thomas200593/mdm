@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.introduction.initialization.ui
+package com.thomas200593.mdm.features.introduction.initialization.ui_2
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -52,10 +52,10 @@ import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPersonName
-import com.thomas200593.mdm.features.introduction.initialization.ui.events.Events
-import com.thomas200593.mdm.features.introduction.initialization.ui.state.ComponentsState
-import com.thomas200593.mdm.features.introduction.initialization.ui.state.DialogState
-import com.thomas200593.mdm.features.introduction.initialization.ui.state.FormInitializationState
+import com.thomas200593.mdm.features.introduction.initialization.ui_2.events.Events
+import com.thomas200593.mdm.features.introduction.initialization.ui_2.state.ComponentsState
+import com.thomas200593.mdm.features.introduction.initialization.ui_2.state.DialogState
+import com.thomas200593.mdm.features.introduction.initialization.ui_2.state.FormInitializationState
 import com.thomas200593.mdm.features.bootstrap.nav.navToBootstrap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

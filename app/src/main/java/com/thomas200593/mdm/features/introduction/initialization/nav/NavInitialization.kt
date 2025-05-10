@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.thomas200593.mdm.app.main.nav.NavigationGraph
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
-import com.thomas200593.mdm.features.introduction.initialization.ui.ScrInitialization
+import com.thomas200593.mdm.features.introduction.initialization.ui_2.ScrInitialization
 
 fun NavGraphBuilder.navGraphInitialization() {
     navigation <NavigationGraph.GraphInitialization>(

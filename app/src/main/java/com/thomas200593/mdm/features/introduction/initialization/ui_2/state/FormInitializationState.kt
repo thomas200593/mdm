@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.introduction.initialization.ui.state
+package com.thomas200593.mdm.features.introduction.initialization.ui_2.state
 
 import com.thomas200593.mdm.core.design_system.util.Constants.STR_EMPTY
 import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldEmailValidation

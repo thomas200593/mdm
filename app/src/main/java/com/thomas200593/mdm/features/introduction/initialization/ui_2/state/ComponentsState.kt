@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.introduction.initialization.ui.state
+package com.thomas200593.mdm.features.introduction.initialization.ui_2.state
 
 import com.thomas200593.mdm.features.common.cnf_common.entity.Common
 import com.thomas200593.mdm.features.user_management.role.entity.RoleEntity
