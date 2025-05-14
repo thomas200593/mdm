@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Checklist
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,7 +36,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,6 +48,7 @@ import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
+import com.thomas200593.mdm.core.ui.common.Theme
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.LoadingDialog
@@ -57,6 +63,8 @@ import com.thomas200593.mdm.features.introduction.initialization.ui.state.Compon
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.DialogState
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.FormInitializationState
 import com.thomas200593.mdm.features.bootstrap.nav.navToBootstrap
+import com.thomas200593.mdm.features.common.cnf_ui_contrast_accent.entity.ContrastAccent
+import com.thomas200593.mdm.features.common.cnf_ui_font_size.entity.FontSize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -64,7 +72,7 @@ import kotlinx.coroutines.launch
     scrGraph: ScrGraphs.Initialization, vm: VMInitialization = hiltViewModel(), stateApp: StateApp = LocalStateApp.current,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
-    val uiState by vm.uiState.collectAsStateWithLifecycle()
+    /*val uiState by vm.uiState.collectAsStateWithLifecycle()
     val formInitialization = vm.formInitialization
     LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrInitialization(
@@ -73,9 +81,73 @@ import kotlinx.coroutines.launch
         onFormEvent = { vm.onFormEvent(it) }, onBottomBarEvent = { vm.onBottomBarEvent(it) },
         onInitializationSuccess = { vm.onDialogEvent(Events.Dialog.SuccessDismissed)
             .also { coroutineScope.launch { stateApp.navController.navToBootstrap() } } }
+    )*/
+    ScrInitialization()
+}
+@OptIn(ExperimentalMaterial3Api::class) @Composable private fun ScrInitialization() {
+    Scaffold(
+        modifier = Modifier,
+        topBar = {
+            TopAppBar(
+                title = {},
+                actions = {
+                    IconButton(
+                        onClick = {},
+                        content = {
+                            Icon(imageVector = Icons.Default.Info, contentDescription = null)
+                        }
+                    )
+                }
+            )
+        },
+        content = {
+            LazyColumn(
+                modifier = Modifier.padding(it).fillMaxSize(),
+                content = {
+                    item {
+                        Card (
+                            modifier = Modifier.fillMaxWidth().padding(8.dp),
+                            content = {
+                                Row (
+                                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(modifier = Modifier.wrapContentWidth(), imageVector = Icons.Default.Info, contentDescription = null)
+                                    Text(modifier = Modifier.weight(1.0f), text = "First thing first, set up your account. it will be administrator role")
+                                }
+                            }
+                        )
+                    }
+                }
+            )
+        },
+        bottomBar = {
+            BottomAppBar(
+                modifier = Modifier,
+                content = {
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {},
+                        content = {
+                            Text("Proceed")
+                        }
+                    )
+                }
+            )
+        }
     )
 }
-@Composable private fun ScrInitialization(
+@Preview @Composable private fun Preview() = Theme.AppTheme(
+    darkThemeEnabled = true,
+    dynamicColorEnabled = true,
+    contrastAccent = ContrastAccent.defaultValue,
+    fontSize = FontSize.defaultValue,
+    content = {
+        ScrInitialization()
+    }
+)
+/*@Composable private fun ScrInitialization(
     scrGraph: ScrGraphs.Initialization, components: ComponentsState, formInitialization: FormInitializationState,
     onTopBarEvent: (Events.TopBar) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit,
     onFormEvent: (Events.Content.Form) -> Unit, onDialogEvent: (Events.Dialog) -> Unit,
@@ -208,4 +280,4 @@ import kotlinx.coroutines.launch
         shape = MaterialTheme.shapes.extraSmall,
         content = { Text(text = stringResource(R.string.str_proceed)) }
     ) }
-)
+)*/
