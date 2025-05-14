@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -49,7 +50,10 @@ import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.Theme
+import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
+import com.thomas200593.mdm.core.ui.component.TxtMdBody
+import com.thomas200593.mdm.core.ui.component.TxtMdTitle
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.LoadingDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
@@ -105,18 +109,24 @@ import kotlinx.coroutines.launch
                 modifier = Modifier.padding(it).fillMaxSize(),
                 content = {
                     item {
-                        Card (
-                            modifier = Modifier.fillMaxWidth().padding(8.dp),
-                            content = {
+                        PanelCard(
+                            modifier = Modifier.padding(Constants.Dimens.dp16),
+                            colors = CardDefaults.cardColors().copy(
+                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                            ),
+                            title = {
                                 Row (
-                                    modifier = Modifier.fillMaxWidth().padding(8.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(modifier = Modifier.wrapContentWidth(), imageVector = Icons.Default.Info, contentDescription = null)
-                                    Text(modifier = Modifier.weight(1.0f), text = "First thing first, set up your account. it will be administrator role")
-                                }
-                            }
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    content = {
+                                        Icon(modifier = Modifier.wrapContentWidth(), imageVector = Icons.Default.Info, contentDescription = null)
+                                        TxtMdTitle(modifier = Modifier.weight(1.0f), text = "Important")
+                                    }
+                                )
+                            },
+                            content = { TxtMdBody(modifier = Modifier.fillMaxWidth(), text = "First thing first, set up your account") }
                         )
                     }
                 }

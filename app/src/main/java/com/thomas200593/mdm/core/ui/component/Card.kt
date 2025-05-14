@@ -1,6 +1,7 @@
 package com.thomas200593.mdm.core.ui.component
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,7 +33,12 @@ import com.thomas200593.mdm.core.design_system.util.Constants
         content = {
             Column (
                 modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp16),
-                content = { title?.invoke(); content.invoke(); footer?.invoke() }
+                verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
+                content = {
+                    title?.invoke()
+                    content.invoke()
+                    footer?.invoke()
+                }
             )
         }
     )
