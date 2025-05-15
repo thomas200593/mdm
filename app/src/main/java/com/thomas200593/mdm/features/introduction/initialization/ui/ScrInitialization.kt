@@ -1,80 +1,57 @@
 package com.thomas200593.mdm.features.introduction.initialization.ui
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DatePicker
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.thomas200593.mdm.R
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.Theme
 import com.thomas200593.mdm.core.ui.component.PanelCard
-import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.TxtMdTitle
-import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
-import com.thomas200593.mdm.core.ui.component.dialog.LoadingDialog
-import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
-import com.thomas200593.mdm.core.ui.component.dialog.SuccessDialog
-import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
+import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldDatePickerSingle
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPersonName
-import com.thomas200593.mdm.features.introduction.initialization.ui.events.Events
-import com.thomas200593.mdm.features.introduction.initialization.ui.state.ComponentsState
-import com.thomas200593.mdm.features.introduction.initialization.ui.state.DialogState
-import com.thomas200593.mdm.features.introduction.initialization.ui.state.FormInitializationState
-import com.thomas200593.mdm.features.bootstrap.nav.navToBootstrap
 import com.thomas200593.mdm.features.common.cnf_ui_contrast_accent.entity.ContrastAccent
 import com.thomas200593.mdm.features.common.cnf_ui_font_size.entity.FontSize
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 @Composable fun ScrInitialization(
-    scrGraph: ScrGraphs.Initialization, vm: VMInitialization = hiltViewModel(), stateApp: StateApp = LocalStateApp.current,
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
+    scrGraph: ScrGraphs.Initialization, vm: VMInitialization = hiltViewModel(),
+    stateApp: StateApp = LocalStateApp.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     /*val uiState by vm.uiState.collectAsStateWithLifecycle()
     val formInitialization = vm.formInitialization
@@ -110,23 +87,83 @@ import kotlinx.coroutines.launch
                 content = {
                     item {
                         PanelCard(
-                            modifier = Modifier.padding(Constants.Dimens.dp16),
-                            colors = CardDefaults.cardColors().copy(
-                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer
-                            ),
+                            modifier = Modifier.padding(Constants.Dimens.dp8),
+                            colors = CardDefaults.cardColors()
+                                .copy(containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer),
                             title = {
                                 Row (
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
                                     verticalAlignment = Alignment.CenterVertically,
                                     content = {
-                                        Icon(modifier = Modifier.wrapContentWidth(), imageVector = Icons.Default.Info, contentDescription = null)
+                                        Icon(
+                                            modifier = Modifier.wrapContentWidth(),
+                                            imageVector = Icons.Default.Info,
+                                            contentDescription = null
+                                        )
                                         TxtMdTitle(modifier = Modifier.weight(1.0f), text = "Important")
                                     }
                                 )
                             },
-                            content = { TxtMdBody(modifier = Modifier.fillMaxWidth(), text = "First thing first, set up your account") }
+                            content = {
+                                TxtMdBody(modifier = Modifier.fillMaxWidth(), text = "First thing first, set up your account")
+                            }
+                        )
+                    }
+                    item {
+                        PanelCard(
+                            modifier = Modifier.padding(Constants.Dimens.dp8),
+                            content = {
+                                TxtFieldPersonName(value = "", onValueChange = {})
+                                TxtFieldPersonName(value = "", onValueChange = {})
+                                TxtFieldDatePickerSingle(value = LocalDate.now(), onValueChange = {})
+                                TxtFieldEmail(value = "", onValueChange = {})
+                                TxtFieldPassword(value = "", onValueChange = {})
+                                Row (
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    content = {
+                                        Checkbox(
+                                            modifier = Modifier.wrapContentWidth(), checked = false,
+                                            onCheckedChange = {}
+                                        )
+                                        Text(
+                                            modifier = Modifier.weight(1.0f),
+                                            text = buildAnnotatedString {
+                                                append("I agree the ")
+                                                withLink(
+                                                    LinkAnnotation.Url(
+                                                        url = "https://google.com/",
+                                                        styles = TextLinkStyles(
+                                                            style = SpanStyle(
+                                                                color = MaterialTheme.colorScheme.primary,
+                                                                fontWeight = FontWeight.Bold
+                                                            )
+                                                        )
+                                                    ),
+                                                    block = { append("Terms of Conditions ") }
+                                                )
+                                                append("and ")
+                                                withLink(
+                                                    LinkAnnotation.Url(
+                                                        url = "https://google.com/",
+                                                        styles = TextLinkStyles(
+                                                            style = SpanStyle(
+                                                                color = MaterialTheme.colorScheme.primary,
+                                                                fontWeight = FontWeight.Bold
+                                                            )
+                                                        )
+                                                    ),
+                                                    block = { append("Privacy Policy") }
+                                                )
+                                                append(".")
+                                            }
+                                        )
+                                    }
+                                )
+                            }
                         )
                     }
                 }
@@ -139,6 +176,7 @@ import kotlinx.coroutines.launch
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {},
+                        shape = MaterialTheme.shapes.extraSmall,
                         content = {
                             Text("Proceed")
                         }
