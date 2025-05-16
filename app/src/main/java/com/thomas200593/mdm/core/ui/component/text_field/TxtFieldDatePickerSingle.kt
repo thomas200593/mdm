@@ -61,20 +61,27 @@ import java.time.format.DateTimeFormatter
         singleLine = true
     )
     if (showDialog) {
-        val datePickerState = rememberDatePickerState (initialSelectedDateMillis = value.toEpochMilli(), yearRange = hundredYearsAgo.year..today.year)
+        val datePickerState = rememberDatePickerState (
+            initialSelectedDateMillis = value.toEpochMilli(),
+            yearRange = hundredYearsAgo.year..today.year
+        )
         DatePickerDialog (
             onDismissRequest = { showDialog = false },
             confirmButton = {
-                TextButton(onClick = {
-                    datePickerState.selectedDateMillis?.let { millis ->
-                        currentOnValueChange(millis.toLocalDate())
-                    }
-                    showDialog = false
-                }, content = {
-                    Text(stringResource(android.R.string.ok))
-                })
+                TextButton(
+                    onClick = {
+                        datePickerState.selectedDateMillis
+                            ?. let { millis -> currentOnValueChange(millis.toLocalDate()) }
+                        showDialog = false
+                    },
+                    content = { Text(stringResource(android.R.string.ok)) })
             },
-            dismissButton = { TextButton (onClick = { showDialog = false }) { Text(stringResource(android.R.string.cancel)) } },
+            dismissButton = {
+                TextButton (
+                    onClick = { showDialog = false },
+                    content = { Text(stringResource(android.R.string.cancel)) }
+                )
+            },
             content = { DatePicker(state = datePickerState, showModeToggle = false) }
         )
     }

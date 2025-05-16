@@ -40,14 +40,12 @@ import com.thomas200593.mdm.core.ui.common.Theme
 import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.TxtMdTitle
-import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldDatePickerSingle
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPersonName
 import com.thomas200593.mdm.features.common.cnf_ui_contrast_accent.entity.ContrastAccent
 import com.thomas200593.mdm.features.common.cnf_ui_font_size.entity.FontSize
 import kotlinx.coroutines.CoroutineScope
-import java.time.LocalDate
 
 @Composable fun ScrInitialization(
     scrGraph: ScrGraphs.Initialization, vm: VMInitialization = hiltViewModel(),
@@ -115,9 +113,9 @@ import java.time.LocalDate
                         PanelCard(
                             modifier = Modifier.padding(Constants.Dimens.dp8),
                             content = {
-                                TxtFieldPersonName(value = "", onValueChange = {})
-                                TxtFieldPersonName(value = "", onValueChange = {})
-                                TxtFieldDatePickerSingle(value = LocalDate.now(), onValueChange = {})
+                                TxtFieldPersonName(value = "", onValueChange = {}, label = "First name", placeholder = "John")
+                                TxtFieldPersonName(value = "", onValueChange = {}, label = "Last name (optional)", placeholder = "Doe")
+                                //TxtFieldDatePickerSingle(value = LocalDate.now(), onValueChange = {})
                                 TxtFieldEmail(value = "", onValueChange = {})
                                 TxtFieldPassword(value = "", onValueChange = {})
                                 Row (
@@ -125,10 +123,7 @@ import java.time.LocalDate
                                     horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
                                     verticalAlignment = Alignment.CenterVertically,
                                     content = {
-                                        Checkbox(
-                                            modifier = Modifier.wrapContentWidth(), checked = false,
-                                            onCheckedChange = {}
-                                        )
+                                        Checkbox(modifier = Modifier.wrapContentWidth(), checked = false, onCheckedChange = {})
                                         Text(
                                             modifier = Modifier.weight(1.0f),
                                             text = buildAnnotatedString {
