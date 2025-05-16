@@ -115,7 +115,6 @@ import kotlinx.coroutines.CoroutineScope
                             content = {
                                 TxtFieldPersonName(value = "", onValueChange = {}, label = "First name", placeholder = "John")
                                 TxtFieldPersonName(value = "", onValueChange = {}, label = "Last name (optional)", placeholder = "Doe")
-                                //TxtFieldDatePickerSingle(value = LocalDate.now(), onValueChange = {})
                                 TxtFieldEmail(value = "", onValueChange = {})
                                 TxtFieldPassword(value = "", onValueChange = {})
                                 Row (
