@@ -3,9 +3,11 @@ package com.thomas200593.mdm.core.design_system.util
 import androidx.compose.ui.unit.dp
 import com.thomas200593.mdm.BuildConfig
 import java.time.Instant
+import java.time.LocalDate
 
 /*TODO: refactor that to resources*/
 object Constants {
+    val NOW_DATE: LocalDate = LocalDate.now()
     val NOW_EPOCH_SECOND = Instant.now().epochSecond
     val NOW_EPOCH_MILLISECOND = Instant.now().toEpochMilli()
     const val WEEK_IN_SECOND = 604_800

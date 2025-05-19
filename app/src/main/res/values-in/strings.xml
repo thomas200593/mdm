@@ -25,4 +25,5 @@
     <string name="str_ok">OK</string>
     <string name="str_role_selection">Pemilihan Role</string>
     <string name="str_pick_a_date">Pilih Tanggal</string>
+    <string name="str_today">Hari ini</string>
 </resources>
