@@ -38,8 +38,10 @@ import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.Theme
 import com.thomas200593.mdm.core.ui.component.PanelCard
+import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.TxtMdTitle
+import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldDatePicker
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPersonName
@@ -112,9 +114,11 @@ import kotlinx.coroutines.CoroutineScope
                     item {
                         PanelCard(
                             modifier = Modifier.padding(Constants.Dimens.dp8),
+                            title = { TxtLgTitle("Administrator Form") },
                             content = {
                                 TxtFieldPersonName(value = "", onValueChange = {}, label = "First name", placeholder = "John")
                                 TxtFieldPersonName(value = "", onValueChange = {}, label = "Last name (optional)", placeholder = "Doe")
+                                TxtFieldDatePicker(value = "", onValueChange = {}, label = "Date of birth", placeholder = "1900-Jan-01")
                                 TxtFieldEmail(value = "", onValueChange = {})
                                 TxtFieldPassword(value = "", onValueChange = {})
                                 Row (

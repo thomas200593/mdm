@@ -25,4 +25,5 @@
     <string name="str_auth">Authentication</string>
     <string name="str_ok">OK</string>
     <string name="str_role_selection">Role Selection</string>
+    <string name="str_pick_a_date">Pick a Date</string>
 </resources>
