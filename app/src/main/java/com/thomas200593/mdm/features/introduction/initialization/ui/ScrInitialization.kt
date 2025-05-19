@@ -21,7 +21,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.LinkAnnotation
@@ -41,6 +45,7 @@ import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.TxtMdTitle
+import com.thomas200593.mdm.core.ui.component.text_field.DateTimePattern
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldDatePicker
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
@@ -118,7 +123,18 @@ import kotlinx.coroutines.CoroutineScope
                             content = {
                                 TxtFieldPersonName(value = "", onValueChange = {}, label = "First name", placeholder = "John")
                                 TxtFieldPersonName(value = "", onValueChange = {}, label = "Last name (optional)", placeholder = "Doe")
-                                TxtFieldDatePicker(value = "", onValueChange = {}, label = "Date of birth", placeholder = "1900-Jan-01")
+                                var date by remember {
+                                    mutableStateOf("")
+                                }
+                                TxtFieldDatePicker(
+                                    value = date,
+                                    onValueChange = {
+                                        date = it
+                                    },
+                                    label = "Date of birth",
+                                    placeholder = "Date of birth",
+                                    displayFormat = DateTimePattern.YYYY_MM_DD
+                                )
                                 TxtFieldEmail(value = "", onValueChange = {})
                                 TxtFieldPassword(value = "", onValueChange = {})
                                 Row (
