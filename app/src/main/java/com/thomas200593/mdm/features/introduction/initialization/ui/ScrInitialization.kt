@@ -116,9 +116,9 @@ import kotlinx.coroutines.CoroutineScope
     )
 }
 @Composable private fun ScreenContent(
-    scrGraph: ScrGraphs.Initialization, components: ComponentsState.Loaded, formInitialization: FormInitializationState,
-    onTopBarEvent: (Events.TopBar) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit,
-    onDialogEvent: (Events.Dialog) -> Unit
+    scrGraph: ScrGraphs.Initialization, components: ComponentsState.Loaded,
+    formInitialization: FormInitializationState, onDialogEvent: (Events.Dialog) -> Unit,
+    onTopBarEvent: (Events.TopBar) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit
 ) {
     HandleDialogs(
         scrGraph = scrGraph,
@@ -130,14 +130,19 @@ import kotlinx.coroutines.CoroutineScope
         modifier = Modifier.imePadding(),
         topBar = { SectionTopBar(onTopBarEvent = onTopBarEvent) },
         content = { SectionContent(paddingValues = it, formInitialization = formInitialization) },
-        bottomBar = { AnimatedVisibility(
-            visible = formInitialization.btnProceedVisible,
-            enter = fadeIn() + slideInVertically(), exit = fadeOut() + slideOutVertically(),
-            content = { SectionBottomBar(
-                formInitialization = formInitialization,
-                onBottomBarEvent = onBottomBarEvent
-            ) }
-        ) }
+        bottomBar = {
+            AnimatedVisibility(
+                visible = formInitialization.btnProceedVisible,
+                enter = fadeIn() + slideInVertically(),
+                exit = fadeOut() + slideOutVertically(),
+                content = {
+                    SectionBottomBar(
+                        formInitialization = formInitialization,
+                        onBottomBarEvent = onBottomBarEvent
+                    )
+                }
+            )
+        }
     )
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
@@ -208,17 +213,47 @@ import kotlinx.coroutines.CoroutineScope
     modifier = Modifier.padding(Constants.Dimens.dp8),
     title = { TxtLgTitle(stringResource(R.string.str_initialization)) },
     content = {
-        TxtFieldPersonName(value = "", onValueChange = {/*TODO*/}, label = "First name", placeholder = "John")
-        TxtFieldPersonName(value = "", onValueChange = {/*TODO*/}, label = "Last name (optional)", placeholder = "Doe")
-        TxtFieldDatePicker(value = "", onValueChange = {/*TODO*/}, label = "Date of birth", placeholder = "Date of birth")
-        TxtFieldEmail(value = "", onValueChange = {/*TODO*/})
-        TxtFieldPassword(value = "", onValueChange = {/*TODO*/})
+        TxtFieldPersonName(
+            value = formInitialization.fldFirstName,
+            onValueChange = {/*TODO*/},
+            enabled = formInitialization.fldFirstNameEnabled,
+            isError = formInitialization.fldFirstNameError.isNotEmpty(),
+            errorMessage = formInitialization.fldFirstNameError,
+            label = "First name",
+            placeholder = "John"
+        )
+        TxtFieldPersonName(
+            value = "",
+            onValueChange = {/*TODO*/},
+            enabled = true, /*TODO*/
+            isError = true, /*TODO*/
+            errorMessage = listOf(), /*TODO*/
+            label = "Last name (optional)",
+            placeholder = "Doe"
+        )
+        TxtFieldDatePicker(
+            value = "",
+            onValueChange = {/*TODO*/},
+            label = "Date of birth",
+            placeholder = "Date of birth"
+        )
+        TxtFieldEmail(
+            value = "",
+            onValueChange = {/*TODO*/}
+        )
+        TxtFieldPassword(
+            value = "",
+            onValueChange = {/*TODO*/}
+        )
         Row (
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
+            horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
             verticalAlignment = Alignment.CenterVertically,
             content = {
-                Checkbox(modifier = Modifier.wrapContentWidth(), checked = false, onCheckedChange = {/*TODO*/})
+                Checkbox(
+                    modifier = Modifier.wrapContentWidth(),
+                    checked = false, onCheckedChange = {/*TODO*/}
+                )
                 Text(
                     modifier = Modifier.weight(1.0f),
                     text = buildAnnotatedString(
@@ -229,8 +264,8 @@ import kotlinx.coroutines.CoroutineScope
                                     url = "https://google.com/",
                                     styles = TextLinkStyles(
                                         style = SpanStyle(
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontWeight = FontWeight.Bold
+                                            color = MaterialTheme.colorScheme.primary,
+                                            fontWeight = FontWeight.Bold
                                         )
                                     )
                                 ),
@@ -246,8 +281,8 @@ import kotlinx.coroutines.CoroutineScope
                                     url = "https://google.com/",
                                     styles = TextLinkStyles(
                                         style = SpanStyle(
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontWeight = FontWeight.Bold
+                                            color = MaterialTheme.colorScheme.primary,
+                                            fontWeight = FontWeight.Bold
                                         )
                                     )
                                 ),
@@ -266,7 +301,8 @@ import kotlinx.coroutines.CoroutineScope
     }
 )
 @Composable private fun SectionBottomBar(
-    formInitialization: FormInitializationState, onBottomBarEvent: (Events.BottomBar) -> Unit
+    formInitialization: FormInitializationState,
+    onBottomBarEvent: (Events.BottomBar) -> Unit
 ) = BottomAppBar(
     content = {
         Button (
