@@ -28,13 +28,9 @@ import com.thomas200593.mdm.R
 import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 
 @Composable fun TxtFieldPassword(
-    modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
-    enabled: Boolean = true,
-    readOnly: Boolean = false,
-    isError: Boolean = false,
-    errorMessage: List<UiText> = emptyList()
+    modifier: Modifier = Modifier, value: String, onValueChange: (String) -> Unit,
+    enabled: Boolean = true, readOnly: Boolean = false,
+    isError: Boolean = false, errorMessage: List<UiText> = emptyList()
 ) {
     val context = LocalContext.current
     val currentOnValueChange by rememberUpdatedState(onValueChange)
@@ -51,6 +47,7 @@ import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
         placeholder = { Text(stringResource(R.string.str_password)) },
         leadingIcon = { Icon(Icons.Outlined.Password, contentDescription = null) },
         trailingIcon = { PasswordVisibilityToggleIcon(
+            enabled = enabled,
             passwordVisible = passwordVisible,
             onTogglePasswordVisibility = { passwordVisible = !passwordVisible }
         ) },
@@ -62,14 +59,14 @@ import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
     )
 }
 @Composable private fun PasswordVisibilityToggleIcon(
-    passwordVisible: Boolean,
-    onTogglePasswordVisibility: () -> Unit
+    enabled: Boolean, passwordVisible: Boolean, onTogglePasswordVisibility: () -> Unit
 ) {
     val image = remember(passwordVisible)
     { if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff }
     val contentDescription = if (passwordVisible) "Hide password icon" else "Show password icon"
     IconButton(
         onClick = onTogglePasswordVisibility,
+        enabled = enabled,
         content = { Icon(imageVector = image, contentDescription = contentDescription) }
     )
 }

@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.thomas200593.mdm.R
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
@@ -114,7 +116,7 @@ import kotlinx.coroutines.CoroutineScope
                     item {
                         PanelCard(
                             modifier = Modifier.padding(Constants.Dimens.dp8),
-                            title = { TxtLgTitle("Administrator Form") },
+                            title = { TxtLgTitle(stringResource(R.string.str_initialization)) },
                             content = {
                                 TxtFieldPersonName(value = "", onValueChange = {}, label = "First name", placeholder = "John")
                                 TxtFieldPersonName(value = "", onValueChange = {}, label = "Last name (optional)", placeholder = "Doe")
