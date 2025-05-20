@@ -1,6 +1,8 @@
 package com.thomas200593.mdm.features.introduction.initialization.ui.state
 
 import com.thomas200593.mdm.core.design_system.util.Constants.STR_EMPTY
+import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldDatePicker
+import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldDatePickerValidation
 import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldEmailValidation
 import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldPasswordValidation
 import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldPersonNameValidation
@@ -33,11 +35,8 @@ data class FormInitializationState(
     val btnProceedVisible: Boolean = false,
     val btnProceedEnabled: Boolean = false
 ) {
-    private val firstNameValidator = TxtFieldPersonNameValidation()
-    private val lastNameValidator = TxtFieldPersonNameValidation()
-    private val emailValidator = TxtFieldEmailValidation()
-    private val passwordValidator = TxtFieldPasswordValidation()
-
+    private val canProceed get() = fldFirstNameError.isEmpty() && fldLastNameError.isEmpty() &&
+        fldEmailError.isEmpty() && fldPasswordError.isEmpty() && (fldChbToCChecked == true)
     fun validateField(
         firstName: String = fldFirstName,
         lastName: String = fldLastName,
@@ -47,7 +46,7 @@ data class FormInitializationState(
     ) = copy(
         fldFirstName = firstName,
         fldFirstNameError = firstNameValidator.validate(
-            firstName,
+            input = firstName,
             required = true
         ).errorMessages,
 
@@ -70,12 +69,7 @@ data class FormInitializationState(
 
         fldChbToCChecked = chbToCChecked
     ).validateFields()
-    fun validateFields() = copy(
-        btnProceedVisible = fldFirstNameError.isEmpty() && fldLastNameError.isEmpty() &&
-                fldEmailError.isEmpty() && fldPasswordError.isEmpty() && fldChbToCChecked == true,
-        btnProceedEnabled = fldFirstNameError.isEmpty() && fldLastNameError.isEmpty() &&
-                fldEmailError.isEmpty() && fldPasswordError.isEmpty() && fldChbToCChecked == true
-    )
+    fun validateFields() = copy(btnProceedVisible = canProceed, btnProceedEnabled = canProceed)
     fun disableInputs() = copy(
         fldFirstNameEnabled = false,
         fldLastNameEnabled = false,
@@ -84,4 +78,11 @@ data class FormInitializationState(
         fldChbToCEnabled = false,
         btnProceedEnabled = false
     )
+    companion object {
+        private val firstNameValidator = TxtFieldPersonNameValidation()
+        private val lastNameValidator = TxtFieldPersonNameValidation()
+        private val dateOfBirthValidator = TxtFieldDatePickerValidation()
+        private val emailValidator = TxtFieldEmailValidation()
+        private val passwordValidator = TxtFieldPasswordValidation()
+    }
 }
