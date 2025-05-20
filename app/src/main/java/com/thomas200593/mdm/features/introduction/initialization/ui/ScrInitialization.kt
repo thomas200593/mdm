@@ -1,9 +1,16 @@
 package com.thomas200593.mdm.features.introduction.initialization.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,9 +25,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,213 +41,69 @@ import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withLink
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas200593.mdm.R
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
-import com.thomas200593.mdm.core.ui.common.Theme
 import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.TxtMdTitle
+import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
+import com.thomas200593.mdm.core.ui.component.dialog.LoadingDialog
+import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
+import com.thomas200593.mdm.core.ui.component.dialog.SuccessDialog
+import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldDatePicker
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPersonName
-import com.thomas200593.mdm.features.common.cnf_ui_contrast_accent.entity.ContrastAccent
-import com.thomas200593.mdm.features.common.cnf_ui_font_size.entity.FontSize
+import com.thomas200593.mdm.features.introduction.initialization.ui.events.Events
+import com.thomas200593.mdm.features.introduction.initialization.ui.state.ComponentsState
+import com.thomas200593.mdm.features.introduction.initialization.ui.state.DialogState
+import com.thomas200593.mdm.features.introduction.initialization.ui.state.FormInitializationState
 import kotlinx.coroutines.CoroutineScope
 
 @Composable fun ScrInitialization(
     scrGraph: ScrGraphs.Initialization, vm: VMInitialization = hiltViewModel(),
     stateApp: StateApp = LocalStateApp.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
-    /*val uiState by vm.uiState.collectAsStateWithLifecycle()
+    val uiState by vm.uiState.collectAsStateWithLifecycle()
     val formInitialization = vm.formInitialization
-    LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
+    LaunchedEffect (key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrInitialization(
-        scrGraph = scrGraph, components = uiState.componentsState, formInitialization = formInitialization,
-        onDialogEvent = { vm.onDialogEvent(it) }, onTopBarEvent = { vm.onTopBarEvent(it) },
-        onFormEvent = { vm.onFormEvent(it) }, onBottomBarEvent = { vm.onBottomBarEvent(it) },
-        onInitializationSuccess = { vm.onDialogEvent(Events.Dialog.SuccessDismissed)
-            .also { coroutineScope.launch { stateApp.navController.navToBootstrap() } } }
-    )*/
-    ScrInitialization()
-}
-@OptIn(ExperimentalMaterial3Api::class) @Composable private fun ScrInitialization() {
-    Scaffold(
-        modifier = Modifier,
-        topBar = {
-            TopAppBar(
-                title = {},
-                actions = {
-                    IconButton(
-                        onClick = {},
-                        content = {
-                            Icon(imageVector = Icons.Default.Info, contentDescription = null)
-                        }
-                    )
-                }
-            )
-        },
-        content = {
-            LazyColumn(
-                modifier = Modifier.padding(it).fillMaxSize(),
-                content = {
-                    item {
-                        PanelCard(
-                            modifier = Modifier.padding(Constants.Dimens.dp8),
-                            colors = CardDefaults.cardColors()
-                                .copy(containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer),
-                            title = {
-                                Row (
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    content = {
-                                        Icon(
-                                            modifier = Modifier.wrapContentWidth(),
-                                            imageVector = Icons.Default.Info,
-                                            contentDescription = null
-                                        )
-                                        TxtMdTitle(modifier = Modifier.weight(1.0f), text = "Important")
-                                    }
-                                )
-                            },
-                            content = {
-                                TxtMdBody(modifier = Modifier.fillMaxWidth(), text = "First thing first, set up your account")
-                            }
-                        )
-                    }
-                    item {
-                        PanelCard(
-                            modifier = Modifier.padding(Constants.Dimens.dp8),
-                            title = { TxtLgTitle(stringResource(R.string.str_initialization)) },
-                            content = {
-                                TxtFieldPersonName(value = "", onValueChange = {}, label = "First name", placeholder = "John")
-                                TxtFieldPersonName(value = "", onValueChange = {}, label = "Last name (optional)", placeholder = "Doe")
-                                TxtFieldDatePicker(value = "", onValueChange = {}, label = "Date of birth", placeholder = "Date of birth")
-                                TxtFieldEmail(value = "", onValueChange = {})
-                                TxtFieldPassword(value = "", onValueChange = {})
-                                Row (
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    content = {
-                                        Checkbox(modifier = Modifier.wrapContentWidth(), checked = false, onCheckedChange = {})
-                                        Text(
-                                            modifier = Modifier.weight(1.0f),
-                                            text = buildAnnotatedString {
-                                                append("I agree the ")
-                                                withLink(
-                                                    LinkAnnotation.Url(
-                                                        url = "https://google.com/",
-                                                        styles = TextLinkStyles(
-                                                            style = SpanStyle(
-                                                                color = MaterialTheme.colorScheme.primary,
-                                                                fontWeight = FontWeight.Bold
-                                                            )
-                                                        )
-                                                    ),
-                                                    block = { append("Terms of Conditions ") }
-                                                )
-                                                append("and ")
-                                                withLink(
-                                                    LinkAnnotation.Url(
-                                                        url = "https://google.com/",
-                                                        styles = TextLinkStyles(
-                                                            style = SpanStyle(
-                                                                color = MaterialTheme.colorScheme.primary,
-                                                                fontWeight = FontWeight.Bold
-                                                            )
-                                                        )
-                                                    ),
-                                                    block = { append("Privacy Policy") }
-                                                )
-                                                append(".")
-                                            }
-                                        )
-                                    }
-                                )
-                            }
-                        )
-                    }
-                }
-            )
-        },
-        bottomBar = {
-            BottomAppBar(
-                modifier = Modifier,
-                content = {
-                    Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = {},
-                        shape = MaterialTheme.shapes.extraSmall,
-                        content = {
-                            Text("Proceed")
-                        }
-                    )
-                }
-            )
-        }
+        scrGraph = scrGraph, components = uiState.componentsState,
+        formInitialization = formInitialization,
+        onDialogEvent = { vm.onDialogEvent(it) },
+        onTopBarEvent = { vm.onTopBarEvent(it) },
+        onBottomBarEvent = { vm.onBottomBarEvent(it) }
     )
 }
-@Preview @Composable private fun Preview() = Theme.AppTheme(
-    darkThemeEnabled = true,
-    dynamicColorEnabled = true,
-    contrastAccent = ContrastAccent.defaultValue,
-    fontSize = FontSize.defaultValue,
-    content = {
-        ScrInitialization()
-    }
-)
-/*@Composable private fun ScrInitialization(
+@OptIn(ExperimentalMaterial3Api::class) @Composable private fun ScrInitialization(
     scrGraph: ScrGraphs.Initialization, components: ComponentsState, formInitialization: FormInitializationState,
-    onTopBarEvent: (Events.TopBar) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit,
-    onFormEvent: (Events.Content.Form) -> Unit, onDialogEvent: (Events.Dialog) -> Unit,
-    onInitializationSuccess: () -> Unit
+    onDialogEvent: (Events.Dialog) -> Unit, onTopBarEvent: (Events.TopBar) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit
 ) = when (components) {
     is ComponentsState.Loading -> ScrLoading()
     is ComponentsState.Loaded -> ScreenContent(
-        components = components, scrGraph = scrGraph, formInitialization = formInitialization,
-        onDialogEvent = onDialogEvent, onTopBarEvent = onTopBarEvent,
-        onFormEvent = onFormEvent, onBottomBarEvent = onBottomBarEvent,
-        onInitializationSuccess = onInitializationSuccess
-    )
-}
-@OptIn(ExperimentalMaterial3Api::class) @Composable private fun ScreenContent(
-    scrGraph: ScrGraphs.Initialization, components: ComponentsState.Loaded, formInitialization: FormInitializationState,
-    onDialogEvent: (Events.Dialog) -> Unit, onTopBarEvent : (Events.TopBar) -> Unit,
-    onFormEvent: (Events.Content.Form) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit,
-    onInitializationSuccess: () -> Unit
-) {
-    HandleDialogs(
-        dialog = components.dialogState, scrGraph = scrGraph, onDialogEvent = onDialogEvent,
-        onTopBarEvent = onTopBarEvent, onInitializationSuccess = onInitializationSuccess
-    )
-    Scaffold(
-        modifier = Modifier.imePadding(),
-        topBar = { SectionTopBar(onTopBarEvent = onTopBarEvent) },
-        content = { SectionContent(paddingValues = it, formInitialization = formInitialization, onFormEvent = onFormEvent) },
-        bottomBar = { AnimatedVisibility (
-            visible = formInitialization.btnProceedVisible,
-            enter = fadeIn() + slideInVertically(), exit = fadeOut() + slideOutVertically(),
-            content = { SectionBottomBar(btnProceedEnabled = formInitialization.btnProceedEnabled, onBottomBarEvent = onBottomBarEvent) }
-        ) }
+        scrGraph = scrGraph, components = components,
+        formInitialization = formInitialization,
+        onDialogEvent = onDialogEvent,
+        onTopBarEvent = onTopBarEvent,
+        onBottomBarEvent = onBottomBarEvent
     )
 }
 @Composable private fun HandleDialogs(
-    dialog: DialogState, scrGraph: ScrGraphs.Initialization, onDialogEvent: (Events.Dialog) -> Unit,
-    onTopBarEvent: (Events.TopBar) -> Unit, onInitializationSuccess: () -> Unit
+    scrGraph: ScrGraphs.Initialization, dialog: DialogState,
+    onTopBarEvent : (Events.TopBar) -> Unit, onDialogEvent: (Events.Dialog) -> Unit
 ) = when(dialog) {
     is DialogState.None -> Unit
     is DialogState.ScrDescDialog -> ScrInfoDialog(
         onDismissRequest = { onTopBarEvent(Events.TopBar.BtnScrDesc.Dismissed) },
-        title = stringResource(scrGraph.title), description = stringResource(scrGraph.description)
+        title = stringResource(scrGraph.title),
+        description = stringResource(scrGraph.description)
     )
     is DialogState.LoadingDialog -> LoadingDialog()
     is DialogState.ErrorDialog -> ErrorDialog(
@@ -245,87 +111,170 @@ import kotlinx.coroutines.CoroutineScope
         message = "Initialization Failed!"
     )
     is DialogState.SuccessDialog -> SuccessDialog(
-        onDismissRequest = { onInitializationSuccess() }, message = "Initialization Success!"
+        onDismissRequest = { onDialogEvent(Events.Dialog.SuccessDismissed) },
+        message = "Initialization Success!"
     )
 }
-@OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
-    title = {}, actions = { IconButton(
-        onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Clicked) },
-        content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) }
-    ) }
-)
-@Composable private fun SectionContent(paddingValues: PaddingValues, formInitialization: FormInitializationState, onFormEvent: (Events.Content.Form) -> Unit) = Surface(
-    modifier = Modifier.padding(paddingValues),
-    content = { LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
-        verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
-        content = {
-            item { PartTitle() }
-            item { PartForm(formInitialization = formInitialization, onFormEvent = onFormEvent) }
-        }
-    ) }
-)
-@Composable private fun PartTitle() = Row(
-    modifier = Modifier.fillMaxWidth(),
-    verticalAlignment = Alignment.Top,
-    content = {
-        Row(
-            modifier = Modifier.weight(0.1f),
-            content = { Icon(imageVector = Icons.Default.Checklist, contentDescription = null) }
-        )
-        Row(
-            modifier = Modifier.weight(0.9f),
-            content = { TxtLgTitle(stringResource(R.string.str_initialization_title)) }
+@Composable private fun ScreenContent(
+    scrGraph: ScrGraphs.Initialization, components: ComponentsState.Loaded, formInitialization: FormInitializationState,
+    onTopBarEvent: (Events.TopBar) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit,
+    onDialogEvent: (Events.Dialog) -> Unit
+) {
+    HandleDialogs(
+        scrGraph = scrGraph,
+        dialog = components.dialogState,
+        onTopBarEvent = onTopBarEvent,
+        onDialogEvent = onDialogEvent
+    )
+    Scaffold(
+        modifier = Modifier.imePadding(),
+        topBar = { SectionTopBar(onTopBarEvent = onTopBarEvent) },
+        content = { SectionContent(paddingValues = it, formInitialization = formInitialization) },
+        bottomBar = { AnimatedVisibility(
+            visible = formInitialization.btnProceedVisible,
+            enter = fadeIn() + slideInVertically(), exit = fadeOut() + slideOutVertically(),
+            content = { SectionBottomBar(
+                formInitialization = formInitialization,
+                onBottomBarEvent = onBottomBarEvent
+            ) }
+        ) }
+    )
+}
+@OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
+    onTopBarEvent: (Events.TopBar) -> Unit
+) = TopAppBar(
+    title = {},
+    actions = {
+        IconButton(
+            onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Clicked) },
+            content = {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = null
+                )
+            }
         )
     }
 )
-@Composable private fun PartForm(formInitialization: FormInitializationState, onFormEvent : (Events.Content.Form) -> Unit) = Card(
-    modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.extraSmall,
-    content = { Column(
-        modifier = Modifier.padding(Constants.Dimens.dp16),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp), content =  {
-            TxtFieldPersonName(
-                value = formInitialization.fldFirstName,
-                onValueChange = { onFormEvent(Events.Content.Form.FirstNameChanged(it)) },
-                enabled = formInitialization.fldFirstNameEnabled,
-                isError = formInitialization.fldFirstNameError.isNotEmpty(),
-                errorMessage = formInitialization.fldFirstNameError,
-                label = stringResource(R.string.str_first_name),
-                placeholder = stringResource(R.string.str_first_name)
-            )
-            TxtFieldPersonName(
-                value = formInitialization.fldLastName,
-                onValueChange = { onFormEvent(Events.Content.Form.LastNameChanged(it)) },
-                enabled = formInitialization.fldLastNameEnabled,
-                isError = formInitialization.fldLastNameError.isNotEmpty(),
-                errorMessage = formInitialization.fldLastNameError,
-                label = stringResource(R.string.str_last_name),
-                placeholder = stringResource(R.string.str_last_name)
-            )
-            TxtFieldEmail(
-                value = formInitialization.fldEmail,
-                onValueChange = { onFormEvent(Events.Content.Form.EmailChanged(it)) },
-                enabled = formInitialization.fldEmailEnabled,
-                isError = formInitialization.fldEmailError.isNotEmpty(),
-                errorMessage = formInitialization.fldEmailError
-            )
-            TxtFieldPassword(
-                value = formInitialization.fldPassword,
-                onValueChange = { onFormEvent(Events.Content.Form.PasswordChanged(it)) },
-                enabled = formInitialization.fldPasswordEnabled,
-                isError = formInitialization.fldPasswordError.isNotEmpty(),
-                errorMessage = formInitialization.fldPasswordError
-            )
-        }
-    ) }
+@OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionContent(
+    paddingValues: PaddingValues, formInitialization: FormInitializationState
+) = Surface(
+    modifier = Modifier.padding(paddingValues).fillMaxSize(),
+    content =  {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
+            verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
+            content = {
+                item { PartFormTitle() }
+                item { PartForm(formInitialization = formInitialization) }
+            }
+        )
+    }
 )
-@Composable private fun SectionBottomBar(btnProceedEnabled: Boolean, onBottomBarEvent: (Events.BottomBar) -> Unit) = BottomAppBar(
-    content = { Button (
-        modifier = Modifier.fillMaxWidth(),
-        onClick = { onBottomBarEvent(Events.BottomBar.BtnProceedInit.Clicked) },
-        enabled = btnProceedEnabled,
-        shape = MaterialTheme.shapes.extraSmall,
-        content = { Text(text = stringResource(R.string.str_proceed)) }
-    ) }
-)*/
+@Composable private fun PartFormTitle() = PanelCard(
+    modifier = Modifier.padding(Constants.Dimens.dp8),
+    colors = CardDefaults.cardColors().copy(
+        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+        contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+    ),
+    title = {
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
+            verticalAlignment = Alignment.CenterVertically,
+            content = {
+                Icon(
+                    modifier = Modifier.wrapContentWidth(),
+                    imageVector = Icons.Default.Info,
+                    contentDescription = null
+                )
+                TxtMdTitle(
+                    modifier = Modifier.weight(1.0f),
+                    text = "Important"
+                )
+            }
+        )
+    },
+    content = {
+        TxtMdBody(
+            modifier = Modifier.fillMaxWidth(),
+            text = "First thing first, set up your account"
+        )
+    }
+)
+@OptIn(ExperimentalMaterial3Api::class) @Composable private fun PartForm(
+    formInitialization: FormInitializationState
+) = PanelCard(
+    modifier = Modifier.padding(Constants.Dimens.dp8),
+    title = { TxtLgTitle(stringResource(R.string.str_initialization)) },
+    content = {
+        TxtFieldPersonName(value = "", onValueChange = {/*TODO*/}, label = "First name", placeholder = "John")
+        TxtFieldPersonName(value = "", onValueChange = {/*TODO*/}, label = "Last name (optional)", placeholder = "Doe")
+        TxtFieldDatePicker(value = "", onValueChange = {/*TODO*/}, label = "Date of birth", placeholder = "Date of birth")
+        TxtFieldEmail(value = "", onValueChange = {/*TODO*/})
+        TxtFieldPassword(value = "", onValueChange = {/*TODO*/})
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
+            verticalAlignment = Alignment.CenterVertically,
+            content = {
+                Checkbox(modifier = Modifier.wrapContentWidth(), checked = false, onCheckedChange = {/*TODO*/})
+                Text(
+                    modifier = Modifier.weight(1.0f),
+                    text = buildAnnotatedString(
+                        builder = {
+                            append(text = "I agree the ")
+                            withLink(
+                                link = LinkAnnotation.Url(
+                                    url = "https://google.com/",
+                                    styles = TextLinkStyles(
+                                        style = SpanStyle(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                ),
+                                block = {
+                                    append(
+                                        text = "Terms of Conditions "
+                                    )
+                                }
+                            )
+                            append(text = "and ")
+                            withLink(
+                                link = LinkAnnotation.Url(
+                                    url = "https://google.com/",
+                                    styles = TextLinkStyles(
+                                        style = SpanStyle(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                ),
+                                block = {
+                                    append(
+                                        text = "Privacy Policy"
+                                    )
+                                }
+                            )
+                            append(text = ".")
+                        }
+                    )
+                )
+            }
+        )
+    }
+)
+@Composable private fun SectionBottomBar(
+    formInitialization: FormInitializationState, onBottomBarEvent: (Events.BottomBar) -> Unit
+) = BottomAppBar(
+    content = {
+        Button (
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { onBottomBarEvent(Events.BottomBar.BtnProceedInit.Clicked) },
+            enabled = formInitialization.btnProceedEnabled,
+            shape = MaterialTheme.shapes.extraSmall,
+            content = { Text(text = stringResource(R.string.str_proceed)) }
+        )
+    }
+)

@@ -67,27 +67,26 @@ import javax.inject.Inject
         ) }
         formInitialization = FormInitializationState().validateField()
     }
-    private fun handleOpenScreen() = viewModelScope.launch {
-        ucGetScreenData.invoke()
-            .onStart { formInitialization = formInitialization.validateField(); uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
-            .collect { (confCommon, initialSetOfRoles) ->
-                uiState.update { currentState -> currentState.copy(
-                    componentsState = ComponentsState.Loaded(
-                        confCommon = confCommon,
-                        dialogState = DialogState.None,
-                        initialSetOfRoles = initialSetOfRoles,
-                        resultInitialization = ResultInitialization.Idle
-                    )
-                ) }
-            }
-    }
+    private fun handleOpenScreen() = viewModelScope.launch { ucGetScreenData.invoke()
+        .onStart {
+            formInitialization = formInitialization.validateField()
+            uiState.update { it.copy(componentsState = ComponentsState.Loading) }
+        }
+        .collect { (confCommon, initialSetOfRoles) ->
+            uiState.update { currentState -> currentState.copy(
+                componentsState = ComponentsState.Loaded(
+                    confCommon = confCommon,
+                    dialogState = DialogState.None,
+                    initialSetOfRoles = initialSetOfRoles,
+                    resultInitialization = ResultInitialization.Idle
+                )
+            ) }
+        } }
     private fun updateDialog(transform: (DialogState) -> DialogState) = updateUiState { it.copy(dialogState = transform(it.dialogState)) }
     private fun updateForm(transform: (FormInitializationState) -> FormInitializationState) =
         viewModelScope.launch(Dispatchers.Main.immediate) {
-            (uiState.value.componentsState as? ComponentsState.Loaded)?.let {
-                val updated = transform(formInitialization)
-                formInitialization.takeIf { it != updated }?.let { formInitialization = updated }
-            }
+            val updated = transform(formInitialization)
+            formInitialization.takeIf { it != updated }?.let { formInitialization = updated }
         }
     private fun handleInitialization() = viewModelScope.launch {
         val frozenForm = formInitialization.disableInputs(); formInitialization = frozenForm
