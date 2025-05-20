@@ -50,12 +50,21 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class) @Composable fun TxtFieldDatePicker(
-    modifier: Modifier = Modifier, value: String, onValueChange: (String) -> Unit,
-    enabled: Boolean = true, isError: Boolean = false, errorMessage: List<UiText> = emptyList(),
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    enabled: Boolean = true,
+    isError: Boolean = false,
+    errorMessage: List<UiText> = emptyList(),
     leadingIcon: @Composable (() -> Unit) = { Icon(Icons.Default.DateRange, contentDescription = null) },
-    label: String? = null, placeholder: String? = null, minYear: Int = -120, maxYear: Int = 0,
-    internalFormat: DateTimePattern = DateTimePattern.YYYY_MM_DD, displayFormat: DateTimePattern = DateTimePattern.YYYY_MM_DD,
-    datePickerDisplayMode: DisplayMode = DisplayMode.Picker, locale: Locale = LocalConfiguration.current.locales[0]
+    label: String? = null,
+    placeholder: String? = null,
+    minYear: Int = -120,
+    maxYear: Int = 0,
+    internalFormat: DateTimePattern = DateTimePattern.YYYY_MM_DD,
+    displayFormat: DateTimePattern = DateTimePattern.YYYY_MM_DD,
+    datePickerDisplayMode: DisplayMode = DisplayMode.Picker,
+    locale: Locale = LocalConfiguration.current.locales[0]
 ) {
     val today = remember { Constants.NOW_DATE }
     val internalFormatter = remember(internalFormat) { DateTimeFormatter.ofPattern(internalFormat.pattern).withLocale(Locale.US) }

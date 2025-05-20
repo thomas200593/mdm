@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,6 +34,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -52,6 +52,7 @@ import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.TxtMdTitle
+import com.thomas200593.mdm.core.ui.component.checkbox.HorizontalCheckbox
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.LoadingDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
@@ -207,6 +208,25 @@ import kotlinx.coroutines.CoroutineScope
         )
     }
 )
+@Composable private fun partTOCText(): AnnotatedString = buildAnnotatedString {
+    append("I agree to the ")
+    withLink(
+        link = LinkAnnotation.Url(
+            url = "https://google.com/",
+            styles = TextLinkStyles(style = SpanStyle(color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold))
+        ),
+        block = { append("Terms and Conditions") }
+    )
+    append(" and ")
+    withLink(
+        link = LinkAnnotation.Url(
+            url = "https://google.com/",
+            styles = TextLinkStyles(style = SpanStyle(color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold))
+        ),
+        block = { append("Privacy Policy") }
+    )
+    append(".")
+}
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun PartForm(
     formInitialization: FormInitializationState
 ) = PanelCard(
@@ -223,80 +243,44 @@ import kotlinx.coroutines.CoroutineScope
             placeholder = "John"
         )
         TxtFieldPersonName(
-            value = "",
+            value = formInitialization.fldLastName,
             onValueChange = {/*TODO*/},
-            enabled = true, /*TODO*/
-            isError = true, /*TODO*/
-            errorMessage = listOf(), /*TODO*/
+            enabled = formInitialization.fldLastNameEnabled,
+            isError = formInitialization.fldLastNameError.isNotEmpty(),
+            errorMessage = formInitialization.fldLastNameError,
             label = "Last name (optional)",
             placeholder = "Doe"
         )
         TxtFieldDatePicker(
-            value = "",
+            value = formInitialization.fldDateOfBirth,
             onValueChange = {/*TODO*/},
+            enabled = formInitialization.fldDateOfBirthEnabled,
+            isError = formInitialization.fldDateOfBirthError.isNotEmpty(),
+            errorMessage = formInitialization.fldDateOfBirthError,
             label = "Date of birth",
-            placeholder = "Date of birth"
+            placeholder = "YYYY-MM-DD"
         )
         TxtFieldEmail(
-            value = "",
-            onValueChange = {/*TODO*/}
+            value = formInitialization.fldEmail,
+            onValueChange = {/*TODO*/},
+            enabled = formInitialization.fldEmailEnabled,
+            isError = formInitialization.fldEmailError.isNotEmpty(),
+            errorMessage = formInitialization.fldEmailError,
+            placeholder = "john.doe@email.com"
         )
         TxtFieldPassword(
-            value = "",
-            onValueChange = {/*TODO*/}
+            value = formInitialization.fldPassword,
+            onValueChange = {/*TODO*/},
+            enabled = formInitialization.fldPasswordEnabled,
+            isError = formInitialization.fldPasswordError.isNotEmpty(),
+            errorMessage = formInitialization.fldPasswordError,
+            placeholder = "********"
         )
-        Row (
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
-            verticalAlignment = Alignment.CenterVertically,
-            content = {
-                Checkbox(
-                    modifier = Modifier.wrapContentWidth(),
-                    checked = false, onCheckedChange = {/*TODO*/}
-                )
-                Text(
-                    modifier = Modifier.weight(1.0f),
-                    text = buildAnnotatedString(
-                        builder = {
-                            append(text = "I agree the ")
-                            withLink(
-                                link = LinkAnnotation.Url(
-                                    url = "https://google.com/",
-                                    styles = TextLinkStyles(
-                                        style = SpanStyle(
-                                            color = MaterialTheme.colorScheme.primary,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    )
-                                ),
-                                block = {
-                                    append(
-                                        text = "Terms of Conditions "
-                                    )
-                                }
-                            )
-                            append(text = "and ")
-                            withLink(
-                                link = LinkAnnotation.Url(
-                                    url = "https://google.com/",
-                                    styles = TextLinkStyles(
-                                        style = SpanStyle(
-                                            color = MaterialTheme.colorScheme.primary,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    )
-                                ),
-                                block = {
-                                    append(
-                                        text = "Privacy Policy"
-                                    )
-                                }
-                            )
-                            append(text = ".")
-                        }
-                    )
-                )
-            }
+        HorizontalCheckbox(
+            annotatedText = partTOCText(),
+            enabled = formInitialization.fldChbToCEnabled,
+            checked = formInitialization.fldChbToCChecked,
+            onCheckedChange = {/*TODO*/}
         )
     }
 )

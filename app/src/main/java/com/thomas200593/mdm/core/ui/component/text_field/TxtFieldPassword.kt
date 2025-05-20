@@ -28,9 +28,15 @@ import com.thomas200593.mdm.R
 import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 
 @Composable fun TxtFieldPassword(
-    modifier: Modifier = Modifier, value: String, onValueChange: (String) -> Unit,
-    enabled: Boolean = true, readOnly: Boolean = false,
-    isError: Boolean = false, errorMessage: List<UiText> = emptyList()
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    enabled: Boolean = true,
+    isError: Boolean = false,
+    errorMessage: List<UiText> = emptyList(),
+    label: String = stringResource(R.string.str_password),
+    placeholder: String = stringResource(R.string.str_password),
+    leadingIcon: @Composable (() -> Unit) = { Icon(Icons.Outlined.Password, contentDescription = null) }
 ) {
     val context = LocalContext.current
     val currentOnValueChange by rememberUpdatedState(onValueChange)
@@ -42,13 +48,11 @@ import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
         value = value,
         onValueChange = { currentOnValueChange(it) },
         enabled = enabled,
-        readOnly = readOnly,
-        label = { Text(stringResource(R.string.str_password)) },
-        placeholder = { Text(stringResource(R.string.str_password)) },
-        leadingIcon = { Icon(Icons.Outlined.Password, contentDescription = null) },
+        label = { Text(label) },
+        placeholder = { Text(placeholder) },
+        leadingIcon = leadingIcon,
         trailingIcon = { PasswordVisibilityToggleIcon(
-            enabled = enabled,
-            passwordVisible = passwordVisible,
+            enabled = enabled, passwordVisible = passwordVisible,
             onTogglePasswordVisibility = { passwordVisible = !passwordVisible }
         ) },
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -61,12 +65,12 @@ import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 @Composable private fun PasswordVisibilityToggleIcon(
     enabled: Boolean, passwordVisible: Boolean, onTogglePasswordVisibility: () -> Unit
 ) {
-    val image = remember(passwordVisible)
-    { if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff }
-    val contentDescription = if (passwordVisible) "Hide password icon" else "Show password icon"
+    val image = remember(passwordVisible) {
+        if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+    }
     IconButton(
         onClick = onTogglePasswordVisibility,
         enabled = enabled,
-        content = { Icon(imageVector = image, contentDescription = contentDescription) }
+        content = { Icon(imageVector = image, contentDescription = null) }
     )
 }

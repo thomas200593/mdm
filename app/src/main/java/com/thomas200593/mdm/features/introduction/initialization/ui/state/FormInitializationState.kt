@@ -15,6 +15,10 @@ data class FormInitializationState(
     val fldLastNameEnabled: Boolean = true,
     val fldLastNameError: List<UiText> = emptyList(),
 
+    val fldDateOfBirth: String = STR_EMPTY,
+    val fldDateOfBirthEnabled: Boolean = true,
+    val fldDateOfBirthError: List<UiText> = emptyList(),
+
     val fldEmail: String = STR_EMPTY,
     val fldEmailEnabled: Boolean = true,
     val fldEmailError: List<UiText> = emptyList(),
@@ -22,6 +26,9 @@ data class FormInitializationState(
     val fldPassword: String = STR_EMPTY,
     val fldPasswordEnabled: Boolean = true,
     val fldPasswordError: List<UiText> = emptyList(),
+
+    val fldChbToCEnabled: Boolean = true,
+    val fldChbToCChecked: Boolean = false,
 
     val btnProceedVisible: Boolean = false,
     val btnProceedEnabled: Boolean = false
@@ -35,7 +42,8 @@ data class FormInitializationState(
         firstName: String = fldFirstName,
         lastName: String = fldLastName,
         email: String = fldEmail,
-        password: String = fldPassword
+        password: String = fldPassword,
+        chbToCChecked: Boolean = fldChbToCChecked
     ) = copy(
         fldFirstName = firstName,
         fldFirstNameError = firstNameValidator.validate(
@@ -58,11 +66,22 @@ data class FormInitializationState(
         fldPassword = password,
         fldPasswordError = passwordValidator.validate(
             input = password, required = true
-        ).errorMessages
+        ).errorMessages,
+
+        fldChbToCChecked = chbToCChecked
     ).validateFields()
     fun validateFields() = copy(
-        btnProceedVisible = fldFirstNameError.isEmpty() && fldLastNameError.isEmpty() && fldEmailError.isEmpty() && fldPasswordError.isEmpty(),
-        btnProceedEnabled = fldFirstNameError.isEmpty() && fldLastNameError.isEmpty() && fldEmailError.isEmpty() && fldPasswordError.isEmpty()
+        btnProceedVisible = fldFirstNameError.isEmpty() && fldLastNameError.isEmpty() &&
+                fldEmailError.isEmpty() && fldPasswordError.isEmpty() && fldChbToCChecked == true,
+        btnProceedEnabled = fldFirstNameError.isEmpty() && fldLastNameError.isEmpty() &&
+                fldEmailError.isEmpty() && fldPasswordError.isEmpty() && fldChbToCChecked == true
     )
-    fun disableInputs() = copy(fldFirstNameEnabled = false, fldLastNameEnabled = false, fldEmailEnabled = false, fldPasswordEnabled = false, btnProceedEnabled = false)
+    fun disableInputs() = copy(
+        fldFirstNameEnabled = false,
+        fldLastNameEnabled = false,
+        fldEmailEnabled = false,
+        fldPasswordEnabled = false,
+        fldChbToCEnabled = false,
+        btnProceedEnabled = false
+    )
 }

@@ -25,9 +25,11 @@ import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
     value: String,
     onValueChange: (String) -> Unit,
     enabled: Boolean = true,
-    readOnly: Boolean = false,
     isError: Boolean = false,
-    errorMessage: List<UiText> = emptyList()
+    errorMessage: List<UiText> = emptyList(),
+    label: String = stringResource(R.string.str_email),
+    placeholder: String = stringResource(R.string.str_email),
+    leadingIcon: @Composable (() -> Unit) = { Icon(Icons.Outlined.Email, null) }
 ) {
     val context = LocalContext.current
     val currentOnValueChange by rememberUpdatedState(onValueChange)
@@ -38,10 +40,9 @@ import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
         value = value,
         onValueChange = { currentOnValueChange(it) },
         enabled = enabled,
-        readOnly = readOnly,
-        label = { Text(stringResource(R.string.str_email)) },
-        placeholder = { Text(stringResource(R.string.str_email)) },
-        leadingIcon = { Icon(Icons.Outlined.Email, null) },
+        label = { Text(label) },
+        placeholder = { Text(placeholder) },
+        leadingIcon = leadingIcon,
         supportingText = { if (isError && errorTexts.isNotEmpty()) ErrorSupportingText(errorTexts) },
         isError = isError,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Done),
