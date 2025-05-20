@@ -1,7 +1,6 @@
 package com.thomas200593.mdm.features.introduction.initialization.ui.state
 
 import com.thomas200593.mdm.core.design_system.util.Constants.STR_EMPTY
-import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldDatePicker
 import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldDatePickerValidation
 import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldEmailValidation
 import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldPasswordValidation
@@ -9,70 +8,66 @@ import com.thomas200593.mdm.core.ui.component.text_field.domain.TxtFieldPersonNa
 import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 
 data class FormInitializationState(
+    /** First name */
     val fldFirstName: String = STR_EMPTY,
     val fldFirstNameEnabled: Boolean = true,
     val fldFirstNameError: List<UiText> = emptyList(),
-
+    /** Last name */
     val fldLastName: String = STR_EMPTY,
     val fldLastNameEnabled: Boolean = true,
     val fldLastNameError: List<UiText> = emptyList(),
-
+    /** Date of Birth */
     val fldDateOfBirth: String = STR_EMPTY,
     val fldDateOfBirthEnabled: Boolean = true,
     val fldDateOfBirthError: List<UiText> = emptyList(),
-
+    /** Email */
     val fldEmail: String = STR_EMPTY,
     val fldEmailEnabled: Boolean = true,
     val fldEmailError: List<UiText> = emptyList(),
-
+    /** Password */
     val fldPassword: String = STR_EMPTY,
     val fldPasswordEnabled: Boolean = true,
     val fldPasswordError: List<UiText> = emptyList(),
-
+    /** Checkbox */
     val fldChbToCEnabled: Boolean = true,
     val fldChbToCChecked: Boolean = false,
-
+    /** Buttons */
     val btnProceedVisible: Boolean = false,
     val btnProceedEnabled: Boolean = false
 ) {
     private val canProceed get() = fldFirstNameError.isEmpty() && fldLastNameError.isEmpty() &&
-        fldEmailError.isEmpty() && fldPasswordError.isEmpty() && (fldChbToCChecked == true)
+        fldDateOfBirthError.isEmpty() && fldEmailError.isEmpty() && fldPasswordError.isEmpty() &&
+        (fldChbToCChecked == true)
     fun validateField(
         firstName: String = fldFirstName,
         lastName: String = fldLastName,
+        dateOfBirth: String = fldDateOfBirth,
         email: String = fldEmail,
         password: String = fldPassword,
         chbToCChecked: Boolean = fldChbToCChecked
     ) = copy(
         fldFirstName = firstName,
-        fldFirstNameError = firstNameValidator.validate(
-            input = firstName,
-            required = true
-        ).errorMessages,
-
+        fldFirstNameError =
+            firstNameValidator.validate(input = firstName, required = true).errorMessages,
         fldLastName = lastName,
-        fldLastNameError = lastNameValidator.validate(
-            input = lastName,
-            required = false
-        ).errorMessages,
-
+        fldLastNameError =
+            lastNameValidator.validate(input = lastName, required = false).errorMessages,
+        fldDateOfBirth = dateOfBirth,
+        fldDateOfBirthError =
+            dateOfBirthValidator.validate(input = dateOfBirth, required = true, minLength = -100, maxLength = 0).errorMessages,
         fldEmail = email,
-        fldEmailError = emailValidator.validate(
-            input = email,
-            required = true
-        ).errorMessages,
-
+        fldEmailError =
+            emailValidator.validate(input = email, required = true).errorMessages,
         fldPassword = password,
-        fldPasswordError = passwordValidator.validate(
-            input = password, required = true
-        ).errorMessages,
-
+        fldPasswordError =
+            passwordValidator.validate(input = password, required = true).errorMessages,
         fldChbToCChecked = chbToCChecked
     ).validateFields()
     fun validateFields() = copy(btnProceedVisible = canProceed, btnProceedEnabled = canProceed)
     fun disableInputs() = copy(
         fldFirstNameEnabled = false,
         fldLastNameEnabled = false,
+        fldDateOfBirthEnabled = false,
         fldEmailEnabled = false,
         fldPasswordEnabled = false,
         fldChbToCEnabled = false,
