@@ -85,9 +85,7 @@ import javax.inject.Inject
         if(uiState.value.resultInitialization == ResultInitializationState.Loading) return@launch
         val frozenForm = formInitialization.disableInputs()
         formInitialization = frozenForm
-        uiState.update { it.copy(
-            resultInitialization = ResultInitializationState.Loading, dialog = DialogState.LoadingDialog
-        ) }
+        uiState.update { it.copy(resultInitialization = ResultInitializationState.Loading, dialog = DialogState.LoadingDialog) }
         val dto = DTOInitialization(
             firstName = frozenForm.fldFirstName.toString().trim(),
             lastName = frozenForm.fldLastName.toString().trim(),
@@ -99,10 +97,12 @@ import javax.inject.Inject
             onSuccess = { result ->
                 uiState.update { it.copy(resultInitialization = ResultInitializationState.Success(result), dialog = DialogState.SuccessDialog) }
                 formInitialization = FormInitializationState().validateFields()
+                return@launch
             },
             onFailure = { err -> val error = err as Error; error.printStackTrace()
                 uiState.update { it.copy(resultInitialization = ResultInitializationState.Failure(error), dialog = DialogState.ErrorDialog(error)) }
                 formInitialization = FormInitializationState().validateFields()
+                return@launch
             }
         )
     }
