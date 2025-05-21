@@ -85,16 +85,23 @@ import javax.inject.Inject
             ) }
         }
     }
-    private fun updateDialog(transform: (DialogState) -> DialogState) = updateUiState { it.copy(dialogState = transform(it.dialogState)) }
+    private fun updateDialog(transform: (DialogState) -> DialogState) =
+        updateUiState { it.copy(dialogState = transform(it.dialogState)) }
     private fun updateForm(transform: (FormInitializationState) -> FormInitializationState) =
         viewModelScope.launch(Dispatchers.Main.immediate) {
             val updated = transform(formInitialization)
             formInitialization.takeIf { it != updated }?.let { formInitialization = updated }
         }
     private fun handleInitialization() = viewModelScope.launch {
-        val frozenForm = formInitialization.disableInputs(); formInitialization = frozenForm
-        updateUiState { componentState -> componentState.copy(resultInitialization = ResultInitialization.Loading, dialogState = DialogState.LoadingDialog) }
+        // Step 1: Ensure componentsState is loaded
         val componentsState = uiState.value.componentsState as? ComponentsState.Loaded ?: return@launch
+        if(componentsState.resultInitialization == ResultInitialization.Loading) return@launch
+        // Step 2: Freeze form inputs
+        val frozenForm = formInitialization.disableInputs()
+        formInitialization = frozenForm
+        // Step 3: Show loading state
+        updateUiState { it.copy(resultInitialization = ResultInitialization.Loading, dialogState = DialogState.LoadingDialog) }
+        // Step 4: Build DTO
         val dto = DTOInitialization(
             firstName = frozenForm.fldFirstName.toString().trim(),
             lastName = frozenForm.fldLastName.toString().trim(),
@@ -102,9 +109,16 @@ import javax.inject.Inject
             authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword.toString().trim()),
             initialSetOfRoles = componentsState.initialSetOfRoles
         )
+        // Step 5: Perform the action and handle result
         ucCreateDataInitialization.invoke(dto).fold(
-            onSuccess =  { result -> updateUiState { it.copy(resultInitialization = ResultInitialization.Success(result), dialogState = DialogState.SuccessDialog) } },
-            onFailure =  { err -> err.printStackTrace(); updateUiState { it.copy(resultInitialization = ResultInitialization.Error(err), dialogState = DialogState.ErrorDialog(err)) } }
+            onSuccess = { result ->
+                updateUiState { it.copy(resultInitialization = ResultInitialization.Success(result), dialogState = DialogState.SuccessDialog) }
+                formInitialization = FormInitializationState().validateFields()
+            },
+            onFailure = { err -> err.printStackTrace()
+                updateUiState { it.copy(resultInitialization = ResultInitialization.Error(err), dialogState = DialogState.ErrorDialog(err)) }
+                formInitialization = FormInitializationState().validateFields()
+            }
         )
     }
 }
