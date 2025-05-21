@@ -26,7 +26,9 @@ import javax.inject.Inject
     private val ucGetScreenData: UCGetScreenData,
     private val ucCreateDataInitialization: UCCreateInitialUser
 ) : ViewModel() {
-    data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
+    data class UiState(
+        val componentsState: ComponentsState = ComponentsState.Loading
+    )
     var uiState = MutableStateFlow(UiState())
         private set
     var formInitialization by mutableStateOf(FormInitializationState())
