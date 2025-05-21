@@ -62,12 +62,14 @@ import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldDatePicker
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPersonName
+import com.thomas200593.mdm.features.bootstrap.nav.navToBootstrap
 import com.thomas200593.mdm.features.introduction.initialization.ui.events.Events
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.ScreenDataState
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.DialogState
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.FormInitializationState
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.ResultInitializationState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable fun ScrInitialization(
     scrGraph: ScrGraphs.Initialization, vm: VMInitialization = hiltViewModel(),
@@ -77,12 +79,12 @@ import kotlinx.coroutines.CoroutineScope
     val formInitialization = vm.formInitialization
     LaunchedEffect (key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrInitialization(
-        scrGraph = scrGraph, uiState = uiState,
-        formInitialization = formInitialization,
-        onDialogEvent = { vm.onDialogEvent(it) },
-        onTopBarEvent = { vm.onTopBarEvent(it) },
-        onFormEvent = { vm.onFormEvent(it) },
-        onBottomBarEvent = { vm.onBottomBarEvent(it) }
+        scrGraph = scrGraph, uiState = uiState, formInitialization = formInitialization,
+        onDialogEvent = { when (it) {
+            is Events.Dialog.SuccessDismissed -> vm.onDialogEvent(it)
+                .also { coroutineScope.launch { stateApp.navController.navToBootstrap() } }
+            else -> vm.onDialogEvent(it) } },
+        onTopBarEvent = { vm.onTopBarEvent(it) }, onFormEvent = { vm.onFormEvent(it) }, onBottomBarEvent = { vm.onBottomBarEvent(it) }
     )
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun ScrInitialization(
@@ -92,169 +94,113 @@ import kotlinx.coroutines.CoroutineScope
 ) = when (uiState.screenData) {
     is ScreenDataState.Loading -> ScrLoading()
     is ScreenDataState.Loaded -> ScreenContent(
-        scrGraph = scrGraph,
-        resultInitialization = uiState.resultInitialization,
-        dialog = uiState.dialog,
-        formInitialization = formInitialization,
-        onDialogEvent = onDialogEvent,
-        onTopBarEvent = onTopBarEvent,
-        onFormEvent = onFormEvent,
-        onBottomBarEvent = onBottomBarEvent
+        scrGraph = scrGraph, resultInitialization = uiState.resultInitialization,
+        dialog = uiState.dialog, formInitialization = formInitialization,
+        onDialogEvent = onDialogEvent, onTopBarEvent = onTopBarEvent,
+        onFormEvent = onFormEvent, onBottomBarEvent = onBottomBarEvent
     )
 }
 @Composable private fun HandleDialogs(
-    scrGraph: ScrGraphs.Initialization,
-    dialog: DialogState,
-    resultInitialization: ResultInitializationState,
-    onTopBarEvent: (Events.TopBar) -> Unit,
-    onDialogEvent: (Events.Dialog) -> Unit
+    scrGraph: ScrGraphs.Initialization, dialog: DialogState, resultInitialization: ResultInitializationState,
+    onTopBarEvent: (Events.TopBar) -> Unit, onDialogEvent: (Events.Dialog) -> Unit
 ) = when(dialog) {
     is DialogState.None -> Unit
     is DialogState.ScrDescDialog -> ScrInfoDialog(
         onDismissRequest = { onTopBarEvent(Events.TopBar.BtnScrDesc.Dismissed) },
-        title = stringResource(scrGraph.title),
-        description = stringResource(scrGraph.description)
+        title = stringResource(scrGraph.title), description = stringResource(scrGraph.description)
     )
     is DialogState.LoadingDialog -> LoadingDialog()
     is DialogState.ErrorDialog -> when (resultInitialization) {
         is ResultInitializationState.Idle, is ResultInitializationState.Loading, is ResultInitializationState.Success -> Unit
         is ResultInitializationState.Failure -> ErrorDialog(
             onDismissRequest = { onDialogEvent(Events.Dialog.ErrorDismissed) },
-            message = "Initialization Failed!",
-            error = resultInitialization.t
+            message = "Initialization Failed!", error = resultInitialization.t
         )
     }
-    is DialogState.SuccessDialog -> SuccessDialog(
-        onDismissRequest = { onDialogEvent(Events.Dialog.SuccessDismissed) },
-        message = "Initialization Success!"
-    )
+    is DialogState.SuccessDialog ->
+        SuccessDialog(onDismissRequest = { onDialogEvent(Events.Dialog.SuccessDismissed) }, message = "Initialization Success!")
 }
 @Composable private fun ScreenContent(
-    scrGraph: ScrGraphs.Initialization,
-    resultInitialization: ResultInitializationState,
-    dialog: DialogState,
-    formInitialization: FormInitializationState,
-    onDialogEvent: (Events.Dialog) -> Unit,
-    onTopBarEvent: (Events.TopBar) -> Unit,
-    onFormEvent: (Events.Content.Form) -> Unit,
-    onBottomBarEvent: (Events.BottomBar) -> Unit
+    scrGraph: ScrGraphs.Initialization, resultInitialization: ResultInitializationState,
+    dialog: DialogState, formInitialization: FormInitializationState,
+    onDialogEvent: (Events.Dialog) -> Unit, onTopBarEvent: (Events.TopBar) -> Unit,
+    onFormEvent: (Events.Content.Form) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit
 ) {
     HandleDialogs(
-        scrGraph = scrGraph,
-        dialog = dialog,
-        resultInitialization = resultInitialization,
-        onTopBarEvent = onTopBarEvent,
-        onDialogEvent = onDialogEvent
+        scrGraph = scrGraph, dialog = dialog, resultInitialization = resultInitialization,
+        onTopBarEvent = onTopBarEvent, onDialogEvent = onDialogEvent
     )
     Scaffold(
-        modifier = Modifier.imePadding(),
-        topBar = { SectionTopBar(onTopBarEvent = onTopBarEvent) },
-        content = {
-            SectionContent(
-                paddingValues = it, formInitialization = formInitialization, onFormEvent = onFormEvent
-            )
-        },
-        bottomBar = {
-            AnimatedVisibility(
-                visible = formInitialization.btnProceedVisible,
-                enter = fadeIn() + slideInVertically(initialOffsetY = { fullHeight -> fullHeight }),
-                exit = fadeOut() + slideOutVertically(targetOffsetY = { fullHeight -> fullHeight }),
-                content = {
-                    SectionBottomBar(
-                        formInitialization = formInitialization,
-                        onBottomBarEvent = onBottomBarEvent
-                    )
-                }
-            )
-        }
+        modifier = Modifier.imePadding(), topBar = { SectionTopBar(onTopBarEvent = onTopBarEvent) },
+        content = { SectionContent(paddingValues = it, formInitialization = formInitialization,
+            onFormEvent = onFormEvent) },
+        bottomBar = { AnimatedVisibility(
+            visible = formInitialization.btnProceedVisible,
+            enter = fadeIn() + slideInVertically(initialOffsetY = { fullHeight -> fullHeight }),
+            exit = fadeOut() + slideOutVertically(targetOffsetY = { fullHeight -> fullHeight }),
+            content = { SectionBottomBar(formInitialization = formInitialization,
+                onBottomBarEvent = onBottomBarEvent) }
+        ) }
     )
 }
-@OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
-    onTopBarEvent: (Events.TopBar) -> Unit
-) = TopAppBar(
-    title = {},
-    actions = {
-        IconButton(
-            onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Clicked) },
-            content = {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = null
-                )
-            }
-        )
-    }
+@OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
+    title = {}, actions = { IconButton(
+        onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Clicked) },
+        content = { Icon(
+            imageVector = Icons.Default.Info,
+            contentDescription = null
+        ) }
+    ) }
 )
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionContent(
     paddingValues: PaddingValues, formInitialization: FormInitializationState,
     onFormEvent: (Events.Content.Form) -> Unit
 ) = Surface(
     modifier = Modifier.padding(paddingValues).fillMaxSize(),
-    content =  {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
-            verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
-            content = {
-                item { PartFormTitle() }
-                item {
-                    PartForm(
-                        formInitialization = formInitialization,
-                        onFormEvent = onFormEvent
-                    )
-                }
-            }
-        )
-    }
+    content =  { LazyColumn(
+        modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
+        verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
+        content = {
+            item { PartFormTitle() }
+            item { PartForm(
+                formInitialization = formInitialization,
+                onFormEvent = onFormEvent
+            ) }
+        }
+    ) }
 )
 @Composable private fun PartFormTitle() = PanelCard(
     modifier = Modifier.padding(Constants.Dimens.dp8),
-    colors = CardDefaults.cardColors().copy(
-        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-        contentColor = MaterialTheme.colorScheme.onTertiaryContainer
-    ),
-    title = {
-        Row (
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
-            verticalAlignment = Alignment.CenterVertically,
-            content = {
-                Icon(
-                    modifier = Modifier.wrapContentWidth(),
-                    imageVector = Icons.Default.Info,
-                    contentDescription = null
-                )
-                TxtMdTitle(
-                    modifier = Modifier.weight(1.0f),
-                    text = "Important"
-                )
-            }
-        )
-    },
-    content = {
-        TxtMdBody(
-            modifier = Modifier.fillMaxWidth(),
-            text = "First thing first, set up your account"
-        )
-    }
+    colors = CardDefaults.cardColors()
+        .copy(containerColor = MaterialTheme.colorScheme.tertiaryContainer, contentColor = MaterialTheme.colorScheme.onTertiaryContainer),
+    title = { Row (
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
+        verticalAlignment = Alignment.CenterVertically,
+        content = {
+            Icon(modifier = Modifier.wrapContentWidth(), imageVector = Icons.Default.Info, contentDescription = null)
+            TxtMdTitle(modifier = Modifier.weight(1.0f), text = "Important")
+        }
+    ) },
+    content = { TxtMdBody(
+        modifier = Modifier.fillMaxWidth(),
+        text = "First thing first, set up your account"
+    ) }
 )
 @Composable private fun partTOCText(): AnnotatedString = buildAnnotatedString {
-    append("I agree to the ")
-    withLink(
+    append("I agree to the "); withLink(
         link = LinkAnnotation.Url(
             url = "https://google.com/",
             styles = TextLinkStyles(style = SpanStyle(color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold))
         ),
         block = { append("Terms and Conditions") }
-    )
-    append(" and ")
-    withLink(
+    ); append(" and "); withLink(
         link = LinkAnnotation.Url(
             url = "https://google.com/",
             styles = TextLinkStyles(style = SpanStyle(color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold))
         ),
         block = { append("Privacy Policy") }
-    )
-    append(".")
+    ); append(".")
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun PartForm(
     formInitialization: FormInitializationState, onFormEvent: (Events.Content.Form) -> Unit
@@ -304,18 +250,16 @@ import kotlinx.coroutines.CoroutineScope
         )
         HorizontalCheckbox(
             annotatedText = partTOCText(),
-            enabled = formInitialization.fldChbToCEnabled,
-            checked = formInitialization.fldChbToCChecked,
+            enabled = formInitialization.fldChbToCEnabled, checked = formInitialization.fldChbToCChecked,
             onCheckedChange = { onFormEvent(Events.Content.Form.CheckBoxChanged(it)) }
         )
     }
 )
-@Composable private fun SectionBottomBar(formInitialization: FormInitializationState, onBottomBarEvent: (Events.BottomBar) -> Unit) = BottomAppBar(
-    content = { Button (
+@Composable private fun SectionBottomBar(formInitialization: FormInitializationState,
+    onBottomBarEvent: (Events.BottomBar) -> Unit) = BottomAppBar(content = { Button (
         modifier = Modifier.fillMaxWidth(),
         onClick = { onBottomBarEvent(Events.BottomBar.BtnProceedInit.Clicked) },
         enabled = formInitialization.btnProceedEnabled,
         shape = MaterialTheme.shapes.extraSmall,
         content = { Text(text = stringResource(R.string.str_proceed)) }
-    ) }
-)
+    ) } )
