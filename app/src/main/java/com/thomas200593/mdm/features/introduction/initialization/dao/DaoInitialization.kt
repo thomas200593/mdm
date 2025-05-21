@@ -13,16 +13,21 @@ import com.thomas200593.mdm.features.user_management.user_role.entity.UserRoleEn
 
 @Dao interface DaoInitialization {
     @Insert(entity = UserEntity::class, onConflict = OnConflictStrategy.ABORT)
-    suspend fun addUser(user: UserEntity) : Long
+    suspend fun addUser(user : UserEntity) : Long
     @Insert(entity = UserProfileEntity::class, onConflict = OnConflictStrategy.ABORT)
-    suspend fun addUserProfile(profile: UserProfileEntity) : Long
+    suspend fun addUserProfile(profile : UserProfileEntity) : Long
     @Insert(entity = AuthEntity::class, onConflict = OnConflictStrategy.ABORT)
-    suspend fun addAuth(auth: AuthEntity) : Long
+    suspend fun addAuth(auth : AuthEntity) : Long
     @Insert(entity = UserRoleEntity::class, onConflict = OnConflictStrategy.ABORT)
-    suspend fun addUserRole(roles: List<UserRoleEntity>) : List<Long>
+    suspend fun addUserRole(roles : List<UserRoleEntity>) : List<Long>
     @Delete(entity = UserEntity::class)
-    suspend fun rollback(user: UserEntity) : Int
-    @Transaction suspend fun insertInitialization(user: UserEntity, profile: UserProfileEntity, auth: AuthEntity, roles: List<UserRoleEntity>): DTOInitializationResult {
+    suspend fun rollback(user : UserEntity) : Int
+    @Transaction suspend fun insertInitialization(
+        user : UserEntity,
+        profile : UserProfileEntity,
+        auth : AuthEntity,
+        roles : List<UserRoleEntity>
+    ) : DTOInitializationResult {
         val userId = addUser(user = user)
         val profileId = addUserProfile(profile = profile)
         val authId = addAuth(auth = auth)

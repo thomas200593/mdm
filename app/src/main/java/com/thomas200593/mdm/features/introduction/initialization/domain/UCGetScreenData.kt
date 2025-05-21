@@ -11,14 +11,19 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class UCGetScreenData @Inject constructor(
-    @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
-    private val ucGetConfCommonCurrent: UCGetConfCommonCurrent,
-    private val repoRole: RepoRole
+    @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher : CoroutineDispatcher,
+    private val ucGetConfCommonCurrent : UCGetConfCommonCurrent,
+    private val repoRole : RepoRole
 ) {
     operator fun invoke() = combine(
         flow = ucGetConfCommonCurrent.invoke().flowOn(ioDispatcher),
         flow2 = repoRole.getBuiltInRoles().flowOn(ioDispatcher)
-    ) { confCommon, setOfRoles -> confCommon to setOfRoles.getOrDefault(emptyList())
-        .filter { it.roleCode in setOf(BuiltInRolesSeeder.SYSTEM_OWNER, BuiltInRolesSeeder.SYSTEM_ADMIN) }.toSet()
+    ) { confCommon, setOfRoles ->
+        confCommon to setOfRoles.getOrDefault(emptyList()).filter {
+            it.roleCode in setOf(
+                BuiltInRolesSeeder.SYSTEM_OWNER,
+                BuiltInRolesSeeder.SYSTEM_ADMIN
+            )
+        }.toSet()
     }.flowOn(ioDispatcher)
 }
