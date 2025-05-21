@@ -63,9 +63,10 @@ import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPersonName
 import com.thomas200593.mdm.features.introduction.initialization.ui.events.Events
-import com.thomas200593.mdm.features.introduction.initialization.ui.state.ComponentsState
+import com.thomas200593.mdm.features.introduction.initialization.ui.state.ScreenDataState
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.DialogState
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.FormInitializationState
+import com.thomas200593.mdm.features.introduction.initialization.ui.state.ResultInitializationState
 import kotlinx.coroutines.CoroutineScope
 
 @Composable fun ScrInitialization(
@@ -76,7 +77,7 @@ import kotlinx.coroutines.CoroutineScope
     val formInitialization = vm.formInitialization
     LaunchedEffect (key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrInitialization(
-        scrGraph = scrGraph, components = uiState.componentsState,
+        scrGraph = scrGraph, uiState = uiState,
         formInitialization = formInitialization,
         onDialogEvent = { vm.onDialogEvent(it) },
         onTopBarEvent = { vm.onTopBarEvent(it) },
@@ -85,13 +86,15 @@ import kotlinx.coroutines.CoroutineScope
     )
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun ScrInitialization(
-    scrGraph: ScrGraphs.Initialization, components: ComponentsState, formInitialization: FormInitializationState,
+    scrGraph: ScrGraphs.Initialization, uiState: VMInitialization.UiState, formInitialization: FormInitializationState,
     onDialogEvent: (Events.Dialog) -> Unit, onTopBarEvent: (Events.TopBar) -> Unit,
     onFormEvent: (Events.Content.Form) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit
-) = when (components) {
-    is ComponentsState.Loading -> ScrLoading()
-    is ComponentsState.Loaded -> ScreenContent(
-        scrGraph = scrGraph, components = components,
+) = when (uiState.screenData) {
+    is ScreenDataState.Loading -> ScrLoading()
+    is ScreenDataState.Loaded -> ScreenContent(
+        scrGraph = scrGraph,
+        resultInitialization = uiState.resultInitialization,
+        dialog = uiState.dialog,
         formInitialization = formInitialization,
         onDialogEvent = onDialogEvent,
         onTopBarEvent = onTopBarEvent,
@@ -100,8 +103,11 @@ import kotlinx.coroutines.CoroutineScope
     )
 }
 @Composable private fun HandleDialogs(
-    scrGraph: ScrGraphs.Initialization, dialog: DialogState,
-    onTopBarEvent : (Events.TopBar) -> Unit, onDialogEvent: (Events.Dialog) -> Unit
+    scrGraph: ScrGraphs.Initialization,
+    dialog: DialogState,
+    resultInitialization: ResultInitializationState,
+    onTopBarEvent: (Events.TopBar) -> Unit,
+    onDialogEvent: (Events.Dialog) -> Unit
 ) = when(dialog) {
     is DialogState.None -> Unit
     is DialogState.ScrDescDialog -> ScrInfoDialog(
@@ -110,24 +116,33 @@ import kotlinx.coroutines.CoroutineScope
         description = stringResource(scrGraph.description)
     )
     is DialogState.LoadingDialog -> LoadingDialog()
-    is DialogState.ErrorDialog -> ErrorDialog(
-        onDismissRequest = { onDialogEvent(Events.Dialog.ErrorDismissed) },
-        message = "Initialization Failed!"
-    )
+    is DialogState.ErrorDialog -> when (resultInitialization) {
+        is ResultInitializationState.Idle, is ResultInitializationState.Loading, is ResultInitializationState.Success -> Unit
+        is ResultInitializationState.Failure -> ErrorDialog(
+            onDismissRequest = { onDialogEvent(Events.Dialog.ErrorDismissed) },
+            message = "Initialization Failed!",
+            error = resultInitialization.t
+        )
+    }
     is DialogState.SuccessDialog -> SuccessDialog(
         onDismissRequest = { onDialogEvent(Events.Dialog.SuccessDismissed) },
         message = "Initialization Success!"
     )
 }
 @Composable private fun ScreenContent(
-    scrGraph: ScrGraphs.Initialization, components: ComponentsState.Loaded,
-    formInitialization: FormInitializationState, onDialogEvent: (Events.Dialog) -> Unit,
-    onTopBarEvent: (Events.TopBar) -> Unit, onFormEvent: (Events.Content.Form) -> Unit,
+    scrGraph: ScrGraphs.Initialization,
+    resultInitialization: ResultInitializationState,
+    dialog: DialogState,
+    formInitialization: FormInitializationState,
+    onDialogEvent: (Events.Dialog) -> Unit,
+    onTopBarEvent: (Events.TopBar) -> Unit,
+    onFormEvent: (Events.Content.Form) -> Unit,
     onBottomBarEvent: (Events.BottomBar) -> Unit
 ) {
     HandleDialogs(
         scrGraph = scrGraph,
-        dialog = components.dialogState,
+        dialog = dialog,
+        resultInitialization = resultInitialization,
         onTopBarEvent = onTopBarEvent,
         onDialogEvent = onDialogEvent
     )

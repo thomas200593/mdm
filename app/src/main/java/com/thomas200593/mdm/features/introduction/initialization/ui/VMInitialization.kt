@@ -5,16 +5,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.core.design_system.util.update
-import com.thomas200593.mdm.features.user_management.security.auth.entity.AuthType
 import com.thomas200593.mdm.features.introduction.initialization.domain.UCCreateInitialUser
 import com.thomas200593.mdm.features.introduction.initialization.domain.UCGetScreenData
 import com.thomas200593.mdm.features.introduction.initialization.entity.DTOInitialization
 import com.thomas200593.mdm.features.introduction.initialization.ui.events.Events
-import com.thomas200593.mdm.features.introduction.initialization.ui.state.ComponentsState
+import com.thomas200593.mdm.features.introduction.initialization.ui.state.ScreenDataState
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.DialogState
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.FormInitializationState
-import com.thomas200593.mdm.features.introduction.initialization.ui.state.ResultInitialization
+import com.thomas200593.mdm.features.introduction.initialization.ui.state.ResultInitializationState
+import com.thomas200593.mdm.features.user_management.security.auth.entity.AuthType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +28,9 @@ import javax.inject.Inject
     private val ucCreateDataInitialization: UCCreateInitialUser
 ) : ViewModel() {
     data class UiState(
-        val componentsState: ComponentsState = ComponentsState.Loading
+        val screenData: ScreenDataState = ScreenDataState.Loading,
+        val dialog: DialogState = DialogState.None,
+        val resultInitialization: ResultInitializationState = ResultInitializationState.Idle
     )
     var uiState = MutableStateFlow(UiState())
         private set
@@ -37,8 +40,8 @@ import javax.inject.Inject
         is Events.Screen.Opened -> handleOpenScreen()
     }
     fun onDialogEvent(dialogEvents: Events.Dialog) = when(dialogEvents) {
-        is Events.Dialog.ErrorDismissed -> resetState()
-        is Events.Dialog.SuccessDismissed -> resetState()
+        is Events.Dialog.ErrorDismissed -> resetTransientState()
+        is Events.Dialog.SuccessDismissed -> resetTransientState()
     }
     fun onTopBarEvent(event: Events.TopBar) = when(event) {
         is Events.TopBar.BtnScrDesc.Clicked -> updateDialog { DialogState.ScrDescDialog }
@@ -55,70 +58,50 @@ import javax.inject.Inject
     fun onBottomBarEvent(event: Events.BottomBar) = when(event) {
         is Events.BottomBar.BtnProceedInit.Clicked -> handleInitialization()
     }
-    private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
-        viewModelScope.launch(Dispatchers.Main.immediate) {
-            uiState.update { current ->
-                (current.componentsState as? ComponentsState.Loaded)
-                    ?. let(transform)
-                    ?. let{ updatedState -> current.copy(componentsState = updatedState)}
-                    ?: current
-            }
-        }
-    private fun resetState() {
-        updateUiState { it.copy(
-            dialogState = DialogState.None,
-            resultInitialization = ResultInitialization.Idle
-        ) }
+    private fun resetTransientState() {
+        uiState.update { it.copy(dialog = DialogState.None, resultInitialization = ResultInitializationState.Idle) }
         formInitialization = FormInitializationState().validateField()
     }
     private fun handleOpenScreen() = viewModelScope.launch { ucGetScreenData.invoke()
         .onStart {
             formInitialization = formInitialization.validateField()
-            uiState.update { it.copy(componentsState = ComponentsState.Loading) }
+            uiState.update { it.copy(screenData = ScreenDataState.Loading) }
         }
-        .collect { (confCommon, initialSetOfRoles) ->
-            uiState.update { currentState -> currentState.copy(
-                componentsState = ComponentsState.Loaded(
-                    confCommon = confCommon,
-                    dialogState = DialogState.None,
-                    initialSetOfRoles = initialSetOfRoles,
-                    resultInitialization = ResultInitialization.Idle
-                )
-            ) }
-        }
+        .collect { (confCommon, initialSetOfRoles) -> uiState.update { it.copy(
+            screenData = ScreenDataState.Loaded(confCommon = confCommon, initialSetOfRoles = initialSetOfRoles),
+            dialog = DialogState.None,
+            resultInitialization = ResultInitializationState.Idle
+        ) } }
     }
     private fun updateDialog(transform: (DialogState) -> DialogState) =
-        updateUiState { it.copy(dialogState = transform(it.dialogState)) }
+        uiState.update { it.copy(dialog = transform(it.dialog)) }
     private fun updateForm(transform: (FormInitializationState) -> FormInitializationState) =
         viewModelScope.launch(Dispatchers.Main.immediate) {
             val updated = transform(formInitialization)
             formInitialization.takeIf { it != updated }?.let { formInitialization = updated }
         }
     private fun handleInitialization() = viewModelScope.launch {
-        // Step 1: Ensure componentsState is loaded
-        val componentsState = uiState.value.componentsState as? ComponentsState.Loaded ?: return@launch
-        if(componentsState.resultInitialization == ResultInitialization.Loading) return@launch
-        // Step 2: Freeze form inputs
+        val loaded = uiState.value.screenData as? ScreenDataState.Loaded ?: return@launch
+        if(uiState.value.resultInitialization == ResultInitializationState.Loading) return@launch
         val frozenForm = formInitialization.disableInputs()
         formInitialization = frozenForm
-        // Step 3: Show loading state
-        updateUiState { it.copy(resultInitialization = ResultInitialization.Loading, dialogState = DialogState.LoadingDialog) }
-        // Step 4: Build DTO
+        uiState.update { it.copy(
+            resultInitialization = ResultInitializationState.Loading, dialog = DialogState.LoadingDialog
+        ) }
         val dto = DTOInitialization(
             firstName = frozenForm.fldFirstName.toString().trim(),
             lastName = frozenForm.fldLastName.toString().trim(),
             email = frozenForm.fldEmail.toString().trim(),
             authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword.toString().trim()),
-            initialSetOfRoles = componentsState.initialSetOfRoles
+            initialSetOfRoles = loaded.initialSetOfRoles
         )
-        // Step 5: Perform the action and handle result
         ucCreateDataInitialization.invoke(dto).fold(
             onSuccess = { result ->
-                updateUiState { it.copy(resultInitialization = ResultInitialization.Success(result), dialogState = DialogState.SuccessDialog) }
+                uiState.update { it.copy(resultInitialization = ResultInitializationState.Success(result), dialog = DialogState.SuccessDialog) }
                 formInitialization = FormInitializationState().validateFields()
             },
-            onFailure = { err -> err.printStackTrace()
-                updateUiState { it.copy(resultInitialization = ResultInitialization.Error(err), dialogState = DialogState.ErrorDialog(err)) }
+            onFailure = { err -> val error = err as Error; error.printStackTrace()
+                uiState.update { it.copy(resultInitialization = ResultInitializationState.Failure(error), dialog = DialogState.ErrorDialog(error)) }
                 formInitialization = FormInitializationState().validateFields()
             }
         )
