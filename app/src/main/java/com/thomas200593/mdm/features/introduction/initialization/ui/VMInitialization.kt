@@ -45,8 +45,10 @@ import javax.inject.Inject
     fun onFormEvent(event: Events.Content.Form) = when(event) {
         is Events.Content.Form.FirstNameChanged -> updateForm { it.validateField(firstName = event.firstName).validateFields() }
         is Events.Content.Form.LastNameChanged -> updateForm { it.validateField(lastName = event.lastName).validateFields() }
+        is Events.Content.Form.DateOfBirthChanged -> updateForm { it.validateField(dateOfBirth = event.dateOfBirth).validateFields() }
         is Events.Content.Form.EmailChanged -> updateForm { it.validateField(email = event.email).validateFields() }
         is Events.Content.Form.PasswordChanged -> updateForm { it.validateField(password = event.password).validateFields() }
+        is Events.Content.Form.CheckBoxChanged -> updateForm { it.validateField(chbToCChecked = event.checked).validateFields() }
     }
     fun onBottomBarEvent(event: Events.BottomBar) = when(event) {
         is Events.BottomBar.BtnProceedInit.Clicked -> handleInitialization()
@@ -81,7 +83,8 @@ import javax.inject.Inject
                     resultInitialization = ResultInitialization.Idle
                 )
             ) }
-        } }
+        }
+    }
     private fun updateDialog(transform: (DialogState) -> DialogState) = updateUiState { it.copy(dialogState = transform(it.dialogState)) }
     private fun updateForm(transform: (FormInitializationState) -> FormInitializationState) =
         viewModelScope.launch(Dispatchers.Main.immediate) {
@@ -96,9 +99,7 @@ import javax.inject.Inject
             firstName = frozenForm.fldFirstName.toString().trim(),
             lastName = frozenForm.fldLastName.toString().trim(),
             email = frozenForm.fldEmail.toString().trim(),
-            authType = AuthType.LocalEmailPassword(
-                password = frozenForm.fldPassword.toString().trim()
-            ),
+            authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword.toString().trim()),
             initialSetOfRoles = componentsState.initialSetOfRoles
         )
         ucCreateDataInitialization.invoke(dto).fold(

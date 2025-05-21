@@ -17,9 +17,7 @@ fun HorizontalCheckbox(modifier: Modifier = Modifier, enabled: Boolean, checked:
     modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8), verticalAlignment = Alignment.CenterVertically,
     content = {
         Checkbox(
-            modifier = Modifier.wrapContentWidth(),
-            enabled = enabled,
-            checked = checked,
+            modifier = Modifier.wrapContentWidth(), enabled = enabled, checked = checked,
             onCheckedChange = onCheckedChange
         )
         Text(modifier = Modifier.weight(1f), text = annotatedText)

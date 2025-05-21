@@ -80,12 +80,14 @@ import kotlinx.coroutines.CoroutineScope
         formInitialization = formInitialization,
         onDialogEvent = { vm.onDialogEvent(it) },
         onTopBarEvent = { vm.onTopBarEvent(it) },
+        onFormEvent = { vm.onFormEvent(it) },
         onBottomBarEvent = { vm.onBottomBarEvent(it) }
     )
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun ScrInitialization(
     scrGraph: ScrGraphs.Initialization, components: ComponentsState, formInitialization: FormInitializationState,
-    onDialogEvent: (Events.Dialog) -> Unit, onTopBarEvent: (Events.TopBar) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit
+    onDialogEvent: (Events.Dialog) -> Unit, onTopBarEvent: (Events.TopBar) -> Unit,
+    onFormEvent: (Events.Content.Form) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit
 ) = when (components) {
     is ComponentsState.Loading -> ScrLoading()
     is ComponentsState.Loaded -> ScreenContent(
@@ -93,6 +95,7 @@ import kotlinx.coroutines.CoroutineScope
         formInitialization = formInitialization,
         onDialogEvent = onDialogEvent,
         onTopBarEvent = onTopBarEvent,
+        onFormEvent = onFormEvent,
         onBottomBarEvent = onBottomBarEvent
     )
 }
@@ -119,7 +122,8 @@ import kotlinx.coroutines.CoroutineScope
 @Composable private fun ScreenContent(
     scrGraph: ScrGraphs.Initialization, components: ComponentsState.Loaded,
     formInitialization: FormInitializationState, onDialogEvent: (Events.Dialog) -> Unit,
-    onTopBarEvent: (Events.TopBar) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit
+    onTopBarEvent: (Events.TopBar) -> Unit, onFormEvent: (Events.Content.Form) -> Unit,
+    onBottomBarEvent: (Events.BottomBar) -> Unit
 ) {
     HandleDialogs(
         scrGraph = scrGraph,
@@ -130,12 +134,16 @@ import kotlinx.coroutines.CoroutineScope
     Scaffold(
         modifier = Modifier.imePadding(),
         topBar = { SectionTopBar(onTopBarEvent = onTopBarEvent) },
-        content = { SectionContent(paddingValues = it, formInitialization = formInitialization) },
+        content = {
+            SectionContent(
+                paddingValues = it, formInitialization = formInitialization, onFormEvent = onFormEvent
+            )
+        },
         bottomBar = {
             AnimatedVisibility(
                 visible = formInitialization.btnProceedVisible,
-                enter = fadeIn() + slideInVertically(),
-                exit = fadeOut() + slideOutVertically(),
+                enter = fadeIn() + slideInVertically(initialOffsetY = { fullHeight -> fullHeight }),
+                exit = fadeOut() + slideOutVertically(targetOffsetY = { fullHeight -> fullHeight }),
                 content = {
                     SectionBottomBar(
                         formInitialization = formInitialization,
@@ -163,7 +171,8 @@ import kotlinx.coroutines.CoroutineScope
     }
 )
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionContent(
-    paddingValues: PaddingValues, formInitialization: FormInitializationState
+    paddingValues: PaddingValues, formInitialization: FormInitializationState,
+    onFormEvent: (Events.Content.Form) -> Unit
 ) = Surface(
     modifier = Modifier.padding(paddingValues).fillMaxSize(),
     content =  {
@@ -172,7 +181,12 @@ import kotlinx.coroutines.CoroutineScope
             verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
             content = {
                 item { PartFormTitle() }
-                item { PartForm(formInitialization = formInitialization) }
+                item {
+                    PartForm(
+                        formInitialization = formInitialization,
+                        onFormEvent = onFormEvent
+                    )
+                }
             }
         )
     }
@@ -228,41 +242,38 @@ import kotlinx.coroutines.CoroutineScope
     append(".")
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun PartForm(
-    formInitialization: FormInitializationState
+    formInitialization: FormInitializationState, onFormEvent: (Events.Content.Form) -> Unit
 ) = PanelCard(
     modifier = Modifier.padding(Constants.Dimens.dp8),
     title = { TxtLgTitle(stringResource(R.string.str_initialization)) },
     content = {
         TxtFieldPersonName(
             value = formInitialization.fldFirstName,
-            onValueChange = {/*TODO*/},
+            onValueChange = { onFormEvent(Events.Content.Form.FirstNameChanged(it)) },
             enabled = formInitialization.fldFirstNameEnabled,
             isError = formInitialization.fldFirstNameError.isNotEmpty(),
             errorMessage = formInitialization.fldFirstNameError,
-            label = "First name",
-            placeholder = "John"
+            label = "First name", placeholder = "John"
         )
         TxtFieldPersonName(
             value = formInitialization.fldLastName,
-            onValueChange = {/*TODO*/},
+            onValueChange = { onFormEvent(Events.Content.Form.LastNameChanged(it)) },
             enabled = formInitialization.fldLastNameEnabled,
             isError = formInitialization.fldLastNameError.isNotEmpty(),
             errorMessage = formInitialization.fldLastNameError,
-            label = "Last name (optional)",
-            placeholder = "Doe"
+            label = "Last name (optional)", placeholder = "Doe"
         )
         TxtFieldDatePicker(
             value = formInitialization.fldDateOfBirth,
-            onValueChange = {/*TODO*/},
+            onValueChange = { onFormEvent(Events.Content.Form.DateOfBirthChanged(it)) },
             enabled = formInitialization.fldDateOfBirthEnabled,
             isError = formInitialization.fldDateOfBirthError.isNotEmpty(),
             errorMessage = formInitialization.fldDateOfBirthError,
-            label = "Date of birth",
-            placeholder = "YYYY-MM-DD"
+            label = "Date of birth", placeholder = "YYYY-MM-DD"
         )
         TxtFieldEmail(
             value = formInitialization.fldEmail,
-            onValueChange = {/*TODO*/},
+            onValueChange = { onFormEvent(Events.Content.Form.EmailChanged(it)) },
             enabled = formInitialization.fldEmailEnabled,
             isError = formInitialization.fldEmailError.isNotEmpty(),
             errorMessage = formInitialization.fldEmailError,
@@ -270,7 +281,7 @@ import kotlinx.coroutines.CoroutineScope
         )
         TxtFieldPassword(
             value = formInitialization.fldPassword,
-            onValueChange = {/*TODO*/},
+            onValueChange = { onFormEvent(Events.Content.Form.PasswordChanged(it)) },
             enabled = formInitialization.fldPasswordEnabled,
             isError = formInitialization.fldPasswordError.isNotEmpty(),
             errorMessage = formInitialization.fldPasswordError,
@@ -280,21 +291,16 @@ import kotlinx.coroutines.CoroutineScope
             annotatedText = partTOCText(),
             enabled = formInitialization.fldChbToCEnabled,
             checked = formInitialization.fldChbToCChecked,
-            onCheckedChange = {/*TODO*/}
+            onCheckedChange = { onFormEvent(Events.Content.Form.CheckBoxChanged(it)) }
         )
     }
 )
-@Composable private fun SectionBottomBar(
-    formInitialization: FormInitializationState,
-    onBottomBarEvent: (Events.BottomBar) -> Unit
-) = BottomAppBar(
-    content = {
-        Button (
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { onBottomBarEvent(Events.BottomBar.BtnProceedInit.Clicked) },
-            enabled = formInitialization.btnProceedEnabled,
-            shape = MaterialTheme.shapes.extraSmall,
-            content = { Text(text = stringResource(R.string.str_proceed)) }
-        )
-    }
+@Composable private fun SectionBottomBar(formInitialization: FormInitializationState, onBottomBarEvent: (Events.BottomBar) -> Unit) = BottomAppBar(
+    content = { Button (
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { onBottomBarEvent(Events.BottomBar.BtnProceedInit.Clicked) },
+        enabled = formInitialization.btnProceedEnabled,
+        shape = MaterialTheme.shapes.extraSmall,
+        content = { Text(text = stringResource(R.string.str_proceed)) }
+    ) }
 )

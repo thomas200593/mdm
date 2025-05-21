@@ -14,8 +14,10 @@ sealed interface Events {
         sealed interface Form : Content {
             data class FirstNameChanged(val firstName: String) : Form
             data class LastNameChanged(val lastName: String) : Form
+            data class DateOfBirthChanged(val dateOfBirth: String) : Form
             data class EmailChanged(val email: String) : Form
             data class PasswordChanged(val password: String) : Form
+            data class CheckBoxChanged(val checked: Boolean) : Form
         }
     }
     sealed interface BottomBar : Events {
