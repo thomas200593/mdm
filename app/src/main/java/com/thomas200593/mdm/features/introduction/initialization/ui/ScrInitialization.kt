@@ -87,7 +87,8 @@ import kotlinx.coroutines.launch
         onTopBarEvent = { vm.onTopBarEvent(it) }, onFormEvent = { vm.onFormEvent(it) }, onBottomBarEvent = { vm.onBottomBarEvent(it) }
     )
 }
-@OptIn(ExperimentalMaterial3Api::class) @Composable private fun ScrInitialization(
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable private fun ScrInitialization(
     scrGraph: ScrGraphs.Initialization, uiState: VMInitialization.UiState, formInitialization: FormInitializationState,
     onDialogEvent: (Events.Dialog) -> Unit, onTopBarEvent: (Events.TopBar) -> Unit,
     onFormEvent: (Events.Content.Form) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit
@@ -143,7 +144,8 @@ import kotlinx.coroutines.launch
         ) }
     )
 }
-@OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
     title = {}, actions = { IconButton(
         onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Clicked) },
         content = { Icon(
@@ -152,10 +154,9 @@ import kotlinx.coroutines.launch
         ) }
     ) }
 )
-@OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionContent(
-    paddingValues: PaddingValues, formInitialization: FormInitializationState,
-    onFormEvent: (Events.Content.Form) -> Unit
-) = Surface(
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable private fun SectionContent(paddingValues: PaddingValues, formInitialization: FormInitializationState,
+    onFormEvent: (Events.Content.Form) -> Unit) = Surface(
     modifier = Modifier.padding(paddingValues).fillMaxSize(),
     content =  { LazyColumn(
         modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
@@ -171,14 +172,15 @@ import kotlinx.coroutines.launch
 )
 @Composable private fun PartFormTitle() = PanelCard(
     modifier = Modifier.padding(Constants.Dimens.dp8),
-    colors = CardDefaults.cardColors()
-        .copy(containerColor = MaterialTheme.colorScheme.tertiaryContainer, contentColor = MaterialTheme.colorScheme.onTertiaryContainer),
+    colors = CardDefaults.cardColors().copy(containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+        contentColor = MaterialTheme.colorScheme.onTertiaryContainer),
     title = { Row (
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
         verticalAlignment = Alignment.CenterVertically,
         content = {
-            Icon(modifier = Modifier.wrapContentWidth(), imageVector = Icons.Default.Info, contentDescription = null)
+            Icon(modifier = Modifier.wrapContentWidth(), imageVector = Icons.Default.Info,
+                contentDescription = null)
             TxtMdTitle(modifier = Modifier.weight(1.0f), text = "Important")
         }
     ) },
@@ -191,13 +193,15 @@ import kotlinx.coroutines.launch
     append("I agree to the "); withLink(
         link = LinkAnnotation.Url(
             url = "https://google.com/",
-            styles = TextLinkStyles(style = SpanStyle(color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold))
+            styles = TextLinkStyles(style = SpanStyle(color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold))
         ),
         block = { append("Terms and Conditions") }
     ); append(" and "); withLink(
         link = LinkAnnotation.Url(
             url = "https://google.com/",
-            styles = TextLinkStyles(style = SpanStyle(color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold))
+            styles = TextLinkStyles(style = SpanStyle(color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold))
         ),
         block = { append("Privacy Policy") }
     ); append(".")
