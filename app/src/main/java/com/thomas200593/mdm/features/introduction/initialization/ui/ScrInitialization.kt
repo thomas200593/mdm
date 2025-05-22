@@ -130,8 +130,7 @@ import kotlinx.coroutines.launch
     )
     is DialogState.LoadingDialog -> LoadingDialog()
     is DialogState.ErrorDialog -> when (resultInitialization) {
-        is ResultInitializationState.Idle, is ResultInitializationState.Loading,
-        is ResultInitializationState.Success -> Unit
+        is ResultInitializationState.Idle, is ResultInitializationState.Loading, is ResultInitializationState.Success -> Unit
         is ResultInitializationState.Failure -> ErrorDialog(
             onDismissRequest = { onDialogEvent(Events.Dialog.ErrorDismissed) },
             message = "Initialization Failed!", error = resultInitialization.t
