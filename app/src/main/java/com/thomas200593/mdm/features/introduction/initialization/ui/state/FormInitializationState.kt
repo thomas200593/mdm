@@ -72,11 +72,11 @@ data class FormInitializationState(
         btnProceedEnabled = false
     )
     companion object {
+        enum class FormField { FirstName, LastName, DateOfBirth, Email, Password, Checkbox }
         private val firstNameValidator = TxtFieldPersonNameValidation()
         private val lastNameValidator = TxtFieldPersonNameValidation()
         private val dateOfBirthValidator = TxtFieldDatePickerValidation()
         private val emailValidator = TxtFieldEmailValidation()
         private val passwordValidator = TxtFieldPasswordValidation()
     }
-    enum class FormField { FirstName, LastName, DateOfBirth, Email, Password, Checkbox }
 }
