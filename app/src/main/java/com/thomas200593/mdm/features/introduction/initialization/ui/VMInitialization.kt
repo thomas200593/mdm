@@ -70,12 +70,6 @@ import javax.inject.Inject
         uiState.update { it.copy(dialog = DialogState.None, resultInitialization = ResultInitializationState.Idle) }
         formInitialization = FormInitializationState().validateFields()
     }
-    private fun revalidateAllFields(current: FormInitializationState): FormInitializationState =
-        current.validateField(FormInitializationState.Companion.FormField.FirstName)
-        .validateField(FormInitializationState.Companion.FormField.LastName)
-        .validateField(FormInitializationState.Companion.FormField.DateOfBirth)
-        .validateField(FormInitializationState.Companion.FormField.Email)
-        .validateField(FormInitializationState.Companion.FormField.Password).validateFields()
     private fun handleOpenScreen() = viewModelScope.launch {
         ucGetScreenData.invoke()
             .onStart { resetTransientState()
@@ -99,6 +93,12 @@ import javax.inject.Inject
         debounceJob = viewModelScope.launch { delay(debounceDelay)
             updateForm { it.validateField(field).validateFields() } }
     }
+    private fun revalidateAllFields(current: FormInitializationState): FormInitializationState =
+        current.validateField(FormInitializationState.Companion.FormField.FirstName)
+        .validateField(FormInitializationState.Companion.FormField.LastName)
+        .validateField(FormInitializationState.Companion.FormField.DateOfBirth)
+        .validateField(FormInitializationState.Companion.FormField.Email)
+        .validateField(FormInitializationState.Companion.FormField.Password).validateFields()
     private fun handleInitialization() = viewModelScope.launch {
         val loaded = uiState.value.screenData as? ScreenDataState.Loaded ?: return@launch
         if(uiState.value.resultInitialization == ResultInitializationState.Loading) return@launch
