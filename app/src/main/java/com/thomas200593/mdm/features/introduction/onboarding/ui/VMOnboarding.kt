@@ -10,6 +10,7 @@ import com.thomas200593.mdm.features.introduction.onboarding.ui.events.Events
 import com.thomas200593.mdm.features.introduction.onboarding.ui.state.ScreenDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,7 +35,12 @@ class VMOnboarding @Inject constructor(
         is Events.BottomBar.NavButton.Page -> handlePageAction(event.action)
         is Events.BottomBar.NavButton.Finish -> handlePageFinish()
     }
-    private fun handleOpenScreen() {
+    private fun handleOpenScreen() = viewModelScope.launch {
+        ucGetScreenData.invoke()
+            .onStart { uiState.update { it.copy(screenData = ScreenDataState.Loading) } }
+            .collect {  }
+    }
+    /*{
         uiState.update { it.copy(screenData = ScreenDataState.Loading) }
         viewModelScope.launch {
             ucGetScreenData.invoke().collect { result ->
@@ -49,7 +55,7 @@ class VMOnboarding @Inject constructor(
                 ) }
             }
         }
-    }
+    }*/
     private fun handleSelectLanguage(language: Language) = viewModelScope.launch { repoConfLanguage.set(language) }
     private fun handlePageAction(action: Events.Action) = uiState.update { currentState ->
         (currentState.screenData as? ScreenDataState.Loaded) ?.let { state ->
