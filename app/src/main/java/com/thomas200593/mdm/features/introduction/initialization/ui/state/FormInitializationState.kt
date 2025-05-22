@@ -38,31 +38,29 @@ data class FormInitializationState(
     private val canProceed get() = fldFirstNameError.isEmpty() && fldLastNameError.isEmpty() &&
         fldDateOfBirthError.isEmpty() && fldEmailError.isEmpty() && fldPasswordError.isEmpty() &&
         (fldChbToCChecked == true)
-    fun validateField(
-        firstName: String = fldFirstName,
-        lastName: String = fldLastName,
-        dateOfBirth: String = fldDateOfBirth,
-        email: String = fldEmail,
-        password: String = fldPassword,
-        chbToCChecked: Boolean = fldChbToCChecked
+    fun setValue(
+        firstName: String? = null,
+        lastName: String? = null,
+        dateOfBirth: String? = null,
+        email: String? = null,
+        password: String? = null,
+        chbToCChecked: Boolean? = null
     ) = copy(
-        fldFirstName = firstName,
-        fldFirstNameError =
-            firstNameValidator.validate(input = firstName, required = true).errorMessages,
-        fldLastName = lastName,
-        fldLastNameError =
-            lastNameValidator.validate(input = lastName, required = false).errorMessages,
-        fldDateOfBirth = dateOfBirth,
-        fldDateOfBirthError =
-            dateOfBirthValidator.validate(input = dateOfBirth, required = true, minLength = -100, maxLength = 0).errorMessages,
-        fldEmail = email,
-        fldEmailError =
-            emailValidator.validate(input = email, required = true).errorMessages,
-        fldPassword = password,
-        fldPasswordError =
-            passwordValidator.validate(input = password, required = true).errorMessages,
-        fldChbToCChecked = chbToCChecked
-    ).validateFields()
+        fldFirstName = firstName ?: fldFirstName,
+        fldLastName = lastName ?: fldLastName,
+        fldDateOfBirth = dateOfBirth ?: fldDateOfBirth,
+        fldEmail = email ?: fldEmail,
+        fldPassword = password ?: fldPassword,
+        fldChbToCChecked = chbToCChecked ?: fldChbToCChecked
+    )
+    fun validateField(formField: FormField): FormInitializationState = when (formField) {
+        FormField.FirstName -> copy(fldFirstNameError = firstNameValidator.validate(input = fldFirstName, required = true).errorMessages)
+        FormField.LastName -> copy(fldLastNameError = lastNameValidator.validate(input = fldLastName, required = false).errorMessages)
+        FormField.DateOfBirth -> copy(fldDateOfBirthError = dateOfBirthValidator.validate(input = fldDateOfBirth, required = true, minLength = -100, maxLength = 0).errorMessages)
+        FormField.Email -> copy(fldEmailError = emailValidator.validate(input = fldEmail, required = true).errorMessages)
+        FormField.Password -> copy(fldPasswordError = passwordValidator.validate(input = fldPassword, required = true).errorMessages)
+        FormField.Checkbox -> this
+    }
     fun validateFields() = copy(btnProceedVisible = canProceed, btnProceedEnabled = canProceed)
     fun disableInputs() = copy(
         fldFirstNameEnabled = false,
@@ -80,4 +78,5 @@ data class FormInitializationState(
         private val emailValidator = TxtFieldEmailValidation()
         private val passwordValidator = TxtFieldPasswordValidation()
     }
+    enum class FormField { FirstName, LastName, DateOfBirth, Email, Password, Checkbox }
 }

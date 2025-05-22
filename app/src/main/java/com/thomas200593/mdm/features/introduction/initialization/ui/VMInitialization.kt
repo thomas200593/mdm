@@ -18,6 +18,8 @@ import com.thomas200593.mdm.features.introduction.initialization.ui.state.Result
 import com.thomas200593.mdm.features.user_management.security.auth.entity.AuthType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -34,6 +36,8 @@ import javax.inject.Inject
     )
     var uiState = MutableStateFlow(UiState()) ; private set
     var formInitialization by mutableStateOf(FormInitializationState()) ; private set
+    private var debounceJob: Job? = null
+    private val debounceDelay: Long = 300L // adjust as needed
     fun onScreenEvent(event: Events.Screen) = when(event) {
         is Events.Screen.Opened -> handleOpenScreen()
     }
@@ -46,18 +50,30 @@ import javax.inject.Inject
         is Events.TopBar.BtnScrDesc.Dismissed -> updateDialog { DialogState.None }
     }
     fun onFormEvent(event: Events.Content.Form) = when(event) {
-        is Events.Content.Form.FirstNameChanged ->
-            updateForm { it.validateField(firstName = event.firstName).validateFields() }
-        is Events.Content.Form.LastNameChanged ->
-            updateForm { it.validateField(lastName = event.lastName).validateFields() }
-        is Events.Content.Form.DateOfBirthChanged ->
-            updateForm { it.validateField(dateOfBirth = event.dateOfBirth).validateFields() }
-        is Events.Content.Form.EmailChanged ->
-            updateForm { it.validateField(email = event.email).validateFields() }
-        is Events.Content.Form.PasswordChanged ->
-            updateForm { it.validateField(password = event.password).validateFields() }
-        is Events.Content.Form.CheckBoxChanged ->
-            updateForm { it.validateField(chbToCChecked = event.checked).validateFields() }
+        is Events.Content.Form.FirstNameChanged -> {
+            updateForm { it.setValue(firstName = event.firstName) }
+            debounceValidateField(FormInitializationState.FormField.FirstName)
+        }
+        is Events.Content.Form.LastNameChanged -> {
+            updateForm { it.setValue(lastName = event.lastName) }
+            debounceValidateField(FormInitializationState.FormField.LastName)
+        }
+        is Events.Content.Form.DateOfBirthChanged -> {
+            updateForm { it.setValue(dateOfBirth = event.dateOfBirth) }
+            debounceValidateField(FormInitializationState.FormField.DateOfBirth)
+        }
+        is Events.Content.Form.EmailChanged -> {
+            updateForm { it.setValue(email = event.email) }
+            debounceValidateField(FormInitializationState.FormField.Email)
+        }
+        is Events.Content.Form.PasswordChanged -> {
+            updateForm { it.setValue(password = event.password) }
+            debounceValidateField(FormInitializationState.FormField.Password)
+        }
+        is Events.Content.Form.CheckBoxChanged -> {
+            updateForm { it.setValue(chbToCChecked = event.checked) }
+            debounceValidateField(FormInitializationState.FormField.Checkbox)
+        }
     }
     fun onBottomBarEvent(event: Events.BottomBar) = when(event) {
         is Events.BottomBar.BtnProceedInit.Clicked -> handleInitialization()
@@ -69,12 +85,19 @@ import javax.inject.Inject
                 resultInitialization = ResultInitializationState.Idle
             )
         }
-        formInitialization = FormInitializationState().validateField()
+        formInitialization = FormInitializationState().validateFields()
     }
+    private fun revalidateAllFields(current: FormInitializationState): FormInitializationState = current
+        .validateField(FormInitializationState.FormField.FirstName)
+        .validateField(FormInitializationState.FormField.LastName)
+        .validateField(FormInitializationState.FormField.DateOfBirth)
+        .validateField(FormInitializationState.FormField.Email)
+        .validateField(FormInitializationState.FormField.Password)
+        .validateFields()
     private fun handleOpenScreen() = viewModelScope.launch {
         ucGetScreenData.invoke()
             .onStart {
-                formInitialization = formInitialization.validateField()
+                resetTransientState()
                 uiState.update { it.copy(screenData = ScreenDataState.Loading) }
             }
             .collect { (confCommon, initialSetOfRoles) ->
@@ -83,9 +106,7 @@ import javax.inject.Inject
                         screenData = ScreenDataState.Loaded(
                             confCommon = confCommon,
                             initialSetOfRoles = initialSetOfRoles
-                        ),
-                        dialog = DialogState.None,
-                        resultInitialization = ResultInitializationState.Idle
+                        )
                     )
                 }
             }
@@ -98,6 +119,15 @@ import javax.inject.Inject
             val updated = transform(formInitialization)
             formInitialization.takeIf { it != updated }?.let { formInitialization = updated }
         }
+    private fun debounceValidateField(field: FormInitializationState.FormField) {
+        debounceJob?.cancel()
+        debounceJob = viewModelScope.launch {
+            delay(debounceDelay)
+            updateForm {
+                it.validateField(field).validateFields()
+            }
+        }
+    }
     private fun handleInitialization() = viewModelScope.launch {
         val loaded = uiState.value.screenData as? ScreenDataState.Loaded ?: return@launch
         if(uiState.value.resultInitialization == ResultInitializationState.Loading) return@launch
@@ -138,7 +168,7 @@ import javax.inject.Inject
                         dialog = DialogState.ErrorDialog(error)
                     )
                 }
-                formInitialization = FormInitializationState().validateFields()
+                formInitialization = revalidateAllFields(formInitialization)
                 return@launch
             }
         )
