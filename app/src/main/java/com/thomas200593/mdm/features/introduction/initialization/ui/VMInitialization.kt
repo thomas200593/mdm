@@ -109,6 +109,7 @@ import javax.inject.Inject
                         )
                     )
                 }
+                formInitialization = revalidateAllFields(formInitialization)
             }
     }
     private fun updateDialog(transform: (DialogState) -> DialogState) = uiState.update {
