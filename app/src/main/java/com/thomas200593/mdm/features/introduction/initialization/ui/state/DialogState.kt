@@ -6,6 +6,6 @@ sealed interface DialogState {
     data object None : DialogState
     data object ScrDescDialog : DialogState
     data object LoadingDialog : DialogState
-    data class ErrorDialog(val t: Error) : DialogState
+    data class ErrorDialog(val t : Error) : DialogState
     data object SuccessDialog : DialogState
 }
