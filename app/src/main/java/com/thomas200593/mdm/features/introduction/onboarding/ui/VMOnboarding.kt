@@ -21,7 +21,7 @@ class VMOnboarding @Inject constructor(
     private val repoConfLanguage: RepoConfLanguage
 ) : ViewModel() {
     data class UiState(
-        val screenDataState: ScreenDataState = ScreenDataState.Loading
+        val screenData: ScreenDataState = ScreenDataState.Loading
     )
     var uiState = MutableStateFlow(UiState()) ; private set
     fun onScreenEvent(event: Events.Screen) = when(event) {
@@ -35,11 +35,11 @@ class VMOnboarding @Inject constructor(
         is Events.BottomBar.NavButton.Finish -> handlePageFinish()
     }
     private fun handleOpenScreen() {
-        uiState.update { it.copy(screenDataState = ScreenDataState.Loading) }
+        uiState.update { it.copy(screenData = ScreenDataState.Loading) }
         viewModelScope.launch {
             ucGetScreenData.invoke().collect { result ->
                 uiState.update { currentState -> currentState.copy(
-                    screenDataState = ScreenDataState.Loaded(
+                    screenData = ScreenDataState.Loaded(
                         confCommon = result.confCommon,
                         languages = result.languageList,
                         onboardingPages = result.onboardingPages,
@@ -52,7 +52,7 @@ class VMOnboarding @Inject constructor(
     }
     private fun handleSelectLanguage(language: Language) = viewModelScope.launch { repoConfLanguage.set(language) }
     private fun handlePageAction(action: Events.Action) = uiState.update { currentState ->
-        (currentState.screenDataState as? ScreenDataState.Loaded) ?.let { state ->
+        (currentState.screenData as? ScreenDataState.Loaded) ?.let { state ->
             val newIdx = when(action) {
                 Events.Action.PREV -> state.currentIndex.minus(1).coerceAtLeast(0)
                 Events.Action.NEXT -> state.currentIndex.plus(1).coerceAtMost(state.maxIndex)
