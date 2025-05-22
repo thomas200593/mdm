@@ -7,7 +7,7 @@ import com.thomas200593.mdm.features.common.cnf_localization_language.repository
 import com.thomas200593.mdm.features.introduction.onboarding.domain.UCFinishOnboarding
 import com.thomas200593.mdm.features.introduction.onboarding.domain.UCGetScreenData
 import com.thomas200593.mdm.features.introduction.onboarding.ui.events.Events
-import com.thomas200593.mdm.features.introduction.onboarding.ui.state.ComponentsState
+import com.thomas200593.mdm.features.introduction.onboarding.ui.state.ScreenDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -20,9 +20,10 @@ class VMOnboarding @Inject constructor(
     private val ucFinishOnboarding: UCFinishOnboarding,
     private val repoConfLanguage: RepoConfLanguage
 ) : ViewModel() {
-    data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
-    var uiState = MutableStateFlow(UiState())
-        private set
+    data class UiState(
+        val screenDataState: ScreenDataState = ScreenDataState.Loading
+    )
+    var uiState = MutableStateFlow(UiState()) ; private set
     fun onScreenEvent(event: Events.Screen) = when(event) {
         is Events.Screen.Opened -> handleOpenScreen()
     }
@@ -34,11 +35,11 @@ class VMOnboarding @Inject constructor(
         is Events.BottomBar.NavButton.Finish -> handlePageFinish()
     }
     private fun handleOpenScreen() {
-        uiState.update { it.copy(componentsState = ComponentsState.Loading) }
+        uiState.update { it.copy(screenDataState = ScreenDataState.Loading) }
         viewModelScope.launch {
             ucGetScreenData.invoke().collect { result ->
                 uiState.update { currentState -> currentState.copy(
-                    componentsState = ComponentsState.Loaded(
+                    screenDataState = ScreenDataState.Loaded(
                         confCommon = result.confCommon,
                         languages = result.languageList,
                         onboardingPages = result.onboardingPages,
@@ -51,7 +52,7 @@ class VMOnboarding @Inject constructor(
     }
     private fun handleSelectLanguage(language: Language) = viewModelScope.launch { repoConfLanguage.set(language) }
     private fun handlePageAction(action: Events.Action) = uiState.update { currentState ->
-        (currentState.componentsState as? ComponentsState.Loaded) ?.let { state ->
+        (currentState.screenDataState as? ScreenDataState.Loaded) ?.let { state ->
             val newIdx = when(action) {
                 Events.Action.PREV -> state.currentIndex.minus(1).coerceAtLeast(0)
                 Events.Action.NEXT -> state.currentIndex.plus(1).coerceAtMost(state.maxIndex)

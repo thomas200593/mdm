@@ -57,7 +57,7 @@ import com.thomas200593.mdm.features.common.cnf_common.entity.Common
 import com.thomas200593.mdm.features.introduction.initialization.nav.navToInitialization
 import com.thomas200593.mdm.features.introduction.onboarding.entity.Onboarding
 import com.thomas200593.mdm.features.introduction.onboarding.ui.events.Events
-import com.thomas200593.mdm.features.introduction.onboarding.ui.state.ComponentsState
+import com.thomas200593.mdm.features.introduction.onboarding.ui.state.ScreenDataState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -69,7 +69,7 @@ fun ScrOnboarding(
     val uiState by vm.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrOnboarding(
-        scrGraph = scrGraph, components = uiState.componentsState, onTopBarEvent = { vm.onTopBarEvent(it) },
+        scrGraph = scrGraph, components = uiState.screenDataState, onTopBarEvent = { vm.onTopBarEvent(it) },
         onBottomBarEvent = { vm.onBottomBarEvent(it) }, onOnboardingFinished = { vm.onBottomBarEvent(it).also {
             coroutineScope.launch { stateApp.navController.navToInitialization() }
         } }
@@ -77,11 +77,11 @@ fun ScrOnboarding(
 }
 @Composable
 private fun ScrOnboarding(
-    scrGraph: ScrGraphs.Onboarding, components: ComponentsState, onTopBarEvent: (Events.TopBar) -> Unit,
+    scrGraph: ScrGraphs.Onboarding, components: ScreenDataState, onTopBarEvent: (Events.TopBar) -> Unit,
     onBottomBarEvent: (Events.BottomBar) -> Unit, onOnboardingFinished: (Events.BottomBar) -> Unit
 ) = when (components) {
-    is ComponentsState.Loading -> ScrLoading(label = scrGraph.title)
-    is ComponentsState.Loaded -> ScreenContent(
+    is ScreenDataState.Loading -> ScrLoading(label = scrGraph.title)
+    is ScreenDataState.Loaded -> ScreenContent(
         components = components, onTopBarEvent = onTopBarEvent, onBottomBarEvent = onBottomBarEvent,
         onOnboardingFinished = onOnboardingFinished
     )
@@ -89,7 +89,7 @@ private fun ScrOnboarding(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
-    components: ComponentsState.Loaded, onTopBarEvent: (Events.TopBar) -> Unit,
+    components: ScreenDataState.Loaded, onTopBarEvent: (Events.TopBar) -> Unit,
     onBottomBarEvent: (Events.BottomBar) -> Unit, onOnboardingFinished: (Events.BottomBar) -> Unit
 ) = Scaffold(
     topBar = { SectionTopBar(confCommon = components.confCommon, languages = components.languages, onTopBarEvent = onTopBarEvent) },
