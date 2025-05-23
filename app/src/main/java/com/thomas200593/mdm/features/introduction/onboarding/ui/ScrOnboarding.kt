@@ -75,9 +75,11 @@ fun ScrOnboarding(
         uiState = uiState,
         formOnboarding = formOnboarding,
         onTopBarEvent = { vm.onTopBarEvent(it) },
-        onBottomBarEvent = { vm.onBottomBarEvent(it) },
-        onOnboardingFinished = { vm.onBottomBarEvent(it)
-            .also { coroutineScope.launch { stateApp.navController.navToInitialization() } } }
+        onBottomBarEvent = { when (it) {
+            is Events.BottomBar.NavButton.Page -> vm.onBottomBarEvent(it)
+            is Events.BottomBar.NavButton.Finish -> vm.onBottomBarEvent(it)
+                .also { coroutineScope.launch { stateApp.navController.navToInitialization() } }
+        } }
     )
 }
 @Composable
@@ -86,16 +88,14 @@ private fun ScrOnboarding(
     uiState : VMOnboarding.UiState,
     formOnboarding : FormOnboardingState,
     onTopBarEvent : (Events.TopBar) -> Unit,
-    onBottomBarEvent : (Events.BottomBar) -> Unit,
-    onOnboardingFinished : (Events.BottomBar) -> Unit
+    onBottomBarEvent : (Events.BottomBar) -> Unit
 ) = when (uiState.screenData) {
     is ScreenDataState.Loading -> ScrLoading(label = scrGraph.title)
     is ScreenDataState.Loaded -> ScreenContent(
         screenData = uiState.screenData,
         formOnboarding = formOnboarding,
         onTopBarEvent = onTopBarEvent,
-        onBottomBarEvent = onBottomBarEvent,
-        onOnboardingFinished = onOnboardingFinished
+        onBottomBarEvent = onBottomBarEvent
     )
 }
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,8 +104,7 @@ private fun ScreenContent(
     screenData: ScreenDataState.Loaded,
     formOnboarding: FormOnboardingState,
     onTopBarEvent: (Events.TopBar) -> Unit,
-    onBottomBarEvent: (Events.BottomBar) -> Unit,
-    onOnboardingFinished: (Events.BottomBar) -> Unit
+    onBottomBarEvent: (Events.BottomBar) -> Unit
 ) = Scaffold(
     topBar = {
         SectionTopBar(
@@ -124,8 +123,7 @@ private fun ScreenContent(
         SectionBottomBar(
             currentIndex = formOnboarding.listCurrentIndex,
             maxIndex = formOnboarding.listMaxIndex,
-            onBottomBarEvents = onBottomBarEvent,
-            onNavFinishEvents = onOnboardingFinished
+            onBottomBarEvents = onBottomBarEvent
         )
     }
 )
@@ -202,8 +200,7 @@ private fun PartDetail(modifier: Modifier, currentPage: Onboarding) = LazyColumn
 private fun SectionBottomBar(
     currentIndex: Int,
     maxIndex: Int,
-    onBottomBarEvents: (Events.BottomBar) -> Unit,
-    onNavFinishEvents: (Events.BottomBar) -> Unit
+    onBottomBarEvents: (Events.BottomBar) -> Unit
 ) = BottomAppBar (
     content = {
         Row(
@@ -257,7 +254,7 @@ private fun SectionBottomBar(
                                     Icons.Default.Check,
                                     BorderStroke(1.dp, btnNextColor.second)
                                 ) to {
-                                    onNavFinishEvents(
+                                    onBottomBarEvents(
                                         Events.BottomBar.NavButton.Finish
                                     )
                                 }
