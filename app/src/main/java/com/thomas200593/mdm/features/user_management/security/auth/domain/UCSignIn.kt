@@ -18,9 +18,9 @@ class UCSignIn @Inject constructor(
     private val repoUser: RepoUser,
     private val repoAuth: RepoAuth<AuthType>
 ) {
+    /*TODO*/
     suspend operator fun invoke(dto: DTOSignIn) = when (dto.authType) {
         is AuthType.LocalEmailPassword -> runCatching {
-            /*TODO fix this like Initialization*/
             val user = repoUser.getOneByEmail(dto.email).flowOn(ioDispatcher).first().getOrThrow()
             val auth = repoAuth.getAuthByUser(user).flowOn(ioDispatcher).first().getOrThrow()
             val result = user to auth
