@@ -114,6 +114,7 @@ import javax.inject.Inject
         formInitialization = frozenForm
         uiState.update { it.copy(resultInitialization = ResultInitializationState.Loading, dialog = DialogState.LoadingDialog) }
         ucCreateDataInitialization.invoke(dto).fold(
+            /*TODO*/
             onSuccess = { result -> uiState.update {
                 it.copy(
                     resultInitialization = ResultInitializationState.Success(result),
@@ -122,7 +123,7 @@ import javax.inject.Inject
                 formInitialization = FormInitializationState().validateFields()
                 return@launch
             },
-            onFailure = { err -> val error = err as Error ; error.printStackTrace() ; uiState.update {
+            onFailure = { err -> val error = err as? Error ?: Error.UnknownError() ; error.printStackTrace() ; uiState.update {
                 it.copy(
                     resultInitialization = ResultInitializationState.Failure(error),
                     dialog = DialogState.ErrorDialog(error)
