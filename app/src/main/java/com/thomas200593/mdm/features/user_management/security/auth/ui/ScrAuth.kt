@@ -201,14 +201,19 @@ import kotlinx.coroutines.launch
             onValueChange = { onFormAuthEvent(Events.Content.Form.PasswordChanged(it)) },
             enabled = formAuth.fldPasswordEnabled
         )
-        (resultSignIn as? ResultSignInState.Success)?.let { onSignInCallback(Events.Content.SignInCallback.Success) }
+        LaunchedEffect(
+            key1 = resultSignIn,
+            block = { if (resultSignIn is ResultSignInState.Success) onSignInCallback(Events.Content.SignInCallback.Success) }
+        )
         (resultSignIn as? ResultSignInState.Failure)?.let { error ->
             AnimatedVisibility(
                 visible = true,
                 content = {
                     PanelCard(
-                        colors = CardDefaults.cardColors()
-                            .copy(containerColor = MaterialTheme.colorScheme.errorContainer, contentColor = MaterialTheme.colorScheme.onErrorContainer),
+                        colors = CardDefaults.cardColors().copy(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+                        ),
                         content = { error.t.message?.let { TxtMdBody(text = it, modifier = Modifier.fillMaxWidth()) } }
                     )
                 }

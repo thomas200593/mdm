@@ -121,8 +121,8 @@ class VMAuth @Inject constructor(
         }
     }
     private fun createSession(userId: String, expiresAt: Long) {
-        uiState.update { it.copy(dialog = DialogState.LoadingSessionDialog) }
         viewModelScope.launch {
+            uiState.update { it.copy(dialog = DialogState.LoadingSessionDialog) }
             sessionManager.archiveAndCleanUpSession()
             sessionManager.startSession(SessionEntity(userId = userId, expiresAt = expiresAt)).fold(
                 onFailure = { err -> val error = err as Error
