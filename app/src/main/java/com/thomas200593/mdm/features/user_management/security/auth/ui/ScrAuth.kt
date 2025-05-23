@@ -60,8 +60,7 @@ import com.thomas200593.mdm.features.bootstrap.nav.navToBootstrap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Composable
-fun ScrAuth(
+@Composable fun ScrAuth(
     scrGraph: ScrGraphs.Auth, vm: VMAuth = hiltViewModel(), stateApp: StateApp = LocalStateApp.current,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
@@ -76,8 +75,7 @@ fun ScrAuth(
         onSignInCallback = { vm.onSignInCallBackEvent(it).also { coroutineScope.launch { stateApp.navController.navToBootstrap() } } }
     )
 }
-@Composable
-private fun ScrAuth(
+@Composable private fun ScrAuth(
     scrGraph: ScrGraphs.Auth, components: ComponentsState, formAuth: FormAuthState,
     onTopBarEvent: (Events.TopBar) -> Unit, onFormAuthEvent: (Events.Content.Form) -> Unit,
     onSignInCallback: (Events.Content.SignInCallback) -> Unit
@@ -90,9 +88,7 @@ private fun ScrAuth(
         onSignInCallback = onSignInCallback
     )
 }
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ScreenContent(
+@OptIn(ExperimentalMaterial3Api::class) @Composable private fun ScreenContent(
     scrGraph: ScrGraphs.Auth, components: ComponentsState.Loaded, formAuth: FormAuthState,
     onTopBarEvent: (Events.TopBar) -> Unit, onFormAuthEvent: (Events.Content.Form) -> Unit,
     onSignInCallback: (Events.Content.SignInCallback) -> Unit
@@ -107,8 +103,7 @@ private fun ScreenContent(
         bottomBar = { SectionBottomBar() }
     )
 }
-@Composable
-private fun HandleDialogs(
+@Composable private fun HandleDialogs(
     dialog: DialogState, scrGraph: ScrGraphs.Auth,
     onTopBarEvent: (Events.TopBar) -> Unit
 ) = when (dialog) {
@@ -120,9 +115,7 @@ private fun HandleDialogs(
     is DialogState.LoadingAuthDialog -> LoadingDialog(message = "Authenticating...")
     is DialogState.LoadingSessionDialog -> LoadingDialog(message = "Creating Session...")
 }
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
+@OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
     title = {}, actions = {
         IconButton(
             onClick = { onTopBarEvent(Events.TopBar.BtnSetting.Clicked) },
@@ -134,8 +127,7 @@ private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
         )
     }
 )
-@Composable
-private fun SectionContent(
+@Composable private fun SectionContent(
     paddingValues: PaddingValues, components: ComponentsState.Loaded, formAuth: FormAuthState,
     onFormAuthEvent: (Events.Content.Form) -> Unit, onSignInCallback: (Events.Content.SignInCallback) -> Unit
 ) = Surface(
@@ -157,8 +149,7 @@ private fun SectionContent(
         )
     }
 )
-@Composable
-private fun SectionPageLogo() {
+@Composable private fun SectionPageLogo() {
     Surface(
         modifier = Modifier.height(100.dp), content = {
             Image(
@@ -168,8 +159,7 @@ private fun SectionPageLogo() {
         }
     )
 }
-@Composable
-private fun SectionPageTitle() = Column (
+@Composable private fun SectionPageTitle() = Column (
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16, Alignment.CenterVertically),
     content = {
@@ -177,8 +167,7 @@ private fun SectionPageTitle() = Column (
         TxtMdBody("To continue, please sign-in into your account.")
     }
 )
-@Composable
-private fun SectionPageAuthPanel(
+@Composable private fun SectionPageAuthPanel(
     components: ComponentsState.Loaded,
     formAuth: FormAuthState,
     onFormAuthEvent: (Events.Content.Form) -> Unit,
@@ -218,8 +207,7 @@ private fun SectionPageAuthPanel(
         SectionRecoverAccount(onFormAuthEvent = onFormAuthEvent)
     }
 )
-@Composable
-private fun SectionRecoverAccount(onFormAuthEvent : (Events.Content.Form) -> Unit) = Column (
+@Composable private fun SectionRecoverAccount(onFormAuthEvent : (Events.Content.Form) -> Unit) = Column (
     modifier = Modifier.fillMaxWidth(),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center,
@@ -228,8 +216,7 @@ private fun SectionRecoverAccount(onFormAuthEvent : (Events.Content.Form) -> Uni
         content = { TxtMdBody("Recover my account") }
     ) }
 )
-@Composable
-private fun SectionBottomBar() = BottomAppBar (
+@Composable private fun SectionBottomBar() = BottomAppBar (
     containerColor = MaterialTheme.colorScheme.surface,
     content = { Row (
         modifier = Modifier.fillMaxWidth(),

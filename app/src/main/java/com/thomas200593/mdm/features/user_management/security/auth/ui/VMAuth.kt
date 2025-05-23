@@ -32,11 +32,11 @@ class VMAuth @Inject constructor(
     private val ucSignIn: UCSignIn,
     private val sessionManager: SessionManager
 ) : ViewModel() {
-    data class UiState(val componentsState: ComponentsState = ComponentsState.Loading)
-    var uiState = MutableStateFlow(UiState())
-        private set
-    var formAuth by mutableStateOf(FormAuthState())
-        private set
+    data class UiState(
+        val componentsState: ComponentsState = ComponentsState.Loading
+    )
+    var uiState = MutableStateFlow(UiState()) ; private set
+    var formAuth by mutableStateOf(FormAuthState()) ; private set
     fun onScreenEvent(event: Events.Screen) = when(event) {
         is Events.Screen.Opened -> handleOpenScreen()
     }
