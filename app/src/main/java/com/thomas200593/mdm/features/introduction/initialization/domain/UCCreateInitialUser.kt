@@ -30,17 +30,15 @@ class UCCreateInitialUser @Inject constructor(
             .failure(Error.Input.MalformedError(message = "Initial user cannot have no role(s)"))
         return repoUser.getOneByEmail(dto.email).flowOn(ioDispatcher).first().let {
             when {
-                it.isSuccess -> Result
-                    .failure(Error.Data.DuplicateError(message = "User with email ${dto.email} already exists"))
+                it.isSuccess -> Result.failure(
+                    Error.Data.DuplicateError(message = "User with email ${dto.email} already exists"))
                 it.isFailure -> {
                     val error = it.exceptionOrNull()
                     when (error) {
                         is Error.Database.DaoQueryNoDataError -> when(dto.authType) {
                             is AuthType.LocalEmailPassword -> {
-                                val input = dto.copy(
-                                    authType = dto.authType
-                                        .copy(password = bCrypt.hash(dto.authType.password))
-                                )
+                                val input = dto.copy(authType = dto.authType
+                                    .copy(password = bCrypt.hash(dto.authType.password)))
                                 val user = input.toUserEntity(uid = UUIDv7.generateAsString())
                                 val auth = input.toAuthEntity(uid = user.uid)
                                 val profile = input.toUserProfileEntity(uid = user.uid)
@@ -59,8 +57,7 @@ class UCCreateInitialUser @Inject constructor(
                         is Error.Database.DaoQueryError -> Result
                             .failure(Error.Database.DaoQueryError(cause = error.cause))
                         else -> Result
-                            .failure(Error.UnknownError(message = error?.message, cause = error?.cause)
-                        )
+                            .failure(Error.UnknownError(message = error?.message, cause = error?.cause))
                     }
                 }
                 else -> Result.failure(Error.UnknownError(message = "Unexpected result state"))
