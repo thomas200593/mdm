@@ -28,5 +28,6 @@ data class UserProfileEntity(
     @ColumnInfo(name = "user_id") val userId: String,
     @ColumnInfo(name = "first_name") val firstName: String,
     @ColumnInfo(name = "last_name") val lastName: String,
+    @ColumnInfo(name = "date_of_birth") val dateOfBirth: String,
     @ColumnInfo(name = "audit_trail") override val auditTrail: AuditTrail = AuditTrail()
 ) : BaseEntity

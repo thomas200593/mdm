@@ -106,6 +106,7 @@ import javax.inject.Inject
         val dto = DTOInitialization(
             firstName = frozenForm.fldFirstName.toString().trim(),
             lastName = frozenForm.fldLastName.toString().trim(),
+            dateOfBirth = frozenForm.fldDateOfBirth.toString().trim(),
             email = frozenForm.fldEmail.toString().trim(),
             authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword.toString().trim()),
             initialSetOfRoles = loaded.initialSetOfRoles

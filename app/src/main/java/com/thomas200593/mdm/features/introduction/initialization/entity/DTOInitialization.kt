@@ -11,6 +11,7 @@ import kotlinx.serialization.Serializable
 @Serializable data class DTOInitialization(
     val firstName : String,
     val lastName : String,
+    val dateOfBirth : String,
     val email : String,
     val authType : AuthType,
     val initialSetOfRoles : Set<RoleEntity>
@@ -26,7 +27,8 @@ fun DTOInitialization.toAuthEntity(uid : String) = AuthEntity(
 fun DTOInitialization.toUserProfileEntity(uid : String) = UserProfileEntity(
     userId = uid,
     firstName = this.firstName,
-    lastName = this.lastName
+    lastName = this.lastName,
+    dateOfBirth = this.dateOfBirth
 )
 fun DTOInitialization.toUserRoleEntity(
     uid : String,
