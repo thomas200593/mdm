@@ -110,7 +110,6 @@ class VMAuth @Inject constructor(
                 formAuth = frozenForm
                 uiState.update { it.copy(resultSignIn = ResultSignInState.Loading, dialog = DialogState.LoadingAuthDialog) }
                 ucSignIn.invoke(dto).fold(
-                    /*TODO*/
                     onSuccess = { createSession(it.first.uid, (dto.timestamp + Constants.WEEK_IN_SECOND)) },
                     onFailure = { err -> val error = err as? Error ?: Error.UnknownError() ; error.printStackTrace() ; uiState.update {
                         it.copy(resultSignIn = ResultSignInState.Failure(error), dialog = DialogState.None) }
@@ -122,7 +121,6 @@ class VMAuth @Inject constructor(
         }
     }
     private fun createSession(userId: String, expiresAt: Long) {
-        /*TODO*/
         viewModelScope.launch {
             uiState.update { it.copy(dialog = DialogState.LoadingSessionDialog) }
             sessionManager.archiveAndCleanUpSession()

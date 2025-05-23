@@ -2,6 +2,7 @@ package com.thomas200593.mdm.features.user_management.security.auth.repository
 
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
+import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.features.user_management.security.auth.dao.DaoAuth
 import com.thomas200593.mdm.features.user_management.security.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.user_management.security.auth.entity.AuthType
@@ -20,7 +21,11 @@ class RepoAuthImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val daoAuth: DaoAuth
 ) : RepoAuth<AuthType> {
-    override fun getAuthByUser(user : UserEntity) = daoAuth.getAuthByUserId(userId = user.uid).flowOn(ioDispatcher)
-        .map { it.firstOrNull()?.let { Result.success(it) } ?: Result.failure(NoSuchElementException("Auth for user ${user.email} not found!")) }
-        .catch { e -> e.printStackTrace(); emit(Result.failure(e)) }
+    override fun getAuthByUser(user : UserEntity) = daoAuth.getAuthByUserId(userId = user.uid)
+        .flowOn(ioDispatcher)
+        .map { it.firstOrNull()
+            ?. let { Result.success(it) }
+            ?: Result.failure(Error.Database.DaoQueryNoDataError(message = "Auth for user ${user.email} not found!"))
+        }
+        .catch { e -> emit(Result.failure(Error.Database.DaoQueryError(cause = e, message = e.message))) }
 }
