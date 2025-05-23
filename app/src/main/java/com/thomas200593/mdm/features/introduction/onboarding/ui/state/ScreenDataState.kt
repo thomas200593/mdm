@@ -9,8 +9,6 @@ sealed interface ScreenDataState {
     data class Loaded(
         val confCommon : Common,
         val languages : List<Language>,
-        val onboardingPages : List<Onboarding>,
-        val currentIndex : Int,
-        val maxIndex: Int
+        val onboardingPages : List<Onboarding>
     ) : ScreenDataState
 }

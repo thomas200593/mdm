@@ -11,22 +11,15 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class UCGetScreenData @Inject constructor(
-    @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
-    private val ucGetConfCommonCurrent: UCGetConfCommonCurrent,
-    private val repoConfLanguage: RepoConfLanguage,
-    private val repoOnboarding: RepoOnboarding
+    @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher : CoroutineDispatcher,
+    private val ucGetConfCommonCurrent : UCGetConfCommonCurrent,
+    private val repoConfLanguage : RepoConfLanguage,
+    private val repoOnboarding : RepoOnboarding
 ) {
     operator fun invoke() = combine(
-        flow = ucGetConfCommonCurrent.invoke(),
-        flow2 = repoConfLanguage.list(),
-        flow3 = repoOnboarding.list
-    ) { confCommon, languageList, onboardingPages ->
-        DTOOnboarding(
-            confCommon = confCommon,
-            languageList = languageList,
-            onboardingPages = onboardingPages,
-            listCurrentIndex = 0,
-            listMaxIndex = onboardingPages.size.minus(1)
-        )
-    }.flowOn(ioDispatcher)
+        flow = ucGetConfCommonCurrent.invoke().flowOn(ioDispatcher),
+        flow2 = repoConfLanguage.list().flowOn(ioDispatcher),
+        flow3 = repoOnboarding.list.flowOn(ioDispatcher)
+    ) { confCommon, languageList, onboardingPages -> Triple(confCommon, languageList, onboardingPages) }
+        .flowOn(ioDispatcher)
 }
