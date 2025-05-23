@@ -113,7 +113,7 @@ class VMAuth @Inject constructor(
                     onSuccess = { createSession(it.first.uid, (dto.timestamp + Constants.WEEK_IN_SECOND)) },
                     onFailure = { err -> val error = err as? Error ?: Error.UnknownError() ; error.printStackTrace() ; uiState.update {
                         it.copy(resultSignIn = ResultSignInState.Failure(error), dialog = DialogState.None) }
-                        formAuth = revalidateAllFields(formAuth)
+                        formAuth = FormAuthState().validateFields()
                         return@launch
                     }
                 )
