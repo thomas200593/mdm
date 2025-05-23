@@ -27,9 +27,9 @@ class UCSignIn @Inject constructor(
             (result.second.authType as? AuthType.LocalEmailPassword)
                 ?. let { storedAuth ->
                     if (dto.authType.provider != storedAuth.provider)
-                        throw Error.Data.ValidationError("Auth Provider mismatch!")
+                        throw Error.Data.ValidationError(message = "Auth Provider mismatch!")
                     if ( ! bCrypt.verify(dto.authType.password, storedAuth.password) )
-                        throw Error.Data.ValidationError("Invalid Password")
+                        throw Error.Data.ValidationError(message = "Invalid Password")
                     result }
                 ?: throw Error.Input.MalformedError("Auth Type Mismatch!")
         }.fold(onSuccess = { Result.success(it) }, onFailure = { Result.failure(it) })
