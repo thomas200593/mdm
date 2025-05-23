@@ -62,8 +62,7 @@ import com.thomas200593.mdm.features.introduction.onboarding.ui.state.ScreenData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Composable
-fun ScrOnboarding(
+@Composable fun ScrOnboarding(
     scrGraph: ScrGraphs.Onboarding, vm: VMOnboarding = hiltViewModel(), stateApp: StateApp = LocalStateApp.current,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
@@ -71,9 +70,7 @@ fun ScrOnboarding(
     val formOnboarding = vm.formOnboarding
     LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrOnboarding(
-        scrGraph = scrGraph,
-        uiState = uiState,
-        formOnboarding = formOnboarding,
+        scrGraph = scrGraph, uiState = uiState, formOnboarding = formOnboarding,
         onTopBarEvent = { vm.onTopBarEvent(it) },
         onBottomBarEvent = { when (it) {
             is Events.BottomBar.NavButton.Page -> vm.onBottomBarEvent(it)
@@ -82,13 +79,9 @@ fun ScrOnboarding(
         } }
     )
 }
-@Composable
-private fun ScrOnboarding(
-    scrGraph : ScrGraphs.Onboarding,
-    uiState : VMOnboarding.UiState,
-    formOnboarding : FormOnboardingState,
-    onTopBarEvent : (Events.TopBar) -> Unit,
-    onBottomBarEvent : (Events.BottomBar) -> Unit
+@Composable private fun ScrOnboarding(
+    scrGraph : ScrGraphs.Onboarding, uiState : VMOnboarding.UiState, formOnboarding : FormOnboardingState,
+    onTopBarEvent : (Events.TopBar) -> Unit, onBottomBarEvent : (Events.BottomBar) -> Unit
 ) = when (uiState.screenData) {
     is ScreenDataState.Loading -> ScrLoading(label = scrGraph.title)
     is ScreenDataState.Loaded -> ScreenContent(
@@ -98,180 +91,113 @@ private fun ScrOnboarding(
         onBottomBarEvent = onBottomBarEvent
     )
 }
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ScreenContent(
-    screenData: ScreenDataState.Loaded,
-    formOnboarding: FormOnboardingState,
-    onTopBarEvent: (Events.TopBar) -> Unit,
-    onBottomBarEvent: (Events.BottomBar) -> Unit
+@OptIn(ExperimentalMaterial3Api::class) @Composable private fun ScreenContent(
+    screenData: ScreenDataState.Loaded, formOnboarding: FormOnboardingState,
+    onTopBarEvent: (Events.TopBar) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit
 ) = Scaffold(
-    topBar = {
-        SectionTopBar(
-            confCommon = screenData.confCommon,
-            languages = screenData.languages,
-            onTopBarEvent = onTopBarEvent
-        )
-    },
-    content = {
-        SectionContent(
-            paddingValues = it,
-            currentPage = screenData.onboardingPages[formOnboarding.listCurrentIndex]
-        )
-    },
-    bottomBar = {
-        SectionBottomBar(
-            currentIndex = formOnboarding.listCurrentIndex,
-            maxIndex = formOnboarding.listMaxIndex,
-            onBottomBarEvents = onBottomBarEvent
-        )
-    }
+    topBar = { SectionTopBar(
+        confCommon = screenData.confCommon,
+        languages = screenData.languages,
+        onTopBarEvent = onTopBarEvent
+    ) },
+    content = { SectionContent(
+        paddingValues = it,
+        currentPage = screenData.onboardingPages[formOnboarding.listCurrentIndex]
+    ) },
+    bottomBar = { SectionBottomBar(
+        currentIndex = formOnboarding.listCurrentIndex,
+        maxIndex = formOnboarding.listMaxIndex,
+        onBottomBarEvents = onBottomBarEvent
+    ) }
 )
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
-    confCommon: Common,
-    languages: List<Language>,
-    onTopBarEvent: (Events.TopBar) -> Unit
+    confCommon: Common, languages: List<Language>, onTopBarEvent: (Events.TopBar) -> Unit
 ) = TopAppBar(
-    title = {},
-    actions = {
-        BtnConfLang(
-            languages = languages,
-            onSelectLanguage = { onTopBarEvent(Events.TopBar.BtnLanguage.Selected(it)) },
-            languageIcon = confCommon.localization.language.country.flag
-        )
-    }
+    title = {}, actions = { BtnConfLang(
+        languages = languages,
+        onSelectLanguage = { onTopBarEvent(Events.TopBar.BtnLanguage.Selected(it)) },
+        languageIcon = confCommon.localization.language.country.flag
+    ) }
 )
-@Composable private fun SectionContent(
-    paddingValues: PaddingValues,
-    currentPage: Onboarding
-) = Surface(
-    modifier = Modifier.padding(paddingValues),
-    content = {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            content = {
-                PartBanner(
-                    modifier = Modifier.fillMaxWidth().weight(1.0f),
-                    currentPage = currentPage
-                )
-                PartDetail(
-                    modifier = Modifier.weight(1.0f).padding(16.dp),
-                    currentPage = currentPage
-                )
-            }
-        )
-    }
+@Composable private fun SectionContent(paddingValues: PaddingValues, currentPage: Onboarding) = Surface(
+    modifier = Modifier.padding(paddingValues), content = { Column(
+        modifier = Modifier.fillMaxSize(),
+        content = {
+            PartBanner(
+                modifier = Modifier.fillMaxWidth().weight(1.0f),
+                currentPage = currentPage
+            )
+            PartDetail(
+                modifier = Modifier.weight(1.0f).padding(16.dp),
+                currentPage = currentPage
+            )
+        }
+    ) }
 )
-@Composable
-private fun PartBanner(modifier: Modifier, currentPage: Onboarding) = Box(
+@Composable private fun PartBanner(modifier: Modifier, currentPage: Onboarding) = Box(
     modifier = modifier, content = {
         SubcomposeAsyncImage(
             modifier = Modifier.fillMaxSize(),
-            model = ImageRequest.Builder(LocalContext.current).crossfade(250)
-                .data(currentPage.imageRes).build(),
+            model = ImageRequest.Builder(LocalContext.current).crossfade(250).data(currentPage.imageRes).build(),
             contentDescription = null,
             loading = { InnerCircularProgressIndicator() },
             contentScale = ContentScale.FillWidth
         )
-        Box(
-            modifier = Modifier.fillMaxSize().align(Alignment.BottomCenter)
-                .graphicsLayer { alpha = 0.6f }
-                .background(
-                    verticalGradient(
-                        colorStops = arrayOf(
-                            Pair(0.6f, Color.Transparent),
-                            Pair(1.0f, MaterialTheme.colorScheme.onSurface)
-                        )
-                    )
-                )
+        Box(modifier = Modifier.fillMaxSize().align(Alignment.BottomCenter)
+            .graphicsLayer { alpha = 0.6f }.background(verticalGradient(
+                colorStops = arrayOf(Pair(0.6f, Color.Transparent), Pair(1.0f, MaterialTheme.colorScheme.onSurface))
+            ))
         )
     }
 )
-@Composable
-private fun PartDetail(modifier: Modifier, currentPage: Onboarding) = LazyColumn(
+@Composable private fun PartDetail(modifier: Modifier, currentPage: Onboarding) = LazyColumn(
     modifier = modifier.fillMaxWidth(),
-    verticalArrangement = Arrangement.spacedBy(16.dp),
-    content = {
+    verticalArrangement = Arrangement.spacedBy(16.dp), content = {
         item { TxtLgTitle(text = stringResource(currentPage.title)) }
         item { TxtMdBody(text = stringResource(currentPage.description)) }
     }
 )
-@Composable
-private fun SectionBottomBar(
-    currentIndex: Int,
-    maxIndex: Int,
-    onBottomBarEvents: (Events.BottomBar) -> Unit
-) = BottomAppBar (
-    content = {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            content = {
-                Row(
-                    modifier = Modifier.weight(0.5f),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
-                    content = {
-                        val strPrev = stringResource(R.string.str_back)
-                        val btnPrevState by remember(currentIndex, maxIndex) { derivedStateOf {
-                            if (currentIndex > 0) true to { onBottomBarEvents(
-                                Events.BottomBar.NavButton.Page(
-                                    Events.Action.PREV)) }
-                            else false to {}
-                        } }
-                        AnimatedVisibility(
-                            visible = btnPrevState.first,
-                            content = {
-                                BtnPrevious(onClick = btnPrevState.second, label = strPrev)
-                            }
-                        )
+@Composable private fun SectionBottomBar(currentIndex: Int, maxIndex: Int,
+    onBottomBarEvents: (Events.BottomBar) -> Unit) = BottomAppBar (
+    content = { Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
+        content = {
+            Row(modifier = Modifier.weight(0.5f),
+                horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically,
+                content = {
+                    val strPrev = stringResource(R.string.str_back)
+                    val btnPrevState by remember(currentIndex, maxIndex) {
+                        derivedStateOf { if (currentIndex > 0) true to
+                        { onBottomBarEvents(Events.BottomBar.NavButton.Page(Events.Action.PREV)) } else false to {} }
                     }
-                )
-                Row(
-                    modifier = Modifier.weight(0.5f),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically,
-                    content = {
-                        val strNext = Pair(stringResource(R.string.str_next), stringResource(R.string.str_finish))
-                        val btnNextColor = Pair(
-                            MaterialTheme.colorScheme.tertiaryContainer,
-                            MaterialTheme.colorScheme.onTertiaryContainer
-                        )
-                        val btnNextState by remember(currentIndex, maxIndex) {
-                            derivedStateOf {
-                                if (currentIndex < maxIndex) Triple(
-                                    strNext.first,
-                                    Icons.AutoMirrored.Default.NavigateNext,
-                                    null
-                                ) to {
-                                    onBottomBarEvents(
-                                        Events.BottomBar.NavButton.Page(Events.Action.NEXT)
-                                    )
-                                }
-                                else Triple(
-                                    strNext.second,
-                                    Icons.Default.Check,
-                                    BorderStroke(1.dp, btnNextColor.second)
-                                ) to {
-                                    onBottomBarEvents(
-                                        Events.BottomBar.NavButton.Finish
-                                    )
-                                }
-                        } }
-                        BtnNext(
-                            onClick = btnNextState.second, label = btnNextState.first.first,
-                            icon = btnNextState.first.second, border = btnNextState.first.third,
-                            colors =
-                                if (currentIndex < maxIndex) ButtonDefaults.textButtonColors()
-                                else ButtonDefaults.textButtonColors().copy(
-                                    containerColor = btnNextColor.first,
-                                    contentColor = btnNextColor.second
-                                )
-                        )
+                    AnimatedVisibility(visible = btnPrevState.first, content = { BtnPrevious(onClick = btnPrevState.second, label = strPrev) })
+                }
+            )
+            Row(modifier = Modifier.weight(0.5f),
+                horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically,
+                content = {
+                    val strNext = Pair(stringResource(R.string.str_next), stringResource(R.string.str_finish))
+                    val btnNextColor = Pair(MaterialTheme.colorScheme.tertiaryContainer, MaterialTheme.colorScheme.onTertiaryContainer)
+                    val btnNextState by remember(currentIndex, maxIndex) {
+                        derivedStateOf {
+                            if (currentIndex < maxIndex) Triple(strNext.first, Icons.AutoMirrored.Default.NavigateNext, null) to
+                            { onBottomBarEvents(Events.BottomBar.NavButton.Page(Events.Action.NEXT)) }
+                            else Triple(strNext.second, Icons.Default.Check, BorderStroke(1.dp, btnNextColor.second)) to
+                            { onBottomBarEvents(Events.BottomBar.NavButton.Finish) }
+                        }
                     }
-                )
-            }
-        )
-    }
+                    BtnNext(onClick = btnNextState.second, label = btnNextState.first.first,
+                        icon = btnNextState.first.second, border = btnNextState.first.third,
+                        colors =
+                            if (currentIndex < maxIndex) ButtonDefaults.textButtonColors()
+                            else ButtonDefaults.textButtonColors().copy(
+                                containerColor = btnNextColor.first,
+                                contentColor = btnNextColor.second
+                            )
+                    )
+                }
+            )
+        }
+    ) }
 )
