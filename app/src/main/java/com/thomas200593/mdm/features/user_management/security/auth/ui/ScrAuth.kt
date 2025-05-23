@@ -51,12 +51,12 @@ import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.features.user_management.security.auth.ui.events.Events
-import com.thomas200593.mdm.features.user_management.security.auth.ui.state.ComponentsState
 import com.thomas200593.mdm.features.user_management.security.auth.ui.state.DialogState
 import com.thomas200593.mdm.features.user_management.security.auth.ui.state.FormAuthState
 import com.thomas200593.mdm.features.user_management.security.auth.ui.state.FormAuthTypeState
-import com.thomas200593.mdm.features.user_management.security.auth.ui.state.ResultSignIn
+import com.thomas200593.mdm.features.user_management.security.auth.ui.state.ResultSignInState
 import com.thomas200593.mdm.features.bootstrap.nav.navToBootstrap
+import com.thomas200593.mdm.features.user_management.security.auth.ui.state.ScreenDataState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -68,7 +68,8 @@ import kotlinx.coroutines.launch
     val formAuth = vm.formAuth
     LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
     ScrAuth(
-        scrGraph = scrGraph, components = uiState.componentsState,
+        scrGraph = scrGraph,
+        uiState = uiState,
         formAuth = formAuth,
         onTopBarEvent = { vm.onTopBarEvent(it) },
         onFormAuthEvent = { vm.onFormAuthEvent(it) },
@@ -76,31 +77,22 @@ import kotlinx.coroutines.launch
     )
 }
 @Composable private fun ScrAuth(
-    scrGraph: ScrGraphs.Auth, components: ComponentsState, formAuth: FormAuthState,
-    onTopBarEvent: (Events.TopBar) -> Unit, onFormAuthEvent: (Events.Content.Form) -> Unit,
+    scrGraph: ScrGraphs.Auth,
+    uiState: VMAuth.UiState,
+    formAuth: FormAuthState,
+    onTopBarEvent: (Events.TopBar) -> Unit,
+    onFormAuthEvent: (Events.Content.Form) -> Unit,
     onSignInCallback: (Events.Content.SignInCallback) -> Unit
-) = when (components) {
-    is ComponentsState.Loading -> ScrLoading()
-    is ComponentsState.Loaded -> ScreenContent(
-        scrGraph = scrGraph, components = components, formAuth = formAuth,
+) = when (uiState.screenData) {
+    is ScreenDataState.Loading -> ScrLoading()
+    is ScreenDataState.Loaded -> ScreenContent(
+        scrGraph = scrGraph,
+        dialog = uiState.dialog,
+        resultSignIn = uiState.resultSignIn,
+        formAuth = formAuth,
         onTopBarEvent = onTopBarEvent,
         onFormAuthEvent = onFormAuthEvent,
         onSignInCallback = onSignInCallback
-    )
-}
-@OptIn(ExperimentalMaterial3Api::class) @Composable private fun ScreenContent(
-    scrGraph: ScrGraphs.Auth, components: ComponentsState.Loaded, formAuth: FormAuthState,
-    onTopBarEvent: (Events.TopBar) -> Unit, onFormAuthEvent: (Events.Content.Form) -> Unit,
-    onSignInCallback: (Events.Content.SignInCallback) -> Unit
-) {
-    HandleDialogs(dialog = components.dialogState, scrGraph = scrGraph, onTopBarEvent = onTopBarEvent)
-    Scaffold(
-        topBar = { SectionTopBar(onTopBarEvent = onTopBarEvent) },
-        content = { SectionContent(
-            paddingValues = it, components = components, formAuth = formAuth,
-            onFormAuthEvent = onFormAuthEvent, onSignInCallback = onSignInCallback
-        ) },
-        bottomBar = { SectionBottomBar() }
     )
 }
 @Composable private fun HandleDialogs(
@@ -115,6 +107,31 @@ import kotlinx.coroutines.launch
     is DialogState.LoadingAuthDialog -> LoadingDialog(message = "Authenticating...")
     is DialogState.LoadingSessionDialog -> LoadingDialog(message = "Creating Session...")
 }
+@Composable private fun ScreenContent(
+    scrGraph: ScrGraphs.Auth,
+    dialog: DialogState,
+    resultSignIn: ResultSignInState,
+    formAuth: FormAuthState,
+    onTopBarEvent: (Events.TopBar) -> Unit,
+    onFormAuthEvent: (Events.Content.Form) -> Unit,
+    onSignInCallback: (Events.Content.SignInCallback) -> Unit
+) {
+    HandleDialogs(
+        scrGraph = scrGraph,
+        dialog = dialog,
+        onTopBarEvent = onTopBarEvent)
+    Scaffold(
+        topBar = { SectionTopBar(onTopBarEvent = onTopBarEvent) },
+        content = { SectionContent(
+            paddingValues = it,
+            resultSignIn = resultSignIn,
+            formAuth = formAuth,
+            onFormAuthEvent = onFormAuthEvent,
+            onSignInCallback = onSignInCallback
+        ) },
+        bottomBar = { SectionBottomBar() }
+    )
+}
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(onTopBarEvent: (Events.TopBar) -> Unit) = TopAppBar(
     title = {}, actions = {
         IconButton(
@@ -128,7 +145,7 @@ import kotlinx.coroutines.launch
     }
 )
 @Composable private fun SectionContent(
-    paddingValues: PaddingValues, components: ComponentsState.Loaded, formAuth: FormAuthState,
+    paddingValues: PaddingValues, resultSignIn: ResultSignInState, formAuth: FormAuthState,
     onFormAuthEvent: (Events.Content.Form) -> Unit, onSignInCallback: (Events.Content.SignInCallback) -> Unit
 ) = Surface(
     modifier = Modifier.padding(paddingValues), content = {
@@ -140,7 +157,7 @@ import kotlinx.coroutines.launch
                 item { SectionPageLogo() }
                 item { SectionPageTitle() }
                 item { SectionPageAuthPanel(
-                    components = components,
+                    resultSignIn = resultSignIn,
                     formAuth = formAuth,
                     onFormAuthEvent = onFormAuthEvent,
                     onSignInCallback = onSignInCallback
@@ -168,7 +185,7 @@ import kotlinx.coroutines.launch
     }
 )
 @Composable private fun SectionPageAuthPanel(
-    components: ComponentsState.Loaded,
+    resultSignIn: ResultSignInState,
     formAuth: FormAuthState,
     onFormAuthEvent: (Events.Content.Form) -> Unit,
     onSignInCallback: (Events.Content.SignInCallback) -> Unit
@@ -184,8 +201,8 @@ import kotlinx.coroutines.launch
             onValueChange = { onFormAuthEvent(Events.Content.Form.PasswordChanged(it)) },
             enabled = formAuth.fldPasswordEnabled
         )
-        (components.resultSignIn as? ResultSignIn.Success)?.let { onSignInCallback(Events.Content.SignInCallback.Success) }
-        (components.resultSignIn as? ResultSignIn.Error)?.let { error ->
+        (resultSignIn as? ResultSignInState.Success)?.let { onSignInCallback(Events.Content.SignInCallback.Success) }
+        (resultSignIn as? ResultSignInState.Failure)?.let { error ->
             AnimatedVisibility(
                 visible = true,
                 content = {

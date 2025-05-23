@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.features.user_management.security.session.SessionManager
 import com.thomas200593.mdm.features.user_management.security.session.entity.SessionEntity
 import com.thomas200593.mdm.core.design_system.util.Constants
@@ -14,13 +15,15 @@ import com.thomas200593.mdm.features.user_management.security.auth.domain.UCSign
 import com.thomas200593.mdm.features.user_management.security.auth.entity.AuthType
 import com.thomas200593.mdm.features.user_management.security.auth.entity.DTOSignIn
 import com.thomas200593.mdm.features.user_management.security.auth.ui.events.Events
-import com.thomas200593.mdm.features.user_management.security.auth.ui.state.ComponentsState
 import com.thomas200593.mdm.features.user_management.security.auth.ui.state.DialogState
 import com.thomas200593.mdm.features.user_management.security.auth.ui.state.FormAuthState
 import com.thomas200593.mdm.features.user_management.security.auth.ui.state.FormAuthTypeState
-import com.thomas200593.mdm.features.user_management.security.auth.ui.state.ResultSignIn
+import com.thomas200593.mdm.features.user_management.security.auth.ui.state.ResultSignInState
+import com.thomas200593.mdm.features.user_management.security.auth.ui.state.ScreenDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -33,89 +36,100 @@ class VMAuth @Inject constructor(
     private val sessionManager: SessionManager
 ) : ViewModel() {
     data class UiState(
-        val componentsState: ComponentsState = ComponentsState.Loading
+        val screenData: ScreenDataState = ScreenDataState.Loading,
+        val dialog: DialogState = DialogState.None,
+        val resultSignIn: ResultSignInState = ResultSignInState.Idle
     )
     var uiState = MutableStateFlow(UiState()) ; private set
     var formAuth by mutableStateOf(FormAuthState()) ; private set
+    private var debounceJob: Job? = null
+    private val debounceDelay: Long = 300L // adjust as needed
     fun onScreenEvent(event: Events.Screen) = when(event) {
         is Events.Screen.Opened -> handleOpenScreen()
     }
     fun onTopBarEvent(events: Events.TopBar) = when (events) {
-        is Events.TopBar.BtnSetting.Clicked -> {/*TODO*/}
+        is Events.TopBar.BtnSetting.Clicked -> resetTransientState()
         is Events.TopBar.BtnScrDesc.Clicked -> updateDialog { DialogState.ScrDescDialog }
         is Events.TopBar.BtnScrDesc.Dismissed -> updateDialog { DialogState.None }
     }
     fun onFormAuthEvent(event: Events.Content.Form) = when (event) {
-        is Events.Content.Form.EmailChanged -> updateForm { it.validateField(email = event.email).validateFields() }
-        is Events.Content.Form.PasswordChanged -> updateForm { it.validateField(password = event.password).validateFields() }
+        is Events.Content.Form.EmailChanged -> {
+            updateForm { it.setValue(email = event.email) }
+            debounceValidateField(FormAuthState.Companion.FormField.Email)
+        }
+        is Events.Content.Form.PasswordChanged -> {
+            updateForm { it.setValue(password = event.password) }
+            debounceValidateField(FormAuthState.Companion.FormField.Password)
+        }
         is Events.Content.Form.BtnSignIn.Clicked -> handleSignIn(event.authType)
         is Events.Content.Form.BtnRecoverAccount.Clicked -> {/*TODO*/}
     }
     fun onSignInCallBackEvent(event: Events.Content.SignInCallback) = when (event) {
-        Events.Content.SignInCallback.Success -> handleSignInCallbackSuccess()
+        Events.Content.SignInCallback.Success -> resetTransientState()
     }
-    private inline fun updateUiState(crossinline transform: (ComponentsState.Loaded) -> ComponentsState) =
-        viewModelScope.launch(Dispatchers.Main.immediate) {
-            uiState.update { current ->
-                (current.componentsState as? ComponentsState.Loaded)
-                    ?. let(transform)
-                    ?. let{ updatedState -> current.copy(componentsState = updatedState)}
-                    ?: current
-            }
-        }
+    private fun resetTransientState() {
+        uiState.update { it.copy(dialog = DialogState.None, resultSignIn = ResultSignInState.Idle) }
+        formAuth = FormAuthState().validateFields()
+    }
     private fun handleOpenScreen() = viewModelScope.launch {
         ucGetScreenData.invoke()
-            .onStart { sessionManager.archiveAndCleanUpSession(); uiState.update { it.copy(componentsState = ComponentsState.Loading) } }
-            .collect { confCommon ->
-                uiState.update { currentState -> currentState.copy(
-                    componentsState = ComponentsState.Loaded(
-                        confCommon = confCommon,
-                        dialogState = DialogState.None,
-                        resultSignIn = ResultSignIn.Idle
-                    )
-                ) }
-            }
+            .onStart { sessionManager.archiveAndCleanUpSession(); resetTransientState()
+                uiState.update { it.copy(screenData = ScreenDataState.Loading) } }
+            .collect { confCommon -> uiState.update { it.copy(
+                screenData = ScreenDataState.Loaded(
+                    confCommon = confCommon
+                ))
+            } ; formAuth = revalidateAllFields(formAuth) }
     }
     private fun updateDialog(transform: (DialogState) -> DialogState) =
-        updateUiState { it.copy(dialogState = transform(it.dialogState)) }
-    private fun updateForm(transform: (FormAuthState) -> FormAuthState) = viewModelScope.launch(Dispatchers.Main.immediate) {
-        (uiState.value.componentsState as? ComponentsState.Loaded)
-            ?.let { val updated = transform(formAuth); if (updated != formAuth) formAuth = updated }
+        uiState.update { it.copy(dialog = transform(it.dialog)) }
+    private fun updateForm(transform: (FormAuthState) -> FormAuthState) =
+        viewModelScope.launch(Dispatchers.Main.immediate) {
+            val updated = transform(formAuth)
+            formAuth.takeIf { it != updated }?.let { formAuth = updated }
+        }
+    private fun debounceValidateField(field : FormAuthState.Companion.FormField) {
+        debounceJob?.cancel()
+        debounceJob = viewModelScope.launch { delay(debounceDelay)
+            updateForm { it.validateField(field).validateFields() } }
     }
+    private fun revalidateAllFields(current: FormAuthState) : FormAuthState =
+        current.validateField(FormAuthState.Companion.FormField.Email)
+        .validateField(FormAuthState.Companion.FormField.Password).validateFields()
     private fun handleSignIn(authType: FormAuthTypeState) = when (authType) {
         is FormAuthTypeState.LocalEmailPassword -> {
-            val frozenForm = formAuth.disableInputs(); formAuth = frozenForm
-            updateUiState { componentState -> componentState.copy(dialogState = DialogState.LoadingAuthDialog, resultSignIn = ResultSignIn.Loading) }
             viewModelScope.launch {
-                val isLoaded = uiState.value.componentsState is ComponentsState.Loaded
-                if (!isLoaded) return@launch
+                uiState.value.screenData as? ScreenDataState.Loaded ?: return@launch
+                if(uiState.value.resultSignIn == ResultSignInState.Loading) return@launch
+                val frozenForm = formAuth.disableInputs()
                 val dto = DTOSignIn(
                     email = frozenForm.fldEmail.trim(),
                     authType = AuthType.LocalEmailPassword(password = frozenForm.fldPassword.trim()),
                     timestamp = Constants.NOW_EPOCH_SECOND
                 )
+                formAuth = frozenForm
+                uiState.update { it.copy(resultSignIn = ResultSignInState.Loading, dialog = DialogState.LoadingAuthDialog) }
                 ucSignIn.invoke(dto).fold(
-                    onFailure = { err ->
-                        updateUiState { it.copy(resultSignIn = ResultSignIn.Error(err), dialogState = DialogState.None) }
-                        formAuth = FormAuthState()
-                    },
-                    onSuccess = { createSession(it.first.uid, (dto.timestamp + Constants.WEEK_IN_SECOND)) }
+                    onSuccess = { createSession(it.first.uid, (dto.timestamp + Constants.WEEK_IN_SECOND)) },
+                    onFailure = { err -> val error = err as Error ; error.printStackTrace() ; uiState.update {
+                        it.copy(resultSignIn = ResultSignInState.Failure(error), dialog = DialogState.None) }
+                        formAuth = revalidateAllFields(formAuth)
+                        return@launch
+                    }
                 )
             }
         }
     }
     private fun createSession(userId: String, expiresAt: Long) {
-        updateUiState { componentState -> componentState.copy(dialogState = DialogState.LoadingSessionDialog) }
+        uiState.update { it.copy(dialog = DialogState.LoadingSessionDialog) }
         viewModelScope.launch {
             sessionManager.archiveAndCleanUpSession()
             sessionManager.startSession(SessionEntity(userId = userId, expiresAt = expiresAt)).fold(
-                onFailure = { err -> updateUiState { it.copy(resultSignIn = ResultSignIn.Error(err), dialogState = DialogState.None) } },
-                onSuccess = { updateUiState { it.copy(resultSignIn = ResultSignIn.Success, dialogState = DialogState.None) } }
+                onFailure = { err -> val error = err as Error
+                    uiState.update { it.copy(resultSignIn = ResultSignInState.Failure(error), dialog = DialogState.None) }
+                },
+                onSuccess = { uiState.update { it.copy(resultSignIn = ResultSignInState.Success, dialog = DialogState.None) } }
             )
         }
-    }
-    private fun handleSignInCallbackSuccess() {
-        updateUiState { componentState -> componentState.copy(resultSignIn = ResultSignIn.Idle, dialogState = DialogState.None) }
-        formAuth = FormAuthState()
     }
 }
