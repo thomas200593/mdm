@@ -224,7 +224,7 @@ import kotlinx.coroutines.launch
             onClick = { onFormAuthEvent(Events.Content.Form.BtnSignIn.Clicked(FormAuthTypeState.LocalEmailPassword)) },
             shape = MaterialTheme.shapes.extraSmall,
             enabled = formAuth.btnSignInEnabled,
-            content = { Text(text = "Sign in") }
+            content = { Text(text = stringResource(R.string.str_sign_in)) }
         )
         SectionRecoverAccount(onFormAuthEvent = onFormAuthEvent)
     }

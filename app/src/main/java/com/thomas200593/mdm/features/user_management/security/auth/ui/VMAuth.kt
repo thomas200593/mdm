@@ -111,8 +111,11 @@ class VMAuth @Inject constructor(
                 uiState.update { it.copy(resultSignIn = ResultSignInState.Loading, dialog = DialogState.LoadingAuthDialog) }
                 ucSignIn.invoke(dto).fold(
                     onSuccess = { createSession(it.first.uid, (dto.timestamp + Constants.WEEK_IN_SECOND)) },
-                    onFailure = { err -> val error = err as? Error ?: Error.UnknownError() ; error.printStackTrace() ; uiState.update {
-                        it.copy(resultSignIn = ResultSignInState.Failure(error), dialog = DialogState.None) }
+                    onFailure = { err ->
+                        val error = err as? Error ?: Error.UnknownError(message = err.message, cause = err.cause)
+                        uiState.update {
+                            it.copy(resultSignIn = ResultSignInState.Failure(error), dialog = DialogState.None)
+                        }
                         formAuth = FormAuthState().validateFields()
                         return@launch
                     }
@@ -125,10 +128,15 @@ class VMAuth @Inject constructor(
             uiState.update { it.copy(dialog = DialogState.LoadingSessionDialog) }
             sessionManager.archiveAndCleanUpSession()
             sessionManager.startSession(SessionEntity(userId = userId, expiresAt = expiresAt)).fold(
-                onFailure = { err -> val error = err as? Error ?: Error.UnknownError()
-                    uiState.update { it.copy(resultSignIn = ResultSignInState.Failure(error), dialog = DialogState.None) }
+                onFailure = { err ->
+                    val error = err as? Error ?: Error.UnknownError(message = err.message, cause = err.cause)
+                    uiState.update {
+                        it.copy(resultSignIn = ResultSignInState.Failure(error), dialog = DialogState.None)
+                    }
                 },
-                onSuccess = { uiState.update { it.copy(resultSignIn = ResultSignInState.Success, dialog = DialogState.None) } }
+                onSuccess = {
+                    uiState.update { it.copy(resultSignIn = ResultSignInState.Success, dialog = DialogState.None) }
+                }
             )
         }
     }

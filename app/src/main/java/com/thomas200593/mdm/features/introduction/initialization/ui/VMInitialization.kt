@@ -123,8 +123,7 @@ import javax.inject.Inject
                 return@launch
             },
             onFailure = { err ->
-                val error = err as? Error ?: Error.UnknownError()
-                error.printStackTrace()
+                val error = err as? Error ?: Error.UnknownError(message = err.message, cause = err.cause)
                 uiState.update {
                     it.copy(
                         resultInitialization = ResultInitializationState.Failure(error),
