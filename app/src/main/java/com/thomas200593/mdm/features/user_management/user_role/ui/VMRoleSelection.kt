@@ -7,7 +7,7 @@ import com.thomas200593.mdm.features.user_management.user_role.repository.RepoUs
 import com.thomas200593.mdm.features.user_management.user_role.ui.events.Events
 import com.thomas200593.mdm.features.user_management.user_role.ui.state.ScreenDataState
 import com.thomas200593.mdm.features.user_management.user_role.ui.state.DialogState
-import com.thomas200593.mdm.features.user_management.user_role.ui.state.ResultSetUserRole
+import com.thomas200593.mdm.features.user_management.user_role.ui.state.ResultSetUserRoleState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
@@ -20,7 +20,7 @@ import javax.inject.Inject
     data class UiState(
         val screenData : ScreenDataState = ScreenDataState.Loading,
         val dialog : DialogState = DialogState.None,
-        val resultSetUserRole : ResultSetUserRole = ResultSetUserRole.Idle
+        val resultSetUserRole : ResultSetUserRoleState = ResultSetUserRoleState.Idle
     )
     var uiState = MutableStateFlow(UiState()) ; private set
     fun onSessionEvent(event: Events.Session) = when (event) {
