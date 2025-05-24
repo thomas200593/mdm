@@ -62,7 +62,7 @@ import kotlinx.coroutines.launch
                 onLoading = { _ -> },
                 onInvalid = { _, _ -> onNavToAuth() },
                 onNoCurrentRole = { _, _ -> onNavToRoleSelection() },
-                onValid = { _, _ -> onNavToDashboard() }
+                onValid = { _, _, _ -> onNavToDashboard() }
             )
         }
     }

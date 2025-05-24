@@ -3,9 +3,9 @@ package com.thomas200593.mdm.core.design_system.state_app
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -18,12 +18,15 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.thomas200593.mdm.app.main.nav.DestTopLevel
 import com.thomas200593.mdm.core.design_system.network_monitor.NetworkMonitor
-import com.thomas200593.mdm.features.user_management.security.session.SessionManager
-import com.thomas200593.mdm.features.user_management.security.session.entity.DTOSessionUserData
-import com.thomas200593.mdm.features.user_management.security.session.entity.SessionEvent
-import com.thomas200593.mdm.features.user_management.security.session.entity.SessionState
 import com.thomas200593.mdm.core.design_system.timber_logger.LocalTimberFileLogger
 import com.thomas200593.mdm.core.design_system.timber_logger.TimberFileLogger
+import com.thomas200593.mdm.features.user_management.role.entity.RoleEntity
+import com.thomas200593.mdm.features.user_management.security.session.SessionManager
+import com.thomas200593.mdm.features.user_management.security.session.entity.SessionEntity
+import com.thomas200593.mdm.features.user_management.security.session.entity.SessionEvent
+import com.thomas200593.mdm.features.user_management.security.session.entity.SessionState
+import com.thomas200593.mdm.features.user_management.user.entity.UserEntity
+import com.thomas200593.mdm.features.user_management.user_profile.entity.UserProfileEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -90,20 +93,21 @@ class StateApp(
 @Composable fun StateApp.SessionHandler(
     onLoading : (event: SessionEvent.Loading) -> Unit,
     onInvalid : (event: SessionEvent.Invalid, t : Throwable) -> Unit,
-    onNoCurrentRole : (event : SessionEvent.NoCurrentRole, data : DTOSessionUserData) -> Unit,
-    onValid : (event : SessionEvent.Valid, data : DTOSessionUserData) -> Unit
+    onNoCurrentRole : (event : SessionEvent.NoCurrentRole, data : Triple<UserEntity, UserProfileEntity, SessionEntity>) -> Unit,
+    onValid : (event : SessionEvent.Valid, data : Triple<UserEntity, UserProfileEntity, SessionEntity>, currentRole : RoleEntity) -> Unit
 ) {
     val sessionState by isSessionValid.collectAsStateWithLifecycle()
     LaunchedEffect(
         key1 = sessionState,
         block = {
             when(sessionState) {
-                SessionState.Loading -> onLoading(SessionEvent.Loading)
+                is SessionState.Loading -> onLoading(SessionEvent.Loading)
                 is SessionState.Invalid -> onInvalid(SessionEvent.Invalid, (sessionState as SessionState.Invalid).t)
                 is SessionState.Valid -> {
                     val data = (sessionState as SessionState.Valid).data
-                    if(data.currentRole?.roleCode.isNullOrEmpty()) onNoCurrentRole(SessionEvent.NoCurrentRole, data)
-                    else onValid(SessionEvent.Valid, data)
+                    data.currentRole.takeIf { it != null && it.roleCode.isNotEmpty() }
+                        ?. let { onValid(SessionEvent.Valid, Triple(data.user, data.profile, data.session), it) }
+                        ?: onNoCurrentRole(SessionEvent.NoCurrentRole, Triple(data.user, data.profile, data.session))
                 }
             }
         }

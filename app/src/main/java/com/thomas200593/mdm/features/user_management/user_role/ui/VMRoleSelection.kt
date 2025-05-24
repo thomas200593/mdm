@@ -1,6 +1,9 @@
 package com.thomas200593.mdm.features.user_management.user_role.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
+import com.thomas200593.mdm.features.user_management.user.entity.UserEntity
 import com.thomas200593.mdm.features.user_management.user_role.domain.UCGetScreenData
 import com.thomas200593.mdm.features.user_management.user_role.domain.UCGetUserRole
 import com.thomas200593.mdm.features.user_management.user_role.repository.RepoUserRole
@@ -10,6 +13,7 @@ import com.thomas200593.mdm.features.user_management.user_role.ui.state.DialogSt
 import com.thomas200593.mdm.features.user_management.user_role.ui.state.ResultSetUserRoleState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel class VMRoleSelection @Inject constructor(
@@ -24,7 +28,7 @@ import javax.inject.Inject
     )
     var uiState = MutableStateFlow(UiState()) ; private set
     fun onSessionEvent(event: Events.Session) = when (event) {
-        is Events.Session.Loading -> {}
+        is Events.Session.Loading -> { uiState.update { it.copy(screenData = ScreenDataState.Loading) } }
         is Events.Session.Invalid -> {}
         is Events.Session.NoCurrentRole -> {}
         is Events.Session.Valid -> {}

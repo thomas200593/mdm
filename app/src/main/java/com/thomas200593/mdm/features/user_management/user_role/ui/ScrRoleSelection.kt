@@ -25,11 +25,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.SessionHandler
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
+import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.features.user_management.user_role.ui.events.Events
+import com.thomas200593.mdm.features.user_management.user_role.ui.state.ScreenDataState
 import kotlinx.coroutines.CoroutineScope
 
 @Composable fun ScrRoleSelection(
@@ -38,13 +42,24 @@ import kotlinx.coroutines.CoroutineScope
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
     stateApp.SessionHandler(
-        onLoading = { ev -> vm.onSessionEvent(event = Events.Session.Loading(ev = ev)) },
-        onInvalid = { ev, t -> vm.onSessionEvent(event = Events.Session.Invalid(ev = ev, t = t)) },
-        onNoCurrentRole = { ev, data -> vm.onSessionEvent(event = Events.Session.NoCurrentRole(ev = ev, data = data)) },
-        onValid = { ev, data -> vm.onSessionEvent(event = Events.Session.Valid(ev = ev, data = data)) }
+        onLoading = { ev -> },
+        onInvalid = { ev, t -> },
+        onNoCurrentRole = { ev, data -> },
+        onValid = { ev, data, currentRole -> }
     )
+    ScrRoleSelection(uiState = uiState)
 }
-@Composable private fun ScrRoleSelection() {}
+@Composable private fun ScrRoleSelection(uiState: VMRoleSelection.UiState) = when (uiState.screenData) {
+    is ScreenDataState.Loading -> ScrLoading()
+    is ScreenDataState.Loaded -> {
+        val roles = uiState.screenData.roles.collectAsLazyPagingItems()
+        when (roles.loadState.refresh) {
+            is LoadState.Error -> TODO()
+            is LoadState.Loading -> TODO()
+            is LoadState.NotLoading -> TODO()
+        }
+    }
+}
 @Composable private fun ScreenContent(
     scrGraph: ScrGraphs.RoleSelection,
     onTopBarEvent: (Events.TopBar) -> Unit,
