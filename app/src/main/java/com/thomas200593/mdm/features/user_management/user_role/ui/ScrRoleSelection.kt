@@ -50,8 +50,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable fun ScrRoleSelection(
-    scrGraph: ScrGraphs.RoleSelection, vm: VMRoleSelection = hiltViewModel(), stateApp: StateApp = LocalStateApp.current,
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
+    scrGraph: ScrGraphs.RoleSelection, vm: VMRoleSelection = hiltViewModel(),
+    stateApp: StateApp = LocalStateApp.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
@@ -68,7 +68,6 @@ import kotlinx.coroutines.launch
         onNoCurrentRole = { ev, data -> vm.onSessionEvent(event = Events.Session.NoCurrentRole(ev = ev, data = data)) },
         onValid = { ev, data -> vm.onSessionEvent(event = Events.Session.Valid(ev = ev, data = data)) }
     )
-    vm.testDeleteUserRole()
 }
 @Composable private fun ScrRoleSelection(
     scrGraph: ScrGraphs.RoleSelection, components: ComponentsState, onTopBarEvent: (Events.TopBar) -> Unit,
@@ -108,8 +107,7 @@ import kotlinx.coroutines.launch
     )
     is DialogState.SessionInvalidDialog -> ErrorDialog(
         onDismissRequest = { onSignOutEvent(Events.Dialog.ErrorDismissed) },
-        title = "Something was wrong",
-        message = "Error : ${dialog.t?.message.orEmpty()}; Stacktrace : ${dialog.t?.cause.toString()}"
+        title = "", /*TODO*/message = "" /*TODO*/
     )
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
@@ -169,12 +167,6 @@ import kotlinx.coroutines.launch
         content = {
             TxtMdTitle("To continue, please select your role")
             TxtMdBody("Role list")
-            /*TODO*/
-            /*RoleDropdown(
-                roles = components.roles,
-                selectedRole = components.selectedRole,
-                onRoleSelected = components.onRoleSelected
-            )*/
         }
     ) }
 )
