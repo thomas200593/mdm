@@ -10,6 +10,6 @@ sealed interface ScreenDataState {
         val confCommon : Common,
         val sessionEvent : SessionEvent,
         val sessionData : SessionEntity?,
-        val resultGetUserRole : ResultGetUserRole
+        val resultGetUserRoles : ResultGetUserRolesState
     ) : ScreenDataState
 }

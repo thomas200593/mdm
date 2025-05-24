@@ -4,9 +4,6 @@ import com.thomas200593.mdm.features.user_management.security.session.entity.DTO
 import com.thomas200593.mdm.features.user_management.security.session.entity.SessionEvent
 
 sealed interface Events {
-    sealed interface Screen : Events {
-        data object Opened : Screen
-    }
     sealed interface Session : Events {
         data class Loading(val ev: SessionEvent.Loading) : Session
         data class Invalid(val ev: SessionEvent.Invalid, val t: Throwable) : Session

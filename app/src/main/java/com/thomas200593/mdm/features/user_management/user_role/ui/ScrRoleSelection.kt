@@ -17,7 +17,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -44,8 +43,6 @@ import kotlinx.coroutines.CoroutineScope
         onNoCurrentRole = { ev, data -> vm.onSessionEvent(event = Events.Session.NoCurrentRole(ev = ev, data = data)) },
         onValid = { ev, data -> vm.onSessionEvent(event = Events.Session.Valid(ev = ev, data = data)) }
     )
-    LaunchedEffect(key1 = Unit, block = { vm.onScreenEvent(Events.Screen.Opened) })
-    ScrRoleSelection()
 }
 @Composable private fun ScrRoleSelection() {}
 @Composable private fun ScreenContent(

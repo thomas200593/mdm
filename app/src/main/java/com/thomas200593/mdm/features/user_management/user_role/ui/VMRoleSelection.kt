@@ -23,9 +23,6 @@ import javax.inject.Inject
         val resultSetUserRole : ResultSetUserRole = ResultSetUserRole.Idle
     )
     var uiState = MutableStateFlow(UiState()) ; private set
-    fun onScreenEvent(event: Events.Screen) = when (event) {
-        is Events.Screen.Opened -> handleOnOpenEvent()
-    }
     fun onSessionEvent(event: Events.Session) = when (event) {
         is Events.Session.Loading -> {}
         is Events.Session.Invalid -> {}
@@ -39,5 +36,4 @@ import javax.inject.Inject
     fun onDialogEvent(event: Events.Dialog) = when (event) {
         Events.Dialog.ErrorDismissed -> {}
     }
-    private fun handleOnOpenEvent() {}
 }
