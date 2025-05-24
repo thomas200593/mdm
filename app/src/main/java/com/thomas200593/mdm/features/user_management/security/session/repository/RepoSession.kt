@@ -34,6 +34,7 @@ class RepoSessionImpl @Inject constructor(
     override suspend fun isValid(session: SessionEntity) = withContext (ioDispatcher)
         { runCatching { UUIDv7.extractTimestamp(UUIDv7.fromUUIDString(session.sessionId)) > 0 && session.expiresAt?.let { it >= Constants.NOW_EPOCH_SECOND } == true } }
     override suspend fun deleteAll() = withContext (ioDispatcher) { daoSession.deleteAll() }
+    /*TODO Wrap Error Create Session on Error sealed class*/
     override suspend fun create(sessionEntity: SessionEntity): Result<SessionEntity> = withContext (ioDispatcher)
         { runCatching { daoSession.create(sessionEntity) }.fold(onSuccess = { Result.success(sessionEntity) }, onFailure = { Result.failure(it)}) }
 }
