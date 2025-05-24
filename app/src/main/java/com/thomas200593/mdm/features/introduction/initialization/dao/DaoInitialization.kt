@@ -23,20 +23,13 @@ import com.thomas200593.mdm.features.user_management.user_role.entity.UserRoleEn
     @Delete(entity = UserEntity::class)
     suspend fun rollback(user : UserEntity) : Int
     @Transaction suspend fun insertInitialization(
-        user : UserEntity,
-        profile : UserProfileEntity,
-        auth : AuthEntity,
-        roles : List<UserRoleEntity>
+        user : UserEntity, profile : UserProfileEntity, auth : AuthEntity, roles : List<UserRoleEntity>
     ) : DTOInitializationResult {
-        val userId = addUser(user = user)
-        val profileId = addUserProfile(profile = profile)
-        val authId = addAuth(auth = auth)
-        val rolesIds = addUserRole(roles = roles)
+        val userId = addUser(user = user) ; val profileId = addUserProfile(profile = profile)
+        val authId = addAuth(auth = auth) ; val rolesIds = addUserRole(roles = roles)
         return DTOInitializationResult(
-            userId = userId, user = user,
-            profileId = profileId, profile = profile,
-            authId = authId, auth = auth,
-            rolesIds = rolesIds, roles = roles
+            userId = userId, user = user, profileId = profileId, profile = profile,
+            authId = authId, auth = auth, rolesIds = rolesIds, roles = roles
         )
     }
 }

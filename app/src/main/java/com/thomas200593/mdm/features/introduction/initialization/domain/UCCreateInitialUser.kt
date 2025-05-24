@@ -26,19 +26,16 @@ class UCCreateInitialUser @Inject constructor(
     private val repoInitialization : RepoInitialization
 ) {
     suspend operator fun invoke(dto : DTOInitialization) : Result<DTOInitialization> {
-        if(dto.initialSetOfRoles.isEmpty()) return Result
-            .failure(Error.Input.MalformedError(message = "Initial user cannot have no role(s)"))
+        if(dto.initialSetOfRoles.isEmpty()) return Result.failure(Error.Input.MalformedError(message = "Initial user cannot have no role(s)"/*TODO Move to String Resources*/))
         return repoUser.getOneByEmail(dto.email).flowOn(ioDispatcher).first().let {
             when {
-                it.isSuccess -> Result.failure(
-                    Error.Data.DuplicateError(message = "User with email ${dto.email} already exists"))
+                it.isSuccess -> Result.failure(Error.Data.DuplicateError(message = "User with email ${dto.email} already exists"/*TODO Move to String Resources*/))
                 it.isFailure -> {
                     val error = it.exceptionOrNull()
                     when (error) {
                         is Error.Database.DaoQueryNoDataError -> when(dto.authType) {
                             is AuthType.LocalEmailPassword -> {
-                                val input = dto.copy(authType = dto.authType
-                                    .copy(password = bCrypt.hash(dto.authType.password)))
+                                val input = dto.copy(authType = dto.authType.copy(password = bCrypt.hash(dto.authType.password)))
                                 val user = input.toUserEntity(uid = UUIDv7.generateAsString())
                                 val auth = input.toAuthEntity(uid = user.uid)
                                 val profile = input.toUserProfileEntity(uid = user.uid)
@@ -46,18 +43,14 @@ class UCCreateInitialUser @Inject constructor(
                                 repoInitialization.createUserLocalEmailPassword(
                                     user = user, auth = auth, profile = profile, roles = roles
                                 ).fold(
-                                    onSuccess = {
-                                        repoInitialization.updateFirstTimeStatus(FirstTimeStatus.NO)
-                                        Result.success(input)
-                                    },
+                                    onSuccess = { repoInitialization.updateFirstTimeStatus(FirstTimeStatus.NO)
+                                        Result.success(input) },
                                     onFailure = { Result.failure(it) }
                                 )
                             }
                         }
-                        is Error.Database.DaoQueryError -> Result
-                            .failure(Error.Database.DaoQueryError(cause = error.cause))
-                        else -> Result
-                            .failure(Error.UnknownError(message = error?.message, cause = error?.cause))
+                        is Error.Database.DaoQueryError -> Result.failure(Error.Database.DaoQueryError(cause = error.cause))
+                        else -> Result.failure(Error.UnknownError(message = error?.message, cause = error?.cause))
                     }
                 }
                 else -> Result.failure(Error.UnknownError(message = "Unexpected result state"))

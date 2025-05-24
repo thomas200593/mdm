@@ -21,10 +21,7 @@ import javax.inject.Inject
 
 interface RepoInitialization {
     suspend fun createUserLocalEmailPassword(
-        user : UserEntity,
-        profile : UserProfileEntity,
-        auth : AuthEntity,
-        roles : Set<UserRoleEntity>
+        user : UserEntity, profile : UserProfileEntity, auth : AuthEntity, roles : Set<UserRoleEntity>
     ) : Result<DTOInitializationResult>
     suspend fun updateFirstTimeStatus(
         firstTimeStatus : FirstTimeStatus
@@ -36,32 +33,19 @@ class RepoInitializationImpl @Inject constructor(
     private val dataStore : DataStorePreferences
 ) : RepoInitialization {
     override suspend fun createUserLocalEmailPassword(
-        user : UserEntity,
-        profile : UserProfileEntity,
-        auth : AuthEntity,
-        roles : Set<UserRoleEntity>
+        user : UserEntity, profile : UserProfileEntity, auth : AuthEntity, roles : Set<UserRoleEntity>
     ) = withContext (ioDispatcher) {
-        daoInitialization.insertInitialization(
-            user,
-            profile,
-            auth,
-            roles.toList()
-        ).takeIf {
-            it.userId > 0 && it.profileId > 0 && it.authId > 0 && it.rolesIds.all { id -> id > 0 } }
-            ?. let { Result.success(it) } ?: run {
-                daoInitialization.rollback(user)
-                Result.failure(
-                    Error.Database.DaoInsertError(
-                        message = "Initialization failed for user ${user.email}, rolling back",
-                        cause = SQLiteAbortException()
-                    )
-                )
-            }
+        daoInitialization.insertInitialization(user, profile, auth, roles.toList())
+            .takeIf { it.userId > 0 && it.profileId > 0 && it.authId > 0 && it.rolesIds.all { id -> id > 0 } }
+            ?. let { Result.success(it) }
+            ?: run { daoInitialization.rollback(user); Result.failure(Error.Database.DaoInsertError(
+                message = "Initialization failed for user ${user.email}, rolling back",
+                cause = SQLiteAbortException()
+            )) }
     }
-    override suspend fun updateFirstTimeStatus(firstTimeStatus: FirstTimeStatus) =
-        withContext (ioDispatcher) {
-            dataStore.instance.edit {
-                it[DataStorePreferencesKeys.dsKeyFirstTimeStatus] = firstTimeStatus.name
-            }
+    override suspend fun updateFirstTimeStatus(firstTimeStatus: FirstTimeStatus) = withContext (ioDispatcher) {
+        dataStore.instance.edit {
+            it[DataStorePreferencesKeys.dsKeyFirstTimeStatus] = firstTimeStatus.name
         }
+    }
 }

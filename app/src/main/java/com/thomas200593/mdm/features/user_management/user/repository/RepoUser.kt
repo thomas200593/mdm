@@ -26,12 +26,16 @@ class RepoUserImpl @Inject constructor(
     override suspend fun deleteAll() = withContext (ioDispatcher) { daoUser.deleteAll() }
     override fun getOneByUid(uid: String): Flow<Result<UserEntity>> = uid.takeIf { it.isNotBlank() }
         ?. let { validUser -> daoUser.getOneByUid(validUser).flowOn(ioDispatcher)
-            .map { user -> user.firstOrNull()?. let { Result.success(it) } ?: Result.failure(Error.Database.DaoQueryNoDataError(message = "User not found with UID : $uid")) }
+            .map { user -> user.firstOrNull()
+                ?. let { Result.success(it) }
+                ?: Result.failure(Error.Database.DaoQueryNoDataError(message = "User not found with UID : $uid")) }
             .catch { emit(Result.failure(Error.Database.DaoQueryError(cause = it))) } }
         ?: flowOf(Result.failure(Error.Input.MalformedError(message = "UID Cannot be blank!")))
     override fun getOneByEmail(email: String) : Flow<Result<UserEntity>> = email.takeIf { it.isNotBlank() }
         ?. let { validEmail -> daoUser.getOneByEmail(validEmail).flowOn(ioDispatcher)
-            .map { user -> user.firstOrNull()?. let { Result.success(it) } ?: Result.failure(Error.Database.DaoQueryNoDataError(message = "User not found with email : $email")) }
+            .map { user -> user.firstOrNull()
+                ?. let { Result.success(it) }
+                ?: Result.failure(Error.Database.DaoQueryNoDataError(message = "User not found with email : $email")) }
             .catch { emit(Result.failure(Error.Database.DaoQueryError(cause = it))) } }
         ?: flowOf(Result.failure(Error.Input.MalformedError(message = "Email cannot be blank!")))
 }
