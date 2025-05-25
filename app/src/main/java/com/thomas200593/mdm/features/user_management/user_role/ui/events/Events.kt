@@ -11,14 +11,10 @@ sealed interface Events {
     sealed interface Session : Events {
         data class Loading(val ev : SessionEvent.Loading) : Session
         data class Invalid(val ev: SessionEvent.Invalid, val error: Error) : Session
-        data class NoCurrentRole(
-            val ev: SessionEvent,
-            val data: Triple<UserEntity, UserProfileEntity, SessionEntity>
-        ) : Session
         data class Valid(
             val ev: SessionEvent,
             val data: Triple<UserEntity, UserProfileEntity, SessionEntity>,
-            val currentRole: RoleEntity
+            val currentRole: RoleEntity?
         ) : Session
     }
     sealed interface TopBar : Events {

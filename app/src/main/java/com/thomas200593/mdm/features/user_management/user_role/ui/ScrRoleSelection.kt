@@ -22,7 +22,7 @@ import kotlinx.coroutines.CoroutineScope
     stateApp.SessionHandler(
         onLoading = { ev -> vm.onSessionEvent(event = Events.Session.Loading(ev = ev)) },
         onInvalid = { ev, err -> vm.onSessionEvent(event = Events.Session.Invalid(ev = ev, error = err)) },
-        onNoCurrentRole = { ev, data -> vm.onSessionEvent(event = Events.Session.NoCurrentRole(ev = ev, data = data)) },
+        onNoCurrentRole = { ev, data -> vm.onSessionEvent(event = Events.Session.Valid(ev = ev, data = data, currentRole = null)) },
         onValid = { ev, data, currentRole -> vm.onSessionEvent(event = Events.Session.Valid(ev = ev, data = data, currentRole = currentRole)) }
     )
     ScrRoleSelection(uiState = uiState)
@@ -31,5 +31,6 @@ import kotlinx.coroutines.CoroutineScope
     uiState: VMRoleSelection.UiState
 ) = when (uiState.screenData) {
     is ScreenDataState.Loading -> ScrLoading()
+    is ScreenDataState.Failure -> {}
     is ScreenDataState.Loaded -> {/*TODO*/}
 }
