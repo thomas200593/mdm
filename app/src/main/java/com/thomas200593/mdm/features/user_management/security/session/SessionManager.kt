@@ -2,6 +2,7 @@ package com.thomas200593.mdm.features.user_management.security.session
 
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
+import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.features.user_management.security.session.domain.UCArchiveAndCleanUp
 import com.thomas200593.mdm.features.user_management.security.session.domain.UCCreate
 import com.thomas200593.mdm.features.user_management.security.session.domain.UCValidateAndGet
@@ -26,7 +27,15 @@ class SessionManagerImpl @Inject constructor (
     private val ucCreate: UCCreate
 ) : SessionManager {
     override val currentSession = ucValidateAndGet.invoke().flowOn(ioDispatcher)
-        .map { it.fold(onSuccess = { SessionState.Valid(it) }, onFailure = { SessionState.Invalid(it) }) }
+        .map {
+            it.fold(
+                onSuccess = { SessionState.Valid(it) },
+                onFailure = { err ->
+                    val error = err as? Error ?: Error.UnknownError(message = err.message, cause = err.cause)
+                    SessionState.Invalid(error)
+                }
+            )
+        }
         .onStart { emit(SessionState.Loading) }
     override suspend fun archiveAndCleanUpSession() = ucArchiveAndCleanUp.invoke()
     override suspend fun startSession(session: SessionEntity) = ucCreate.invoke(session = session)

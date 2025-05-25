@@ -17,6 +17,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.thomas200593.mdm.app.main.nav.DestTopLevel
+import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.core.design_system.network_monitor.NetworkMonitor
 import com.thomas200593.mdm.core.design_system.timber_logger.LocalTimberFileLogger
 import com.thomas200593.mdm.core.design_system.timber_logger.TimberFileLogger
@@ -91,8 +92,8 @@ class StateApp(
     }
 }
 @Composable fun StateApp.SessionHandler(
-    onLoading : (event: SessionEvent.Loading) -> Unit,
-    onInvalid : (event: SessionEvent.Invalid, t : Throwable) -> Unit,
+    onLoading : (event : SessionEvent.Loading) -> Unit,
+    onInvalid : (event : SessionEvent.Invalid, error : Error) -> Unit,
     onNoCurrentRole : (event : SessionEvent.NoCurrentRole, data : Triple<UserEntity, UserProfileEntity, SessionEntity>) -> Unit,
     onValid : (event : SessionEvent.Valid, data : Triple<UserEntity, UserProfileEntity, SessionEntity>, currentRole : RoleEntity) -> Unit
 ) {
@@ -102,7 +103,7 @@ class StateApp(
         block = {
             when(sessionState) {
                 is SessionState.Loading -> onLoading(SessionEvent.Loading)
-                is SessionState.Invalid -> onInvalid(SessionEvent.Invalid, (sessionState as SessionState.Invalid).t)
+                is SessionState.Invalid -> onInvalid(SessionEvent.Invalid, (sessionState as SessionState.Invalid).error)
                 is SessionState.Valid -> {
                     val data = (sessionState as SessionState.Valid).data
                     data.currentRole.takeIf { it != null && it.roleCode.isNotEmpty() }
