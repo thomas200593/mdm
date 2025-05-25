@@ -5,14 +5,12 @@ import com.thomas200593.mdm.features.user_management.security.session.entity.Ses
 
 sealed interface Events {
     sealed interface Session : Events {
-        data class Loading(val ev: SessionEvent.Loading) : Session
-        data class Invalid(val ev: SessionEvent.Invalid, val t: Throwable) : Session
-        data class NoCurrentRole(val ev: SessionEvent, val data: DTOSessionUserData) : Session
-        data class Valid(val ev: SessionEvent, val data: DTOSessionUserData) : Session
+        data class Loading(val event : SessionEvent.Loading) : Session
+        data class Invalid(val event : SessionEvent.Invalid) : Session
+        data class NoCurrentRole(val event : SessionEvent) : Session
+        data class Valid(val event : SessionEvent) : Session
     }
-    sealed interface Dialog : Events {
-        data object ErrorDismissed : Dialog
-    }
+    sealed interface Dialog : Events {}
     sealed interface TopBar : Events {
         sealed interface BtnScrDesc : TopBar {
             data object Clicked : BtnScrDesc

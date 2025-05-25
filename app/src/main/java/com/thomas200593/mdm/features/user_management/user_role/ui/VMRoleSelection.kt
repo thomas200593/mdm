@@ -1,16 +1,13 @@
 package com.thomas200593.mdm.features.user_management.user_role.ui
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
-import com.thomas200593.mdm.features.user_management.user.entity.UserEntity
 import com.thomas200593.mdm.features.user_management.user_role.domain.UCGetScreenData
 import com.thomas200593.mdm.features.user_management.user_role.domain.UCGetUserRole
 import com.thomas200593.mdm.features.user_management.user_role.repository.RepoUserRole
 import com.thomas200593.mdm.features.user_management.user_role.ui.events.Events
-import com.thomas200593.mdm.features.user_management.user_role.ui.state.ScreenDataState
 import com.thomas200593.mdm.features.user_management.user_role.ui.state.DialogState
 import com.thomas200593.mdm.features.user_management.user_role.ui.state.ResultSetUserRoleState
+import com.thomas200593.mdm.features.user_management.user_role.ui.state.ScreenDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -36,8 +33,5 @@ import javax.inject.Inject
     fun onTopBarEvent(event: Events.TopBar) = when (event) {
         is Events.TopBar.BtnScrDesc.Clicked -> {}
         is Events.TopBar.BtnScrDesc.Dismissed -> {}
-    }
-    fun onDialogEvent(event: Events.Dialog) = when (event) {
-        Events.Dialog.ErrorDismissed -> {}
     }
 }
