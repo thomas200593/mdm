@@ -1,5 +1,6 @@
 package com.thomas200593.mdm.features.introduction.initialization.domain
 
+import android.database.sqlite.SQLiteAbortException
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
 import com.thomas200593.mdm.core.design_system.error.Error
@@ -25,28 +26,36 @@ class UCCreateInitialUser @Inject constructor(
     private val repoUser : RepoUser,
     private val repoInitialization : RepoInitialization
 ) {
-    suspend operator fun invoke(dto : DTOInitialization) : Result<DTOInitialization> {
-        if(dto.initialSetOfRoles.isEmpty()) return Result.failure(Error.Input.MalformedError(message = "Initial user cannot have no role(s)"/*TODO Move to String Resources*/))
-        return repoUser.getOneByEmail(dto.email).flowOn(ioDispatcher).first().let {
+    suspend operator fun invoke(dto: DTOInitialization): Result<DTOInitialization> {
+        if (dto.initialSetOfRoles.isEmpty()) return Result.failure(Error.Input.MalformedError(message = "Initial user cannot have no role(s)"))
+        return repoUser.getOneByEmail(dto.email).flowOn(ioDispatcher).first().let { result ->
             when {
-                it.isSuccess -> Result.failure(Error.Data.DuplicateError(message = "User with email ${dto.email} already exists"/*TODO Move to String Resources*/))
-                it.isFailure -> {
-                    val error = it.exceptionOrNull()
-                    when (error) {
-                        is Error.Database.DaoQueryNoDataError -> when(dto.authType) {
+                result.isSuccess -> Result.failure(Error.Data.DuplicateError(message = "User with email ${dto.email} already exists"))
+                result.isFailure -> {
+                    val error = result.exceptionOrNull()
+                    return when (error) {
+                        is Error.Database.DaoQueryNoDataError -> when (dto.authType) {
                             is AuthType.LocalEmailPassword -> {
                                 val input = dto.copy(authType = dto.authType.copy(password = bCrypt.hash(dto.authType.password)))
                                 val user = input.toUserEntity(uid = UUIDv7.generateAsString())
                                 val auth = input.toAuthEntity(uid = user.uid)
                                 val profile = input.toUserProfileEntity(uid = user.uid)
                                 val roles = input.toUserRoleEntity(uid = user.uid, roles = dto.initialSetOfRoles)
-                                repoInitialization.createUserLocalEmailPassword(
+                                val insertionResult = repoInitialization.createUserLocalEmailPassword(
                                     user = user, auth = auth, profile = profile, roles = roles
-                                ).fold(
-                                    onSuccess = { repoInitialization.updateFirstTimeStatus(FirstTimeStatus.NO)
-                                        Result.success(input) },
-                                    onFailure = { Result.failure(it) }
                                 )
+                                val success = insertionResult.userId > 0 && insertionResult.profileId > 0 &&
+                                    insertionResult.authId > 0 && insertionResult.rolesIds.all { it > 0 }
+                                if (success) {
+                                    repoInitialization.updateFirstTimeStatus(FirstTimeStatus.NO)
+                                    Result.success(input)
+                                } else {
+                                    repoInitialization.rollback(user)
+                                    Result.failure(Error.Database.DaoInsertError(
+                                        message = "Initialization failed for user ${user.email}, rolling back",
+                                        cause = SQLiteAbortException()
+                                    ))
+                                }
                             }
                         }
                         is Error.Database.DaoQueryError -> Result.failure(Error.Database.DaoQueryError(cause = error.cause))
