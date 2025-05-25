@@ -27,14 +27,24 @@ class RepoSessionImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val daoSession: DaoSession
 ) : RepoSession {
-    override fun getAll() = daoSession.getAll().flowOn(ioDispatcher).map { Result.success(it) }.catch { emit(Result.failure(it)) }
-    override fun getCurrent() = daoSession.getCurrent().flowOn(ioDispatcher)
-        .map { if(it.isNotEmpty()) Result.success(it.first()) else Result.failure(Error.Database.DaoQueryNoDataError(message = "No session found!")) }
-        .catch { e -> emit(Result.failure(Error.Database.DaoQueryError(message = e.message, cause = e))) }
-    override suspend fun isValid(session: SessionEntity) = withContext (ioDispatcher)
-        { runCatching { UUIDv7.extractTimestamp(UUIDv7.fromUUIDString(session.sessionId)) > 0 && session.expiresAt?.let { it >= Constants.NOW_EPOCH_SECOND } == true } }
+    override fun getAll() = daoSession.getAll().flowOn(ioDispatcher).map { Result.success(it) }
+        .catch { emit(Result.failure(Error.Database.DaoQueryError(message = it.message, cause = it.cause))) }
+    override fun getCurrent() = daoSession.getCurrent().flowOn(ioDispatcher).map {
+        if(it.isNotEmpty()) Result.success(it.first())
+        else Result.failure(Error.Database.DaoQueryNoDataError(message = "No session found!"))
+    }.catch { emit(Result.failure(Error.Database.DaoQueryError(message = it.message, cause = it.cause))) }
+    override suspend fun isValid(session: SessionEntity) = withContext (ioDispatcher) {
+        runCatching {
+            UUIDv7.extractTimestamp(UUIDv7.fromUUIDString(session.sessionId)) > 0 && session.expiresAt
+                ?.let { it >= Constants.NOW_EPOCH_SECOND } == true
+        }
+    }
     override suspend fun deleteAll() = withContext (ioDispatcher) { daoSession.deleteAll() }
-    /*TODO Wrap Error Create Session on Error sealed class*/
-    override suspend fun create(sessionEntity: SessionEntity): Result<SessionEntity> = withContext (ioDispatcher)
-        { runCatching { daoSession.create(sessionEntity) }.fold(onSuccess = { Result.success(sessionEntity) }, onFailure = { Result.failure(it)}) }
+    override suspend fun create(sessionEntity: SessionEntity): Result<SessionEntity> = withContext (ioDispatcher) {
+        runCatching { daoSession.create(sessionEntity) }
+            .fold(
+                onSuccess = { Result.success(sessionEntity) },
+                onFailure = { Result.failure(Error.Database.DaoInsertError(message = it.message, cause = it.cause))}
+            )
+    }
 }

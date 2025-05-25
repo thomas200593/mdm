@@ -17,6 +17,6 @@ class UCArchiveAndCleanUp @Inject constructor(
     private val repoSessionHistory: RepoSessionHistory
 ) { suspend operator fun invoke() = withContext (ioDispatcher) {
     repoSession.getAll().flowOn(ioDispatcher).first().getOrDefault(emptyList()).takeIf { it.isNotEmpty() }
-        ?.map { SessionHistoryEntity(session = it) }?.let { repoSessionHistory.insertAll(it) }
+        ?.map { SessionHistoryEntity(session = it) } ?.let { repoSessionHistory.insertAll(it) }
     repoSession.deleteAll()
 } }
