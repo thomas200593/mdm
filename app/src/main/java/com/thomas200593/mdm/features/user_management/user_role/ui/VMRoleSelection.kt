@@ -26,9 +26,9 @@ import javax.inject.Inject
     var uiState = MutableStateFlow(UiState()) ; private set
     fun onSessionEvent(event: Events.Session) = when (event) {
         is Events.Session.Loading -> { uiState.update { it.copy(screenData = ScreenDataState.Loading) } }
-        is Events.Session.Invalid -> {}
-        is Events.Session.NoCurrentRole -> {}
-        is Events.Session.Valid -> {}
+        is Events.Session.Invalid -> {  }
+        is Events.Session.NoCurrentRole -> {  }
+        is Events.Session.Valid -> {  }
     }
     fun onTopBarEvent(event: Events.TopBar) = when (event) {
         is Events.TopBar.BtnScrDesc.Clicked -> {}

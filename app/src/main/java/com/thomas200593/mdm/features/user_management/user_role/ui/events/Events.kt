@@ -10,7 +10,6 @@ sealed interface Events {
         data class NoCurrentRole(val event : SessionEvent) : Session
         data class Valid(val event : SessionEvent) : Session
     }
-    sealed interface Dialog : Events {}
     sealed interface TopBar : Events {
         sealed interface BtnScrDesc : TopBar {
             data object Clicked : BtnScrDesc
