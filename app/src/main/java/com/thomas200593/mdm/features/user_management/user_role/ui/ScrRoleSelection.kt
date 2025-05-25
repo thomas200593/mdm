@@ -22,7 +22,7 @@ import kotlinx.coroutines.CoroutineScope
         onLoading = { event -> },
         onInvalid = { event, error -> },
         onNoCurrentRole = { event, data -> },
-        onValid = { ev, data, currentRole -> }
+        onValid = { event, data, currentRole -> }
     )
     ScrRoleSelection(uiState = uiState)
 }
