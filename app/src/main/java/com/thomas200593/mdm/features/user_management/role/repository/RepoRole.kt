@@ -2,6 +2,7 @@ package com.thomas200593.mdm.features.user_management.role.repository
 
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
+import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.features.user_management.role.dao.DaoRole
 import com.thomas200593.mdm.features.user_management.role.entity.RoleEntity
 import com.thomas200593.mdm.features.user_management.role.entity.RoleType
@@ -21,6 +22,7 @@ class RepoRoleImpl @Inject constructor(
     private val daoRole: DaoRole
 ) : RepoRole {
     override fun getBuiltInRoles(): Flow<Result<List<RoleEntity>>> = daoRole
-        .getBuiltInRoles(TypeConverterRoleType().toJson(RoleType.BuiltIn).orEmpty()).flowOn(ioDispatcher)
-        .map { Result.success(it) }.catch { emit(Result.failure(it)) }
+        .getBuiltInRoles(TypeConverterRoleType().toJson(RoleType.BuiltIn).orEmpty())
+        .flowOn(ioDispatcher).map { Result.success(it) }
+        .catch { emit(Result.failure(Error.Database.DaoQueryError(message = it.message, cause = it.cause))) }
 }
