@@ -1,14 +1,25 @@
 package com.thomas200593.mdm.features.user_management.user_role.ui.events
 
-import com.thomas200593.mdm.features.user_management.security.session.entity.DTOSessionUserData
+import com.thomas200593.mdm.core.design_system.error.Error
+import com.thomas200593.mdm.features.user_management.role.entity.RoleEntity
+import com.thomas200593.mdm.features.user_management.security.session.entity.SessionEntity
 import com.thomas200593.mdm.features.user_management.security.session.entity.SessionEvent
+import com.thomas200593.mdm.features.user_management.user.entity.UserEntity
+import com.thomas200593.mdm.features.user_management.user_profile.entity.UserProfileEntity
 
 sealed interface Events {
     sealed interface Session : Events {
-        data class Loading(val event : SessionEvent.Loading) : Session
-        data class Invalid(val event : SessionEvent.Invalid) : Session
-        data class NoCurrentRole(val event : SessionEvent) : Session
-        data class Valid(val event : SessionEvent) : Session
+        data class Loading(val ev : SessionEvent.Loading) : Session
+        data class Invalid(val ev: SessionEvent.Invalid, val error: Error) : Session
+        data class NoCurrentRole(
+            val ev: SessionEvent,
+            val data: Triple<UserEntity, UserProfileEntity, SessionEntity>
+        ) : Session
+        data class Valid(
+            val ev: SessionEvent,
+            val data: Triple<UserEntity, UserProfileEntity, SessionEntity>,
+            val currentRole: RoleEntity
+        ) : Session
     }
     sealed interface TopBar : Events {
         sealed interface BtnScrDesc : TopBar {

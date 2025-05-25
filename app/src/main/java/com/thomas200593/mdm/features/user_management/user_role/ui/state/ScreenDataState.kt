@@ -13,6 +13,9 @@ sealed interface ScreenDataState {
         val confCommon : Common,
         val sessionEvent : SessionEvent,
         val sessionData : SessionEntity?,
-        val roles: Flow<PagingData<RoleEntity>>
+        val roles : Flow<PagingData<RoleEntity>>
     ) : ScreenDataState
+    data class Error(
+        val error : Error
+    )
 }
