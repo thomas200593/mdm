@@ -34,17 +34,14 @@ class RepoSessionImpl @Inject constructor(
         else Result.failure(Error.Database.DaoQueryNoDataError(message = "No session found!"))
     }.catch { emit(Result.failure(Error.Database.DaoQueryError(message = it.message, cause = it.cause))) }
     override suspend fun isValid(session: SessionEntity) = withContext (ioDispatcher) {
-        runCatching {
-            UUIDv7.extractTimestamp(UUIDv7.fromUUIDString(session.sessionId)) > 0 && session.expiresAt
-                ?.let { it >= Constants.NOW_EPOCH_SECOND } == true
-        }
+        runCatching { UUIDv7.extractTimestamp(UUIDv7.fromUUIDString(session.sessionId)) > 0 && session.expiresAt
+            ?.let { it >= Constants.NOW_EPOCH_SECOND } == true }
     }
     override suspend fun deleteAll() = withContext (ioDispatcher) { daoSession.deleteAll() }
     override suspend fun create(sessionEntity: SessionEntity): Result<SessionEntity> = withContext (ioDispatcher) {
-        runCatching { daoSession.create(sessionEntity) }
-            .fold(
-                onSuccess = { Result.success(sessionEntity) },
-                onFailure = { Result.failure(Error.Database.DaoInsertError(message = it.message, cause = it.cause))}
-            )
+        runCatching { daoSession.create(sessionEntity) }.fold(
+            onSuccess = { Result.success(sessionEntity) },
+            onFailure = { Result.failure(Error.Database.DaoInsertError(message = it.message, cause = it.cause))}
+        )
     }
 }
