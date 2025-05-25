@@ -1,6 +1,8 @@
 package com.thomas200593.mdm.features.user_management.user_role.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.thomas200593.mdm.features.user_management.security.session.repository.RepoSession
 import com.thomas200593.mdm.features.user_management.user_role.domain.UCGetScreenData
 import com.thomas200593.mdm.features.user_management.user_role.domain.UCGetUserRole
 import com.thomas200593.mdm.features.user_management.user_role.repository.RepoUserRole
@@ -11,12 +13,14 @@ import com.thomas200593.mdm.features.user_management.user_role.ui.state.ScreenDa
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel class VMRoleSelection @Inject constructor(
     private val ucGetScreenData: UCGetScreenData,
     private val ucGetUserRole: UCGetUserRole,
-    private val repoUserRole: RepoUserRole
+    private val repoUserRole: RepoUserRole,
+    private val repoSession: RepoSession
 ) : ViewModel() {
     data class UiState(
         val screenData : ScreenDataState = ScreenDataState.Loading,
@@ -36,16 +40,25 @@ import javax.inject.Inject
         is Events.Session.Invalid -> {
             uiState.update {
                 it.copy(
-                    screenData = ScreenDataState.Loading,
                     dialog = DialogState.SessionInvalid(error = event.error),
                     resultSetUserRole = ResultSetUserRoleState.Idle
                 )
             }
         }
-        is Events.Session.Valid -> { /*TODO*/ }
+        is Events.Session.Valid -> {
+            uiState.update {
+                it.copy(
+                    screenData = ScreenDataState.Loaded(
+                        int = 1
+                    ),
+                    resultSetUserRole = ResultSetUserRoleState.Idle
+                )
+            }
+        }
     }
     fun onTopBarEvent(event: Events.TopBar) = when (event) {
         is Events.TopBar.BtnScrDesc.Clicked -> {}
         is Events.TopBar.BtnScrDesc.Dismissed -> {}
     }
+    fun deleteSession() = viewModelScope.launch { repoSession.deleteAll() }
 }

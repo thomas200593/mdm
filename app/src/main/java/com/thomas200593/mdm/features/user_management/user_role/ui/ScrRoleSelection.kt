@@ -1,5 +1,7 @@
 package com.thomas200593.mdm.features.user_management.user_role.ui
 
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -9,10 +11,14 @@ import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.SessionHandler
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
+import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
+import com.thomas200593.mdm.features.user_management.security.auth.nav.navToAuth
 import com.thomas200593.mdm.features.user_management.user_role.ui.events.Events
+import com.thomas200593.mdm.features.user_management.user_role.ui.state.DialogState
 import com.thomas200593.mdm.features.user_management.user_role.ui.state.ScreenDataState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable fun ScrRoleSelection(
     scrGraph: ScrGraphs.RoleSelection, vm: VMRoleSelection = hiltViewModel(),
@@ -25,11 +31,37 @@ import kotlinx.coroutines.CoroutineScope
         onNoCurrentRole = { ev, data -> vm.onSessionEvent(event = Events.Session.Valid(ev = ev, data = data, currentRole = null)) },
         onValid = { ev, data, currentRole -> vm.onSessionEvent(event = Events.Session.Valid(ev = ev, data = data, currentRole = currentRole)) }
     )
-    ScrRoleSelection(uiState = uiState)
+    ScrRoleSelection(
+        uiState = uiState,
+        deleteSession = { vm.deleteSession() },
+        onLogout = {
+            coroutineScope.launch { stateApp.navController.navToAuth() }
+        }
+    )
 }
 @Composable private fun ScrRoleSelection(
-    uiState: VMRoleSelection.UiState
+    uiState: VMRoleSelection.UiState,
+    onLogout: () -> Unit,
+    deleteSession : () -> Unit
 ) = when (uiState.screenData) {
     is ScreenDataState.Loading -> ScrLoading()
-    is ScreenDataState.Loaded -> {/*TODO*/}
+    is ScreenDataState.Loaded -> {
+        when (uiState.dialog) {
+            is DialogState.None -> Unit
+            is DialogState.ScrDescDialog -> Unit
+            is DialogState.SessionInvalid -> ErrorDialog(
+                onDismissRequest = onLogout,
+                error = uiState.dialog.error,
+                message = uiState.dialog.error.message.toString(),
+                btnConfirmText = "Logout"
+            )
+        }
+        Button (
+            onClick = {
+                deleteSession()
+            }, content = {
+                Text("Logout")
+            }
+        )
+    }
 }

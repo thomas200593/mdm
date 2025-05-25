@@ -10,9 +10,10 @@ import kotlinx.coroutines.flow.Flow
 sealed interface ScreenDataState {
     data object Loading : ScreenDataState
     data class Loaded(
-        val confCommon : Common,
+        val int: Int
+        /*val confCommon : Common,
         val sessionEvent : SessionEvent,
         val sessionData : SessionEntity?,
-        val roles : Flow<PagingData<RoleEntity>>
+        val roles : Flow<PagingData<RoleEntity>>*/
     ) : ScreenDataState
 }
