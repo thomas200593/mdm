@@ -31,6 +31,5 @@ import kotlinx.coroutines.CoroutineScope
     uiState: VMRoleSelection.UiState
 ) = when (uiState.screenData) {
     is ScreenDataState.Loading -> ScrLoading()
-    is ScreenDataState.Failure -> {}
     is ScreenDataState.Loaded -> {/*TODO*/}
 }
