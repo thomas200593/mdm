@@ -24,7 +24,7 @@ import javax.inject.Inject
         val resultSetUserRole : ResultSetUserRoleState = ResultSetUserRoleState.Idle
     )
     var uiState = MutableStateFlow(UiState()) ; private set
-    fun onSessionEvent(event: Events.Session) = when (event) {
+    fun onSessionEvent(event : Events.Session) = when (event) {
         is Events.Session.Loading -> { uiState.update { it.copy(screenData = ScreenDataState.Loading) } }
         is Events.Session.Invalid -> {  }
         is Events.Session.NoCurrentRole -> {  }
