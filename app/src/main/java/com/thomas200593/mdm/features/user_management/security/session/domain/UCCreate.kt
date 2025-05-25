@@ -11,4 +11,5 @@ import javax.inject.Inject
 class UCCreate @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher : CoroutineDispatcher,
     private val repoSession : RepoSession
-) { suspend operator fun invoke(session : SessionEntity) = withContext (ioDispatcher) { repoSession.create(session) } }
+) { suspend operator fun invoke(session : SessionEntity) = withContext (ioDispatcher) {
+    repoSession.create(session) } }
