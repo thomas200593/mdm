@@ -45,14 +45,17 @@ import javax.inject.Inject
                 )
             }
         }
-        is Events.Session.Valid -> {
-            uiState.update {
-                it.copy(
-                    screenData = ScreenDataState.Loaded(
-                        int = 1
-                    ),
-                    resultSetUserRole = ResultSetUserRoleState.Idle
-                )
+        is Events.Session.Valid -> viewModelScope.launch {
+            ucGetScreenData.invoke().collect { confCommon ->
+                uiState.update {
+                    it.copy(
+                        screenData = ScreenDataState.Loaded(
+                            confCommon = confCommon,
+                            sessionEvent = event.ev,
+                            sessionData = event.data.third
+                        )
+                    )
+                }
             }
         }
     }
