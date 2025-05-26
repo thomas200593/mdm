@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,11 +29,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.thomas200593.mdm.R
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.SessionHandler
@@ -155,10 +161,22 @@ import kotlinx.coroutines.CoroutineScope
     modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center,
-    content = { PanelCard(
-        modifier = Modifier.padding(Constants.Dimens.dp16),
-        content = { TxtMdBody("This user has no role associate with, please contact the System Administrator!.") }
-    ) }
+    content = {
+        PanelCard(
+            modifier = Modifier.padding(Constants.Dimens.dp16),
+            title = {
+                Icon(
+                    modifier = Modifier.fillMaxWidth(),
+                    imageVector = ImageVector.vectorResource(R.drawable.app_icon_sad_48px),
+                    contentDescription = null
+                )
+                HorizontalDivider()
+            },
+            content = {
+                TxtMdBody("This user has no role associate with, please contact the System Administrator!.")
+            }
+        )
+    }
 )
 @Composable private fun PartContentUserRoleList(
     lazyPagingItems: LazyPagingItems<RoleEntity>,

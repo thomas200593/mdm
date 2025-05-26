@@ -14,6 +14,7 @@ data class RoleEntity (
     @PrimaryKey
     @ColumnInfo(name = "role_code") val roleCode: String,
     @ColumnInfo(name = "role_type") val roleType: RoleType,
+    @ColumnInfo(name = "role_image") val image: String = Constants.STR_SYSTEM,
     @ColumnInfo(name = "role_label") val label: String,
     @ColumnInfo(name = "description") val description: String = Constants.STR_EMPTY,
     @ColumnInfo(name = "audit_trail") override val auditTrail: AuditTrail
