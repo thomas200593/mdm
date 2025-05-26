@@ -1,8 +1,0 @@
-package com.thomas200593.mdm.features.user_management.security.auth.ui.state
-
-sealed interface DialogState {
-    data object None : DialogState
-    data object ScrDescDialog : DialogState
-    data object LoadingAuthDialog : DialogState
-    data object LoadingSessionDialog : DialogState
-}

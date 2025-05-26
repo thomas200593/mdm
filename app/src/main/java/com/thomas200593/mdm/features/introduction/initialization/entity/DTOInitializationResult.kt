@@ -1,9 +1,9 @@
 package com.thomas200593.mdm.features.introduction.initialization.entity
 
-import com.thomas200593.mdm.features.user_management.security.auth.entity.AuthEntity
-import com.thomas200593.mdm.features.user_management.user.entity.UserEntity
-import com.thomas200593.mdm.features.user_management.user_profile.entity.UserProfileEntity
-import com.thomas200593.mdm.features.user_management.user_role.entity.UserRoleEntity
+import com.thomas200593.mdm.features.auth.entity.AuthEntity
+import com.thomas200593.mdm.features.management.user.entity.UserEntity
+import com.thomas200593.mdm.features.user_profile.entity.UserProfileEntity
+import com.thomas200593.mdm.features.user_role.entity.UserRoleEntity
 
 data class DTOInitializationResult(
     val userId : Long, val user : UserEntity,

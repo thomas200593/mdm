@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.thomas200593.mdm.BuildConfig
 import com.thomas200593.mdm.core.data.local.database.AppDatabase
-import com.thomas200593.mdm.features.user_management.role.entity.BuiltInRolesSeeder
+import com.thomas200593.mdm.features.management.role.entity.BuiltInRolesSeeder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

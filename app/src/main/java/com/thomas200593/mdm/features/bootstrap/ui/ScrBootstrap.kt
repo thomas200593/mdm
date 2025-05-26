@@ -13,12 +13,12 @@ import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.features.bootstrap.ui.events.Events
 import com.thomas200593.mdm.features.bootstrap.ui.state.ScreenDataState
-import com.thomas200593.mdm.features.user_management.security.auth.nav.navToAuth
+import com.thomas200593.mdm.features.auth.nav.navToAuth
 import com.thomas200593.mdm.features.introduction.initialization.entity.FirstTimeStatus
 import com.thomas200593.mdm.features.introduction.initialization.nav.navToInitialization
 import com.thomas200593.mdm.features.introduction.onboarding.entity.OnboardingStatus
 import com.thomas200593.mdm.features.introduction.onboarding.nav.navToOnboarding
-import com.thomas200593.mdm.features.user_management.user_role.nav.navToRoleSelection
+import com.thomas200593.mdm.features.user_role.nav.navToRoleSelection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

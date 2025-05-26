@@ -3,8 +3,7 @@ package com.thomas200593.mdm.features.introduction.initialization.domain
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
 import com.thomas200593.mdm.features.common.cnf_common.domain.UCGetConfCommonCurrent
-import com.thomas200593.mdm.features.user_management.role.entity.BuiltInRolesSeeder
-import com.thomas200593.mdm.features.user_management.role.repository.RepoRole
+import com.thomas200593.mdm.features.management.role.repository.RepoRole
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn

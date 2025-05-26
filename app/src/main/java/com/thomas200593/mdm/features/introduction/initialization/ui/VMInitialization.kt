@@ -15,7 +15,7 @@ import com.thomas200593.mdm.features.introduction.initialization.ui.state.Screen
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.DialogState
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.FormInitializationState
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.ResultInitializationState
-import com.thomas200593.mdm.features.user_management.security.auth.entity.AuthType
+import com.thomas200593.mdm.features.auth.entity.AuthType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
