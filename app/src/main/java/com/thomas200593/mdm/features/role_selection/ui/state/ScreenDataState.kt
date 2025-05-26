@@ -15,7 +15,7 @@ sealed interface ScreenDataState {
         val sessionData : SessionEntity?,
         val roles : Flow<PagingData<RoleEntity>>,
         val isRefreshing : Boolean = false,
-        val layoutMode : LayoutMode = LayoutMode.List,
+        val layoutMode : LayoutMode = LayoutMode.Grid,
         val selectedRole : RoleEntity? = null
     ) : ScreenDataState
 }

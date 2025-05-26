@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.ViewModule
@@ -98,12 +99,11 @@ import kotlinx.coroutines.CoroutineScope
     onSelectedRole: (RoleEntity) -> Unit
 ) {
     HandleDialogs(
-        scrGraph = scrGraph,
-        dialog = dialog
+        scrGraph = scrGraph, dialog = dialog
     )
     Scaffold(
         modifier = Modifier.imePadding(),
-        topBar = { SectionTopBar(screenData = screenData) },
+        topBar = { SectionTopBar(scrGraph = scrGraph, screenData = screenData) },
         content = {
             SectionContent(
                 paddingValues = it,
@@ -113,11 +113,14 @@ import kotlinx.coroutines.CoroutineScope
         }
     )
 }
-@OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(screenData: ScreenDataState.Loaded) = TopAppBar(
-    title = {},
+@OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
+    scrGraph: ScrGraphs.RoleSelection,
+    screenData: ScreenDataState.Loaded
+) = TopAppBar(
+    title = { Text(stringResource(scrGraph.title)) },
     actions = {
         IconButton(
-            onClick = {/*TODO*/},
+            onClick = { /*TODO*/ },
             content = {
                 Icon(
                     imageVector = if (screenData.layoutMode == LayoutMode.List)
@@ -132,6 +135,16 @@ import kotlinx.coroutines.CoroutineScope
                 Icon(
                     imageVector = Icons.Default.Info,
                     contentDescription = null
+                )
+            }
+        )
+        IconButton(
+            onClick = { /*TODO*/ },
+            content = {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.Logout,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error
                 )
             }
         )
