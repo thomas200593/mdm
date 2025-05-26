@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.user_role.dao
+package com.thomas200593.mdm.features.management.user_role.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao

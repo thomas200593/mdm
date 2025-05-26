@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.user_role.domain
+package com.thomas200593.mdm.features.management.user_role.domain
 
 import androidx.sqlite.SQLiteException
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
@@ -6,7 +6,7 @@ import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
 import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.features.management.user.entity.UserEntity
 import com.thomas200593.mdm.features.management.user.repository.RepoUser
-import com.thomas200593.mdm.features.user_role.repository.RepoUserRole
+import com.thomas200593.mdm.features.management.user_role.repository.RepoUserRole
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emitAll
@@ -33,8 +33,6 @@ class UCGetUserRole @Inject constructor(
         is SQLiteException -> Error.Database.DaoQueryError(message = t.message, cause = t.cause)
         is NoSuchElementException -> Error.Database.DaoQueryNoDataError(message = t.message, cause = t.cause)
         is IllegalArgumentException -> Error.Input.MalformedError(message = t.message, cause = t.cause)
-        is kotlin.Error -> Error.UnknownError(message = t.message, cause = t.cause)
-        //what else?
         else -> Error.UnknownError(message = t?.message, cause = t?.cause)
     }
 }

@@ -9,7 +9,7 @@ import com.thomas200593.mdm.features.introduction.initialization.entity.DTOIniti
 import com.thomas200593.mdm.features.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.management.user.entity.UserEntity
 import com.thomas200593.mdm.features.user_profile.entity.UserProfileEntity
-import com.thomas200593.mdm.features.user_role.entity.UserRoleEntity
+import com.thomas200593.mdm.features.management.user_role.entity.UserRoleEntity
 
 @Dao interface DaoInitialization {
     @Insert(entity = UserEntity::class, onConflict = OnConflictStrategy.ABORT)

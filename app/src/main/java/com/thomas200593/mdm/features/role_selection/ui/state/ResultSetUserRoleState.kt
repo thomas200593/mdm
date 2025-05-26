@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.user_role.ui.state
+package com.thomas200593.mdm.features.role_selection.ui.state
 
 sealed interface ResultSetUserRoleState {
     data object Idle : ResultSetUserRoleState

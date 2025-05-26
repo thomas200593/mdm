@@ -10,7 +10,7 @@ import com.thomas200593.mdm.features.auth.nav.navGraphAuth
 import com.thomas200593.mdm.features.bootstrap.ui.ScrBootstrap
 import com.thomas200593.mdm.features.introduction.initialization.nav.navGraphInitialization
 import com.thomas200593.mdm.features.introduction.onboarding.nav.navGraphOnboarding
-import com.thomas200593.mdm.features.user_role.nav.navGraphRoleSelection
+import com.thomas200593.mdm.features.role_selection.nav.navGraphRoleSelection
 
 fun NavGraphBuilder.navGraphBootstrap() {
     navigation<NavigationGraph.GraphBootstrap>(

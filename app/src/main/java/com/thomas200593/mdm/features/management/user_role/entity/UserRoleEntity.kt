@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.user_role.entity
+package com.thomas200593.mdm.features.management.user_role.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

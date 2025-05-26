@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.user_role.repository
+package com.thomas200593.mdm.features.management.user_role.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -9,7 +9,7 @@ import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
 import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
 import com.thomas200593.mdm.features.management.user.entity.UserEntity
-import com.thomas200593.mdm.features.user_role.dao.DaoUserRole
+import com.thomas200593.mdm.features.management.user_role.dao.DaoUserRole
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

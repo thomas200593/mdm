@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.user_role.ui
+package com.thomas200593.mdm.features.role_selection.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,10 +43,10 @@ import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
-import com.thomas200593.mdm.features.user_role.ui.events.Events
-import com.thomas200593.mdm.features.user_role.ui.state.DialogState
-import com.thomas200593.mdm.features.user_role.ui.state.LayoutMode
-import com.thomas200593.mdm.features.user_role.ui.state.ScreenDataState
+import com.thomas200593.mdm.features.role_selection.ui.events.Events
+import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
+import com.thomas200593.mdm.features.role_selection.ui.state.LayoutMode
+import com.thomas200593.mdm.features.role_selection.ui.state.ScreenDataState
 import kotlinx.coroutines.CoroutineScope
 
 @Composable fun ScrRoleSelection(

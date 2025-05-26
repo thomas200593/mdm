@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.user_role.ui.events
+package com.thomas200593.mdm.features.role_selection.ui.events
 
 import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity

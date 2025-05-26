@@ -1,7 +1,7 @@
-package com.thomas200593.mdm.features.user_role.di
+package com.thomas200593.mdm.features.management.user_role.di
 
-import com.thomas200593.mdm.features.user_role.repository.RepoUserRole
-import com.thomas200593.mdm.features.user_role.repository.RepoUserRoleImpl
+import com.thomas200593.mdm.features.management.user_role.repository.RepoUserRole
+import com.thomas200593.mdm.features.management.user_role.repository.RepoUserRoleImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

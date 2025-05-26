@@ -18,7 +18,7 @@ import com.thomas200593.mdm.features.introduction.initialization.entity.FirstTim
 import com.thomas200593.mdm.features.introduction.initialization.nav.navToInitialization
 import com.thomas200593.mdm.features.introduction.onboarding.entity.OnboardingStatus
 import com.thomas200593.mdm.features.introduction.onboarding.nav.navToOnboarding
-import com.thomas200593.mdm.features.user_role.nav.navToRoleSelection
+import com.thomas200593.mdm.features.role_selection.nav.navToRoleSelection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
