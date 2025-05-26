@@ -27,63 +27,63 @@ object BuiltInRolesSeeder {
         ),
         /*TODO Test Only*/
         RoleEntity(
-            roleCode = "ROLE_TEST_1",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_1",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
-            label = "Role Test 1",
-            description = "Role test 1",
+            label = "THIS IS VERY LONG TEXT FOR ROLE TEST 1",
+            description = "THIS IS VERY LONG TEXT FOR ROLE TEST 1",
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_2",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_2",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
-            label = "Role Test 2",
+            label = "THIS IS VERY LONG TEXT FOR ROLE TEST 2",
             description = "Role test 2",
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_3",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_3",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
-            label = "Role Test 3",
-            description = "Role test 3",
+            label = "THIS IS VERY LONG TEXT FOR ROLE TEST 3",
+            description = "THIS IS VERY LONG TEXT FOR ROLE TEST 3",
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_4",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_4",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
-            label = "Role Test 4",
-            description = "Role test 4",
+            label = "THIS IS VERY LONG TEXT FOR ROLE TEST 4",
+            description = "THIS IS VERY LONG TEXT FOR ROLE TEST 4",
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_5",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_5",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
-            label = "Role Test 5",
-            description = "Role test 5",
+            label = "THIS IS VERY LONG TEXT FOR ROLE TEST 5",
+            description = "THIS IS VERY LONG TEXT FOR ROLE TEST 5",
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_6",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_6",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
-            label = "Role Test 6",
-            description = "Role test 6",
+            label = "THIS IS VERY LONG TEXT FOR ROLE TEST 6",
+            description = "THIS IS VERY LONG TEXT FOR ROLE TEST 6",
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_7",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_7",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
-            label = "Role Test 7",
-            description = "Role test 7",
+            label = "THIS IS VERY LONG TEXT FOR ROLE TEST 7",
+            description = "THIS IS VERY LONG TEXT FOR ROLE TEST 7",
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_8",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_8",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 8",
@@ -91,7 +91,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_9",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_9",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 9",
@@ -99,7 +99,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_10",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_10",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 10",
@@ -107,7 +107,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_11",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_11",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 11",
@@ -115,7 +115,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_12",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_12",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 12",
@@ -123,7 +123,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_13",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_13",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 13",
@@ -131,7 +131,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_14",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_14",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 14",
@@ -139,7 +139,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_15",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_15",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 15",
@@ -147,7 +147,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_16",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_16",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 16",
@@ -155,7 +155,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_17",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_17",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 17",
@@ -163,7 +163,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_18",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_18",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 18",
@@ -171,7 +171,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_19",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_19",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 19",
@@ -179,7 +179,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_20",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_20",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 20",
@@ -187,7 +187,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_21",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_21",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 21",
@@ -195,7 +195,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_22",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_22",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 22",
@@ -203,7 +203,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_23",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_23",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 23",
@@ -211,7 +211,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_24",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_24",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 24",
@@ -219,7 +219,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_25",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_25",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 25",
@@ -227,7 +227,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_26",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_26",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 26",
@@ -235,7 +235,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_27",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_27",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 27",
@@ -243,7 +243,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_28",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_28",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 28",
@@ -251,7 +251,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_29",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_29",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 29",
@@ -259,7 +259,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_30",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_30",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 30",
@@ -267,7 +267,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_31",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_31",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 31",
@@ -275,7 +275,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_32",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_32",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 32",
@@ -283,7 +283,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_33",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_33",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 33",
@@ -291,7 +291,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_34",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_34",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 34",
@@ -299,7 +299,7 @@ object BuiltInRolesSeeder {
             auditTrail = AuditTrail()
         ),
         RoleEntity(
-            roleCode = "ROLE_TEST_35",
+            roleCode = "THIS_IS_VERY_LONG_ROLE_TEST_35",
             roleType = RoleType.BuiltIn,
             image = Constants.STR_SYSTEM,
             label = "Role Test 35",

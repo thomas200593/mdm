@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -25,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -33,7 +35,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -44,7 +45,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
 import com.thomas200593.mdm.R
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
@@ -242,7 +242,7 @@ import java.io.File
     role: RoleEntity,
     screenData: ScreenDataState.Loaded,
     onSelectedRole: (RoleEntity) -> Unit
-) = PanelCard(
+) = Card (
     modifier = Modifier.padding(Constants.Dimens.dp4).clickable(onClick = { onSelectedRole(role) }),
     border = BorderStroke(
         width = Constants.Dimens.dp1,
@@ -251,13 +251,13 @@ import java.io.File
     ),
     content = {
         Row (
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16, Alignment.CenterHorizontally),
+            modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp8),
+            horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8, Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically,
             content = {
                 val imgModel = when {
                     role.image.isEmpty() || role.image == Constants.STR_SYSTEM -> R.drawable.app_icon_48x48px
-                    else -> File(role.image)
+                    else -> File(role.image) /*TODO Fall back if not exists*/
                 }
                 Surface(
                     shape = RoundedCornerShape(Constants.Dimens.dp8),
@@ -280,11 +280,12 @@ import java.io.File
                 Column(
                     modifier = Modifier.weight(1f),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8, Alignment.CenterVertically),
+                    verticalArrangement = Arrangement.Top,
                     content = {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.Top
                         ) {
                             TxtMdBody(
                                 text = role.label,
@@ -292,13 +293,14 @@ import java.io.File
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
-                            TxtMdLabel(
-                                text = role.roleType.toString()
+                            SuggestionChip(
+                                onClick = {/*TODO Show Dialog what is this role about?*/},
+                                label = { TxtMdLabel(text = role.roleType.toString()) }
                             )
                         }
                         TxtMdLabel(
                             text = role.description,
-                            maxLines = 2,
+                            maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.fillMaxWidth(),
                             style = MaterialTheme.typography.bodySmall
