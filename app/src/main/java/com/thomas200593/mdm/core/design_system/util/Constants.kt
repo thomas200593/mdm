@@ -17,7 +17,11 @@ object Constants {
     const val STR_UNDERSCORE = "_"
     const val STR_APP_VERSION = "$STR_UNDERSCORE${BuildConfig.VERSION_NAME}$STR_UNDERSCORE${BuildConfig.BUILD_TYPE}"
     object Dimens {
+        val dp1 = 1.dp
+        val dp2 = 2.dp
+        val dp4 = 4.dp
         val dp8 = 8.dp
         val dp16 = 16.dp
+        val dp64 = 64.dp
     }
 }

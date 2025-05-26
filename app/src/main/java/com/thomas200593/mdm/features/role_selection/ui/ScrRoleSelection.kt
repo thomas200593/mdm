@@ -1,16 +1,20 @@
 package com.thomas200593.mdm.features.role_selection.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Info
@@ -29,14 +33,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 import com.thomas200593.mdm.R
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
@@ -45,7 +53,9 @@ import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
+import com.thomas200593.mdm.core.ui.component.TxtMdLabel
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
+import com.thomas200593.mdm.core.ui.component.screen.InnerCircularProgressIndicator
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
@@ -53,6 +63,7 @@ import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
 import com.thomas200593.mdm.features.role_selection.ui.state.LayoutMode
 import com.thomas200593.mdm.features.role_selection.ui.state.ScreenDataState
 import kotlinx.coroutines.CoroutineScope
+import java.io.File
 
 @Composable fun ScrRoleSelection(
     scrGraph: ScrGraphs.RoleSelection, vm: VMRoleSelection = hiltViewModel(),
@@ -232,8 +243,71 @@ import kotlinx.coroutines.CoroutineScope
     screenData: ScreenDataState.Loaded,
     onSelectedRole: (RoleEntity) -> Unit
 ) = PanelCard(
-    modifier = Modifier.clickable(onClick = { onSelectedRole(role) }),
-    content = { Text(role.label) },
+    modifier = Modifier.padding(Constants.Dimens.dp4).clickable(onClick = { onSelectedRole(role) }),
+    border = BorderStroke(
+        width = Constants.Dimens.dp1,
+        color = if (screenData.selectedRole == role) MaterialTheme.colorScheme.primary
+        else MaterialTheme.colorScheme.outline
+    ),
+    content = {
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16, Alignment.CenterHorizontally),
+            verticalAlignment = Alignment.CenterVertically,
+            content = {
+                val imgModel = when {
+                    role.image.isEmpty() || role.image == Constants.STR_SYSTEM -> R.drawable.app_icon_48x48px
+                    else -> File(role.image)
+                }
+                Surface(
+                    shape = RoundedCornerShape(Constants.Dimens.dp8),
+                    border = BorderStroke(
+                        width = Constants.Dimens.dp1,
+                        color = if (screenData.selectedRole == role) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.outline
+                    ),
+                    tonalElevation = Constants.Dimens.dp2,
+                    modifier = Modifier.size(Constants.Dimens.dp64)
+                ) {
+                    SubcomposeAsyncImage(
+                        model = imgModel,
+                        contentDescription = null,
+                        loading = { InnerCircularProgressIndicator() },
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8, Alignment.CenterVertically),
+                    content = {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            TxtMdBody(
+                                text = role.label,
+                                modifier = Modifier.weight(1f),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            TxtMdLabel(
+                                text = role.roleType.toString()
+                            )
+                        }
+                        TxtMdLabel(
+                            text = role.description,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.fillMaxWidth(),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                )
+            }
+        )
+    },
     colors = CardDefaults.cardColors().copy(
         containerColor = if(screenData.selectedRole == role) MaterialTheme.colorScheme.secondaryContainer
         else MaterialTheme.colorScheme.tertiaryContainer,

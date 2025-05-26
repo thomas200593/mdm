@@ -3,12 +3,11 @@ package com.thomas200593.mdm.features.role_selection.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
-import com.thomas200593.mdm.core.design_system.session.repository.RepoSession
 import com.thomas200593.mdm.features.management.user.entity.UserEntity
+import com.thomas200593.mdm.features.management.user_role.domain.UCGetUserRole
+import com.thomas200593.mdm.features.role_selection.domain.UCGetScreenData
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
-import com.thomas200593.mdm.features.role_selection.domain.UCGetScreenData
-import com.thomas200593.mdm.features.management.user_role.domain.UCGetUserRole
 import com.thomas200593.mdm.features.role_selection.ui.state.ResultSetUserRoleState
 import com.thomas200593.mdm.features.role_selection.ui.state.ScreenDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
