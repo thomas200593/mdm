@@ -19,8 +19,11 @@ class UCGetScreenData @Inject constructor(
         flow = ucGetConfCommonCurrent.invoke().flowOn(ioDispatcher),
         flow2 = repoRole.getBuiltInRoles().flowOn(ioDispatcher)
     ) { confCommon, setOfRoles ->
-        confCommon to setOfRoles.getOrDefault(emptyList()).filter {
-            it.roleCode in setOf(BuiltInRolesSeeder.SYSTEM_OWNER, BuiltInRolesSeeder.SYSTEM_ADMIN)
-        }.toSet()
+        confCommon to setOfRoles.getOrDefault(emptyList())
+            /*TODO Test Only*/
+            /*.filter {
+                it.roleCode in setOf(BuiltInRolesSeeder.SYSTEM_OWNER, BuiltInRolesSeeder.SYSTEM_ADMIN)
+            }*/
+            .toSet()
     }.flowOn(ioDispatcher)
 }
