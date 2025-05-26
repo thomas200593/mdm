@@ -19,8 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel class VMRoleSelection @Inject constructor(
     private val ucGetScreenData: UCGetScreenData,
-    private val ucGetUserRole: UCGetUserRole,
-    private val repoSession: RepoSession
+    private val ucGetUserRole: UCGetUserRole
 ) : ViewModel() {
     private var currentUser: UserEntity? = null
     data class UiState(
@@ -80,5 +79,4 @@ import javax.inject.Inject
             }
         } ?: return
     }
-    fun deleteSession() = viewModelScope.launch { repoSession.deleteAll() }
 }

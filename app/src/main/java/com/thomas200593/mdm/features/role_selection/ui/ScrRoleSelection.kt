@@ -12,9 +12,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.ViewModule
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -121,36 +119,15 @@ import kotlinx.coroutines.CoroutineScope
     actions = {
         IconButton(
             onClick = { /*TODO*/ },
-            content = {
-                Icon(
-                    imageVector = if (screenData.layoutMode == LayoutMode.List)
-                        Icons.Default.ViewModule else Icons.AutoMirrored.Filled.ViewList,
-                    contentDescription = "Toggle Layout"
-                )
-            }
+            content = { Icon(imageVector = Icons.Default.Info, contentDescription = null) }
         )
         IconButton(
             onClick = { /*TODO*/ },
-            content = {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = null
-                )
-            }
-        )
-        IconButton(
-            onClick = { /*TODO*/ },
-            content = {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.Logout,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.error
-                )
-            }
+            content = { Icon(imageVector = Icons.AutoMirrored.Filled.Logout, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
         )
     }
 )
-@OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionContent (
+@Composable private fun SectionContent (
     paddingValues: PaddingValues,
     screenData: ScreenDataState.Loaded,
     onSelectedRole: (RoleEntity) -> Unit
@@ -189,17 +166,15 @@ import kotlinx.coroutines.CoroutineScope
     onSelectedRole: (RoleEntity) -> Unit
 ) = LazyColumn (
     modifier = Modifier.fillMaxSize(),
-    content = {
-        items(lazyPagingItems.itemCount) { index ->
-            lazyPagingItems[index]?.let { role ->
-                ItemListRole(
-                    role = role,
-                    screenData = screenData,
-                    onSelectedRole = onSelectedRole
-                )
-            }
+    content = { items(lazyPagingItems.itemCount) { index ->
+        lazyPagingItems[index]?.let { role ->
+            ItemListRole(
+                role = role,
+                screenData = screenData,
+                onSelectedRole = onSelectedRole
+            )
         }
-    }
+    } }
 )
 @Composable private fun PartContentUserRoleGrid(
     lazyPagingItems: LazyPagingItems<RoleEntity>,
@@ -208,17 +183,15 @@ import kotlinx.coroutines.CoroutineScope
 ) = LazyVerticalGrid (
     modifier = Modifier.fillMaxSize(),
     columns = GridCells.Fixed(2),
-    content = {
-        items(lazyPagingItems.itemCount) { index ->
-            lazyPagingItems[index]?.let { role ->
-                ItemGridRole(
-                    role = role,
-                    screenData = screenData,
-                    onSelectedRole = onSelectedRole
-                )
-            }
+    content = { items(lazyPagingItems.itemCount) { index ->
+        lazyPagingItems[index]?.let { role ->
+            ItemGridRole(
+                role = role,
+                screenData = screenData,
+                onSelectedRole = onSelectedRole
+            )
         }
-    }
+    } }
 )
 @Composable private fun ItemGridRole(
     role: RoleEntity,
@@ -245,8 +218,8 @@ import kotlinx.coroutines.CoroutineScope
     content = { Text(role.label) },
     colors = CardDefaults.cardColors().copy(
         containerColor = if(screenData.selectedRole == role) MaterialTheme.colorScheme.secondaryContainer
-                         else MaterialTheme.colorScheme.tertiaryContainer,
+        else MaterialTheme.colorScheme.tertiaryContainer,
         contentColor = if(screenData.selectedRole == role) MaterialTheme.colorScheme.onSecondaryContainer
-                       else MaterialTheme.colorScheme.onTertiaryContainer
+        else MaterialTheme.colorScheme.onTertiaryContainer
     )
 )
