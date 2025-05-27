@@ -152,7 +152,6 @@ import java.io.File
         Column (
             modifier = Modifier.fillMaxSize(),
             content = {
-                Text("Filtering Roles", modifier = Modifier.fillMaxWidth())
                 val lazyPagingItems = screenData.roles.collectAsLazyPagingItems()
                 lazyPagingItems.itemCount.takeIf { it <= 0 }
                     ?. let { PartContentUserRoleEmpty() }
