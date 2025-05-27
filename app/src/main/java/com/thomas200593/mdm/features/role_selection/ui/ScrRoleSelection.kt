@@ -117,7 +117,7 @@ import java.io.File
     HandleDialogs(scrGraph = scrGraph, dialog = dialog)
     Scaffold(
         modifier = Modifier.imePadding(),
-        topBar = { SectionTopBar(scrGraph = scrGraph, screenData = screenData) },
+        topBar = { SectionTopBar(scrGraph = scrGraph) },
         content = { SectionContent(
             paddingValues = it,
             screenData = screenData,
@@ -127,8 +127,7 @@ import java.io.File
     )
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
-    scrGraph: ScrGraphs.RoleSelection,
-    screenData: ScreenDataState.Loaded
+    scrGraph: ScrGraphs.RoleSelection
 ) = TopAppBar(
     title = { Text(stringResource(scrGraph.title)) },
     actions = {
