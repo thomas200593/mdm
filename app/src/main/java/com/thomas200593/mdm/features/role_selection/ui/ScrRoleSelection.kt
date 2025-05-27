@@ -334,15 +334,15 @@ import java.io.File
         }
     )
 }
-@OptIn(ExperimentalMaterial3Api::class) @Preview @Composable fun PreviewModalBottomSheet() =
-    PartContentModalBottomSheet(
-        currentFilter = null,
-        currentSort = SortOption.LabelAsc,
-        onFilterSelected = {},
-        onSortSelected = {},
-        onApply = {},
-        onDismiss = {}
-    )
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview @Composable fun PreviewModalBottomSheet() = PartContentModalBottomSheet(
+    currentFilter = null,
+    currentSort = SortOption.LabelAsc,
+    onFilterSelected = {},
+    onSortSelected = {},
+    onApply = {},
+    onDismiss = {}
+)
 @Composable private fun PartContentUserRoleList(
     lazyPagingItems: LazyPagingItems<RoleEntity>,
     screenData: ScreenDataState.Loaded,
