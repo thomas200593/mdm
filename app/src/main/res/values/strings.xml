@@ -29,4 +29,7 @@
     <string name="str_today">Today</string>
     <string name="str_sign_in">Sign in</string>
     <string name="str_search">Search…</string>
+    <string name="str_select">Select</string>
+    <string name="str_user_have_no_roles_assoc">This user has no role associate with, please contact the System Administrator!.</string>
+    <string name="str_session_invalid">Session invalid / expired</string>
 </resources>

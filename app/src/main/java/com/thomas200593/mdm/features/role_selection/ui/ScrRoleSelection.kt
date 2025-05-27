@@ -115,7 +115,7 @@ import java.io.File
     )
     is DialogState.SessionInvalid -> ErrorDialog(
         onDismissRequest = {/*TODO*/},
-        title = "Session Invalid",
+        title = stringResource(R.string.str_session_invalid),
         message = dialog.error.message.toString(),
         error = dialog.error,
         btnConfirmText = stringResource(R.string.str_sign_in)
@@ -162,7 +162,9 @@ import java.io.File
     screenData: ScreenDataState.Loaded,
     onSelectedRole: (RoleEntity) -> Unit
 ) = Surface(
-    modifier = Modifier.padding(paddingValues).fillMaxSize(),
+    modifier = Modifier
+        .padding(paddingValues)
+        .fillMaxSize(),
     content = { Column (
         modifier = Modifier.fillMaxSize(),
         content = {
@@ -178,7 +180,9 @@ import java.io.File
     ) }
 )
 @Composable private fun PartContentUserRoleEmpty() = Column (
-    modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
+    modifier = Modifier
+        .fillMaxSize()
+        .padding(Constants.Dimens.dp16),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center,
     content = { PanelCard(
@@ -191,7 +195,7 @@ import java.io.File
             )
             HorizontalDivider()
         },
-        content = { TxtMdBody("This user has no role associate with, please contact the System Administrator!.") }
+        content = { TxtMdBody(stringResource(R.string.str_user_have_no_roles_assoc)) }
     ) }
 )
 @Composable private fun PartContentUserRoleSelectionForm(
@@ -265,7 +269,9 @@ import java.io.File
     screenData: ScreenDataState.Loaded,
     onSelectedRole: (RoleEntity) -> Unit
 ) = Card (
-    modifier = Modifier.padding(Constants.Dimens.dp4).clickable(onClick = { onSelectedRole(role) }),
+    modifier = Modifier
+        .padding(Constants.Dimens.dp4)
+        .clickable(onClick = { onSelectedRole(role) }),
     border = BorderStroke(
         width = Constants.Dimens.dp1,
         color = if (screenData.selectedRole == role) MaterialTheme.colorScheme.primary
@@ -278,7 +284,9 @@ import java.io.File
         else MaterialTheme.colorScheme.onTertiaryContainer
     ),
     content = { Row (
-        modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp8),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(Constants.Dimens.dp8),
         horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
         verticalAlignment = Alignment.CenterVertically,
         content = {
@@ -338,7 +346,9 @@ import java.io.File
     screenData: ScreenDataState.Loaded,
     onSelectedRole: (RoleEntity) -> Unit
 ) = Card(
-    modifier = Modifier.padding(Constants.Dimens.dp8).clickable(onClick = { onSelectedRole(role) }),
+    modifier = Modifier
+        .padding(Constants.Dimens.dp8)
+        .clickable(onClick = { onSelectedRole(role) }),
     shape = MaterialTheme.shapes.extraSmall,
     border = BorderStroke(
         width = Constants.Dimens.dp1,
@@ -397,7 +407,7 @@ import java.io.File
             )
             Button(
                 onClick = { /*TODO*/ },
-                content = { Text("Select Role") },
+                content = { Text(stringResource(R.string.str_select)) },
                 modifier = Modifier.weight(1f)
             )
         }
