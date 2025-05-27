@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Quiz
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,7 +27,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -54,6 +54,7 @@ import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.TxtMdLabel
+import com.thomas200593.mdm.core.ui.component.TxtMdTitle
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.screen.InnerCircularProgressIndicator
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
@@ -113,19 +114,15 @@ import java.io.File
     dialog: DialogState,
     onSelectedRole: (RoleEntity) -> Unit
 ) {
-    HandleDialogs(
-        scrGraph = scrGraph, dialog = dialog
-    )
+    HandleDialogs(scrGraph = scrGraph, dialog = dialog)
     Scaffold(
         modifier = Modifier.imePadding(),
         topBar = { SectionTopBar(scrGraph = scrGraph, screenData = screenData) },
-        content = {
-            SectionContent(
-                paddingValues = it,
-                screenData = screenData,
-                onSelectedRole = onSelectedRole
-            )
-        }
+        content = { SectionContent(
+            paddingValues = it,
+            screenData = screenData,
+            onSelectedRole = onSelectedRole
+        ) }
     )
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
@@ -249,16 +246,20 @@ import java.io.File
         color = if (screenData.selectedRole == role) MaterialTheme.colorScheme.primary
         else MaterialTheme.colorScheme.outline
     ),
+    colors = CardDefaults.cardColors().copy(
+        containerColor = if(screenData.selectedRole == role) MaterialTheme.colorScheme.secondaryContainer
+        else MaterialTheme.colorScheme.tertiaryContainer,
+        contentColor = if(screenData.selectedRole == role) MaterialTheme.colorScheme.onSecondaryContainer
+        else MaterialTheme.colorScheme.onTertiaryContainer
+    ),
     content = {
         Row (
             modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp8),
-            horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8, Alignment.CenterHorizontally),
+            horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
             verticalAlignment = Alignment.CenterVertically,
             content = {
-                val imgModel = when {
-                    role.image.isEmpty() || role.image == Constants.STR_SYSTEM -> R.drawable.app_icon_48x48px
-                    else -> File(role.image) /*TODO Fall back if not exists*/
-                }
+                val imgModel = File(role.image).takeIf { role.image.isNotEmpty() && role.image != Constants.STR_SYSTEM && it.exists() }
+                    ?: R.drawable.app_icon_48x48px
                 Surface(
                     shape = RoundedCornerShape(Constants.Dimens.dp8),
                     border = BorderStroke(
@@ -267,53 +268,49 @@ import java.io.File
                         else MaterialTheme.colorScheme.outline
                     ),
                     tonalElevation = Constants.Dimens.dp2,
-                    modifier = Modifier.size(Constants.Dimens.dp64)
-                ) {
-                    SubcomposeAsyncImage(
+                    modifier = Modifier.size(Constants.Dimens.dp48),
+                    content = { SubcomposeAsyncImage(
                         model = imgModel,
                         contentDescription = null,
                         loading = { InnerCircularProgressIndicator() },
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
-                    )
-                }
-                Column(
+                    ) }
+                )
+                Column (
                     modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp4),
                     content = {
-                        Row(
+                        TxtMdTitle(
+                            text = role.label,
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.Top
-                        ) {
-                            TxtMdBody(
-                                text = role.label,
-                                modifier = Modifier.weight(1f),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            SuggestionChip(
-                                onClick = {/*TODO Show Dialog what is this role about?*/},
-                                label = { TxtMdLabel(text = role.roleType.toString()) }
-                            )
-                        }
-                        TxtMdLabel(
-                            text = role.description,
                             maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.fillMaxWidth(),
-                            style = MaterialTheme.typography.bodySmall
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Card(
+                            modifier = Modifier,
+                            border = BorderStroke(
+                                width = Constants.Dimens.dp1,
+                                color = if (screenData.selectedRole == role) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.outline
+                            ),
+                            shape = MaterialTheme.shapes.extraSmall,
+                            content = { TxtMdLabel(
+                                text = role.roleType.toString(),
+                                maxLines = 1,
+                                modifier = Modifier.padding(Constants.Dimens.dp4),
+                                overflow = TextOverflow.Ellipsis
+                            ) }
                         )
                     }
                 )
+                IconButton(
+                    onClick = { /* TODO: Show info dialog */ },
+                    /*modifier = Modifier.size(Constants.Dimens.dp24),*/
+                    content = { Icon(imageVector = Icons.Default.Quiz, contentDescription = null) }
+                )
             }
         )
-    },
-    colors = CardDefaults.cardColors().copy(
-        containerColor = if(screenData.selectedRole == role) MaterialTheme.colorScheme.secondaryContainer
-        else MaterialTheme.colorScheme.tertiaryContainer,
-        contentColor = if(screenData.selectedRole == role) MaterialTheme.colorScheme.onSecondaryContainer
-        else MaterialTheme.colorScheme.onTertiaryContainer
-    )
+    }
 )
