@@ -1,5 +1,6 @@
 package com.thomas200593.mdm.features.role_selection.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,8 +18,11 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Assistant
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -56,6 +60,7 @@ import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.TxtMdLabel
 import com.thomas200593.mdm.core.ui.component.TxtMdTitle
+import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.screen.InnerCircularProgressIndicator
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
@@ -108,7 +113,13 @@ import java.io.File
         title = stringResource(scrGraph.title),
         description = stringResource(scrGraph.description)
     )
-    is DialogState.SessionInvalid -> Unit
+    is DialogState.SessionInvalid -> ErrorDialog(
+        onDismissRequest = {/*TODO*/},
+        title = "Session Invalid",
+        message = dialog.error.message.toString(),
+        error = dialog.error,
+        btnConfirmText = stringResource(R.string.str_sign_in)
+    )
 }
 @Composable private fun ScreenContent(
     scrGraph: ScrGraphs.RoleSelection,
@@ -125,7 +136,10 @@ import java.io.File
             screenData = screenData,
             onSelectedRole = onSelectedRole
         ) },
-        bottomBar = { /*TODO*/ }
+        bottomBar = { AnimatedVisibility(
+            visible = screenData.selectedRole != null,
+            content = { SectionBottomBar() }
+        ) }
     )
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
@@ -149,42 +163,36 @@ import java.io.File
     onSelectedRole: (RoleEntity) -> Unit
 ) = Surface(
     modifier = Modifier.padding(paddingValues).fillMaxSize(),
-    content = {
-        Column (
-            modifier = Modifier.fillMaxSize(),
-            content = {
-                val lazyPagingItems = screenData.roles.collectAsLazyPagingItems()
-                lazyPagingItems.itemCount.takeIf { it <= 0 }
-                    ?. let { PartContentUserRoleEmpty() }
-                    ?: PartContentUserRoleSelectionForm(
-                        screenData = screenData,
-                        lazyPagingItems = lazyPagingItems,
-                        onSelectedRole = onSelectedRole
-                    )
-            }
-        )
-    }
+    content = { Column (
+        modifier = Modifier.fillMaxSize(),
+        content = {
+            val lazyPagingItems = screenData.roles.collectAsLazyPagingItems()
+            lazyPagingItems.itemCount.takeIf { it <= 0 }
+                ?. let { PartContentUserRoleEmpty() }
+                ?: PartContentUserRoleSelectionForm(
+                    screenData = screenData,
+                    lazyPagingItems = lazyPagingItems,
+                    onSelectedRole = onSelectedRole
+                )
+        }
+    ) }
 )
 @Composable private fun PartContentUserRoleEmpty() = Column (
     modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center,
-    content = {
-        PanelCard(
-            modifier = Modifier.padding(Constants.Dimens.dp16),
-            title = {
-                Icon(
-                    modifier = Modifier.fillMaxWidth(),
-                    imageVector = ImageVector.vectorResource(R.drawable.app_icon_sad_48px),
-                    contentDescription = null
-                )
-                HorizontalDivider()
-            },
-            content = {
-                TxtMdBody("This user has no role associate with, please contact the System Administrator!.")
-            }
-        )
-    }
+    content = { PanelCard(
+        modifier = Modifier.padding(Constants.Dimens.dp16),
+        title = {
+            Icon(
+                modifier = Modifier.fillMaxWidth(),
+                imageVector = ImageVector.vectorResource(R.drawable.app_icon_sad_48px),
+                contentDescription = null
+            )
+            HorizontalDivider()
+        },
+        content = { TxtMdBody("This user has no role associate with, please contact the System Administrator!.") }
+    ) }
 )
 @Composable private fun PartContentUserRoleSelectionForm(
     screenData: ScreenDataState.Loaded,
@@ -206,12 +214,12 @@ import java.io.File
     }
 }
 @Composable private fun PartContentUserRoleToolbar() = Row (
-    modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp8),
+    modifier = Modifier.fillMaxWidth(),
     horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically,
     content = {
         SearchToolBar(
-            query = "search", /*TODO*/
+            query = "", /*TODO*/
             onQueryChanged = {/*TODO*/},
             onSearchTriggered = {/*TODO*/},
             modifier = Modifier.weight(.9f)
@@ -229,15 +237,13 @@ import java.io.File
     onSelectedRole: (RoleEntity) -> Unit
 ) = LazyColumn (
     modifier = Modifier.fillMaxSize(),
-    content = { items(lazyPagingItems.itemCount) { index ->
-        lazyPagingItems[index]?.let { role ->
-            ItemListRole(
-                role = role,
-                screenData = screenData,
-                onSelectedRole = onSelectedRole
-            )
-        }
-    } }
+    content = { items(lazyPagingItems.itemCount) { index -> lazyPagingItems[index]
+        ?.let { role -> ItemListRole(
+            role = role,
+            screenData = screenData,
+            onSelectedRole = onSelectedRole
+        ) } }
+    }
 )
 @Composable private fun PartContentUserRoleGrid(
     lazyPagingItems: LazyPagingItems<RoleEntity>,
@@ -246,15 +252,13 @@ import java.io.File
 ) = LazyVerticalGrid (
     modifier = Modifier.fillMaxSize(),
     columns = GridCells.Fixed(3),
-    content = { items(lazyPagingItems.itemCount) { index ->
-        lazyPagingItems[index]?.let { role ->
-            ItemGridRole(
-                role = role,
-                screenData = screenData,
-                onSelectedRole = onSelectedRole
-            )
-        }
-    } }
+    content = { items(lazyPagingItems.itemCount) { index -> lazyPagingItems[index]
+        ?.let { role -> ItemGridRole(
+            role = role,
+            screenData = screenData,
+            onSelectedRole = onSelectedRole
+        ) } }
+    }
 )
 @Composable private fun ItemListRole(
     role: RoleEntity,
@@ -273,62 +277,61 @@ import java.io.File
         contentColor = if(screenData.selectedRole == role) MaterialTheme.colorScheme.onSecondaryContainer
         else MaterialTheme.colorScheme.onTertiaryContainer
     ),
-    content = {
-        Row (
-            modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp8),
-            horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
-            verticalAlignment = Alignment.CenterVertically,
-            content = {
-                val imgModel = File(role.image).takeIf { role.image.isNotEmpty() && role.image != Constants.STR_SYSTEM && it.exists() }
-                    ?: R.drawable.app_icon_48x48px
-                Surface(
-                    shape = RoundedCornerShape(Constants.Dimens.dp8),
-                    border = BorderStroke(
-                        width = Constants.Dimens.dp1,
-                        color = if (screenData.selectedRole == role) MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.outline
-                    ),
-                    tonalElevation = Constants.Dimens.dp2,
-                    modifier = Modifier.size(Constants.Dimens.dp48),
-                    content = { SubcomposeAsyncImage(
-                        model = imgModel,
-                        contentDescription = null,
-                        loading = { InnerCircularProgressIndicator() },
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    ) }
-                )
-                Column (
-                    modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp4),
-                    content = {
-                        TxtMdTitle(
-                            text = role.label,
-                            modifier = Modifier.fillMaxWidth(),
+    content = { Row (
+        modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp8),
+        horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
+        verticalAlignment = Alignment.CenterVertically,
+        content = {
+            val imgModel = File(role.image)
+                .takeIf { role.image.isNotEmpty() && role.image != Constants.STR_SYSTEM && it.exists() }
+                ?: R.drawable.app_icon_48x48px
+            Surface(
+                shape = RoundedCornerShape(Constants.Dimens.dp8),
+                border = BorderStroke(
+                    width = Constants.Dimens.dp1,
+                    color = if (screenData.selectedRole == role) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.outline
+                ),
+                tonalElevation = Constants.Dimens.dp2,
+                modifier = Modifier.size(Constants.Dimens.dp48),
+                content = { SubcomposeAsyncImage(
+                    model = imgModel,
+                    contentDescription = null,
+                    loading = { InnerCircularProgressIndicator() },
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                ) }
+            )
+            Column (
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp4),
+                content = {
+                    TxtMdTitle(
+                        text = role.label,
+                        modifier = Modifier.fillMaxWidth(),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Card(
+                        modifier = Modifier,
+                        border = BorderStroke(
+                            width = Constants.Dimens.dp1,
+                            color = if (screenData.selectedRole == role) MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.outline
+                        ),
+                        shape = MaterialTheme.shapes.extraSmall,
+                        content = { TxtMdLabel(
+                            text = role.roleType.toString(),
                             maxLines = 1,
+                            modifier = Modifier.padding(Constants.Dimens.dp4),
                             overflow = TextOverflow.Ellipsis
-                        )
-                        Card(
-                            modifier = Modifier,
-                            border = BorderStroke(
-                                width = Constants.Dimens.dp1,
-                                color = if (screenData.selectedRole == role) MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.outline
-                            ),
-                            shape = MaterialTheme.shapes.extraSmall,
-                            content = { TxtMdLabel(
-                                text = role.roleType.toString(),
-                                maxLines = 1,
-                                modifier = Modifier.padding(Constants.Dimens.dp4),
-                                overflow = TextOverflow.Ellipsis
-                            ) }
-                        )
-                    }
-                )
-            }
-        )
-    }
+                        ) }
+                    )
+                }
+            )
+        }
+    ) }
 )
 @Composable private fun ItemGridRole(
     role: RoleEntity,
@@ -348,39 +351,55 @@ import java.io.File
         contentColor = if(screenData.selectedRole == role) MaterialTheme.colorScheme.onSecondaryContainer
         else MaterialTheme.colorScheme.onTertiaryContainer
     ),
-    content = {
-        Column (
-            modifier = Modifier.padding(Constants.Dimens.dp8),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8, Alignment.CenterVertically),
-            content = {
-                val imgModel = File(role.image).takeIf { role.image.isNotEmpty() && role.image != Constants.STR_SYSTEM && it.exists() }
-                    ?: R.drawable.app_icon_48x48px
-                Surface(
-                    shape = RoundedCornerShape(Constants.Dimens.dp8),
-                    border = BorderStroke(
-                        width = Constants.Dimens.dp1,
-                        color = if (screenData.selectedRole == role) MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.outline
-                    ),
-                    tonalElevation = Constants.Dimens.dp2,
-                    modifier = Modifier.size(Constants.Dimens.dp100),
-                    content = { SubcomposeAsyncImage(
-                        model = imgModel,
-                        contentDescription = null,
-                        loading = { InnerCircularProgressIndicator() },
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    ) }
-                )
-                TxtMdTitle(
-                    text = role.label,
-                    modifier = Modifier.fillMaxWidth(),
-                    maxLines = 1,
-                    textAlign = TextAlign.Center,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-        )
-    }
+    content = { Column (
+        modifier = Modifier.padding(Constants.Dimens.dp8),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8, Alignment.CenterVertically),
+        content = {
+            val imgModel = File(role.image)
+                .takeIf { role.image.isNotEmpty() && role.image != Constants.STR_SYSTEM && it.exists() }
+                ?: R.drawable.app_icon_48x48px
+            Surface(
+                shape = RoundedCornerShape(Constants.Dimens.dp8),
+                border = BorderStroke(
+                    width = Constants.Dimens.dp1,
+                    color = if (screenData.selectedRole == role) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.outline
+                ),
+                tonalElevation = Constants.Dimens.dp2,
+                modifier = Modifier.size(Constants.Dimens.dp100),
+                content = { SubcomposeAsyncImage(
+                    model = imgModel,
+                    contentDescription = null,
+                    loading = { InnerCircularProgressIndicator() },
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                ) }
+            )
+            TxtMdTitle(
+                text = role.label,
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 1,
+                textAlign = TextAlign.Center,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    ) }
+)
+@Composable private fun SectionBottomBar() = BottomAppBar(
+    modifier = Modifier.fillMaxWidth(),
+    content = { Row(
+        modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+        content = {
+            IconButton(
+                onClick = { /*TODO*/ },
+                content = { Icon(imageVector = Icons.Default.Assistant, contentDescription = null) }
+            )
+            Button(
+                onClick = { /*TODO*/ },
+                content = { Text("Select Role") },
+                modifier = Modifier.weight(1f)
+            )
+        }
+    ) }
 )
