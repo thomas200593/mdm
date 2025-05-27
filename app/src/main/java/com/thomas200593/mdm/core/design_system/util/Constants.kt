@@ -13,6 +13,7 @@ object Constants {
     const val WEEK_IN_SECOND = 604_800
     const val ID = "ID"
     const val STR_EMPTY = ""
+    const val STR_NEW_LINE = "\n"
     const val STR_SYSTEM = "SYSTEM"
     const val STR_UNDERSCORE = "_"
     const val STR_APP_VERSION = "$STR_UNDERSCORE${BuildConfig.VERSION_NAME}$STR_UNDERSCORE${BuildConfig.BUILD_TYPE}"

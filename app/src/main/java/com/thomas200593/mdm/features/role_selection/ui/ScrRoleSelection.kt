@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -58,6 +59,7 @@ import com.thomas200593.mdm.core.ui.component.TxtMdTitle
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.screen.InnerCircularProgressIndicator
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
+import com.thomas200593.mdm.core.ui.component.text_field.SearchToolBar
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
@@ -154,18 +156,11 @@ import java.io.File
                 val lazyPagingItems = screenData.roles.collectAsLazyPagingItems()
                 lazyPagingItems.itemCount.takeIf { it <= 0 }
                     ?. let { PartContentUserRoleEmpty() }
-                    ?: when(screenData.layoutMode) {
-                        LayoutMode.List -> PartContentUserRoleList(
-                            lazyPagingItems = lazyPagingItems,
-                            screenData = screenData,
-                            onSelectedRole = onSelectedRole
-                        )
-                        LayoutMode.Grid -> PartContentUserRoleGrid(
-                            lazyPagingItems = lazyPagingItems,
-                            screenData = screenData,
-                            onSelectedRole = onSelectedRole
-                        )
-                    }
+                    ?: PartContentUserRoleSelectionForm(
+                        screenData = screenData,
+                        lazyPagingItems = lazyPagingItems,
+                        onSelectedRole = onSelectedRole
+                    )
             }
         )
     }
@@ -188,6 +183,43 @@ import java.io.File
             content = {
                 TxtMdBody("This user has no role associate with, please contact the System Administrator!.")
             }
+        )
+    }
+)
+@Composable private fun PartContentUserRoleSelectionForm(
+    screenData: ScreenDataState.Loaded,
+    lazyPagingItems: LazyPagingItems<RoleEntity>,
+    onSelectedRole: (RoleEntity) -> Unit
+) {
+    PartContentUserRoleToolbar()
+    when(screenData.layoutMode) {
+        LayoutMode.List -> PartContentUserRoleList(
+            lazyPagingItems = lazyPagingItems,
+            screenData = screenData,
+            onSelectedRole = onSelectedRole
+        )
+        LayoutMode.Grid -> PartContentUserRoleGrid(
+            lazyPagingItems = lazyPagingItems,
+            screenData = screenData,
+            onSelectedRole = onSelectedRole
+        )
+    }
+}
+@Composable private fun PartContentUserRoleToolbar() = Row (
+    modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp8),
+    horizontalArrangement = Arrangement.Center,
+    verticalAlignment = Alignment.CenterVertically,
+    content = {
+        SearchToolBar(
+            query = "search", /*TODO*/
+            onQueryChanged = {/*TODO*/},
+            onSearchTriggered = {/*TODO*/},
+            modifier = Modifier.weight(.9f)
+        )
+        IconButton(
+            onClick = { /*TODO*/ },
+            content = { Icon(imageVector = Icons.Default.FilterList, contentDescription = null) },
+            modifier = Modifier.weight(.1f)
         )
     }
 )
