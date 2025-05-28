@@ -1,10 +1,5 @@
 package com.thomas200593.mdm.features.introduction.initialization.ui
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -52,7 +47,7 @@ import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.TxtMdTitle
-import com.thomas200593.mdm.core.ui.component.anim.BottomBarAnim
+import com.thomas200593.mdm.core.ui.component.anim.SlideUpFadeAnim
 import com.thomas200593.mdm.core.ui.component.checkbox.HorizontalCheckbox
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.LoadingDialog
@@ -169,7 +164,7 @@ import kotlinx.coroutines.launch
                 onFormEvent = onFormEvent
             )
         },
-        bottomBar = { BottomBarAnim(
+        bottomBar = { SlideUpFadeAnim(
             visible = formInitialization.btnProceedVisible,
             content = { SectionBottomBar(
                 formInitialization = formInitialization, onBottomBarEvent = onBottomBarEvent

@@ -12,6 +12,6 @@ import androidx.compose.runtime.Composable
 
 private val slideFadeIn: EnterTransition = fadeIn() + slideInVertically { fullHeight -> fullHeight }
 private val slideFadeOut: ExitTransition = fadeOut() + slideOutVertically { fullHeight -> fullHeight }
-@Composable fun BottomBarAnim(
+@Composable fun SlideUpFadeAnim(
     visible : Boolean, content : @Composable AnimatedVisibilityScope.() -> Unit
 ) = AnimatedVisibility(visible = visible, enter = slideFadeIn, exit = slideFadeOut, content = content)
