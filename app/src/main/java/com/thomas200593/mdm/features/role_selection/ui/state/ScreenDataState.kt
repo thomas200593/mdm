@@ -13,19 +13,6 @@ sealed interface ScreenDataState {
         val confCommon : Common,
         val sessionEvent : SessionEvent,
         val sessionData : SessionEntity?,
-        val roles : Flow<PagingData<RoleEntity>>,
-        val layoutMode : LayoutMode = LayoutMode.List,
-        val selectedRole : RoleEntity? = null
+        val roles : Flow<PagingData<RoleEntity>>
     ) : ScreenDataState
-}
-enum class LayoutMode { List, Grid }
-enum class SortOption(val label: String) {
-    LabelAsc("Label A–Z"),
-    LabelDesc("Label Z–A"),
-    TypeAsc("Role Type ↑"),
-    TypeDesc("Role Type ↓"),
-    CodeAsc("Role Code ↑"),
-    CodeDesc("Role Code ↓"),
-    CreatedOldest("Created Oldest"),
-    CreatedNewest("Created Newest")
 }

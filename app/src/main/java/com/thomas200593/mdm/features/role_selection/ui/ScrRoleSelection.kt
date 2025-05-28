@@ -81,9 +81,8 @@ import com.thomas200593.mdm.features.management.role.entity.RoleEntity
 import com.thomas200593.mdm.features.management.role.entity.RoleType
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
-import com.thomas200593.mdm.features.role_selection.ui.state.LayoutMode
+import com.thomas200593.mdm.features.role_selection.ui.state.FormRoleSelectionState
 import com.thomas200593.mdm.features.role_selection.ui.state.ScreenDataState
-import com.thomas200593.mdm.features.role_selection.ui.state.SortOption
 import kotlinx.coroutines.CoroutineScope
 import java.io.File
 
@@ -92,6 +91,7 @@ import java.io.File
     stateApp: StateApp = LocalStateApp.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
+    val formRoleSelection = vm.formRoleSelection
     stateApp.SessionHandler(
         onLoading = { ev -> vm.onSessionEvent(event = Events.Session.Loading(ev = ev)) },
         onInvalid = { ev, err -> vm.onSessionEvent(event = Events.Session.Invalid(ev = ev, error = err)) },
@@ -101,12 +101,14 @@ import java.io.File
     ScrRoleSelection(
         scrGraph = scrGraph,
         uiState = uiState,
+        formRoleSelection = formRoleSelection,
         onSelectedRole = { vm.onSelectedRole(it) },
     )
 }
 @Composable private fun ScrRoleSelection(
     scrGraph: ScrGraphs.RoleSelection,
     uiState: VMRoleSelection.UiState,
+    formRoleSelection: FormRoleSelectionState,
     onSelectedRole: (RoleEntity) -> Unit,
 ) = when (uiState.screenData) {
     is ScreenDataState.Loading -> ScrLoading()
@@ -114,6 +116,7 @@ import java.io.File
         scrGraph = scrGraph,
         screenData = uiState.screenData,
         dialog = uiState.dialog,
+        formRoleSelection = formRoleSelection,
         onSelectedRole = onSelectedRole
     )
 }
@@ -139,6 +142,7 @@ import java.io.File
     scrGraph: ScrGraphs.RoleSelection,
     screenData: ScreenDataState.Loaded,
     dialog: DialogState,
+    formRoleSelection: FormRoleSelectionState,
     onSelectedRole: (RoleEntity) -> Unit
 ) {
     HandleDialogs(scrGraph = scrGraph, dialog = dialog)
@@ -148,10 +152,11 @@ import java.io.File
         content = { SectionContent(
             paddingValues = it,
             screenData = screenData,
+            formRoleSelection = formRoleSelection,
             onSelectedRole = onSelectedRole
         ) },
         bottomBar = { AnimatedVisibility(
-            visible = screenData.selectedRole != null,
+            visible = (formRoleSelection.fldSelectedRole != null) && (formRoleSelection.btnProceedVisible),
             content = { SectionBottomBar() }
         ) }
     )
@@ -174,11 +179,10 @@ import java.io.File
 @Composable private fun SectionContent (
     paddingValues: PaddingValues,
     screenData: ScreenDataState.Loaded,
+    formRoleSelection: FormRoleSelectionState,
     onSelectedRole: (RoleEntity) -> Unit
 ) = Surface(
-    modifier = Modifier
-        .padding(paddingValues)
-        .fillMaxSize(),
+    modifier = Modifier.padding(paddingValues).fillMaxSize(),
     content = { Column (
         modifier = Modifier.fillMaxSize(),
         content = {
@@ -188,6 +192,7 @@ import java.io.File
                 ?: PartContentUserRoleSelectionForm(
                     screenData = screenData,
                     lazyPagingItems = lazyPagingItems,
+                    formRoleSelection = formRoleSelection,
                     onSelectedRole = onSelectedRole
                 )
         }
@@ -215,18 +220,21 @@ import java.io.File
 @Composable private fun PartContentUserRoleSelectionForm(
     screenData: ScreenDataState.Loaded,
     lazyPagingItems: LazyPagingItems<RoleEntity>,
+    formRoleSelection: FormRoleSelectionState,
     onSelectedRole: (RoleEntity) -> Unit
 ) {
     PartContentUserRoleToolbar()
-    when(screenData.layoutMode) {
-        LayoutMode.List -> PartContentUserRoleList(
+    when(formRoleSelection.fldLayoutMode) {
+        FormRoleSelectionState.Companion.LayoutMode.List -> PartContentUserRoleList(
             lazyPagingItems = lazyPagingItems,
             screenData = screenData,
+            formRoleSelection = formRoleSelection,
             onSelectedRole = onSelectedRole
         )
-        LayoutMode.Grid -> PartContentUserRoleGrid(
+        FormRoleSelectionState.Companion.LayoutMode.Grid -> PartContentUserRoleGrid(
             lazyPagingItems = lazyPagingItems,
             screenData = screenData,
+            formRoleSelection = formRoleSelection,
             onSelectedRole = onSelectedRole
         )
     }
@@ -252,9 +260,9 @@ import java.io.File
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun PartContentModalBottomSheet(
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     currentFilter: RoleType?,
-    currentSort: SortOption,
+    currentSort: FormRoleSelectionState.Companion.SortOption,
     onFilterSelected: (RoleType?) -> Unit,
-    onSortSelected: (SortOption) -> Unit,
+    onSortSelected: (FormRoleSelectionState.Companion.SortOption) -> Unit,
     onApply: () -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -307,7 +315,7 @@ import java.io.File
                 Text("Sort By", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    SortOption.entries.forEach { option ->
+                    FormRoleSelectionState.Companion.SortOption.entries.forEach { option ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
@@ -337,7 +345,7 @@ import java.io.File
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview @Composable fun PreviewModalBottomSheet() = PartContentModalBottomSheet(
     currentFilter = null,
-    currentSort = SortOption.LabelAsc,
+    currentSort = FormRoleSelectionState.Companion.SortOption.LabelAsc,
     onFilterSelected = {},
     onSortSelected = {},
     onApply = {},
@@ -346,6 +354,7 @@ import java.io.File
 @Composable private fun PartContentUserRoleList(
     lazyPagingItems: LazyPagingItems<RoleEntity>,
     screenData: ScreenDataState.Loaded,
+    formRoleSelection: FormRoleSelectionState,
     onSelectedRole: (RoleEntity) -> Unit
 ) = LazyColumn (
     modifier = Modifier.fillMaxSize(),
@@ -353,6 +362,7 @@ import java.io.File
         ?.let { role -> ItemListRole(
             role = role,
             screenData = screenData,
+            formRoleSelection = formRoleSelection,
             onSelectedRole = onSelectedRole
         ) } }
     }
@@ -360,6 +370,7 @@ import java.io.File
 @Composable private fun PartContentUserRoleGrid(
     lazyPagingItems: LazyPagingItems<RoleEntity>,
     screenData: ScreenDataState.Loaded,
+    formRoleSelection: FormRoleSelectionState,
     onSelectedRole: (RoleEntity) -> Unit
 ) = LazyVerticalGrid (
     modifier = Modifier.fillMaxSize(),
@@ -368,6 +379,7 @@ import java.io.File
         ?.let { role -> ItemGridRole(
             role = role,
             screenData = screenData,
+            formRoleSelection = formRoleSelection,
             onSelectedRole = onSelectedRole
         ) } }
     }
@@ -375,26 +387,25 @@ import java.io.File
 @Composable private fun ItemListRole(
     role: RoleEntity,
     screenData: ScreenDataState.Loaded,
+    formRoleSelection: FormRoleSelectionState,
     onSelectedRole: (RoleEntity) -> Unit
 ) = Card (
-    modifier = Modifier
-        .padding(Constants.Dimens.dp4)
-        .clickable(onClick = { onSelectedRole(role) }),
+    modifier = Modifier.padding(Constants.Dimens.dp4).clickable(
+        onClick = { onSelectedRole(role) }
+    ),
     border = BorderStroke(
         width = Constants.Dimens.dp1,
-        color = if (screenData.selectedRole == role) MaterialTheme.colorScheme.primary
+        color = if (formRoleSelection.fldSelectedRole == role) MaterialTheme.colorScheme.primary
         else MaterialTheme.colorScheme.outline
     ),
     colors = CardDefaults.cardColors().copy(
-        containerColor = if(screenData.selectedRole == role) MaterialTheme.colorScheme.secondaryContainer
+        containerColor = if(formRoleSelection.fldSelectedRole == role) MaterialTheme.colorScheme.secondaryContainer
         else MaterialTheme.colorScheme.tertiaryContainer,
-        contentColor = if(screenData.selectedRole == role) MaterialTheme.colorScheme.onSecondaryContainer
+        contentColor = if(formRoleSelection.fldSelectedRole == role) MaterialTheme.colorScheme.onSecondaryContainer
         else MaterialTheme.colorScheme.onTertiaryContainer
     ),
     content = { Row (
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(Constants.Dimens.dp8),
+        modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp8),
         horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
         verticalAlignment = Alignment.CenterVertically,
         content = {
@@ -405,7 +416,7 @@ import java.io.File
                 shape = RoundedCornerShape(Constants.Dimens.dp8),
                 border = BorderStroke(
                     width = Constants.Dimens.dp1,
-                    color = if (screenData.selectedRole == role) MaterialTheme.colorScheme.primary
+                    color = if (formRoleSelection.fldSelectedRole == role) MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.outline
                 ),
                 tonalElevation = Constants.Dimens.dp2,
@@ -433,7 +444,7 @@ import java.io.File
                         modifier = Modifier,
                         border = BorderStroke(
                             width = Constants.Dimens.dp1,
-                            color = if (screenData.selectedRole == role) MaterialTheme.colorScheme.primary
+                            color = if (formRoleSelection.fldSelectedRole == role) MaterialTheme.colorScheme.primary
                             else MaterialTheme.colorScheme.outline
                         ),
                         shape = MaterialTheme.shapes.extraSmall,
@@ -452,6 +463,7 @@ import java.io.File
 @Composable private fun ItemGridRole(
     role: RoleEntity,
     screenData: ScreenDataState.Loaded,
+    formRoleSelection: FormRoleSelectionState,
     onSelectedRole: (RoleEntity) -> Unit
 ) = Card(
     modifier = Modifier
@@ -460,13 +472,13 @@ import java.io.File
     shape = MaterialTheme.shapes.extraSmall,
     border = BorderStroke(
         width = Constants.Dimens.dp1,
-        color = if (screenData.selectedRole == role) MaterialTheme.colorScheme.primary
+        color = if (formRoleSelection.fldSelectedRole == role) MaterialTheme.colorScheme.primary
         else MaterialTheme.colorScheme.outline
     ),
     colors = CardDefaults.cardColors().copy(
-        containerColor = if(screenData.selectedRole == role) MaterialTheme.colorScheme.secondaryContainer
+        containerColor = if(formRoleSelection.fldSelectedRole == role) MaterialTheme.colorScheme.secondaryContainer
         else MaterialTheme.colorScheme.tertiaryContainer,
-        contentColor = if(screenData.selectedRole == role) MaterialTheme.colorScheme.onSecondaryContainer
+        contentColor = if(formRoleSelection.fldSelectedRole == role) MaterialTheme.colorScheme.onSecondaryContainer
         else MaterialTheme.colorScheme.onTertiaryContainer
     ),
     content = { Column (
@@ -481,7 +493,7 @@ import java.io.File
                 shape = RoundedCornerShape(Constants.Dimens.dp8),
                 border = BorderStroke(
                     width = Constants.Dimens.dp1,
-                    color = if (screenData.selectedRole == role) MaterialTheme.colorScheme.primary
+                    color = if (formRoleSelection.fldSelectedRole == role) MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.outline
                 ),
                 tonalElevation = Constants.Dimens.dp2,
