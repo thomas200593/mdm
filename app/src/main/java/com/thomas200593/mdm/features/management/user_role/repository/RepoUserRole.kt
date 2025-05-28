@@ -15,14 +15,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 interface RepoUserRole {
     fun getUserRoles(user: UserEntity) : Flow<Result<List<RoleEntity>>>
-    fun getUserRolesPaged(user: UserEntity) : Flow<PagingData<RoleEntity>>
+    fun getAllAssociatedUserRolesByUserPaged(user: UserEntity) : Flow<PagingData<RoleEntity>>
     fun invalidatePagingSource() : Unit?
-    suspend fun deleteAll()
 }
 class RepoUserRoleImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
@@ -34,9 +32,8 @@ class RepoUserRoleImpl @Inject constructor(
             if(list.isNotEmpty()) Result.success(list)
             else Result.failure(Error.Database.DaoQueryNoDataError(message = "User ${user.email} has no roles associate with"))
         }.catch { err -> emit(Result.failure(Error.Database.DaoQueryError(message = err.message, cause = err))) }
-    override fun getUserRolesPaged(user: UserEntity) = Pager(
+    override fun getAllAssociatedUserRolesByUserPaged(user: UserEntity) = Pager(
         config = PagingConfig(pageSize = 20), pagingSourceFactory = { daoUserRole.getUserRolesPaged(user.uid) }
     ).flow
     override fun invalidatePagingSource() = currentPagingSource?.invalidate()
-    override suspend fun deleteAll() = withContext (ioDispatcher) { daoUserRole.deleteAll() }
 }

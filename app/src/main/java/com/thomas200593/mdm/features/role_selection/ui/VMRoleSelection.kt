@@ -14,6 +14,9 @@ import com.thomas200593.mdm.features.role_selection.ui.state.FormRoleSelectionSt
 import com.thomas200593.mdm.features.role_selection.ui.state.ResultSetUserRoleState
 import com.thomas200593.mdm.features.role_selection.ui.state.ScreenDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -30,20 +33,25 @@ import javax.inject.Inject
     )
     var uiState = MutableStateFlow(UiState()) ; private set
     var formRoleSelection by mutableStateOf(FormRoleSelectionState()) ; private set
+    private var debounceJob: Job? = null
+    private val debounceDelay: Long = 300L // adjust as needed
     fun onSessionEvent(event : Events.Session) = when (event) {
         is Events.Session.Loading -> handleSessionLoading()
         is Events.Session.Invalid -> handleSessionInvalid(event)
         is Events.Session.Valid -> handleSessionValid(event)
     }
     fun onTopBarEvent(event: Events.TopBar) = when (event) {
-        is Events.TopBar.BtnScrDesc.Clicked -> {/*TODO*/}
-        is Events.TopBar.BtnScrDesc.Dismissed -> {/*TODO*/}
+        is Events.TopBar.BtnScrDesc.Clicked -> updateDialog { DialogState.ScrDescDialog }
+        is Events.TopBar.BtnScrDesc.Dismissed -> updateDialog { DialogState.None }
         is Events.TopBar.BtnSignOut.Clicked -> {/*TODO*/}
     }
     fun onFormEvent(event: Events.Content.Form) = when (event) {
         is Events.Content.Form.SelectedRole -> handleRoleSelection(event.role)
         is Events.Content.Form.ModalBottomSheetSortFilter.Clicked -> {/*TODO*/}
-        is Events.Content.Form.SearchBar.QueryChanged -> {/*TODO*/}
+        is Events.Content.Form.SearchBar.QueryChanged -> {
+            updateForm { it.setValue(searchQuery = event.query, selectedRole = null) }
+            handleSearchBarQueryField()
+        }
     }
     fun onBottomBarEvent(event: Events.BottomBar) = when (event) {
         is Events.BottomBar.BtnConfirmRole.Clicked -> {/*TODO*/}
@@ -65,8 +73,8 @@ import javax.inject.Inject
     }
     private fun handleSessionValid(event : Events.Session.Valid) = viewModelScope.launch {
         val user = event.data.first
+        formRoleSelection = FormRoleSelectionState().setValue(user = user)
         val rolesFlow = ucGetUserRole.invoke(user)
-        formRoleSelection = formRoleSelection.setValue(user = user)
         ucGetScreenData.invoke().collect { confCommon ->
             uiState.update {
                 it.copy(
@@ -85,5 +93,23 @@ import javax.inject.Inject
         (uiState.value.screenData as? ScreenDataState.Loaded) ?.let { loaded ->
             formRoleSelection = formRoleSelection.setValue(selectedRole = role)
         } ?: return
+    }
+    private fun updateDialog(transform: (DialogState) -> DialogState) =
+        uiState.update { it.copy(dialog = transform(it.dialog)) }
+    private fun updateForm(transform: (FormRoleSelectionState) -> FormRoleSelectionState) =
+        viewModelScope.launch(Dispatchers.Main.immediate) {
+            val updated = transform(formRoleSelection)
+            formRoleSelection.takeIf { it != updated }?.let { formRoleSelection = updated }
+        }
+    private fun handleSearchBarQueryField() {
+        debounceJob?.cancel()
+        debounceJob = viewModelScope.launch {
+            delay(debounceDelay)
+            /**TODO
+             * checkup user
+             * cleanup current role
+             * Perform Search & Filter Query and reflect to State
+             * */
+        }
     }
 }

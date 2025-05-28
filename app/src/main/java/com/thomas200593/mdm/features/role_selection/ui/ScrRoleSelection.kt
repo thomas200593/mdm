@@ -342,7 +342,7 @@ import java.io.File
                             content = {
                                 RadioButton(selected = currentSort == option, onClick = { onSortSelected(option) })
                                 Spacer(Modifier.width(8.dp))
-                                Text(option.label)
+                                Text(stringResource(option.label))
                             }
                         )
                     }

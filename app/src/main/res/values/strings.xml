@@ -32,4 +32,12 @@
     <string name="str_select">Select</string>
     <string name="str_user_have_no_roles_assoc">This user has no role associate with, please contact the System Administrator!.</string>
     <string name="str_session_invalid">Session invalid / expired</string>
+    <string name="str_user_role_sort_opt_label_asc">Role label A–Z</string>
+    <string name="str_user_role_sort_opt_label_desc">Role label Z–A</string>
+    <string name="str_user_role_sort_opt_role_type_asc">Role type ↑</string>
+    <string name="str_user_role_sort_opt_role_type_desc">Role type ↓</string>
+    <string name="str_user_role_sort_opt_role_code_asc">Role code ↑</string>
+    <string name="str_user_role_sort_opt_role_code_desc">Role code ↓</string>
+    <string name="str_user_role_sort_opt_audit_created_asc">Created oldest</string>
+    <string name="str_user_role_sort_opt_audit_created_desc">Created newest</string>
 </resources>

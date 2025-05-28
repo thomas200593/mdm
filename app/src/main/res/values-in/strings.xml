@@ -29,6 +29,14 @@
     <string name="str_sign_in">Masuk</string>
     <string name="str_search">Cari…</string>
     <string name="str_select">Pilih</string>
-    <string name="str_user_have_no_roles_assoc">This user has no role associate with, please contact the System Administrator!.</string>
+    <string name="str_user_have_no_roles_assoc">Pengguna ini tidak mempunyai role yang terkait, mohon kontak System Administrator!.</string>
     <string name="str_session_invalid">Session tidak valid / kedaluwarsa</string>
+    <string name="str_user_role_sort_opt_label_asc">Label role A–Z</string>
+    <string name="str_user_role_sort_opt_label_desc">Label role Z–A</string>
+    <string name="str_user_role_sort_opt_role_type_asc">Tipe role ↑</string>
+    <string name="str_user_role_sort_opt_role_type_desc">Tipe role ↓</string>
+    <string name="str_user_role_sort_opt_role_code_asc">Kode role ↑</string>
+    <string name="str_user_role_sort_opt_role_code_desc">Kode role ↓</string>
+    <string name="str_user_role_sort_opt_audit_created_asc">Dibuat paling lama</string>
+    <string name="str_user_role_sort_opt_audit_created_desc">Dibuat paling baru</string>
 </resources>

@@ -27,7 +27,7 @@ class UCGetUserRole @Inject constructor(
     }.flowOn(ioDispatcher)*/
     operator fun invoke(user: UserEntity) = flow {
         val userEntity = repoUser.getOneByUid(user.uid).flowOn(ioDispatcher).first().getOrThrow()
-        emitAll(repoUserRole.getUserRolesPaged(userEntity))
+        emitAll(repoUserRole.getAllAssociatedUserRolesByUserPaged(userEntity))
     }.catch { val err = mapThrowableError(it) ; throw err}.flowOn(ioDispatcher)
     private fun mapThrowableError(t: Throwable?) : Error = when (t) {
         is SQLiteException -> Error.Database.DaoQueryError(message = t.message, cause = t.cause)
