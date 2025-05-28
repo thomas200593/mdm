@@ -1,6 +1,5 @@
 package com.thomas200593.mdm.features.role_selection.ui
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -71,6 +70,7 @@ import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.TxtMdLabel
 import com.thomas200593.mdm.core.ui.component.TxtMdTitle
+import com.thomas200593.mdm.core.ui.component.anim.BottomBarAnim
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.screen.InnerCircularProgressIndicator
@@ -174,7 +174,7 @@ import java.io.File
             formRoleSelection = formRoleSelection,
             onFormEvent = onFormEvent
         ) },
-        bottomBar = { AnimatedVisibility(
+        bottomBar = { BottomBarAnim(
             visible = (formRoleSelection.fldSelectedRole != null) && (formRoleSelection.btnProceedVisible),
             content = { SectionBottomBar(formRoleSelection = formRoleSelection, onBottomBarEvent = onBottomBarEvent) }
         ) }
@@ -202,9 +202,7 @@ import java.io.File
     formRoleSelection : FormRoleSelectionState,
     onFormEvent: (Events.Content.Form) -> Unit
 ) = Surface(
-    modifier = Modifier
-        .padding(paddingValues)
-        .fillMaxSize(),
+    modifier = Modifier.padding(paddingValues).fillMaxSize(),
     content = { Column (
         modifier = Modifier.fillMaxSize(),
         content = {

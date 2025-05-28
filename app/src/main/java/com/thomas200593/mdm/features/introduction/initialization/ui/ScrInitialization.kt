@@ -52,6 +52,7 @@ import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.TxtMdTitle
+import com.thomas200593.mdm.core.ui.component.anim.BottomBarAnim
 import com.thomas200593.mdm.core.ui.component.checkbox.HorizontalCheckbox
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.LoadingDialog
@@ -168,19 +169,12 @@ import kotlinx.coroutines.launch
                 onFormEvent = onFormEvent
             )
         },
-        bottomBar = {
-            AnimatedVisibility(
-                visible = formInitialization.btnProceedVisible,
-                enter = fadeIn() + slideInVertically(initialOffsetY = { fullHeight -> fullHeight }),
-                exit = fadeOut() + slideOutVertically(targetOffsetY = { fullHeight -> fullHeight }),
-                content = {
-                    SectionBottomBar(
-                        formInitialization = formInitialization,
-                        onBottomBarEvent = onBottomBarEvent
-                    )
-                }
-            )
-        }
+        bottomBar = { BottomBarAnim(
+            visible = formInitialization.btnProceedVisible,
+            content = { SectionBottomBar(
+                formInitialization = formInitialization, onBottomBarEvent = onBottomBarEvent
+            ) }
+        ) }
     )
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(

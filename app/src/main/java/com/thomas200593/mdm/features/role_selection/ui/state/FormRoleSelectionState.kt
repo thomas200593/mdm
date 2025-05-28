@@ -2,6 +2,7 @@ package com.thomas200593.mdm.features.role_selection.ui.state
 
 import androidx.annotation.StringRes
 import com.thomas200593.mdm.R
+import com.thomas200593.mdm.core.design_system.session.entity.SessionEntity
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
 import com.thomas200593.mdm.features.management.role.entity.RoleType
@@ -28,6 +29,8 @@ data class FormRoleSelectionState(
         fldSearchQuery = searchQuery ?: fldSearchQuery,
         fldLayoutMode = layoutMode ?: fldLayoutMode
     )
+    fun validateSelection(session : SessionEntity) = copy(btnProceedVisible = canProceed(session), btnProceedEnabled = canProceed(session))
+    private fun canProceed(session: SessionEntity) = fldUser?.uid == session.userId && fldSelectedRole != null
     companion object {
         enum class LayoutMode { List, Grid }
         enum class SortOption(@StringRes val label : Int) {
@@ -37,7 +40,7 @@ data class FormRoleSelectionState(
             TypeDesc(R.string.str_user_role_sort_opt_role_type_desc),
             CodeAsc(R.string.str_user_role_sort_opt_role_code_asc),
             CodeDesc(R.string.str_user_role_sort_opt_role_code_desc),
-            /*CreatedOldest(R.string.str_user_role_sort_opt_audit_created_asc),
+            /*TODO Ignore, CreatedOldest(R.string.str_user_role_sort_opt_audit_created_asc),
             CreatedNewest(R.string.str_user_role_sort_opt_audit_created_desc)*/
         }
     }

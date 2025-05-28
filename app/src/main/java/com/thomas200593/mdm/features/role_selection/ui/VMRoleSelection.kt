@@ -109,9 +109,9 @@ import javax.inject.Inject
         }
     }
     private fun handleRoleSelection(role: RoleEntity) {
-        (uiState.value.screenData as? ScreenDataState.Loaded) ?.let { loaded ->
-            updateForm { it.setValue(selectedRole = role) }
-        } ?: return
+        val loadedState = uiState.value.screenData as? ScreenDataState.Loaded ?: return
+        val session = loadedState.sessionData ?: return
+        updateForm { it.setValue(selectedRole = role).validateSelection(session) }
     }
     private fun updateDialog(transform: (DialogState) -> DialogState) =
         uiState.update { it.copy(dialog = transform(it.dialog)) }
