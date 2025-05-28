@@ -70,7 +70,7 @@ import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.TxtMdLabel
 import com.thomas200593.mdm.core.ui.component.TxtMdTitle
-import com.thomas200593.mdm.core.ui.component.anim.SlideUpFadeAnim
+import com.thomas200593.mdm.core.ui.common.anim.SlideUpFadeAnim
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.screen.InnerCircularProgressIndicator

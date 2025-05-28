@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.core.ui.component.anim
+package com.thomas200593.mdm.core.ui.common.anim
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
