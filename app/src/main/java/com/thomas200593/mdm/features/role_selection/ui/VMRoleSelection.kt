@@ -36,47 +36,50 @@ import javax.inject.Inject
         is Events.Session.Valid -> handleSessionValid(event)
     }
     fun onTopBarEvent(event: Events.TopBar) = when (event) {
-        is Events.TopBar.BtnScrDesc.Clicked -> {}
-        is Events.TopBar.BtnScrDesc.Dismissed -> {}
+        is Events.TopBar.BtnScrDesc.Clicked -> {/*TODO*/}
+        is Events.TopBar.BtnScrDesc.Dismissed -> {/*TODO*/}
+        is Events.TopBar.BtnSignOut.Clicked -> {/*TODO*/}
     }
-    fun onSelectedRole(role: RoleEntity) {
-        (uiState.value.screenData as? ScreenDataState.Loaded) ?.let { loaded ->
-            formRoleSelection = formRoleSelection.setValue(selectedRole = role)
-        } ?: return
+    fun onFormEvent(event: Events.Content.Form) = when (event) {
+        is Events.Content.Form.SelectedRole -> handleRoleSelection(event.role)
+        is Events.Content.Form.ModalBottomSheetSortFilter.Clicked -> {/*TODO*/}
+        is Events.Content.Form.SearchBar.QueryChanged -> {/*TODO*/}
     }
     private fun handleSessionLoading() {
         formRoleSelection = FormRoleSelectionState()
-        uiState.update {
-            it.copy(
-                screenData = ScreenDataState.Loading,
-                resultSetUserRole = ResultSetUserRoleState.Idle
-            )
-        }
+        uiState.update { it.copy(
+            screenData = ScreenDataState.Loading,
+            resultSetUserRole = ResultSetUserRoleState.Idle
+        ) }
     }
     private fun handleSessionInvalid(event : Events.Session.Invalid) {
         formRoleSelection = FormRoleSelectionState()
-        uiState.update {
-            it.copy(
-                dialog = DialogState.SessionInvalid(error = event.error),
-                resultSetUserRole = ResultSetUserRoleState.Idle
-            )
-        }
+        uiState.update { it.copy(
+            dialog = DialogState.SessionInvalid(error = event.error),
+            resultSetUserRole = ResultSetUserRoleState.Idle
+        ) }
     }
     private fun handleSessionValid(event : Events.Session.Valid) = viewModelScope.launch {
         val user = event.data.first
         val rolesFlow = ucGetUserRole.invoke(user)
+        formRoleSelection = formRoleSelection.setValue(user = user)
         ucGetScreenData.invoke().collect { confCommon ->
-                uiState.update {
-                    it.copy(
-                        screenData = ScreenDataState.Loaded(
-                            confCommon = confCommon,
-                            sessionEvent = event.ev,
-                            sessionData = event.data.third,
-                            roles = rolesFlow
-                        ),
-                        resultSetUserRole = ResultSetUserRoleState.Idle
-                    )
-                }
+            uiState.update {
+                it.copy(
+                    screenData = ScreenDataState.Loaded(
+                        confCommon = confCommon,
+                        sessionEvent = event.ev,
+                        sessionData = event.data.third,
+                        roles = rolesFlow
+                    ),
+                    resultSetUserRole = ResultSetUserRoleState.Idle
+                )
             }
+        }
+    }
+    private fun handleRoleSelection(role: RoleEntity) {
+        (uiState.value.screenData as? ScreenDataState.Loaded) ?.let { loaded ->
+            formRoleSelection = formRoleSelection.setValue(selectedRole = role)
+        } ?: return
     }
 }

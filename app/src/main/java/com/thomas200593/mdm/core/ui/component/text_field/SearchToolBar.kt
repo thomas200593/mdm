@@ -38,18 +38,15 @@ import com.thomas200593.mdm.core.design_system.util.Constants
     modifier : Modifier, placeholder : @Composable () -> Unit = { Text(stringResource(R.string.str_search)) }
 ) = Row (
     modifier = modifier,
-    horizontalArrangement = Arrangement.Center,
-    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
     content = { SearchTextField(
-        query = query,
-        placeholder = placeholder,
-        onQueryChanged = onQueryChanged,
-        onSearchTriggered = onSearchTriggered,
+        query = query, placeholder = placeholder,
+        onQueryChanged = onQueryChanged, onSearchTriggered = onSearchTriggered,
     ) }
 )
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SearchTextField(
-    query : String, onQueryChanged: (String) -> Unit, onSearchTriggered:(String) -> Unit,
-    placeholder: @Composable () -> Unit
+    query : String, placeholder: @Composable () -> Unit,
+    onQueryChanged: (String) -> Unit, onSearchTriggered:(String) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -57,10 +54,8 @@ import com.thomas200593.mdm.core.design_system.util.Constants
     TextField(
         value = query,
         onValueChange = { if(Constants.STR_NEW_LINE !in it) onQueryChanged(it) },
-        colors = TextFieldDefaults.colors().copy(
-            focusedIndicatorColor = Color.Transparent, unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent
-        ),
+        colors = TextFieldDefaults.colors().copy(focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent, disabledIndicatorColor = Color.Transparent),
         leadingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = null) },
         trailingIcon = { if(query.isNotEmpty()) IconButton (
             onClick = { onQueryChanged(Constants.STR_EMPTY) }, content = { Icon(
@@ -68,8 +63,8 @@ import com.thomas200593.mdm.core.design_system.util.Constants
                 tint = MaterialTheme.colorScheme.onSurface,
             ) }
         ) },
-        modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp8)
-            .focusRequester(focusRequester = focusRequester).onKeyEvent {
+        modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp8).focusRequester(focusRequester = focusRequester)
+            .onKeyEvent {
                 if (it.key == Key.Enter) { onSearchExplicitlyTriggered(); true }
                 else { false }
             },

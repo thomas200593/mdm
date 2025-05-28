@@ -12,8 +12,7 @@ sealed interface Events {
         data class Loading(val ev : SessionEvent.Loading) : Session
         data class Invalid(val ev: SessionEvent.Invalid, val error: Error) : Session
         data class Valid(
-            val ev: SessionEvent,
-            val data: Triple<UserEntity, UserProfileEntity, SessionEntity>,
+            val ev: SessionEvent, val data: Triple<UserEntity, UserProfileEntity, SessionEntity>,
             val currentRole: RoleEntity?
         ) : Session
     }
@@ -21,6 +20,20 @@ sealed interface Events {
         sealed interface BtnScrDesc : TopBar {
             data object Clicked : BtnScrDesc
             data object Dismissed : BtnScrDesc
+        }
+        sealed interface BtnSignOut : TopBar {
+            data object Clicked : BtnSignOut
+        }
+    }
+    sealed interface Content : Events {
+        sealed interface Form : Content {
+            data class SelectedRole(val role : RoleEntity) : Form
+            sealed interface SearchBar : Form {
+                data class QueryChanged(val query : String) : SearchBar
+            }
+            sealed interface ModalBottomSheetSortFilter : Form {
+                data object Clicked : ModalBottomSheetSortFilter
+            }
         }
     }
 }

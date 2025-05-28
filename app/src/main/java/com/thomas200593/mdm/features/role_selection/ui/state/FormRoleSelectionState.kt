@@ -1,10 +1,14 @@
 package com.thomas200593.mdm.features.role_selection.ui.state
 
+import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
 import com.thomas200593.mdm.features.management.role.entity.RoleType
+import com.thomas200593.mdm.features.management.user.entity.UserEntity
 
 data class FormRoleSelectionState(
+    val fldUser : UserEntity? = null,
     val fldSelectedRole : RoleEntity? = null,
+    val fldSearchQuery: String = Constants.STR_EMPTY,
     val fldLayoutMode: LayoutMode = LayoutMode.List,
     val fldCurrentFilter : RoleType? = null, // null = All
     val fldCurrentSort : SortOption = SortOption.LabelAsc, // default sort
@@ -12,10 +16,14 @@ data class FormRoleSelectionState(
     val btnProceedEnabled : Boolean = false
 ) {
     fun setValue(
+        user : UserEntity? = null,
         selectedRole : RoleEntity? = null,
-        layoutMode: LayoutMode? = null
+        searchQuery : String? = null,
+        layoutMode : LayoutMode? = null
     ) = copy(
+        fldUser = user ?: fldUser,
         fldSelectedRole = selectedRole ?: fldSelectedRole,
+        fldSearchQuery = searchQuery ?: fldSearchQuery,
         fldLayoutMode = layoutMode ?: fldLayoutMode
     )
     companion object {
