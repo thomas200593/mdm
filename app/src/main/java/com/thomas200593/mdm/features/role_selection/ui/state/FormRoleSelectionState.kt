@@ -33,8 +33,8 @@ data class FormRoleSelectionState(
         enum class SortOption(@StringRes val label : Int) {
             LabelAsc(R.string.str_user_role_sort_opt_label_asc),
             LabelDesc(R.string.str_user_role_sort_opt_label_desc),
-            /*TypeAsc(R.string.str_user_role_sort_opt_role_type_asc),
-            TypeDesc(R.string.str_user_role_sort_opt_role_type_desc),*/
+            TypeAsc(R.string.str_user_role_sort_opt_role_type_asc),
+            TypeDesc(R.string.str_user_role_sort_opt_role_type_desc),
             CodeAsc(R.string.str_user_role_sort_opt_role_code_asc),
             CodeDesc(R.string.str_user_role_sort_opt_role_code_desc),
             /*CreatedOldest(R.string.str_user_role_sort_opt_audit_created_asc),

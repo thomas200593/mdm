@@ -6,7 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
+import com.thomas200593.mdm.features.management.role.entity.RoleType
 import com.thomas200593.mdm.features.management.user_role.domain.UCGetUserRole
+import com.thomas200593.mdm.features.management.user_role.entity.FilterOption
+import com.thomas200593.mdm.features.management.user_role.entity.SortOption
 import com.thomas200593.mdm.features.role_selection.domain.UCGetScreenData
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
@@ -74,7 +77,23 @@ import javax.inject.Inject
     private fun handleSessionValid(event : Events.Session.Valid) = viewModelScope.launch {
         val user = event.data.first
         formRoleSelection = FormRoleSelectionState().setValue(user = user)
-        val rolesFlow = ucGetUserRole.invoke(user)
+        val rolesFlow = ucGetUserRole.invoke(
+            user = user,
+            query = formRoleSelection.fldSearchQuery,
+            sortOption = when (formRoleSelection.fldCurrentSort) {
+                FormRoleSelectionState.Companion.SortOption.LabelAsc -> SortOption.RoleLabelAsc
+                FormRoleSelectionState.Companion.SortOption.LabelDesc -> SortOption.RoleLabelDesc
+                FormRoleSelectionState.Companion.SortOption.CodeAsc -> SortOption.RoleCodeAsc
+                FormRoleSelectionState.Companion.SortOption.CodeDesc -> SortOption.RoleCodeDesc
+                FormRoleSelectionState.Companion.SortOption.TypeAsc -> SortOption.RoleTypeAsc
+                FormRoleSelectionState.Companion.SortOption.TypeDesc -> SortOption.RoleTypeDesc
+            },
+            filterOption = when (formRoleSelection.fldCurrentFilter) {
+                RoleType.BuiltIn -> FilterOption.RoleTypeBuiltIn
+                RoleType.UserDefined -> FilterOption.RoleTypeUserDefined
+                null -> FilterOption.RoleTypeAll
+            }
+        )
         ucGetScreenData.invoke().collect { confCommon ->
             uiState.update {
                 it.copy(
@@ -105,11 +124,29 @@ import javax.inject.Inject
         debounceJob?.cancel()
         debounceJob = viewModelScope.launch {
             delay(debounceDelay)
-            /**TODO
-             * checkup user
-             * cleanup current role
-             * Perform Search & Filter Query and reflect to State
-             * */
+            val currentSession = (uiState.value.screenData as? ScreenDataState.Loaded) ?: return@launch
+            formRoleSelection.fldUser?.let { user ->
+                val rolesFlow = ucGetUserRole.invoke(
+                    user = user,
+                    query = formRoleSelection.fldSearchQuery,
+                    sortOption = when (formRoleSelection.fldCurrentSort) {
+                        FormRoleSelectionState.Companion.SortOption.LabelAsc -> SortOption.RoleLabelAsc
+                        FormRoleSelectionState.Companion.SortOption.LabelDesc -> SortOption.RoleLabelDesc
+                        FormRoleSelectionState.Companion.SortOption.CodeAsc -> SortOption.RoleCodeAsc
+                        FormRoleSelectionState.Companion.SortOption.CodeDesc -> SortOption.RoleCodeDesc
+                        FormRoleSelectionState.Companion.SortOption.TypeAsc -> SortOption.RoleTypeAsc
+                        FormRoleSelectionState.Companion.SortOption.TypeDesc -> SortOption.RoleTypeDesc
+                    },
+                    filterOption = when (formRoleSelection.fldCurrentFilter) {
+                        RoleType.BuiltIn -> FilterOption.RoleTypeBuiltIn
+                        RoleType.UserDefined -> FilterOption.RoleTypeUserDefined
+                        null -> FilterOption.RoleTypeAll
+                    }
+                )
+                uiState.update {
+                    it.copy(screenData = currentSession.copy(roles = rolesFlow))
+                }
+            }
         }
     }
 }

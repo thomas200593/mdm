@@ -46,7 +46,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -202,23 +205,38 @@ import java.io.File
     formRoleSelection : FormRoleSelectionState,
     onFormEvent: (Events.Content.Form) -> Unit
 ) = Surface(
-    modifier = Modifier.padding(paddingValues).fillMaxSize(),
+    modifier = Modifier
+        .padding(paddingValues)
+        .fillMaxSize(),
     content = { Column (
         modifier = Modifier.fillMaxSize(),
         content = {
+            PartContentUserRoleToolbar(
+                formRoleSelection = formRoleSelection,
+                onFormEvent = onFormEvent
+            )
             val lazyPagingItems = screenData.roles.collectAsLazyPagingItems()
             lazyPagingItems.itemCount.takeIf { it <= 0 }
                 ?. let { PartContentUserRoleEmpty() }
-                ?: PartContentUserRoleSelectionForm(
-                    lazyPagingItems = lazyPagingItems,
-                    formRoleSelection = formRoleSelection,
-                    onFormEvent = onFormEvent
-                )
+                ?: when(formRoleSelection.fldLayoutMode) {
+                    FormRoleSelectionState.Companion.LayoutMode.List -> PartContentUserRoleList(
+                        lazyPagingItems = lazyPagingItems,
+                        formRoleSelection = formRoleSelection,
+                        onFormEvent = onFormEvent
+                    )
+                    FormRoleSelectionState.Companion.LayoutMode.Grid -> PartContentUserRoleGrid(
+                        lazyPagingItems = lazyPagingItems,
+                        formRoleSelection = formRoleSelection,
+                        onFormEvent = onFormEvent
+                    )
+                }
         }
     ) }
 )
 @Composable private fun PartContentUserRoleEmpty() = Column (
-    modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
+    modifier = Modifier
+        .fillMaxSize()
+        .padding(Constants.Dimens.dp16),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center,
     content = { PanelCard(
@@ -233,28 +251,6 @@ import java.io.File
         content = { TxtMdBody(stringResource(R.string.str_user_have_no_roles_assoc)) }
     ) }
 )
-@Composable private fun PartContentUserRoleSelectionForm(
-    lazyPagingItems : LazyPagingItems<RoleEntity>,
-    formRoleSelection : FormRoleSelectionState,
-    onFormEvent: (Events.Content.Form) -> Unit
-) {
-    PartContentUserRoleToolbar(
-        formRoleSelection = formRoleSelection,
-        onFormEvent = onFormEvent
-    )
-    when(formRoleSelection.fldLayoutMode) {
-        FormRoleSelectionState.Companion.LayoutMode.List -> PartContentUserRoleList(
-            lazyPagingItems = lazyPagingItems,
-            formRoleSelection = formRoleSelection,
-            onFormEvent = onFormEvent
-        )
-        FormRoleSelectionState.Companion.LayoutMode.Grid -> PartContentUserRoleGrid(
-            lazyPagingItems = lazyPagingItems,
-            formRoleSelection = formRoleSelection,
-            onFormEvent = onFormEvent
-        )
-    }
-}
 @Composable private fun PartContentUserRoleToolbar(
     formRoleSelection: FormRoleSelectionState,
     onFormEvent: (Events.Content.Form) -> Unit
@@ -306,7 +302,9 @@ import java.io.File
              *    - Role Type
              */
             Column(
-                modifier = Modifier.fillMaxWidth().padding(16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
             ) {
                 // FILTER SECTION
                 Text("Filter by Role Type", style = MaterialTheme.typography.titleMedium)
@@ -337,7 +335,9 @@ import java.io.File
                     FormRoleSelectionState.Companion.SortOption.entries.forEach { option ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
                                 .clickable { onSortSelected(option) },
                             content = {
                                 RadioButton(selected = currentSort == option, onClick = { onSortSelected(option) })
@@ -391,9 +391,11 @@ import java.io.File
     formRoleSelection: FormRoleSelectionState,
     onFormEvent : (Events.Content.Form) -> Unit
 ) = Card (
-    modifier = Modifier.padding(Constants.Dimens.dp4).clickable(
-        onClick = { onFormEvent(Events.Content.Form.SelectedRole(role)) }
-    ),
+    modifier = Modifier
+        .padding(Constants.Dimens.dp4)
+        .clickable(
+            onClick = { onFormEvent(Events.Content.Form.SelectedRole(role)) }
+        ),
     border = BorderStroke(
         width = Constants.Dimens.dp1,
         color =
@@ -409,7 +411,9 @@ import java.io.File
             else MaterialTheme.colorScheme.onTertiaryContainer
     ),
     content = { Row (
-        modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp8),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(Constants.Dimens.dp8),
         horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
         verticalAlignment = Alignment.CenterVertically,
         content = {
@@ -462,9 +466,11 @@ import java.io.File
     formRoleSelection : FormRoleSelectionState,
     onFormEvent : (Events.Content.Form) -> Unit
 ) = Card(
-    modifier = Modifier.padding(Constants.Dimens.dp8).clickable(
-        onClick = { onFormEvent(Events.Content.Form.SelectedRole(role)) }
-    ),
+    modifier = Modifier
+        .padding(Constants.Dimens.dp8)
+        .clickable(
+            onClick = { onFormEvent(Events.Content.Form.SelectedRole(role)) }
+        ),
     shape = MaterialTheme.shapes.extraSmall,
     border = BorderStroke(
         width = Constants.Dimens.dp1,
