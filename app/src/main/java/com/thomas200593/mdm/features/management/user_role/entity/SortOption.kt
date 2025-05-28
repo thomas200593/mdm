@@ -10,6 +10,6 @@ enum class SortOption(@StringRes val label : Int) {
     RoleTypeDesc(label = R.string.str_user_role_sort_opt_role_type_desc),
     RoleCodeAsc(label = R.string.str_user_role_sort_opt_role_code_asc),
     RoleCodeDesc(label = R.string.str_user_role_sort_opt_role_code_desc),
-    RoleCreatedOldest(label = R.string.str_user_role_sort_opt_audit_created_asc),
-    RoleCreatedNewest(label = R.string.str_user_role_sort_opt_audit_created_desc)
+    /*RoleCreatedOldest(label = R.string.str_user_role_sort_opt_audit_created_asc),
+    RoleCreatedNewest(label = R.string.str_user_role_sort_opt_audit_created_desc)*/
 }
