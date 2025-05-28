@@ -76,7 +76,7 @@ import javax.inject.Inject
     }
     private fun handleSessionValid(event : Events.Session.Valid) = viewModelScope.launch {
         val user = event.data.first
-        formRoleSelection = FormRoleSelectionState().setValue(user = user)
+        updateForm { it.setValue(user = user) }
         val rolesFlow = ucGetUserRole.invoke(
             user = user,
             query = formRoleSelection.fldSearchQuery,
@@ -110,7 +110,7 @@ import javax.inject.Inject
     }
     private fun handleRoleSelection(role: RoleEntity) {
         (uiState.value.screenData as? ScreenDataState.Loaded) ?.let { loaded ->
-            formRoleSelection = formRoleSelection.setValue(selectedRole = role)
+            updateForm { it.setValue(selectedRole = role) }
         } ?: return
     }
     private fun updateDialog(transform: (DialogState) -> DialogState) =

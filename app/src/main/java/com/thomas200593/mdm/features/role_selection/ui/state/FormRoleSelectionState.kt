@@ -24,7 +24,7 @@ data class FormRoleSelectionState(
         layoutMode : LayoutMode? = null
     ) = copy(
         fldUser = user ?: fldUser,
-        fldSelectedRole = selectedRole ?: fldSelectedRole,
+        fldSelectedRole = selectedRole,
         fldSearchQuery = searchQuery ?: fldSearchQuery,
         fldLayoutMode = layoutMode ?: fldLayoutMode
     )

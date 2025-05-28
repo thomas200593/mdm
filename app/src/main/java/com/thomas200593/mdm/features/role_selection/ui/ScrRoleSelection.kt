@@ -46,10 +46,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -94,7 +91,6 @@ import java.io.File
     scrGraph: ScrGraphs.RoleSelection, vm: VMRoleSelection = hiltViewModel(),
     stateApp: StateApp = LocalStateApp.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
-    /*TODO The selected role is not nullify*/
     val uiState by vm.uiState.collectAsStateWithLifecycle()
     val formRoleSelection = vm.formRoleSelection
     stateApp.SessionHandler(
@@ -186,7 +182,7 @@ import java.io.File
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
     scrGraph: ScrGraphs.RoleSelection,
-    onTopBarEvent : (Events.TopBar) -> Unit
+    onTopBarEvent: (Events.TopBar) -> Unit
 ) = TopAppBar(
     title = { Text(stringResource(scrGraph.title)) },
     actions = {
