@@ -45,6 +45,10 @@ import javax.inject.Inject
         is Events.Content.Form.ModalBottomSheetSortFilter.Clicked -> {/*TODO*/}
         is Events.Content.Form.SearchBar.QueryChanged -> {/*TODO*/}
     }
+    fun onBottomBarEvent(event: Events.BottomBar) = when (event) {
+        is Events.BottomBar.BtnConfirmRole.Clicked -> {/*TODO*/}
+        is Events.BottomBar.BtnRoleInfo.Clicked -> {/*TODO*/}
+    }
     private fun handleSessionLoading() {
         formRoleSelection = FormRoleSelectionState()
         uiState.update { it.copy(

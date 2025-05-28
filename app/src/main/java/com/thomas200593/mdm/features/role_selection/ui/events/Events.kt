@@ -36,4 +36,12 @@ sealed interface Events {
             }
         }
     }
+    sealed interface BottomBar : Events {
+        sealed interface BtnConfirmRole : BottomBar {
+            data class Clicked(val role: RoleEntity?) : BtnConfirmRole
+        }
+        sealed interface BtnRoleInfo : BottomBar {
+            data class Clicked(val role: RoleEntity?) : BtnRoleInfo
+        }
+    }
 }

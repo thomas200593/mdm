@@ -109,6 +109,7 @@ import java.io.File
             else -> { vm.onTopBarEvent(it) }
         } },
         onFormEvent = { vm.onFormEvent(it) },
+        onBottomBarEvent = { vm.onBottomBarEvent(it) }
     )
 }
 @Composable private fun ScrRoleSelection(
@@ -116,7 +117,8 @@ import java.io.File
     uiState : VMRoleSelection.UiState,
     formRoleSelection : FormRoleSelectionState,
     onTopBarEvent: (Events.TopBar) -> Unit,
-    onFormEvent: (Events.Content.Form) -> Unit
+    onFormEvent: (Events.Content.Form) -> Unit,
+    onBottomBarEvent: (Events.BottomBar) -> Unit
 ) = when (uiState.screenData) {
     is ScreenDataState.Loading -> ScrLoading()
     is ScreenDataState.Loaded -> ScreenContent(
@@ -125,7 +127,8 @@ import java.io.File
         dialog = uiState.dialog,
         formRoleSelection = formRoleSelection,
         onTopBarEvent = onTopBarEvent,
-        onFormEvent = onFormEvent
+        onFormEvent = onFormEvent,
+        onBottomBarEvent = onBottomBarEvent
     )
 }
 @Composable private fun HandleDialogs(
@@ -153,7 +156,8 @@ import java.io.File
     dialog : DialogState,
     formRoleSelection : FormRoleSelectionState,
     onTopBarEvent: (Events.TopBar) -> Unit,
-    onFormEvent: (Events.Content.Form) -> Unit
+    onFormEvent: (Events.Content.Form) -> Unit,
+    onBottomBarEvent: (Events.BottomBar) -> Unit
 ) {
     HandleDialogs(
         scrGraph = scrGraph, dialog = dialog, onTopBarEvent = onTopBarEvent
@@ -172,7 +176,7 @@ import java.io.File
         ) },
         bottomBar = { AnimatedVisibility(
             visible = (formRoleSelection.fldSelectedRole != null) && (formRoleSelection.btnProceedVisible),
-            content = { SectionBottomBar() }
+            content = { SectionBottomBar(formRoleSelection = formRoleSelection, onBottomBarEvent = onBottomBarEvent) }
         ) }
     )
 }
@@ -507,17 +511,20 @@ import java.io.File
         }
     ) }
 )
-@Composable private fun SectionBottomBar() = BottomAppBar(
+@Composable private fun SectionBottomBar(
+    formRoleSelection: FormRoleSelectionState,
+    onBottomBarEvent : (Events.BottomBar) -> Unit
+) = BottomAppBar(
     modifier = Modifier.fillMaxWidth(),
     content = { Row(
         modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
         content = {
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { onBottomBarEvent(Events.BottomBar.BtnRoleInfo.Clicked(formRoleSelection.fldSelectedRole)) },
                 content = { Icon(imageVector = Icons.Default.Assistant, contentDescription = null) }
             )
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { onBottomBarEvent(Events.BottomBar.BtnConfirmRole.Clicked(formRoleSelection.fldSelectedRole)) },
                 content = { Text(stringResource(R.string.str_select)) },
                 modifier = Modifier.weight(1f)
             )
