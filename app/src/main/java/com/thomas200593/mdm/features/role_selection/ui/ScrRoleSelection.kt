@@ -94,6 +94,7 @@ import java.io.File
     scrGraph: ScrGraphs.RoleSelection, vm: VMRoleSelection = hiltViewModel(),
     stateApp: StateApp = LocalStateApp.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
+    /*TODO The selected role is not nullify*/
     val uiState by vm.uiState.collectAsStateWithLifecycle()
     val formRoleSelection = vm.formRoleSelection
     stateApp.SessionHandler(
