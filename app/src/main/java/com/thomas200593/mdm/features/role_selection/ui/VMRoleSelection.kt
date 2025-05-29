@@ -62,7 +62,7 @@ import javax.inject.Inject
         is Events.Content.Form.ModalBottomSheet.Dismissed -> {/*TODO*/}
     }
     fun onBottomBarEvent(event: Events.BottomBar) = when (event) {
-        is Events.BottomBar.BtnConfirmRole.Clicked -> {/*TODO*/}
+        is Events.BottomBar.BtnConfirmRole.Clicked -> handleConfirmRole(event.role)
         is Events.BottomBar.BtnRoleInfo.Clicked -> updateDialog { DialogState.RoleInfo(event.role) }
         is Events.BottomBar.BtnRoleInfo.Dismissed -> updateDialog { DialogState.None }
     }
@@ -82,7 +82,6 @@ import javax.inject.Inject
     }
     private fun handleSessionValid(event : Events.Session.Valid) = viewModelScope.launch {
         val user = event.data.first
-        updateForm { it.setValue(user = user) }
         val rolesFlow = ucGetUserRole.invoke(
             user = user,
             query = formRoleSelection.fldSearchQuery,
@@ -98,27 +97,24 @@ import javax.inject.Inject
         )
         combine (
             flow = ucGetScreenData.invoke(), flow2 = ucGetUserRoleCount.invoke(user = user)
-        ) { confCommon, userRolesCount -> confCommon to userRolesCount}
-            .collect { (confCommon, userRolesCount) ->
-                uiState.update {
-                    it.copy(
-                        screenData = ScreenDataState.Loaded(
-                            confCommon = confCommon,
-                            sessionEvent = event.ev,
-                            sessionData = event.data.third,
-                            userRolesCount = userRolesCount,
-                            roles = rolesFlow
-                        ),
-                        resultSetUserRole = ResultSetUserRoleState.Idle
-                    )
-                }
+        ) { confCommon, userRolesCount -> confCommon to userRolesCount}.collect { (confCommon, userRolesCount) ->
+            uiState.update {
+                it.copy(
+                    screenData = ScreenDataState.Loaded(
+                        confCommon = confCommon,
+                        sessionEvent = event.ev,
+                        userData = user,
+                        sessionData = event.data.third,
+                        userRolesCount = userRolesCount,
+                        roles = rolesFlow
+                    ),
+                    resultSetUserRole = ResultSetUserRoleState.Idle
+                )
             }
+        }
     }
-    private fun handleRoleSelection(role: RoleEntity) {
-        val loadedState = uiState.value.screenData as? ScreenDataState.Loaded ?: return
-        val session = loadedState.sessionData ?: return
-        updateForm { it.setValue(selectedRole = role).validateSelection(session) }
-    }
+    private fun handleRoleSelection(role: RoleEntity) =
+        updateForm { it.setValue(selectedRole = role).validateSelection() }
     private fun handleLayoutType(layoutMode: FormRoleSelectionState.Companion.LayoutMode) =
         updateForm { it.setValue(layoutMode = layoutMode) }
     private fun updateDialog(transform: (DialogState) -> DialogState) =
@@ -133,7 +129,7 @@ import javax.inject.Inject
         debounceJob = viewModelScope.launch {
             delay(debounceDelay)
             val currentSession = (uiState.value.screenData as? ScreenDataState.Loaded) ?: return@launch
-            formRoleSelection.fldUser?.let { user ->
+            currentSession.userData?.let { user ->
                 val rolesFlow = ucGetUserRole.invoke(
                     user = user,
                     query = formRoleSelection.fldSearchQuery,
@@ -156,4 +152,13 @@ import javax.inject.Inject
     private fun handleSignOut() = uiState.update { it.copy(
         screenData = ScreenDataState.Loading, dialog = DialogState.None, resultSetUserRole = ResultSetUserRoleState.Idle
     ) }
+    private fun handleConfirmRole(role : RoleEntity) = viewModelScope.launch {
+        //check the loaded state
+        //ensure set the form with role
+        //freeze the form
+        //execute uc with throw with param loaded.session & form.selected
+        //if else
+        val loaded = uiState.value.screenData as? ScreenDataState.Loaded ?: return@launch
+        updateForm { it.setValue(selectedRole = role) }
+    }
 }

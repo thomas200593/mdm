@@ -277,7 +277,7 @@ import java.io.File
             modifier = Modifier
         )
         IconButton(
-            onClick = { onFormEvent(Events.Content.Form.ModalBottomSheet.Clicked) },
+            onClick = { onFormEvent(Events.Content.Form.ModalBottomSheet.Clicked) /*TODO*/ },
             content = { Icon(imageVector = Icons.Default.FilterList, contentDescription = null) },
             modifier = Modifier
         )

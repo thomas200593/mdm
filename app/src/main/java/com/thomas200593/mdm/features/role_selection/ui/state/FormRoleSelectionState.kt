@@ -2,15 +2,11 @@ package com.thomas200593.mdm.features.role_selection.ui.state
 
 import androidx.annotation.StringRes
 import com.thomas200593.mdm.R
-import com.thomas200593.mdm.core.design_system.session.entity.SessionEntity
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
-import com.thomas200593.mdm.features.management.role.entity.RoleType
-import com.thomas200593.mdm.features.management.user.entity.UserEntity
 import com.thomas200593.mdm.features.management.user_role.entity.FilterOption
 
 data class FormRoleSelectionState(
-    val fldUser : UserEntity? = null,
     val fldSelectedRole : RoleEntity? = null,
     val fldSearchQuery: String = Constants.STR_EMPTY,
     val fldLayoutMode: LayoutMode = LayoutMode.List,
@@ -19,23 +15,21 @@ data class FormRoleSelectionState(
     val btnProceedVisible : Boolean = false,
     val btnProceedEnabled : Boolean = false
 ) {
+    private val canProceed get() = fldSelectedRole != null
     fun setValue(
-        user : UserEntity? = null,
         selectedRole : RoleEntity? = null,
         searchQuery : String? = null,
         layoutMode : LayoutMode? = null,
         filterOption: FilterOption? = null,
         sortOption: SortOption? = null
     ) = copy(
-        fldUser = user ?: fldUser,
         fldSelectedRole = selectedRole,
         fldSearchQuery = searchQuery ?: fldSearchQuery,
         fldLayoutMode = layoutMode ?: fldLayoutMode,
         fldCurrentFilter = filterOption ?: fldCurrentFilter,
         fldCurrentSort = sortOption ?: fldCurrentSort
     )
-    fun validateSelection(session : SessionEntity) = copy(btnProceedVisible = canProceed(session), btnProceedEnabled = canProceed(session))
-    private fun canProceed(session: SessionEntity) = fldUser?.uid == session.userId && fldSelectedRole != null
+    fun validateSelection() = copy(btnProceedVisible = canProceed, btnProceedEnabled = canProceed)
     companion object {
         enum class LayoutMode { List, Grid }
         enum class SortOption(@StringRes val label : Int) {
