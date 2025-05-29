@@ -8,8 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
 import com.thomas200593.mdm.features.management.role.entity.RoleType
 import com.thomas200593.mdm.features.management.user_role.domain.UCGetUserRole
+import com.thomas200593.mdm.features.management.user_role.domain.UCGetUserRoleCount
 import com.thomas200593.mdm.features.management.user_role.entity.FilterOption
 import com.thomas200593.mdm.features.management.user_role.entity.SortOption
+import com.thomas200593.mdm.features.management.user_role.repository.RepoUserRole
 import com.thomas200593.mdm.features.role_selection.domain.UCGetScreenData
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
@@ -21,13 +23,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel class VMRoleSelection @Inject constructor(
     private val ucGetScreenData: UCGetScreenData,
-    private val ucGetUserRole: UCGetUserRole
+    private val ucGetUserRole: UCGetUserRole,
+    private val ucGetUserRoleCount: UCGetUserRoleCount,
+    private val repoUserRole: RepoUserRole
 ) : ViewModel() {
     data class UiState(
         val screenData : ScreenDataState = ScreenDataState.Loading,
@@ -50,7 +55,7 @@ import javax.inject.Inject
     }
     fun onFormEvent(event: Events.Content.Form) = when (event) {
         is Events.Content.Form.SelectedRole -> handleRoleSelection(event.role)
-        is Events.Content.Form.ModalBottomSheetSortFilter.Clicked -> {/*TODO*/}
+        is Events.Content.Form.ModalBottomSheetSortFilter.Clicked -> testDelUserRoles()
         is Events.Content.Form.SearchBar.QueryChanged -> {
             updateForm { it.setValue(searchQuery = event.query, selectedRole = null) }
             handleSearchBarQueryField()
@@ -94,19 +99,23 @@ import javax.inject.Inject
                 null -> FilterOption.RoleTypeAll
             }
         )
-        ucGetScreenData.invoke().collect { confCommon ->
-            uiState.update {
-                it.copy(
-                    screenData = ScreenDataState.Loaded(
-                        confCommon = confCommon,
-                        sessionEvent = event.ev,
-                        sessionData = event.data.third,
-                        roles = rolesFlow
-                    ),
-                    resultSetUserRole = ResultSetUserRoleState.Idle
-                )
+        combine (
+            flow = ucGetScreenData.invoke(), flow2 = ucGetUserRoleCount.invoke(user = user)
+        ) { confCommon, userRolesCount -> confCommon to userRolesCount}
+            .collect { (confCommon, userRolesCount) ->
+                uiState.update {
+                    it.copy(
+                        screenData = ScreenDataState.Loaded(
+                            confCommon = confCommon,
+                            sessionEvent = event.ev,
+                            sessionData = event.data.third,
+                            userRolesCount = userRolesCount,
+                            roles = rolesFlow
+                        ),
+                        resultSetUserRole = ResultSetUserRoleState.Idle
+                    )
+                }
             }
-        }
     }
     private fun handleRoleSelection(role: RoleEntity) {
         val loadedState = uiState.value.screenData as? ScreenDataState.Loaded ?: return
@@ -148,5 +157,8 @@ import javax.inject.Inject
                 }
             }
         }
+    }
+    private fun testDelUserRoles() = viewModelScope.launch {
+        repoUserRole.deleteAll()
     }
 }

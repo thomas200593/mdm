@@ -18,6 +18,8 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 interface RepoUserRole {
+    suspend fun deleteAll()
+    fun getUserRolesCountByUser(user : UserEntity) : Flow<Long>
     fun getUserRolesAssocByUser(
         user: UserEntity,
         query: String,
@@ -29,6 +31,9 @@ class RepoUserRoleImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val daoUserRole: DaoUserRole
 ) : RepoUserRole {
+    override suspend fun deleteAll() = daoUserRole.deleteAll()
+    override fun getUserRolesCountByUser(user : UserEntity) : Flow<Long> =
+        daoUserRole.getUserRolesCountByUser(userId = user.uid).flowOn(ioDispatcher)
     override fun getUserRolesAssocByUser(
         user: UserEntity,
         query: String,

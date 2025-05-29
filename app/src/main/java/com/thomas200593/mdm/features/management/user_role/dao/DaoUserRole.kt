@@ -9,8 +9,7 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
 import kotlinx.coroutines.flow.Flow
 
-@Dao
-interface DaoUserRole {
+@Dao interface DaoUserRole {
     @Transaction @Query("""
         SELECT r.* 
         FROM user u
@@ -32,4 +31,9 @@ interface DaoUserRole {
     fun getUserRolesAssocByUser(query: SupportSQLiteQuery): PagingSource<Int, RoleEntity>
     @Query("""DELETE FROM user_role WHERE 1 = 1""")
     suspend fun deleteAll()
+    @Transaction @Query("""
+        SELECT COUNT(ur.user_id) FROM user_role ur WHERE 1 = 1
+        AND ur.user_id = :userId
+    """)
+    fun getUserRolesCountByUser(userId: String) : Flow<Long>
 }

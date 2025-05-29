@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Assistant
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.ImagesearchRoller
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomSheetDefaults
@@ -206,25 +207,21 @@ import java.io.File
     content = { Column (
         modifier = Modifier.fillMaxSize(),
         content = {
-            PartContentUserRoleToolbar(
-                formRoleSelection = formRoleSelection,
-                onFormEvent = onFormEvent
-            )
             val lazyPagingItems = screenData.roles.collectAsLazyPagingItems()
-            lazyPagingItems.itemCount.takeIf { it <= 0 }
-                ?. let { PartContentUserRoleEmpty() }
-                ?: when(formRoleSelection.fldLayoutMode) {
-                    FormRoleSelectionState.Companion.LayoutMode.List -> PartContentUserRoleList(
-                        lazyPagingItems = lazyPagingItems,
-                        formRoleSelection = formRoleSelection,
-                        onFormEvent = onFormEvent
-                    )
-                    FormRoleSelectionState.Companion.LayoutMode.Grid -> PartContentUserRoleGrid(
-                        lazyPagingItems = lazyPagingItems,
-                        formRoleSelection = formRoleSelection,
-                        onFormEvent = onFormEvent
-                    )
+            when {
+                screenData.userRolesCount <= 0 -> PartContentUserRoleEmpty()
+                else -> {
+                    PartContentUserRoleToolbar(formRoleSelection = formRoleSelection, onFormEvent = onFormEvent)
+                    when {
+                        lazyPagingItems.itemCount <= 0 -> PartContentUserRoleSearchNoResult(formRoleSelection.fldSearchQuery)
+                        else -> PartContentUserRoleResult(
+                            formRoleSelection = formRoleSelection,
+                            lazyPagingItems = lazyPagingItems,
+                            onFormEvent = onFormEvent
+                        )
+                    }
                 }
+            }
         }
     ) }
 )
@@ -244,6 +241,24 @@ import java.io.File
             HorizontalDivider()
         },
         content = { TxtMdBody(stringResource(R.string.str_user_have_no_roles_assoc)) }
+    ) }
+)
+@Composable private fun PartContentUserRoleSearchNoResult(query: String) = Column (
+    modifier = Modifier
+        .fillMaxSize()
+        .padding(Constants.Dimens.dp16),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center,
+    content = { PanelCard(
+        modifier = Modifier.padding(Constants.Dimens.dp16), title = {
+            Icon(
+                modifier = Modifier.fillMaxWidth(),
+                imageVector = Icons.Default.ImagesearchRoller,
+                contentDescription = null
+            )
+            HorizontalDivider()
+        },
+        content = { TxtMdBody("No roles found for keyword '$query'.") }
     ) }
 )
 @Composable private fun PartContentUserRoleToolbar(
@@ -267,6 +282,24 @@ import java.io.File
         )
     }
 )
+@Composable private fun PartContentUserRoleResult(
+    formRoleSelection: FormRoleSelectionState,
+    onFormEvent: (Events.Content.Form) -> Unit,
+    lazyPagingItems: LazyPagingItems<RoleEntity>
+) {
+    when(formRoleSelection.fldLayoutMode) {
+        FormRoleSelectionState.Companion.LayoutMode.List -> PartContentUserRoleList(
+            lazyPagingItems = lazyPagingItems,
+            formRoleSelection = formRoleSelection,
+            onFormEvent = onFormEvent
+        )
+        FormRoleSelectionState.Companion.LayoutMode.Grid -> PartContentUserRoleGrid(
+            lazyPagingItems = lazyPagingItems,
+            formRoleSelection = formRoleSelection,
+            onFormEvent = onFormEvent
+        )
+    }
+}
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun PartContentModalBottomSheet(
     sheetState : SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     currentFilter : RoleType?,
