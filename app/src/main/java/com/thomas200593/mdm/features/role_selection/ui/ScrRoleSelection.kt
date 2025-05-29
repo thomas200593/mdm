@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -30,23 +29,32 @@ import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.RadioButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -55,6 +63,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -67,11 +76,11 @@ import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.SessionHandler
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
+import com.thomas200593.mdm.core.ui.common.anim.SlideUpFadeAnim
 import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.TxtMdLabel
 import com.thomas200593.mdm.core.ui.component.TxtMdTitle
-import com.thomas200593.mdm.core.ui.common.anim.SlideUpFadeAnim
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.screen.InnerCircularProgressIndicator
@@ -79,7 +88,8 @@ import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.core.ui.component.text_field.SearchToolBar
 import com.thomas200593.mdm.features.auth.nav.navToAuth
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
-import com.thomas200593.mdm.features.management.role.entity.RoleType
+import com.thomas200593.mdm.features.management.user_role.entity.FilterOption
+import com.thomas200593.mdm.features.management.user_role.entity.SortOption
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
 import com.thomas200593.mdm.features.role_selection.ui.state.FormRoleSelectionState
@@ -132,9 +142,10 @@ import java.io.File
         onBottomBarEvent = onBottomBarEvent
     )
 }
-@Composable private fun HandleDialogs(
+@OptIn(ExperimentalMaterial3Api::class) @Composable private fun HandleDialogs(
     scrGraph : ScrGraphs.RoleSelection,
     dialog : DialogState,
+    formRoleSelection: FormRoleSelectionState,
     onTopBarEvent: (Events.TopBar) -> Unit
 ) = when (dialog) {
     is DialogState.None -> Unit
@@ -150,6 +161,19 @@ import java.io.File
         error = dialog.error,
         btnConfirmText = stringResource(R.string.str_sign_in)
     )
+    is DialogState.ModalBottomSheet -> PartContentModalBottomSheet(
+        currentFilter = formRoleSelection.fldCurrentFilter,
+        currentSort = when (formRoleSelection.fldCurrentSort) {
+            FormRoleSelectionState.Companion.SortOption.LabelAsc -> SortOption.RoleLabelAsc
+            FormRoleSelectionState.Companion.SortOption.LabelDesc -> SortOption.RoleLabelDesc
+            FormRoleSelectionState.Companion.SortOption.TypeAsc -> SortOption.RoleTypeAsc
+            FormRoleSelectionState.Companion.SortOption.TypeDesc -> SortOption.RoleTypeDesc
+            FormRoleSelectionState.Companion.SortOption.CodeAsc -> SortOption.RoleCodeAsc
+            FormRoleSelectionState.Companion.SortOption.CodeDesc -> SortOption.RoleCodeDesc
+        },
+        onApply = { },
+        onDismiss = { }
+    )
 }
 @Composable private fun ScreenContent(
     scrGraph : ScrGraphs.RoleSelection,
@@ -161,7 +185,8 @@ import java.io.File
     onBottomBarEvent: (Events.BottomBar) -> Unit
 ) {
     HandleDialogs(
-        scrGraph = scrGraph, dialog = dialog, onTopBarEvent = onTopBarEvent
+        scrGraph = scrGraph, dialog = dialog, onTopBarEvent = onTopBarEvent,
+        formRoleSelection = formRoleSelection
     )
     Scaffold(
         modifier = Modifier.imePadding(),
@@ -300,91 +325,141 @@ import java.io.File
         )
     }
 }
-@OptIn(ExperimentalMaterial3Api::class) @Composable private fun PartContentModalBottomSheet(
-    sheetState : SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-    currentFilter : RoleType?,
-    currentSort : FormRoleSelectionState.Companion.SortOption,
-    onFilterSelected : (RoleType?) -> Unit,
-    onSortSelected : (FormRoleSelectionState.Companion.SortOption) -> Unit,
-    onApply : () -> Unit,
-    onDismiss : () -> Unit
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PartContentModalBottomSheet(
+    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+    currentFilter: FilterOption,
+    currentSort: SortOption,
+    /*onFilterSelected: (FilterOption) -> Unit,
+    onSortSelected: (SortOption) -> Unit,*/
+    onApply: () -> Unit,
+    onDismiss: () -> Unit
 ) {
-    val roleTypes = setOf<RoleType>(RoleType.BuiltIn, RoleType.UserDefined)
+    var sortExpanded by remember { mutableStateOf(false) }
+
+    // Internal selection state
+    var selectedFilter by remember { mutableStateOf(currentFilter) }
+    var selectedSort by remember { mutableStateOf(currentSort) }
+
     ModalBottomSheet(
-        onDismissRequest = { /*TODO*/ },
+        onDismissRequest = onDismiss,
         sheetState = sheetState,
-        dragHandle = { BottomSheetDefaults.DragHandle() },
-        content = {
-            /** TODO
-             * Filterable:
-             * 1. Sort by:
-             *    - Role Type (Ascending)
-             *    - Role Type (Descending)
-             *    - Label (A–Z)
-             *    - Label (Z–A)
-             *    - Role Code (Ascending)
-             *    - Role Code (Descending)
-             *    - Created At (Oldest First)
-             *    - Created At (Newest First)
-             * 2. Filter by:
-             *    - Role Type
-             */
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
+        dragHandle = { BottomSheetDefaults.DragHandle() }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            // Filter Section
+            Text(
+                text = "Filter by Role Type",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                // FILTER SECTION
-                Text("Filter by Role Type", style = MaterialTheme.typography.titleMedium)
-                Spacer(Modifier.height(8.dp))
-                FlowRow (
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
+                FilterOption.entries.forEach { option ->
                     FilterChip(
-                        selected = currentFilter == null,
-                        onClick = { onFilterSelected(null) },
-                        label = { Text("All") }
+                        selected = selectedFilter == option,
+                        onClick = { selectedFilter = option },
+                        label = {
+                            Text(
+                                text = when (option) {
+                                    FilterOption.RoleTypeAll -> "All"
+                                    FilterOption.RoleTypeBuiltIn -> "Built-in"
+                                    FilterOption.RoleTypeUserDefined -> "User-defined"
+                                }
+                            )
+                        }
                     )
-                    roleTypes.forEach { type ->
-                        FilterChip(
-                            selected = currentFilter == type,
-                            onClick = { onFilterSelected(type) },
-                            label = { Text(type::class.simpleName ?: "Unknown") }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Sort Section
+            Text(
+                text = "Sort by",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            ExposedDropdownMenuBox(
+                expanded = sortExpanded,
+                onExpandedChange = { sortExpanded = !sortExpanded }
+            ) {
+                TextButton (
+                    modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true).fillMaxWidth(),
+                    onClick = { sortExpanded = true },
+                    enabled = true,
+                    content = {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
+                            verticalAlignment = Alignment.CenterVertically,
+                            content = { TxtMdLabel(text = stringResource(id = selectedSort.label)) }
                         )
                     }
-                }
-                Spacer(Modifier.height(24.dp))
-                // SORT SECTION
-                Text("Sort By", style = MaterialTheme.typography.titleMedium)
-                Spacer(Modifier.height(8.dp))
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    FormRoleSelectionState.Companion.SortOption.entries.forEach { option ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp)
-                                .clickable { onSortSelected(option) },
-                            content = {
-                                RadioButton(selected = currentSort == option, onClick = { onSortSelected(option) })
-                                Spacer(Modifier.width(8.dp))
-                                Text(stringResource(option.label))
+                )
+                ExposedDropdownMenu(
+                    expanded = sortExpanded,
+                    onDismissRequest = { sortExpanded = false }
+                ) {
+                    SortOption.entries.forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text(stringResource(id = option.label)) },
+                            onClick = {
+                                selectedSort = option
+                                sortExpanded = false
                             }
                         )
                     }
                 }
-                Spacer(Modifier.height(24.dp))
-                // APPLY BUTTON
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Buttons Row
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                OutlinedButton (
+                    onClick = {
+                        selectedFilter = currentFilter
+                        selectedSort = currentSort
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Reset")
+                }
+
                 Button(
-                    onClick = onApply,
-                    modifier = Modifier.fillMaxWidth()
-                ) { Text("Apply") }
+                    onClick = {
+                        /*onFilterSelected(selectedFilter)
+                        onSortSelected(selectedSort)*/
+                        onApply()
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Apply")
+                }
             }
         }
-    )
+    }
 }
+@OptIn(ExperimentalMaterial3Api::class) @Preview @Composable fun Preview() = PartContentModalBottomSheet(
+    sheetState = rememberModalBottomSheetState(),
+    currentFilter = FilterOption.RoleTypeAll,
+    currentSort = SortOption.RoleLabelAsc,
+    onApply = {},
+    onDismiss = {}
+)
 @Composable private fun PartContentUserRoleList(
     lazyPagingItems: LazyPagingItems<RoleEntity>,
     formRoleSelection: FormRoleSelectionState,

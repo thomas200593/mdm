@@ -7,13 +7,14 @@ import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
 import com.thomas200593.mdm.features.management.role.entity.RoleType
 import com.thomas200593.mdm.features.management.user.entity.UserEntity
+import com.thomas200593.mdm.features.management.user_role.entity.FilterOption
 
 data class FormRoleSelectionState(
     val fldUser : UserEntity? = null,
     val fldSelectedRole : RoleEntity? = null,
     val fldSearchQuery: String = Constants.STR_EMPTY,
     val fldLayoutMode: LayoutMode = LayoutMode.List,
-    val fldCurrentFilter : RoleType? = null, // null = All
+    val fldCurrentFilter : FilterOption = FilterOption.RoleTypeAll, // null = All
     val fldCurrentSort : SortOption = SortOption.LabelAsc, // default sort
     val btnProceedVisible : Boolean = false,
     val btnProceedEnabled : Boolean = false
@@ -22,12 +23,16 @@ data class FormRoleSelectionState(
         user : UserEntity? = null,
         selectedRole : RoleEntity? = null,
         searchQuery : String? = null,
-        layoutMode : LayoutMode? = null
+        layoutMode : LayoutMode? = null,
+        filterOption: FilterOption? = null,
+        sortOption: SortOption? = null
     ) = copy(
         fldUser = user ?: fldUser,
         fldSelectedRole = selectedRole,
         fldSearchQuery = searchQuery ?: fldSearchQuery,
-        fldLayoutMode = layoutMode ?: fldLayoutMode
+        fldLayoutMode = layoutMode ?: fldLayoutMode,
+        fldCurrentFilter = filterOption ?: fldCurrentFilter,
+        fldCurrentSort = sortOption ?: fldCurrentSort
     )
     fun validateSelection(session : SessionEntity) = copy(btnProceedVisible = canProceed(session), btnProceedEnabled = canProceed(session))
     private fun canProceed(session: SessionEntity) = fldUser?.uid == session.userId && fldSelectedRole != null
