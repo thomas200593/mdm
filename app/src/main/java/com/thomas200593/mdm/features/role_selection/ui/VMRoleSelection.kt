@@ -159,6 +159,10 @@ import javax.inject.Inject
         //execute uc with throw with param loaded.session & form.selected
         //if else
         val loaded = uiState.value.screenData as? ScreenDataState.Loaded ?: return@launch
+        if(uiState.value.resultSetUserRole == ResultSetUserRoleState.Loading) return@launch
         updateForm { it.setValue(selectedRole = role) }
+        val frozenForm = formRoleSelection.disableInputs()
+        /*TODO Build DTO*/
+        formRoleSelection = frozenForm
     }
 }
