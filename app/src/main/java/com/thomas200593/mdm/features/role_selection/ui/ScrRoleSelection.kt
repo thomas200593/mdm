@@ -4,13 +4,10 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,42 +16,29 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Assistant
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.GridOn
 import androidx.compose.material.icons.filled.ImagesearchRoller
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -63,8 +47,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
@@ -88,8 +70,7 @@ import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.core.ui.component.text_field.SearchToolBar
 import com.thomas200593.mdm.features.auth.nav.navToAuth
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
-import com.thomas200593.mdm.features.management.user_role.entity.FilterOption
-import com.thomas200593.mdm.features.management.user_role.entity.SortOption
+import com.thomas200593.mdm.features.management.role.ui.RoleInfoDialog
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
 import com.thomas200593.mdm.features.role_selection.ui.state.FormRoleSelectionState
@@ -145,8 +126,8 @@ import java.io.File
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun HandleDialogs(
     scrGraph : ScrGraphs.RoleSelection,
     dialog : DialogState,
-    formRoleSelection: FormRoleSelectionState,
-    onTopBarEvent: (Events.TopBar) -> Unit
+    onTopBarEvent: (Events.TopBar) -> Unit,
+    onBottomBarEvent: (Events.BottomBar) -> Unit
 ) = when (dialog) {
     is DialogState.None -> Unit
     is DialogState.ScrDescDialog -> ScrInfoDialog(
@@ -161,18 +142,9 @@ import java.io.File
         error = dialog.error,
         btnConfirmText = stringResource(R.string.str_sign_in)
     )
-    is DialogState.ModalBottomSheet -> PartContentModalBottomSheet(
-        currentFilter = formRoleSelection.fldCurrentFilter,
-        currentSort = when (formRoleSelection.fldCurrentSort) {
-            FormRoleSelectionState.Companion.SortOption.LabelAsc -> SortOption.RoleLabelAsc
-            FormRoleSelectionState.Companion.SortOption.LabelDesc -> SortOption.RoleLabelDesc
-            FormRoleSelectionState.Companion.SortOption.TypeAsc -> SortOption.RoleTypeAsc
-            FormRoleSelectionState.Companion.SortOption.TypeDesc -> SortOption.RoleTypeDesc
-            FormRoleSelectionState.Companion.SortOption.CodeAsc -> SortOption.RoleCodeAsc
-            FormRoleSelectionState.Companion.SortOption.CodeDesc -> SortOption.RoleCodeDesc
-        },
-        onApply = { },
-        onDismiss = { }
+    is DialogState.RoleInfo -> RoleInfoDialog(
+        onDismissRequest = { onBottomBarEvent(Events.BottomBar.BtnRoleInfo.Dismissed) },
+        role = dialog.role
     )
 }
 @Composable private fun ScreenContent(
@@ -185,8 +157,8 @@ import java.io.File
     onBottomBarEvent: (Events.BottomBar) -> Unit
 ) {
     HandleDialogs(
-        scrGraph = scrGraph, dialog = dialog, onTopBarEvent = onTopBarEvent,
-        formRoleSelection = formRoleSelection
+        scrGraph = scrGraph, dialog = dialog,
+        onTopBarEvent = onTopBarEvent, onBottomBarEvent = onBottomBarEvent
     )
     Scaffold(
         modifier = Modifier.imePadding(),
@@ -207,8 +179,7 @@ import java.io.File
     )
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
-    scrGraph: ScrGraphs.RoleSelection,
-    onTopBarEvent: (Events.TopBar) -> Unit
+    scrGraph: ScrGraphs.RoleSelection, onTopBarEvent: (Events.TopBar) -> Unit
 ) = TopAppBar(
     title = { Text(stringResource(scrGraph.title)) },
     actions = {
@@ -223,9 +194,7 @@ import java.io.File
     }
 )
 @Composable private fun SectionContent (
-    paddingValues : PaddingValues,
-    screenData : ScreenDataState.Loaded,
-    formRoleSelection : FormRoleSelectionState,
+    paddingValues : PaddingValues, screenData : ScreenDataState.Loaded, formRoleSelection : FormRoleSelectionState,
     onFormEvent: (Events.Content.Form) -> Unit
 ) = Surface(
     modifier = Modifier.padding(paddingValues).fillMaxSize(),
@@ -236,7 +205,10 @@ import java.io.File
             when {
                 screenData.userRolesCount <= 0 -> PartContentUserRoleEmpty()
                 else -> {
-                    PartContentUserRoleToolbar(formRoleSelection = formRoleSelection, onFormEvent = onFormEvent)
+                    PartContentUserRoleToolbar(
+                        formRoleSelection = formRoleSelection,
+                        onFormEvent = onFormEvent
+                    )
                     when {
                         lazyPagingItems.itemCount <= 0 -> PartContentUserRoleSearchNoResult(formRoleSelection.fldSearchQuery)
                         else -> PartContentUserRoleResult(
@@ -251,9 +223,7 @@ import java.io.File
     ) }
 )
 @Composable private fun PartContentUserRoleEmpty() = Column (
-    modifier = Modifier
-        .fillMaxSize()
-        .padding(Constants.Dimens.dp16),
+    modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center,
     content = { PanelCard(
@@ -269,18 +239,13 @@ import java.io.File
     ) }
 )
 @Composable private fun PartContentUserRoleSearchNoResult(query: String) = Column (
-    modifier = Modifier
-        .fillMaxSize()
-        .padding(Constants.Dimens.dp16),
+    modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center,
     content = { PanelCard(
         modifier = Modifier.padding(Constants.Dimens.dp16), title = {
-            Icon(
-                modifier = Modifier.fillMaxWidth(),
-                imageVector = Icons.Default.ImagesearchRoller,
-                contentDescription = null
-            )
+            Icon(modifier = Modifier.fillMaxWidth(),
+                imageVector = Icons.Default.ImagesearchRoller, contentDescription = null)
             HorizontalDivider()
         },
         content = { TxtMdBody("No roles found for keyword '$query'.") }
@@ -290,7 +255,7 @@ import java.io.File
     formRoleSelection: FormRoleSelectionState,
     onFormEvent: (Events.Content.Form) -> Unit
 ) = Row (
-    modifier = Modifier.fillMaxWidth(),
+    modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp4),
     horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically,
     content = {
@@ -298,19 +263,29 @@ import java.io.File
             query = formRoleSelection.fldSearchQuery,
             onQueryChanged = { onFormEvent(Events.Content.Form.SearchBar.QueryChanged(it)) },
             onSearchTriggered = { onFormEvent(Events.Content.Form.SearchBar.QueryChanged(it)) },
-            modifier = Modifier.weight(.9f)
+            modifier = Modifier.weight(1f)
         )
         IconButton(
-            onClick = { onFormEvent(Events.Content.Form.ModalBottomSheetSortFilter.Clicked) },
+            onClick = { onFormEvent( when (formRoleSelection.fldLayoutMode) {
+                FormRoleSelectionState.Companion.LayoutMode.List -> Events.Content.Form.LayoutType.Grid
+                FormRoleSelectionState.Companion.LayoutMode.Grid -> Events.Content.Form.LayoutType.List
+            } ) },
+            content = { Icon(imageVector = when (formRoleSelection.fldLayoutMode) {
+                FormRoleSelectionState.Companion.LayoutMode.List -> Icons.AutoMirrored.Filled.List
+                FormRoleSelectionState.Companion.LayoutMode.Grid -> Icons.Default.GridOn },
+                contentDescription = null) },
+            modifier = Modifier
+        )
+        IconButton(
+            onClick = { onFormEvent(Events.Content.Form.ModalBottomSheet.Clicked) },
             content = { Icon(imageVector = Icons.Default.FilterList, contentDescription = null) },
-            modifier = Modifier.weight(.1f)
+            modifier = Modifier
         )
     }
 )
 @Composable private fun PartContentUserRoleResult(
-    formRoleSelection: FormRoleSelectionState,
-    onFormEvent: (Events.Content.Form) -> Unit,
-    lazyPagingItems: LazyPagingItems<RoleEntity>
+    formRoleSelection: FormRoleSelectionState, lazyPagingItems: LazyPagingItems<RoleEntity>,
+    onFormEvent: (Events.Content.Form) -> Unit
 ) {
     when(formRoleSelection.fldLayoutMode) {
         FormRoleSelectionState.Companion.LayoutMode.List -> PartContentUserRoleList(
@@ -325,144 +300,8 @@ import java.io.File
         )
     }
 }
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun PartContentModalBottomSheet(
-    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-    currentFilter: FilterOption,
-    currentSort: SortOption,
-    /*onFilterSelected: (FilterOption) -> Unit,
-    onSortSelected: (SortOption) -> Unit,*/
-    onApply: () -> Unit,
-    onDismiss: () -> Unit
-) {
-    var sortExpanded by remember { mutableStateOf(false) }
-
-    // Internal selection state
-    var selectedFilter by remember { mutableStateOf(currentFilter) }
-    var selectedSort by remember { mutableStateOf(currentSort) }
-
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        dragHandle = { BottomSheetDefaults.DragHandle() }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            // Filter Section
-            Text(
-                text = "Filter by Role Type",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                FilterOption.entries.forEach { option ->
-                    FilterChip(
-                        selected = selectedFilter == option,
-                        onClick = { selectedFilter = option },
-                        label = {
-                            Text(
-                                text = when (option) {
-                                    FilterOption.RoleTypeAll -> "All"
-                                    FilterOption.RoleTypeBuiltIn -> "Built-in"
-                                    FilterOption.RoleTypeUserDefined -> "User-defined"
-                                }
-                            )
-                        }
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Sort Section
-            Text(
-                text = "Sort by",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
-            ExposedDropdownMenuBox(
-                expanded = sortExpanded,
-                onExpandedChange = { sortExpanded = !sortExpanded }
-            ) {
-                TextButton (
-                    modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true).fillMaxWidth(),
-                    onClick = { sortExpanded = true },
-                    enabled = true,
-                    content = {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
-                            verticalAlignment = Alignment.CenterVertically,
-                            content = { TxtMdLabel(text = stringResource(id = selectedSort.label)) }
-                        )
-                    }
-                )
-                ExposedDropdownMenu(
-                    expanded = sortExpanded,
-                    onDismissRequest = { sortExpanded = false }
-                ) {
-                    SortOption.entries.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(stringResource(id = option.label)) },
-                            onClick = {
-                                selectedSort = option
-                                sortExpanded = false
-                            }
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Buttons Row
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                OutlinedButton (
-                    onClick = {
-                        selectedFilter = currentFilter
-                        selectedSort = currentSort
-                    },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("Reset")
-                }
-
-                Button(
-                    onClick = {
-                        /*onFilterSelected(selectedFilter)
-                        onSortSelected(selectedSort)*/
-                        onApply()
-                    },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("Apply")
-                }
-            }
-        }
-    }
-}
-@OptIn(ExperimentalMaterial3Api::class) @Preview @Composable fun Preview() = PartContentModalBottomSheet(
-    sheetState = rememberModalBottomSheetState(),
-    currentFilter = FilterOption.RoleTypeAll,
-    currentSort = SortOption.RoleLabelAsc,
-    onApply = {},
-    onDismiss = {}
-)
 @Composable private fun PartContentUserRoleList(
-    lazyPagingItems: LazyPagingItems<RoleEntity>,
-    formRoleSelection: FormRoleSelectionState,
+    lazyPagingItems: LazyPagingItems<RoleEntity>, formRoleSelection: FormRoleSelectionState,
     onFormEvent: (Events.Content.Form) -> Unit
 ) = LazyColumn (
     modifier = Modifier.fillMaxSize(),
@@ -475,8 +314,7 @@ fun PartContentModalBottomSheet(
     }
 )
 @Composable private fun PartContentUserRoleGrid(
-    lazyPagingItems: LazyPagingItems<RoleEntity>,
-    formRoleSelection: FormRoleSelectionState,
+    lazyPagingItems: LazyPagingItems<RoleEntity>, formRoleSelection: FormRoleSelectionState,
     onFormEvent: (Events.Content.Form) -> Unit
 ) = LazyVerticalGrid (
     modifier = Modifier.fillMaxSize(),
@@ -490,15 +328,12 @@ fun PartContentModalBottomSheet(
     }
 )
 @Composable private fun ItemListRole(
-    role: RoleEntity,
-    formRoleSelection: FormRoleSelectionState,
+    role: RoleEntity, formRoleSelection: FormRoleSelectionState,
     onFormEvent : (Events.Content.Form) -> Unit
 ) = Card (
-    modifier = Modifier
-        .padding(Constants.Dimens.dp4)
-        .clickable(
-            onClick = { onFormEvent(Events.Content.Form.SelectedRole(role)) }
-        ),
+    modifier = Modifier.padding(Constants.Dimens.dp4).clickable(
+        onClick = { onFormEvent(Events.Content.Form.SelectedRole(role)) }
+    ),
     border = BorderStroke(
         width = Constants.Dimens.dp1,
         color =
@@ -514,9 +349,7 @@ fun PartContentModalBottomSheet(
             else MaterialTheme.colorScheme.onTertiaryContainer
     ),
     content = { Row (
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(Constants.Dimens.dp8),
+        modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp8),
         horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
         verticalAlignment = Alignment.CenterVertically,
         content = {
@@ -550,8 +383,9 @@ fun PartContentModalBottomSheet(
                     Card(
                         modifier = Modifier, border = BorderStroke(
                             width = Constants.Dimens.dp1,
-                            color = if (formRoleSelection.fldSelectedRole == role) MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.outline
+                            color =
+                                if (formRoleSelection.fldSelectedRole == role) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.outline
                         ),
                         shape = MaterialTheme.shapes.extraSmall,
                         content = { TxtMdLabel(
@@ -565,15 +399,12 @@ fun PartContentModalBottomSheet(
     ) }
 )
 @Composable private fun ItemGridRole(
-    role : RoleEntity,
-    formRoleSelection : FormRoleSelectionState,
+    role : RoleEntity, formRoleSelection : FormRoleSelectionState,
     onFormEvent : (Events.Content.Form) -> Unit
 ) = Card(
-    modifier = Modifier
-        .padding(Constants.Dimens.dp8)
-        .clickable(
-            onClick = { onFormEvent(Events.Content.Form.SelectedRole(role)) }
-        ),
+    modifier = Modifier.padding(Constants.Dimens.dp8).clickable(
+        onClick = { onFormEvent(Events.Content.Form.SelectedRole(role)) }
+    ),
     shape = MaterialTheme.shapes.extraSmall,
     border = BorderStroke(
         width = Constants.Dimens.dp1,
@@ -621,20 +452,22 @@ fun PartContentModalBottomSheet(
     ) }
 )
 @Composable private fun SectionBottomBar(
-    formRoleSelection: FormRoleSelectionState,
-    onBottomBarEvent : (Events.BottomBar) -> Unit
+    formRoleSelection: FormRoleSelectionState, onBottomBarEvent : (Events.BottomBar) -> Unit
 ) = BottomAppBar(
     modifier = Modifier.fillMaxWidth(),
     content = { Row(
         modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
         content = {
             IconButton(
-                onClick = { onBottomBarEvent(Events.BottomBar.BtnRoleInfo.Clicked(formRoleSelection.fldSelectedRole)) },
+                onClick = { formRoleSelection.fldSelectedRole
+                    ?.let { onBottomBarEvent(Events.BottomBar.BtnRoleInfo.Clicked(it)) } },
                 content = { Icon(imageVector = Icons.Default.Assistant, contentDescription = null) }
             )
             Button(
-                onClick = { onBottomBarEvent(Events.BottomBar.BtnConfirmRole.Clicked(formRoleSelection.fldSelectedRole)) },
+                onClick = { formRoleSelection.fldSelectedRole
+                    ?.let { onBottomBarEvent(Events.BottomBar.BtnConfirmRole.Clicked(it)) } },
                 content = { Text(stringResource(R.string.str_select)) },
+                shape = MaterialTheme.shapes.extraSmall,
                 modifier = Modifier.weight(1f)
             )
         }

@@ -31,17 +31,24 @@ sealed interface Events {
             sealed interface SearchBar : Form {
                 data class QueryChanged(val query : String) : SearchBar
             }
-            sealed interface ModalBottomSheetSortFilter : Form {
-                data object Clicked : ModalBottomSheetSortFilter
+            sealed interface LayoutType : Form {
+                data object List : LayoutType
+                data object Grid : LayoutType
+            }
+            sealed interface ModalBottomSheet : Form {
+                data object Clicked : ModalBottomSheet
+                data object Dismissed : ModalBottomSheet
+                data object Applied : ModalBottomSheet
             }
         }
     }
     sealed interface BottomBar : Events {
         sealed interface BtnConfirmRole : BottomBar {
-            data class Clicked(val role: RoleEntity?) : BtnConfirmRole
+            data class Clicked(val role: RoleEntity) : BtnConfirmRole
         }
         sealed interface BtnRoleInfo : BottomBar {
-            data class Clicked(val role: RoleEntity?) : BtnRoleInfo
+            data class Clicked(val role: RoleEntity) : BtnRoleInfo
+            data object Dismissed : BtnRoleInfo
         }
     }
 }

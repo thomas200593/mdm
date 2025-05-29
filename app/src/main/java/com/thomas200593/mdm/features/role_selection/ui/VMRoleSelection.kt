@@ -9,7 +9,6 @@ import com.thomas200593.mdm.features.management.role.entity.RoleEntity
 import com.thomas200593.mdm.features.management.user_role.domain.UCGetUserRole
 import com.thomas200593.mdm.features.management.user_role.domain.UCGetUserRoleCount
 import com.thomas200593.mdm.features.management.user_role.entity.SortOption
-import com.thomas200593.mdm.features.management.user_role.repository.RepoUserRole
 import com.thomas200593.mdm.features.role_selection.domain.UCGetScreenData
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
@@ -29,8 +28,7 @@ import javax.inject.Inject
 @HiltViewModel class VMRoleSelection @Inject constructor(
     private val ucGetScreenData: UCGetScreenData,
     private val ucGetUserRole: UCGetUserRole,
-    private val ucGetUserRoleCount: UCGetUserRoleCount,
-    private val repoUserRole: RepoUserRole
+    private val ucGetUserRoleCount: UCGetUserRoleCount
 ) : ViewModel() {
     data class UiState(
         val screenData : ScreenDataState = ScreenDataState.Loading,
@@ -49,19 +47,24 @@ import javax.inject.Inject
     fun onTopBarEvent(event: Events.TopBar) = when (event) {
         is Events.TopBar.BtnScrDesc.Clicked -> updateDialog { DialogState.ScrDescDialog }
         is Events.TopBar.BtnScrDesc.Dismissed -> updateDialog { DialogState.None }
-        is Events.TopBar.BtnSignOut.Clicked -> {/*TODO*/}
+        is Events.TopBar.BtnSignOut.Clicked -> handleSignOut()
     }
     fun onFormEvent(event: Events.Content.Form) = when (event) {
         is Events.Content.Form.SelectedRole -> handleRoleSelection(event.role)
-        is Events.Content.Form.ModalBottomSheetSortFilter.Clicked -> updateDialog { DialogState.ModalBottomSheet }
         is Events.Content.Form.SearchBar.QueryChanged -> {
             updateForm { it.setValue(searchQuery = event.query, selectedRole = null) }
             handleSearchBarQueryField()
         }
+        is Events.Content.Form.LayoutType.Grid -> handleLayoutType(FormRoleSelectionState.Companion.LayoutMode.Grid)
+        is Events.Content.Form.LayoutType.List -> handleLayoutType(FormRoleSelectionState.Companion.LayoutMode.List)
+        is Events.Content.Form.ModalBottomSheet.Clicked -> {/*TODO*/}
+        is Events.Content.Form.ModalBottomSheet.Applied -> {/*TODO*/}
+        is Events.Content.Form.ModalBottomSheet.Dismissed -> {/*TODO*/}
     }
     fun onBottomBarEvent(event: Events.BottomBar) = when (event) {
         is Events.BottomBar.BtnConfirmRole.Clicked -> {/*TODO*/}
-        is Events.BottomBar.BtnRoleInfo.Clicked -> {/*TODO*/}
+        is Events.BottomBar.BtnRoleInfo.Clicked -> updateDialog { DialogState.RoleInfo(event.role) }
+        is Events.BottomBar.BtnRoleInfo.Dismissed -> updateDialog { DialogState.None }
     }
     private fun handleSessionLoading() {
         formRoleSelection = FormRoleSelectionState()
@@ -116,6 +119,8 @@ import javax.inject.Inject
         val session = loadedState.sessionData ?: return
         updateForm { it.setValue(selectedRole = role).validateSelection(session) }
     }
+    private fun handleLayoutType(layoutMode: FormRoleSelectionState.Companion.LayoutMode) =
+        updateForm { it.setValue(layoutMode = layoutMode) }
     private fun updateDialog(transform: (DialogState) -> DialogState) =
         uiState.update { it.copy(dialog = transform(it.dialog)) }
     private fun updateForm(transform: (FormRoleSelectionState) -> FormRoleSelectionState) =
@@ -148,7 +153,7 @@ import javax.inject.Inject
             }
         }
     }
-    private fun testDelUserRoles() = viewModelScope.launch {
-        repoUserRole.deleteAll()
-    }
+    private fun handleSignOut() = uiState.update { it.copy(
+        screenData = ScreenDataState.Loading, dialog = DialogState.None, resultSetUserRole = ResultSetUserRoleState.Idle
+    ) }
 }
