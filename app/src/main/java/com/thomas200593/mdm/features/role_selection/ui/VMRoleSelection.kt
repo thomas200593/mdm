@@ -10,6 +10,8 @@ import com.thomas200593.mdm.features.management.user_role.domain.UCGetUserRole
 import com.thomas200593.mdm.features.management.user_role.domain.UCGetUserRoleCount
 import com.thomas200593.mdm.features.management.user_role.entity.SortOption
 import com.thomas200593.mdm.features.role_selection.domain.UCGetScreenData
+import com.thomas200593.mdm.features.role_selection.domain.UCSetUserRole
+import com.thomas200593.mdm.features.role_selection.entity.DTORoleSelection
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
 import com.thomas200593.mdm.features.role_selection.ui.state.FormRoleSelectionState
@@ -28,7 +30,8 @@ import javax.inject.Inject
 @HiltViewModel class VMRoleSelection @Inject constructor(
     private val ucGetScreenData: UCGetScreenData,
     private val ucGetUserRole: UCGetUserRole,
-    private val ucGetUserRoleCount: UCGetUserRoleCount
+    private val ucGetUserRoleCount: UCGetUserRoleCount,
+    private val ucSetUserRole: UCSetUserRole
 ) : ViewModel() {
     data class UiState(
         val screenData : ScreenDataState = ScreenDataState.Loading,
@@ -161,8 +164,14 @@ import javax.inject.Inject
         val loaded = uiState.value.screenData as? ScreenDataState.Loaded ?: return@launch
         if(uiState.value.resultSetUserRole == ResultSetUserRoleState.Loading) return@launch
         updateForm { it.setValue(selectedRole = role) }
-        val frozenForm = formRoleSelection.disableInputs()
-        /*TODO Build DTO*/
+        val frozenForm = formRoleSelection.disableInputs()/*TODO*/
         formRoleSelection = frozenForm
+        val dto = DTORoleSelection(
+            user = loaded.userData,
+            session = loaded.sessionData,
+            role = formRoleSelection.fldSelectedRole
+        )
+        uiState.update { it.copy(resultSetUserRole = ResultSetUserRoleState.Loading) }
+        ucSetUserRole.invoke(dto)
     }
 }

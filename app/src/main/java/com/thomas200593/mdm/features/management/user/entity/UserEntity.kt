@@ -6,8 +6,9 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.thomas200593.mdm.core.data.local.database.entity_common.AuditTrail
 import com.thomas200593.mdm.core.design_system.base_class.BaseEntity
+import kotlinx.serialization.Serializable
 
-@Entity(
+@Serializable @Entity(
     tableName = "user",
     indices = [Index(value = ["email"], unique = true)] // Ensures email is unique
 )
