@@ -85,10 +85,8 @@ import kotlinx.coroutines.launch
 ) = when (uiState.screenData) {
     is ScreenDataState.Loading -> ScrLoading(label = scrGraph.title)
     is ScreenDataState.Loaded -> ScreenContent(
-        screenData = uiState.screenData,
-        formOnboarding = formOnboarding,
-        onTopBarEvent = onTopBarEvent,
-        onBottomBarEvent = onBottomBarEvent
+        screenData = uiState.screenData, formOnboarding = formOnboarding,
+        onTopBarEvent = onTopBarEvent, onBottomBarEvent = onBottomBarEvent
     )
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun ScreenContent(
@@ -96,17 +94,14 @@ import kotlinx.coroutines.launch
     onTopBarEvent: (Events.TopBar) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit
 ) = Scaffold(
     topBar = { SectionTopBar(
-        confCommon = screenData.confCommon,
-        languages = screenData.languages,
+        confCommon = screenData.confCommon, languages = screenData.languages,
         onTopBarEvent = onTopBarEvent
     ) },
     content = { SectionContent(
-        paddingValues = it,
-        currentPage = screenData.onboardingPages[formOnboarding.listCurrentIndex]
+        paddingValues = it, currentPage = screenData.onboardingPages[formOnboarding.listCurrentIndex]
     ) },
     bottomBar = { SectionBottomBar(
-        currentIndex = formOnboarding.listCurrentIndex,
-        maxIndex = formOnboarding.listMaxIndex,
+        currentIndex = formOnboarding.listCurrentIndex, maxIndex = formOnboarding.listMaxIndex,
         onBottomBarEvents = onBottomBarEvent
     ) }
 )
@@ -114,23 +109,16 @@ import kotlinx.coroutines.launch
     confCommon: Common, languages: List<Language>, onTopBarEvent: (Events.TopBar) -> Unit
 ) = TopAppBar(
     title = {}, actions = { BtnConfLang(
-        languages = languages,
-        onSelectLanguage = { onTopBarEvent(Events.TopBar.BtnLanguage.Selected(it)) },
-        languageIcon = confCommon.localization.language.country.flag
+        languages = languages, languageIcon = confCommon.localization.language.country.flag,
+        onSelectLanguage = { onTopBarEvent(Events.TopBar.BtnLanguage.Selected(it)) }
     ) }
 )
 @Composable private fun SectionContent(paddingValues: PaddingValues, currentPage: Onboarding) = Surface(
     modifier = Modifier.padding(paddingValues), content = { Column(
         modifier = Modifier.fillMaxSize(),
         content = {
-            PartBanner(
-                modifier = Modifier.fillMaxWidth().weight(1.0f),
-                currentPage = currentPage
-            )
-            PartDetail(
-                modifier = Modifier.weight(1.0f).padding(16.dp),
-                currentPage = currentPage
-            )
+            PartBanner(modifier = Modifier.fillMaxWidth().weight(1.0f), currentPage = currentPage)
+            PartDetail(modifier = Modifier.weight(1.0f).padding(16.dp), currentPage = currentPage)
         }
     ) }
 )
