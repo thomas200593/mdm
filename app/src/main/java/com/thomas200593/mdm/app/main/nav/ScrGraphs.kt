@@ -28,17 +28,17 @@ import kotlinx.serialization.Serializable
         @StringRes val description: Int = R.string.str_role_selection
     )
     @Serializable sealed class DestTopLevel(
-        @DrawableRes val iconRes: Int,
+        val iconRes: AppIcons.DestTopLevel,
         @StringRes val title: Int,
         @StringRes val description: Int
     ) {
         @Serializable data object Dashboard : DestTopLevel(
-            iconRes = AppIcons.DestTopLevel.dashboard,
+            iconRes = AppIcons.DestTopLevel.Dashboard,
             title = R.string.str_dashboard,
             description = R.string.str_dashboard_desc
         )
         @Serializable data object UserProfile : DestTopLevel(
-            iconRes = AppIcons.DestTopLevel.user_profile,
+            iconRes = AppIcons.DestTopLevel.UserProfile,
             title = R.string.str_user_profile,
             description = R.string.str_user_profile_desc
         )

@@ -28,9 +28,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -82,13 +80,13 @@ import kotlin.reflect.KClass
                     onClick = { stateApp.navToDestTopLevel(dest) },
                     icon = {
                         Icon(
-                            imageVector = ImageVector.vectorResource(dest.scrGraphs.iconRes),
+                            imageVector = AppIcons.mapTopLevelToMaterialIcons(dest.scrGraphs.iconRes),
                             contentDescription = null
                         )
                     },
                     selectedIcon = {
                         Icon(
-                            imageVector = ImageVector.vectorResource(dest.scrGraphs.iconRes),
+                            imageVector = AppIcons.mapTopLevelToMaterialIcons(dest.scrGraphs.iconRes),
                             contentDescription = null
                         )
                     },
@@ -125,7 +123,6 @@ import kotlin.reflect.KClass
                             modifier = modifier,
                             colors = TopAppBarDefaults.topAppBarColors(),
                             navBtnOnClick = { /*TODO*/ },
-                            actBtnIcon = AppIcons.App.icon,
                             actBtnOnClick = { /*TODO*/ }
                         )
                     }
