@@ -16,9 +16,7 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaul
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItemColors
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldValue
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScope
-import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -98,8 +96,7 @@ import androidx.compose.ui.unit.dp
     modifier: Modifier = Modifier,
     navSuiteItems: NavSuiteScope.() -> Unit,
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
-    content: @Composable () -> Unit,
-    state: NavigationSuiteScaffoldValue
+    content: @Composable () -> Unit
 ) {
     val layoutType = NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(windowAdaptiveInfo)
     val navSuiteItemColors = NavigationSuiteItemColors(
@@ -134,8 +131,7 @@ import androidx.compose.ui.unit.dp
             navigationRailContainerColor = Color.Transparent
         ),
         modifier = modifier,
-        content = content,
-        state = rememberNavigationSuiteScaffoldState(state)
+        content = content
     )
 }
 class NavSuiteScope internal constructor(

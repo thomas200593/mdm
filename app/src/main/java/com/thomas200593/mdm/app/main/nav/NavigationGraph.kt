@@ -10,4 +10,5 @@ import kotlinx.serialization.Serializable
     @Serializable data object GraphAuth
     @Serializable data object GraphRoleSelection
     @Serializable data object GraphDashboard
+    @Serializable data object GraphUserProfile
 }

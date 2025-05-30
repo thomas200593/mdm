@@ -12,6 +12,7 @@ import com.thomas200593.mdm.features.introduction.initialization.nav.navGraphIni
 import com.thomas200593.mdm.features.introduction.onboarding.nav.navGraphOnboarding
 import com.thomas200593.mdm.features.role_selection.nav.navGraphRoleSelection
 import com.thomas200593.mdm.features.tld.dashboard.nav.navGraphDashboard
+import com.thomas200593.mdm.features.tld.user_profile.nav.navGraphUserProfile
 
 fun NavGraphBuilder.navGraphBootstrap() {
     navigation<NavigationGraph.GraphBootstrap>(
@@ -24,6 +25,7 @@ fun NavGraphBuilder.navGraphBootstrap() {
             navGraphRoleSelection()
             //Group to TLD
             navGraphDashboard()
+            navGraphUserProfile()
         }
     )
 }

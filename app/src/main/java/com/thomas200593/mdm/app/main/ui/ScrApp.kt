@@ -22,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -66,12 +65,8 @@ import kotlin.reflect.KClass
     snackBarHostState: SnackbarHostState,
 ) {
     val currentDestination = stateApp.currentDestination
-    val state =
-        if(stateApp.currentTopLevelDestination != null) NavigationSuiteScaffoldValue.Visible
-        else NavigationSuiteScaffoldValue.Hidden
     AppNavSuiteScaffold(
         modifier = modifier,
-        state = state,
         navSuiteItems = {
             stateApp.destTopLevel.forEach { dest ->
                 val selected = currentDestination.isRouteInHierarchy(dest.baseRoute)
