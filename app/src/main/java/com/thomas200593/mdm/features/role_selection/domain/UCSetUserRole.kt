@@ -29,7 +29,6 @@ class UCSetUserRole @Inject constructor(
             if(!list.contains(dto.role)) return Result.failure(Error.Data.NotFoundError(message = "User ${dto.user.email} has no role ${dto.role.label}"))
         }.getOrElse { throw Error.Database.DaoQueryError(message = it.message, cause = it.cause) }
         repoSession.isValid(dto.session).getOrElse { throw Error.Data.ValidationError(message = "User session ${dto.user.email} is expired / invalid") }
-        //update session role, else cleanup, then throw
         val updateResult = repoSession.update(dto.session.copy(currentRoleCode = dto.role.roleCode)).getOrThrow()
         return if (updateResult > 0) Result.success(dto)
         else Result.failure(Error.Database.DaoUpdateError(message = "Failure during update role '${dto.role.label}' for user ${dto.user.email}"))
