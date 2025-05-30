@@ -30,7 +30,7 @@ data class FormRoleSelectionState(
         fldCurrentSort = sortOption ?: fldCurrentSort
     )
     fun validateSelection() = copy(btnProceedVisible = canProceed, btnProceedEnabled = canProceed)
-    fun disableInputs() = copy(/*TODO*/)
+    fun disableInputs() = copy(btnProceedVisible = false, btnProceedEnabled = false)
     companion object {
         enum class LayoutMode { List, Grid }
         enum class SortOption(@StringRes val label : Int) {

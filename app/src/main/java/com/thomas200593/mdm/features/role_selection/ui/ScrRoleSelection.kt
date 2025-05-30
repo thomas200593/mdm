@@ -37,6 +37,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -69,11 +70,13 @@ import com.thomas200593.mdm.core.ui.component.screen.InnerCircularProgressIndica
 import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.core.ui.component.text_field.SearchToolBar
 import com.thomas200593.mdm.features.auth.nav.navToAuth
+import com.thomas200593.mdm.features.bootstrap.nav.navToBootstrap
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
 import com.thomas200593.mdm.features.management.role.ui.RoleInfoDialog
 import com.thomas200593.mdm.features.role_selection.ui.events.Events
 import com.thomas200593.mdm.features.role_selection.ui.state.DialogState
 import com.thomas200593.mdm.features.role_selection.ui.state.FormRoleSelectionState
+import com.thomas200593.mdm.features.role_selection.ui.state.ResultSetUserRoleState
 import com.thomas200593.mdm.features.role_selection.ui.state.ScreenDataState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -101,7 +104,8 @@ import java.io.File
             else -> { vm.onTopBarEvent(it) }
         } },
         onFormEvent = { vm.onFormEvent(it) },
-        onBottomBarEvent = { vm.onBottomBarEvent(it) }
+        onBottomBarEvent = { vm.onBottomBarEvent(it) },
+        onUserRoleSetCallback = { vm.onUserRoleSetCallBackEvent(it).also { coroutineScope.launch { stateApp.navController.navToBootstrap() } } }
     )
 }
 @Composable private fun ScrRoleSelection(
@@ -110,17 +114,20 @@ import java.io.File
     formRoleSelection : FormRoleSelectionState,
     onTopBarEvent: (Events.TopBar) -> Unit,
     onFormEvent: (Events.Content.Form) -> Unit,
-    onBottomBarEvent: (Events.BottomBar) -> Unit
+    onBottomBarEvent: (Events.BottomBar) -> Unit,
+    onUserRoleSetCallback: (Events.Content.UserRoleSetCallback) -> Unit
 ) = when (uiState.screenData) {
     is ScreenDataState.Loading -> ScrLoading()
     is ScreenDataState.Loaded -> ScreenContent(
         scrGraph = scrGraph,
         screenData = uiState.screenData,
         dialog = uiState.dialog,
+        resultSetRole = uiState.resultSetUserRole,
         formRoleSelection = formRoleSelection,
         onTopBarEvent = onTopBarEvent,
         onFormEvent = onFormEvent,
-        onBottomBarEvent = onBottomBarEvent
+        onBottomBarEvent = onBottomBarEvent,
+        onUserRoleSetCallback = onUserRoleSetCallback
     )
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun HandleDialogs(
@@ -148,14 +155,20 @@ import java.io.File
     )
 }
 @Composable private fun ScreenContent(
-    scrGraph : ScrGraphs.RoleSelection,
-    screenData : ScreenDataState.Loaded,
-    dialog : DialogState,
-    formRoleSelection : FormRoleSelectionState,
+    scrGraph: ScrGraphs.RoleSelection,
+    screenData: ScreenDataState.Loaded,
+    dialog: DialogState,
+    resultSetRole: ResultSetUserRoleState,
+    formRoleSelection: FormRoleSelectionState,
     onTopBarEvent: (Events.TopBar) -> Unit,
     onFormEvent: (Events.Content.Form) -> Unit,
-    onBottomBarEvent: (Events.BottomBar) -> Unit
+    onBottomBarEvent: (Events.BottomBar) -> Unit,
+    onUserRoleSetCallback : (Events.Content.UserRoleSetCallback) -> Unit
 ) {
+    LaunchedEffect(
+        key1 = resultSetRole,
+        block = { if (resultSetRole is ResultSetUserRoleState.Success) onUserRoleSetCallback(Events.Content.UserRoleSetCallback.Success) }
+    )
     HandleDialogs(
         scrGraph = scrGraph, dialog = dialog,
         onTopBarEvent = onTopBarEvent, onBottomBarEvent = onBottomBarEvent

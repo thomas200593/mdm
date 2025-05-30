@@ -116,6 +116,10 @@ import kotlinx.coroutines.launch
     onFormAuthEvent: (Events.Content.Form) -> Unit,
     onSignInCallback: (Events.Content.SignInCallback) -> Unit
 ) {
+    LaunchedEffect(
+        key1 = resultSignIn,
+        block = { if (resultSignIn is ResultSignInState.Success) onSignInCallback(Events.Content.SignInCallback.Success) }
+    )
     HandleDialogs(
         scrGraph = scrGraph,
         dialog = dialog,
@@ -126,8 +130,7 @@ import kotlinx.coroutines.launch
             paddingValues = it,
             resultSignIn = resultSignIn,
             formAuth = formAuth,
-            onFormAuthEvent = onFormAuthEvent,
-            onSignInCallback = onSignInCallback
+            onFormAuthEvent = onFormAuthEvent
         ) },
         bottomBar = { SectionBottomBar() }
     )
@@ -146,7 +149,7 @@ import kotlinx.coroutines.launch
 )
 @Composable private fun SectionContent(
     paddingValues: PaddingValues, resultSignIn: ResultSignInState, formAuth: FormAuthState,
-    onFormAuthEvent: (Events.Content.Form) -> Unit, onSignInCallback: (Events.Content.SignInCallback) -> Unit
+    onFormAuthEvent: (Events.Content.Form) -> Unit
 ) = Surface(
     modifier = Modifier.padding(paddingValues), content = {
         LazyColumn(
@@ -159,8 +162,7 @@ import kotlinx.coroutines.launch
                 item { SectionPageAuthPanel(
                     resultSignIn = resultSignIn,
                     formAuth = formAuth,
-                    onFormAuthEvent = onFormAuthEvent,
-                    onSignInCallback = onSignInCallback
+                    onFormAuthEvent = onFormAuthEvent
                 ) }
             }
         )
@@ -187,8 +189,7 @@ import kotlinx.coroutines.launch
 @Composable private fun SectionPageAuthPanel(
     resultSignIn: ResultSignInState,
     formAuth: FormAuthState,
-    onFormAuthEvent: (Events.Content.Form) -> Unit,
-    onSignInCallback: (Events.Content.SignInCallback) -> Unit
+    onFormAuthEvent: (Events.Content.Form) -> Unit
 ) = PanelCard(
     modifier = Modifier.padding(Constants.Dimens.dp16), content = {
         TxtFieldEmail(
@@ -200,10 +201,6 @@ import kotlinx.coroutines.launch
             value = formAuth.fldPassword,
             onValueChange = { onFormAuthEvent(Events.Content.Form.PasswordChanged(it)) },
             enabled = formAuth.fldPasswordEnabled
-        )
-        LaunchedEffect(
-            key1 = resultSignIn,
-            block = { if (resultSignIn is ResultSignInState.Success) onSignInCallback(Events.Content.SignInCallback.Success) }
         )
         (resultSignIn as? ResultSignInState.Failure)?.let { error ->
             AnimatedVisibility(

@@ -41,6 +41,9 @@ sealed interface Events {
                 data object Applied : ModalBottomSheet
             }
         }
+        sealed interface UserRoleSetCallback : Content {
+            data object Success : UserRoleSetCallback
+        }
     }
     sealed interface BottomBar : Events {
         sealed interface BtnConfirmRole : BottomBar {

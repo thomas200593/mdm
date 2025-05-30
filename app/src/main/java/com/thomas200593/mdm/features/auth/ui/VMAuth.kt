@@ -65,7 +65,7 @@ class VMAuth @Inject constructor(
         is Events.Content.Form.BtnRecoverAccount.Clicked -> {/*TODO*/}
     }
     fun onSignInCallBackEvent(event: Events.Content.SignInCallback) = when (event) {
-        Events.Content.SignInCallback.Success -> resetTransientState()
+        is Events.Content.SignInCallback.Success -> resetTransientState()
     }
     private fun resetTransientState() {
         uiState.update { it.copy(dialog = DialogState.None, resultSignIn = ResultSignInState.Idle) }

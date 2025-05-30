@@ -70,6 +70,12 @@ import javax.inject.Inject
         is Events.BottomBar.BtnRoleInfo.Clicked -> updateDialog { DialogState.RoleInfo(event.role) }
         is Events.BottomBar.BtnRoleInfo.Dismissed -> updateDialog { DialogState.None }
     }
+    fun onUserRoleSetCallBackEvent(event: Events.Content.UserRoleSetCallback) = when (event) {
+        is Events.Content.UserRoleSetCallback.Success -> {
+            uiState.update { it.copy(dialog = DialogState.None, resultSetUserRole = ResultSetUserRoleState.Idle) }
+            formRoleSelection = FormRoleSelectionState().validateSelection()
+        }
+    }
     private fun handleSessionLoading() {
         formRoleSelection = FormRoleSelectionState()
         uiState.update { it.copy(
@@ -160,7 +166,7 @@ import javax.inject.Inject
         val loaded = uiState.value.screenData as? ScreenDataState.Loaded ?: return@launch
         if(uiState.value.resultSetUserRole == ResultSetUserRoleState.Loading) return@launch
         updateForm { it.setValue(selectedRole = role) }
-        val frozenForm = formRoleSelection.disableInputs()/*TODO*/
+        val frozenForm = formRoleSelection.disableInputs()
         formRoleSelection = frozenForm
         when {
             loaded.userData == null -> {
@@ -181,7 +187,10 @@ import javax.inject.Inject
                         val error = err as? Error ?: Error.UnknownError(message = err.message, cause = err.cause)
                         handleSetRoleFailure(error)
                     },
-                    onSuccess = { result -> /*TODO*/ }
+                    onSuccess = { result ->
+                        uiState.update { it.copy(resultSetUserRole = ResultSetUserRoleState.Success(result)) }
+                        formRoleSelection = FormRoleSelectionState().validateSelection()
+                    }
                 )
             }
         }

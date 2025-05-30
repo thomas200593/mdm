@@ -3,6 +3,7 @@ package com.thomas200593.mdm.features.introduction.initialization.domain
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.CoroutineDispatchers
 import com.thomas200593.mdm.core.design_system.coroutine_dispatchers.Dispatcher
 import com.thomas200593.mdm.features.common.cnf_common.domain.UCGetConfCommonCurrent
+import com.thomas200593.mdm.features.management.role.entity.BuiltInRolesSeeder
 import com.thomas200593.mdm.features.management.role.repository.RepoRole
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.combine
@@ -18,11 +19,8 @@ class UCGetScreenData @Inject constructor(
         flow = ucGetConfCommonCurrent.invoke().flowOn(ioDispatcher),
         flow2 = repoRole.getBuiltInRoles().flowOn(ioDispatcher)
     ) { confCommon, setOfRoles ->
-        confCommon to setOfRoles.getOrDefault(emptyList())
-            /*TODO Test Only*/
-            /*.filter {
-                it.roleCode in setOf(BuiltInRolesSeeder.SYSTEM_OWNER, BuiltInRolesSeeder.SYSTEM_ADMIN)
-            }*/
-            .toSet()
+        confCommon to setOfRoles.getOrDefault(emptyList()).filter {
+            it.roleCode in setOf(BuiltInRolesSeeder.SYSTEM_OWNER, BuiltInRolesSeeder.SYSTEM_ADMIN)
+        }.toSet()
     }.flowOn(ioDispatcher)
 }
