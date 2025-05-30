@@ -6,7 +6,7 @@ import com.thomas200593.mdm.features.management.user.entity.UserEntity
 import kotlinx.serialization.Serializable
 
 @Serializable data class DTORoleSelection(
-    val user : UserEntity?,
-    val session : SessionEntity?,
-    val role : RoleEntity?
+    val user : UserEntity,
+    val session : SessionEntity,
+    val role : RoleEntity
 )

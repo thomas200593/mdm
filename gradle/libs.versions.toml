@@ -1,5 +1,5 @@
 [versions]
-agp = "8.10.0"
+agp = "8.10.1"
 andMaterial = "1.12.0"
 andxAppcompat = "1.7.0"
 andxComposeUi = "1.8.2"

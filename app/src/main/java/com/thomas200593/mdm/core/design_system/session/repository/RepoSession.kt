@@ -22,6 +22,7 @@ interface RepoSession {
     suspend fun isValid(session : SessionEntity) : Result<Boolean>
     suspend fun deleteAll()
     suspend fun create(sessionEntity : SessionEntity) : Result<SessionEntity>
+    suspend fun update(session: SessionEntity): Result<Int>
 }
 class RepoSessionImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
@@ -42,6 +43,12 @@ class RepoSessionImpl @Inject constructor(
         runCatching { daoSession.create(sessionEntity) }.fold(
             onSuccess = { Result.success(sessionEntity) },
             onFailure = { Result.failure(Error.Database.DaoInsertError(message = it.message, cause = it.cause))}
+        )
+    }
+    override suspend fun update(session: SessionEntity) = withContext (ioDispatcher) {
+        runCatching { daoSession.update(session) }.fold(
+            onSuccess = { Result.success(it) },
+            onFailure = { Result.failure(Error.Database.DaoUpdateError(message = it.message, cause = it.cause)) }
         )
     }
 }

@@ -28,7 +28,7 @@ class UCGetUserRole @Inject constructor(
         sortOption : SortOption = SortOption.RoleLabelAsc, filterOption : FilterOption = FilterOption.RoleTypeAll
     ) = flow {
         val userEntity = repoUser.getOneByUid(user.uid).flowOn(ioDispatcher).first().getOrThrow()
-        emitAll(repoUserRole.getUserRolesAssocByUser(user = userEntity, query = query, sortOption = sortOption, filterOption = filterOption).flowOn(ioDispatcher))
+        emitAll(repoUserRole.getUserRolesAssocByUserPaged(user = userEntity, query = query, sortOption = sortOption, filterOption = filterOption).flowOn(ioDispatcher))
     }.catch { val err = mapThrowableError(it) ; throw err}.flowOn(ioDispatcher)
     private fun mapThrowableError(t: Throwable?) : Error = when (t) {
         is SQLiteException -> Error.Database.DaoQueryError(message = t.message, cause = t.cause)

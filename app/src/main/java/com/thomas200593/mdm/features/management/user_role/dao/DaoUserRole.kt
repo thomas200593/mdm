@@ -11,29 +11,14 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao interface DaoUserRole {
     @Transaction @Query("""
-        SELECT r.* 
-        FROM user u
-        LEFT JOIN user_role ur ON u.uid = ur.user_id
-        INNER JOIN role r ON r.role_code = ur.role_code
-        WHERE 1 = 1 
-        AND u.uid = :userId""")
-    fun getUserRoles(userId: String): Flow<List<RoleEntity>>
-    @Transaction @Query("""
-        SELECT r.* 
-        FROM user u
-        LEFT JOIN user_role ur ON u.uid = ur.user_id
-        INNER JOIN role r ON r.role_code = ur.role_code
-        WHERE 1 = 1 
-        AND u.uid = :userId
-    """)
-    fun getUserRolesPaged(userId: String) : PagingSource<Int, RoleEntity>
-    @Transaction @RawQuery(observedEntities = [RoleEntity::class])
-    fun getUserRolesAssocByUser(query: SupportSQLiteQuery): PagingSource<Int, RoleEntity>
-    @Query("""DELETE FROM user_role WHERE 1 = 1""")
-    suspend fun deleteAll()
-    @Transaction @Query("""
         SELECT COUNT(ur.user_id) FROM user_role ur WHERE 1 = 1
         AND ur.user_id = :userId
     """)
     fun getUserRolesCountByUser(userId: String) : Flow<Long>
+    @Transaction @RawQuery(observedEntities = [RoleEntity::class])
+    fun getUserRolesAssocByUserPaging(query: SupportSQLiteQuery): PagingSource<Int, RoleEntity>
+    @Transaction @RawQuery(observedEntities = [RoleEntity::class])
+    fun getUserRolesAssocByUserList(query: SupportSQLiteQuery): Flow<List<RoleEntity>>
+    @Query("""DELETE FROM user_role WHERE 1 = 1""")
+    suspend fun deleteAll()
 }

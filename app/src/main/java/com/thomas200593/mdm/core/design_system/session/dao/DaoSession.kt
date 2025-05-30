@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.thomas200593.mdm.core.design_system.session.entity.DTOSessionUserData
 import com.thomas200593.mdm.core.design_system.session.entity.SessionEntity
 import kotlinx.coroutines.flow.Flow
@@ -19,4 +20,6 @@ import kotlinx.coroutines.flow.Flow
     suspend fun deleteAll()
     @Insert(entity = SessionEntity::class, onConflict = OnConflictStrategy.ABORT)
     suspend fun create(session: SessionEntity)
+    @Update(entity = SessionEntity::class)
+    suspend fun update(entity: SessionEntity) : Int
 }

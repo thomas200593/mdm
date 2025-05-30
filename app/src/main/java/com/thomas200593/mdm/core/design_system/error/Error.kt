@@ -34,6 +34,13 @@ sealed class Error(
             override val message: String? = "Database insert operation failed",
             override val cause: Throwable? = SQLiteException()
         ) : Database(code, emoji, localizedMessage, message, cause)
+        data class DaoUpdateError(
+            override val code: String = "ERROR_DB_DAO_UPDATE",
+            override val emoji: String = "💾❌️",
+            override val localizedMessage: Int? = null,
+            override val message: String? = "Database update operation failed",
+            override val cause: Throwable? = SQLiteException()
+        ) : Database(code, emoji, localizedMessage, message, cause)
         data class DaoQueryError(
             override val code: String = "ERROR_DB_DAO_QUERY",
             override val emoji: String = "💾❌️",

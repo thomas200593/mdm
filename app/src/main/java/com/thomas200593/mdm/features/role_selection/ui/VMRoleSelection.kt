@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
 import com.thomas200593.mdm.features.management.user_role.domain.UCGetUserRole
 import com.thomas200593.mdm.features.management.user_role.domain.UCGetUserRoleCount
@@ -156,22 +157,37 @@ import javax.inject.Inject
         screenData = ScreenDataState.Loading, dialog = DialogState.None, resultSetUserRole = ResultSetUserRoleState.Idle
     ) }
     private fun handleConfirmRole(role : RoleEntity) = viewModelScope.launch {
-        //check the loaded state
-        //ensure set the form with role
-        //freeze the form
-        //execute uc with throw with param loaded.session & form.selected
-        //if else
         val loaded = uiState.value.screenData as? ScreenDataState.Loaded ?: return@launch
         if(uiState.value.resultSetUserRole == ResultSetUserRoleState.Loading) return@launch
         updateForm { it.setValue(selectedRole = role) }
         val frozenForm = formRoleSelection.disableInputs()/*TODO*/
         formRoleSelection = frozenForm
-        val dto = DTORoleSelection(
-            user = loaded.userData,
-            session = loaded.sessionData,
-            role = formRoleSelection.fldSelectedRole
-        )
-        uiState.update { it.copy(resultSetUserRole = ResultSetUserRoleState.Loading) }
-        ucSetUserRole.invoke(dto)
+        when {
+            loaded.userData == null -> {
+                val error = Error.Input.MalformedError(message = "User is not authorized to set role")
+                handleSetRoleFailure(error)
+                return@launch
+            }
+            loaded.sessionData == null -> {
+                val error = Error.Input.MalformedError(message = "Your session is invalid / expired, please re-log")
+                handleSetRoleFailure(error)
+                return@launch
+            }
+            else -> {
+                val dto = DTORoleSelection(user = loaded.userData, session = loaded.sessionData, role = role)
+                uiState.update { it.copy(resultSetUserRole = ResultSetUserRoleState.Loading) }
+                ucSetUserRole.invoke(dto).fold(
+                    onFailure = { err ->
+                        val error = err as? Error ?: Error.UnknownError(message = err.message, cause = err.cause)
+                        handleSetRoleFailure(error)
+                    },
+                    onSuccess = { result -> /*TODO*/ }
+                )
+            }
+        }
+    }
+    private fun handleSetRoleFailure(error: Error) {
+        uiState.update { it.copy(resultSetUserRole = ResultSetUserRoleState.Failure(error)) }
+        formRoleSelection = FormRoleSelectionState().validateSelection()
     }
 }

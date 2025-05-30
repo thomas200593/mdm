@@ -20,12 +20,18 @@ import javax.inject.Inject
 interface RepoUserRole {
     suspend fun deleteAll()
     fun getUserRolesCountByUser(user : UserEntity) : Flow<Long>
-    fun getUserRolesAssocByUser(
+    fun getUserRolesAssocByUserPaged(
         user: UserEntity,
         query: String,
         sortOption: SortOption,
         filterOption: FilterOption
     ): Flow<PagingData<RoleEntity>>
+    fun getUserRolesAssocByUserList(
+        user : UserEntity,
+        query : String,
+        sortOption : SortOption,
+        filterOption : FilterOption
+    ): Flow<List<RoleEntity>>
 }
 class RepoUserRoleImpl @Inject constructor(
     @Dispatcher(CoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
@@ -34,20 +40,34 @@ class RepoUserRoleImpl @Inject constructor(
     override suspend fun deleteAll() = daoUserRole.deleteAll()
     override fun getUserRolesCountByUser(user : UserEntity) : Flow<Long> =
         daoUserRole.getUserRolesCountByUser(userId = user.uid).flowOn(ioDispatcher)
-    override fun getUserRolesAssocByUser(
+    override fun getUserRolesAssocByUserPaged(
         user: UserEntity,
         query: String,
         sortOption: SortOption,
         filterOption: FilterOption
     ): Flow<PagingData<RoleEntity>> {
         val pagingConfig = PagingConfig(pageSize = 20, enablePlaceholders = false)
-        val pagingSourceFactory = { daoUserRole.getUserRolesAssocByUser(buildGetUserRolesAssocByUserQuery(
+        val pagingSourceFactory = { daoUserRole.getUserRolesAssocByUserPaging(buildGetUserRolesAssocByUserQuery(
             userId = user.uid,
             query = query,
             sortOption = sortOption,
             filterOption = filterOption
         )) }
         return Pager(config = pagingConfig, pagingSourceFactory = pagingSourceFactory).flow.flowOn(ioDispatcher)
+    }
+    override fun getUserRolesAssocByUserList(
+        user: UserEntity,
+        query: String,
+        sortOption: SortOption,
+        filterOption: FilterOption
+    ): Flow<List<RoleEntity>> {
+        val sql = buildGetUserRolesAssocByUserQuery(
+            userId = user.uid,
+            query = query,
+            sortOption = sortOption,
+            filterOption = filterOption
+        )
+        return daoUserRole.getUserRolesAssocByUserList(sql).flowOn(ioDispatcher)
     }
     private fun buildGetUserRolesAssocByUserQuery(
         userId: String,
