@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.thomas200593.mdm.app.main.nav.DestTopLevel
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.SessionHandler
@@ -34,7 +35,7 @@ import kotlinx.coroutines.launch
         onNavToInitialization = { coroutineScope.launch { stateApp.navController.navToInitialization() } },
         onNavToAuth = { coroutineScope.launch { stateApp.navController.navToAuth() } },
         onNavToRoleSelection = { coroutineScope.launch { stateApp.navController.navToRoleSelection() } },
-        onNavToDashboard = {  }
+        onNavToDashboard = { coroutineScope.launch { stateApp.navToDestTopLevel(DestTopLevel.DASHBOARD) } }
     )
 }
 @Composable private fun ScrBootstrap(

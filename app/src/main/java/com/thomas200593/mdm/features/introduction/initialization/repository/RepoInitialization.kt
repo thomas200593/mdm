@@ -11,7 +11,7 @@ import com.thomas200593.mdm.features.introduction.initialization.entity.DTOIniti
 import com.thomas200593.mdm.features.introduction.initialization.entity.FirstTimeStatus
 import com.thomas200593.mdm.features.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.management.user.entity.UserEntity
-import com.thomas200593.mdm.features.user_profile.entity.UserProfileEntity
+import com.thomas200593.mdm.features.tld.user_profile.entity.UserProfileEntity
 import com.thomas200593.mdm.features.management.user_role.entity.UserRoleEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext

@@ -27,7 +27,8 @@ import com.thomas200593.mdm.core.design_system.session.entity.SessionEntity
 import com.thomas200593.mdm.core.design_system.session.entity.SessionEvent
 import com.thomas200593.mdm.core.design_system.session.entity.SessionState
 import com.thomas200593.mdm.features.management.user.entity.UserEntity
-import com.thomas200593.mdm.features.user_profile.entity.UserProfileEntity
+import com.thomas200593.mdm.features.tld.dashboard.nav.navToDashboard
+import com.thomas200593.mdm.features.tld.user_profile.entity.UserProfileEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -84,6 +85,7 @@ class StateApp(
         when (dest) {
             DestTopLevel.DASHBOARD -> {
                 timberFileLogger.log(Log.DEBUG, TAG, "")
+                navController.navToDashboard(topLevelDestNavOptions)
             }
             DestTopLevel.USER_PROFILE -> {
                 timberFileLogger.log(Log.DEBUG, TAG, "")
