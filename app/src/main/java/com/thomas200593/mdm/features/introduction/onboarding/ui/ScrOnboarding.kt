@@ -131,9 +131,9 @@ import kotlinx.coroutines.launch
             loading = { InnerCircularProgressIndicator() },
             contentScale = ContentScale.FillWidth
         )
-        Box(modifier = Modifier.fillMaxSize().align(Alignment.BottomCenter)
-            .graphicsLayer { alpha = 0.6f }.background(verticalGradient(
-                colorStops = arrayOf(Pair(0.6f, Color.Transparent), Pair(1.0f, MaterialTheme.colorScheme.onSurface))
+        Box(modifier = Modifier.fillMaxSize().align(Alignment.BottomCenter).graphicsLayer { alpha = 0.6f }
+            .background(verticalGradient(
+                colorStops = arrayOf(0.6f to Color.Transparent, 1.0f to MaterialTheme.colorScheme.onSurface)
             ))
         )
     }
