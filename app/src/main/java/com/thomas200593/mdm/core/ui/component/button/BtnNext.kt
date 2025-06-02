@@ -22,10 +22,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
     shape: Shape = ButtonDefaults.textShape, colors: ButtonColors = ButtonDefaults.textButtonColors(),
     elevation: ButtonElevation? = null, border: BorderStroke? = null,
     contentPadding: PaddingValues = ButtonDefaults.TextButtonContentPadding, interactionSource: MutableInteractionSource? = null
-) {
-    TextButton (
-        modifier = modifier, onClick = onClick, enabled = enabled, shape = shape, colors = colors,
-        elevation = elevation, border = border, contentPadding = contentPadding, interactionSource = interactionSource,
-        content = { Text(label); Icon(imageVector = icon, contentDescription = null)  }
-    )
-}
+) = TextButton (
+    modifier = modifier, onClick = onClick, enabled = enabled, shape = shape, colors = colors,
+    elevation = elevation, border = border, contentPadding = contentPadding, interactionSource = interactionSource,
+    content = { Text(label); Icon(imageVector = icon, contentDescription = null)  }
+)

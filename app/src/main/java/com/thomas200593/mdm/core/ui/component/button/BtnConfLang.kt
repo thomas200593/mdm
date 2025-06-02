@@ -32,42 +32,35 @@ import com.thomas200593.mdm.features.common.cnf_localization_language.entity.Lan
 @OptIn(ExperimentalMaterial3Api::class) @Composable fun BtnConfLang(
     modifier: Modifier = Modifier,
     languages: List<Language>, languageIcon: String, languageName: String? = null, onSelectLanguage: (Language) -> Unit,
-    enabled: Boolean = true, shape: Shape = MaterialTheme.shapes.medium, colors: ButtonColors = ButtonDefaults.textButtonColors(),
+    enabled: Boolean = true, shape: Shape = MaterialTheme.shapes.extraSmall, colors: ButtonColors = ButtonDefaults.textButtonColors(),
     elevation: ButtonElevation? = null, border: BorderStroke? = null, contentPadding: PaddingValues = ButtonDefaults.TextButtonContentPadding,
     interactionSource: MutableInteractionSource? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded },
-        content = {
+        expanded = expanded, onExpandedChange = { expanded = !expanded }, content = {
             TextButton(
                 modifier = modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
                 onClick = { expanded = true }, enabled = enabled, shape = shape, colors = colors,
-                elevation = elevation, border = border, contentPadding = contentPadding, interactionSource = interactionSource
-            ) {
-                Row(
+                elevation = elevation, border = border, contentPadding = contentPadding, interactionSource = interactionSource,
+                content = { Row(
                     horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
                     verticalAlignment = Alignment.CenterVertically,
                     content = {
                         TxtMdLabel(text = languageIcon)
                         languageName?.let { TxtMdLabel(text = it, color = colors.contentColor, maxLines = 1) }
                     }
-                )
-            }
+                ) }
+            )
             ExposedDropdownMenu(
                 expanded = expanded, onDismissRequest = { expanded = false },
-                modifier = Modifier.fillMaxWidth(0.5f), content = {
-                    languages.forEach {
-                        DropdownMenuItem(
-                            modifier = Modifier.fillMaxWidth(),
-                            onClick = { expanded = false; onSelectLanguage.invoke(it) },
-                            leadingIcon = { Text(it.country.flag) },
-                            text = { TxtMdLabel(text = it.country.name) },
-                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                        )
-                    }
-                }
+                modifier = Modifier.fillMaxWidth(0.5f), content = { languages.forEach { DropdownMenuItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { expanded = false; onSelectLanguage.invoke(it) },
+                    leadingIcon = { Text(it.country.flag) },
+                    text = { TxtMdLabel(text = it.country.name) },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                ) } }
             )
         }
     )
