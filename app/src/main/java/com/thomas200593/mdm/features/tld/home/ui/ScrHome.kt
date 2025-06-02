@@ -13,18 +13,16 @@ import com.thomas200593.mdm.features.auth.nav.navToAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Composable
-fun ScrHome(
+@Composable fun ScrHome(
     scrGraph: ScrGraphs.DestTopLevel.Home,
     stateApp: StateApp = LocalStateApp.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
+    ScrHome(
+        scrGraph = scrGraph
+    )
+}
+@Composable private fun ScrHome(scrGraph: ScrGraphs.DestTopLevel.Home) {
     Column {
         Text("Screen : ${stringResource(scrGraph.title)}")
-        Button(
-            onClick = { coroutineScope.launch { stateApp.navController.navToAuth() } },
-            content = {
-                Text("Logout")
-            }
-        )
     }
 }
