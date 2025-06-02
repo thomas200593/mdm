@@ -30,24 +30,22 @@ enum class DialogType {
     confirmButton: @Composable (() -> Unit)? = null,
     dismissButton:  @Composable (() -> Unit)? = null,
     properties: DialogProperties = DialogProperties()
-) {
-    AlertDialog(
-        modifier = modifier,
-        onDismissRequest = onDismissRequest,
-        confirmButton = { confirmButton?.invoke() },
-        dismissButton = { dismissButton?.invoke() },
-        icon = icon,
-        title = title,
-        text = text,
-        shape = shape,
-        containerColor = containerColor ?: getContainerColor(dialogType),
-        iconContentColor = iconContentColor ?: getContentColor(dialogType),
-        titleContentColor = titleContentColor ?: getContentColor(dialogType),
-        textContentColor = textContentColor ?: getContentColor(dialogType),
-        tonalElevation = tonalElevation,
-        properties = properties,
-    )
-}
+) = AlertDialog(
+    modifier = modifier,
+    onDismissRequest = onDismissRequest,
+    confirmButton = { confirmButton?.invoke() },
+    dismissButton = { dismissButton?.invoke() },
+    icon = icon,
+    title = title,
+    text = text,
+    shape = shape,
+    containerColor = containerColor ?: getContainerColor(dialogType),
+    iconContentColor = iconContentColor ?: getContentColor(dialogType),
+    titleContentColor = titleContentColor ?: getContentColor(dialogType),
+    textContentColor = textContentColor ?: getContentColor(dialogType),
+    tonalElevation = tonalElevation,
+    properties = properties,
+)
 @Composable private fun getContainerColor(dialogType: DialogType) = when(dialogType) {
     DialogType.CONFIRMATION -> MaterialTheme.colorScheme.secondaryContainer
     DialogType.ERROR -> MaterialTheme.colorScheme.errorContainer

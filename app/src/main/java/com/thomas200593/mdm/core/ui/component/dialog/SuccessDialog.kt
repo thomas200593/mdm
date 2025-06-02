@@ -15,14 +15,12 @@ import com.thomas200593.mdm.R
     title: String = stringResource(R.string.str_success),
     message: String = stringResource(R.string.str_success),
     btnConfirmText: String = stringResource(R.string.str_ok)
-) {
-    BaseAlertDialog(
-        onDismissRequest = onDismissRequest,
-        dialogType = DialogType.SUCCESS,
-        icon = { Icon(Icons.Default.Check, contentDescription = null) },
-        title = { Text(title) },
-        text = { Text(message) },
-        confirmButton = { Button(onClick = onDismissRequest) { Text(btnConfirmText) } },
-        properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
-    )
-}
+) = BaseAlertDialog(
+    onDismissRequest = onDismissRequest,
+    dialogType = DialogType.SUCCESS,
+    icon = { Icon(Icons.Default.Check, contentDescription = null) },
+    title = { Text(title) },
+    text = { Text(message) },
+    confirmButton = { Button(onClick = onDismissRequest) { Text(btnConfirmText) } },
+    properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+)

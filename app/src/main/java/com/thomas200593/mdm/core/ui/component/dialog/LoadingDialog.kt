@@ -19,29 +19,27 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.thomas200593.mdm.R
 
-@Composable fun LoadingDialog(message: String = stringResource(R.string.str_loading)) {
-    Dialog (
-        onDismissRequest = {},
-        properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false, usePlatformDefaultWidth = false),
-        content = {
-            Box(
-                modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.5f)).clickable(enabled = false) {},
-                contentAlignment = Alignment.Center,
-                content = {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        content = {
-                            CircularProgressIndicator()
-                            Text(
-                                text = message,
-                                color = Color.White,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    )
-                }
-            )
-        }
-    )
-}
+@Composable fun LoadingDialog(message: String = stringResource(R.string.str_loading)) = Dialog (
+    onDismissRequest = {},
+    properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false, usePlatformDefaultWidth = false),
+    content = {
+        Box(
+            modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.5f)).clickable(enabled = false) {},
+            contentAlignment = Alignment.Center,
+            content = {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    content = {
+                        CircularProgressIndicator()
+                        Text(
+                            text = message,
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                )
+            }
+        )
+    }
+)
