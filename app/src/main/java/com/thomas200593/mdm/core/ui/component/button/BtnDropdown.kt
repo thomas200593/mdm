@@ -37,7 +37,9 @@ import com.thomas200593.mdm.core.ui.component.TxtMdLabel
 @OptIn(ExperimentalMaterial3Api::class) @Composable fun <T> BtnDropdown(
     modifier: Modifier = Modifier,
     items: List<T>,
+    itemIcon: (T) -> SelectorIcon,
     selectedIcon: SelectorIcon,
+    itemLabel: @Composable (T) -> Unit,
     selectedLabel: String? = null,
     onSelectItem: (T) -> Unit,
     enabled: Boolean = true,
@@ -46,14 +48,11 @@ import com.thomas200593.mdm.core.ui.component.TxtMdLabel
     elevation: ButtonElevation? = null,
     border: BorderStroke? = null,
     contentPadding: PaddingValues = ButtonDefaults.TextButtonContentPadding,
-    interactionSource: MutableInteractionSource? = null,
-    itemIcon: (T) -> SelectorIcon,
-    itemLabel: @Composable (T) -> Unit
+    interactionSource: MutableInteractionSource? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
-        expanded = expanded, onExpandedChange = { expanded = !expanded },
-        content = {
+        expanded = expanded, onExpandedChange = { expanded = !expanded }, content = {
             TextButton(
                 modifier = modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
                 onClick = { expanded = true },
@@ -88,12 +87,10 @@ import com.thomas200593.mdm.core.ui.component.TxtMdLabel
     )
 }
 @Composable
-private fun RenderSelectorIcon(icon: SelectorIcon, iconSize: Dp = ButtonDefaults.IconSize) {
-    when (icon) {
-        is SelectorIcon.EmojiString -> Text(text = icon.emoji)
-        is SelectorIcon.DrawableAssets ->
-            Icon(modifier = Modifier.size(iconSize), imageVector = ImageVector.vectorResource(icon.resId), contentDescription = null)
-    }
+private fun RenderSelectorIcon(icon: SelectorIcon, iconSize: Dp = ButtonDefaults.IconSize) = when (icon) {
+    is SelectorIcon.EmojiString -> Text(text = icon.emoji)
+    is SelectorIcon.DrawableAssets -> Icon(modifier = Modifier.size(iconSize),
+        imageVector = ImageVector.vectorResource(icon.resId), contentDescription = null)
 }
 sealed class SelectorIcon {
     data class EmojiString(val emoji: String) : SelectorIcon()
