@@ -51,7 +51,7 @@ import javax.inject.Inject
     }
     fun onTopBarEvent(event: Events.TopBar) = when (event) {
         is Events.TopBar.BtnScrDesc.Clicked -> updateDialog { DialogState.ScrDescDialog }
-        is Events.TopBar.BtnScrDesc.Dismissed,
+        is Events.TopBar.BtnScrDesc.Dismissed -> updateDialog { DialogState.None }
         is Events.TopBar.BtnSignOut.Clicked -> resetToLoadingState()
     }
     fun onFormEvent(event: Events.Content.Form) = when (event) {
