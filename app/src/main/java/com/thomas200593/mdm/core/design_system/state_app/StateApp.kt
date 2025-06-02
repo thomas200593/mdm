@@ -79,7 +79,7 @@ class StateApp(
         DestTopLevel.entries.firstOrNull { currentDestination?.hasRoute(route = it.route) == true }
     fun navToDestTopLevel(dest: DestTopLevel) {
         val topLevelDestNavOptions = navOptions(optionsBuilder = {
-            popUpTo(id = navController.graph.findStartDestination().id, popUpToBuilder = { saveState = true })
+            popUpTo(id = navController.graph.findStartDestination().id, popUpToBuilder = { saveState = true; inclusive = true })
             launchSingleTop = true; restoreState = true
         })
         timberFileLogger.log(Log.DEBUG, TAG, "${this@StateApp::class.simpleName}.navToDestTopLevel()")
