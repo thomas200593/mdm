@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -89,24 +88,57 @@ import java.util.Locale
         val newMillis = parsedDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
         if (datePickerState.selectedDateMillis != newMillis) datePickerState.setSelectedDate(parsedDate)
     } })
-    if (showDialog) { DatePickerDialog(
-        onDismissRequest = { showDialog = false },
-        confirmButton = { TextButton(onClick = { datePickerState.selectedDateMillis
-            ?.let { millis -> val selectedDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault())
-                .toLocalDate().format(internalFormatter); onValueChange(selectedDate)
-            } ; showDialog = false }, content = { Text(stringResource(R.string.str_ok)) }) },
-        dismissButton = { TextButton(onClick = { showDialog = false }, content = { Text(stringResource(R.string.str_back)) }) },
-        content = { Column(modifier = Modifier.padding(16.dp), content = {
-            DatePicker(state = datePickerState)
-            Spacer(modifier = Modifier.height(12.dp))
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End,
-                content = { TextButton(onClick = {
-                    val todayFormatted = today.format(internalFormatter)
-                    onValueChange(todayFormatted); showDialog = false
-                }, content = { Text(stringResource(R.string.str_today)) }) }
-            )
-        }) }
-    ) }
+    if (showDialog) {
+        DatePickerDialog(
+            onDismissRequest = { showDialog = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            val selectedDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault())
+                                .toLocalDate().format(internalFormatter)
+                            onValueChange(selectedDate)
+                        }
+                        showDialog = false
+                    },
+                    content = {
+                        Text(stringResource(R.string.str_ok))
+                    }
+                )
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDialog = false },
+                    content = { Text(stringResource(R.string.str_back)) }
+                )
+            },
+            content = {
+                Column(
+                    modifier = Modifier,
+                    content = {
+                        DatePicker(state = datePickerState)
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End,
+                            content = {
+                                TextButton(
+                                    onClick = {
+                                        val todayFormatted = today.format(internalFormatter)
+                                        onValueChange(todayFormatted)
+                                        showDialog = false
+                                    },
+                                    content = {
+                                        Text(stringResource(R.string.str_today))
+                                    }
+                                )
+                            }
+                        )
+                    }
+                )
+            }
+        )
+    }
     Row(
         modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
         verticalAlignment = Alignment.CenterVertically, content =  {
@@ -115,11 +147,14 @@ import java.util.Locale
                 modifier = Modifier.weight(1f),
                 enabled = enabled, readOnly = true,
                 label = label?.let { { Text(it) } }, placeholder = placeholder?.let { { Text(it) } },
-                leadingIcon = leadingIcon, trailingIcon = { if (value.isNotBlank()) IconButton(
-                    onClick = { onValueChange(Constants.STR_EMPTY) },
-                    enabled = enabled,
-                    content = { Icon(imageVector = Icons.Default.Clear, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
-                ) },
+                leadingIcon = leadingIcon,
+                trailingIcon = {
+                    if (value.isNotBlank()) IconButton(
+                        onClick = { onValueChange(Constants.STR_EMPTY) },
+                        enabled = enabled,
+                        content = { Icon(imageVector = Icons.Default.Clear, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
+                    )
+                },
                 supportingText = { if (isError && errorMessage.isNotEmpty())
                     ErrorSupportingText(errorMessage.map { "• ${it.asString(LocalContext.current)}" } ) },
                 isError = isError, singleLine = true,
