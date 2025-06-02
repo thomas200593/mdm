@@ -22,29 +22,21 @@ import com.thomas200593.mdm.core.design_system.util.Constants.STR_APP_VERSION
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdTitle
 
-@Composable fun ScrLoading(@StringRes label: Int = R.string.str_loading) {
-    Scaffold(
+@Composable fun ScrLoading(@StringRes label: Int = R.string.str_loading) = Scaffold(
+    content = { Column (
+        modifier = Modifier.padding(it).fillMaxSize().verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(dp16, Alignment.CenterVertically),
         content = {
-            Column (
-                modifier = Modifier.padding(it).fillMaxSize().verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(dp16, Alignment.CenterVertically),
-                content = {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                    TxtLgTitle(text = stringResource(label))
-                }
-            )
-        },
-        bottomBar = {
-            Column(
-                modifier = Modifier.fillMaxWidth().navigationBarsPadding(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(dp16, Alignment.CenterVertically),
-                content = {
-                    TxtLgTitle(text = stringResource(R.string.app_name))
-                    TxtMdTitle(text = stringResource(R.string.str_version) + STR_APP_VERSION)
-                }
-            )
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            TxtLgTitle(text = stringResource(label))
         }
-    )
-}
+    ) },
+    bottomBar = { Column(
+        modifier = Modifier.fillMaxWidth().navigationBarsPadding(),
+        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(dp16, Alignment.CenterVertically),
+        content = {
+            TxtLgTitle(text = stringResource(R.string.app_name))
+            TxtMdTitle(text = stringResource(R.string.str_version) + STR_APP_VERSION)
+        }
+    ) }
+)
