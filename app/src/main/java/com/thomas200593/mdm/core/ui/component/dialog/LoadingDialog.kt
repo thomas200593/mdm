@@ -19,6 +19,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.thomas200593.mdm.R
 
+//ScrAuth
+//ScrInitialization
 @Composable fun LoadingDialog(message: String = stringResource(R.string.str_loading)) = Dialog (
     onDismissRequest = {},
     properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false, usePlatformDefaultWidth = false),

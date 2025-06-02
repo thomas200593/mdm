@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
+//ScrOnboarding
+//ScrRoleSelection
 @Composable fun InnerCircularProgressIndicator() = Column(
     horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
     modifier = Modifier.fillMaxWidth(), content = { CircularProgressIndicator() }

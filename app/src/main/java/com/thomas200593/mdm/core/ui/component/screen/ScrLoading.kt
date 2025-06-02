@@ -22,6 +22,11 @@ import com.thomas200593.mdm.core.design_system.util.Constants.STR_APP_VERSION
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdTitle
 
+//ScrAuth
+//ScrBootstrap
+//ScrInitialization
+//ScrOnboarding
+//ScrRoleSelection
 @Composable fun ScrLoading(@StringRes label: Int = R.string.str_loading) = Scaffold(
     content = { Column (
         modifier = Modifier.padding(it).fillMaxSize().verticalScroll(rememberScrollState()),
