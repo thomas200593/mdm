@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.tld.dashboard.ui
+package com.thomas200593.mdm.features.tld.menu.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
@@ -14,10 +14,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun ScrDashboard(
-    scrGraph: ScrGraphs.DestTopLevel.Dashboard,
-    stateApp: StateApp = LocalStateApp.current,
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
+fun ScrMenu(
+    scrGraph: ScrGraphs.DestTopLevel.Menu,
+    stateApp: StateApp = LocalStateApp.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     Column {
         Text("Screen : ${stringResource(scrGraph.title)}")

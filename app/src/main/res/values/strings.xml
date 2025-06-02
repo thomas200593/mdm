@@ -18,10 +18,10 @@
     <string name="str_email">e-mail</string>
     <string name="str_password">Password</string>
     <string name="str_proceed">Proceed</string>
-    <string name="str_dashboard">Dashboard</string>
-    <string name="str_dashboard_desc">App Dashboard Desc</string>
-    <string name="str_user_profile">User Profile</string>
-    <string name="str_user_profile_desc">User Profile Desc</string>
+    <string name="str_home">Home</string>
+    <string name="str_home_desc">Application homepage</string>
+    <string name="str_menu">Menu</string>
+    <string name="str_menu_desc">Menu Desc</string>
     <string name="str_auth">Authentication</string>
     <string name="str_ok">OK</string>
     <string name="str_role_selection">Role Selection</string>

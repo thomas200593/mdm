@@ -27,9 +27,9 @@ import com.thomas200593.mdm.core.design_system.session.entity.SessionEntity
 import com.thomas200593.mdm.core.design_system.session.entity.SessionEvent
 import com.thomas200593.mdm.core.design_system.session.entity.SessionState
 import com.thomas200593.mdm.features.management.user.entity.UserEntity
-import com.thomas200593.mdm.features.tld.dashboard.nav.navToDashboard
-import com.thomas200593.mdm.features.tld.user_profile.entity.UserProfileEntity
-import com.thomas200593.mdm.features.tld.user_profile.nav.navToUserProfile
+import com.thomas200593.mdm.features.tld.home.nav.navToHome
+import com.thomas200593.mdm.features.tld.menu.nav.navToMenu
+import com.thomas200593.mdm.features.user_profile.entity.UserProfileEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -84,8 +84,8 @@ class StateApp(
         })
         timberFileLogger.log(Log.DEBUG, TAG, "${this@StateApp::class.simpleName}.navToDestTopLevel()")
         when (dest) {
-            DestTopLevel.DASHBOARD -> navController.navToDashboard(topLevelDestNavOptions)
-            DestTopLevel.USER_PROFILE -> navController.navToUserProfile(topLevelDestNavOptions)
+            DestTopLevel.HOME -> navController.navToHome(topLevelDestNavOptions)
+            DestTopLevel.MENU -> navController.navToMenu(topLevelDestNavOptions)
         }
     }
 }

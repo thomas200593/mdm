@@ -17,10 +17,10 @@
     <string name="str_email">e-mail</string>
     <string name="str_password">Kata sandi</string>
     <string name="str_proceed">Proses</string>
-    <string name="str_dashboard">Dasbor</string>
-    <string name="str_dashboard_desc">Deskripsi Dashbor App</string>
-    <string name="str_user_profile">Profil Pengguna</string>
-    <string name="str_user_profile_desc">Deskripsi Profil Pengguna</string>
+    <string name="str_home">Beranda</string>
+    <string name="str_home_desc">Halaman utama aplikasi</string>
+    <string name="str_menu">Profil Pengguna</string>
+    <string name="str_menu_desc">Deskripsi Profil Pengguna</string>
     <string name="str_auth">Authentication</string>
     <string name="str_ok">OK</string>
     <string name="str_role_selection">Pemilihan Role</string>

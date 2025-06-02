@@ -18,8 +18,8 @@ import com.thomas200593.mdm.features.management.role.entity.RoleEntity
 import com.thomas200593.mdm.features.management.role.entity.TypeConverterRoleType
 import com.thomas200593.mdm.features.management.user.dao.DaoUser
 import com.thomas200593.mdm.features.management.user.entity.UserEntity
-import com.thomas200593.mdm.features.tld.user_profile.dao.DaoUserProfile
-import com.thomas200593.mdm.features.tld.user_profile.entity.UserProfileEntity
+import com.thomas200593.mdm.features.user_profile.dao.DaoUserProfile
+import com.thomas200593.mdm.features.user_profile.entity.UserProfileEntity
 import com.thomas200593.mdm.features.management.user_role.dao.DaoUserRole
 import com.thomas200593.mdm.features.management.user_role.entity.UserRoleEntity
 import javax.inject.Singleton

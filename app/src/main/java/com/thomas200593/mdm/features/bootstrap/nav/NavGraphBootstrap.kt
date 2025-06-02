@@ -11,8 +11,9 @@ import com.thomas200593.mdm.features.bootstrap.ui.ScrBootstrap
 import com.thomas200593.mdm.features.introduction.initialization.nav.navGraphInitialization
 import com.thomas200593.mdm.features.introduction.onboarding.nav.navGraphOnboarding
 import com.thomas200593.mdm.features.role_selection.nav.navGraphRoleSelection
-import com.thomas200593.mdm.features.tld.dashboard.nav.navGraphDashboard
-import com.thomas200593.mdm.features.tld.user_profile.nav.navGraphUserProfile
+import com.thomas200593.mdm.features.tld.home.nav.navGraphHome
+import com.thomas200593.mdm.features.tld.menu.nav.navGraphMenu
+import com.thomas200593.mdm.features.user_profile.nav.navGraphUserProfile
 
 fun NavGraphBuilder.navGraphBootstrap() {
     navigation<NavigationGraph.GraphBootstrap>(
@@ -23,9 +24,10 @@ fun NavGraphBuilder.navGraphBootstrap() {
             navGraphInitialization()
             navGraphAuth()
             navGraphRoleSelection()
-            //Group to TLD
-            navGraphDashboard()
             navGraphUserProfile()
+            /** Top Level Domain */
+            navGraphHome()
+            navGraphMenu()
         }
     )
 }

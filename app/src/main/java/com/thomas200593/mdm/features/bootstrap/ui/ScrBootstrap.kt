@@ -35,25 +35,25 @@ import kotlinx.coroutines.launch
         onNavToInitialization = { coroutineScope.launch { stateApp.navController.navToInitialization() } },
         onNavToAuth = { coroutineScope.launch { stateApp.navController.navToAuth() } },
         onNavToRoleSelection = { coroutineScope.launch { stateApp.navController.navToRoleSelection() } },
-        onNavToDashboard = { coroutineScope.launch { stateApp.navToDestTopLevel(DestTopLevel.DASHBOARD) } }
+        onNavToHome = { coroutineScope.launch { stateApp.navToDestTopLevel(DestTopLevel.HOME) } }
     )
 }
 @Composable private fun ScrBootstrap(
     scrGraph: ScrGraphs.Bootstrap, screenData: ScreenDataState,
     onNavToOnboarding: () -> Unit, onNavToInitialization: () -> Unit, onNavToAuth: () -> Unit,
-    onNavToRoleSelection: () -> Unit, onNavToDashboard: () -> Unit
+    onNavToRoleSelection: () -> Unit, onNavToHome: () -> Unit
 ) = when (screenData) {
     is ScreenDataState.Loading -> ScrLoading(label = scrGraph.title)
     is ScreenDataState.Loaded -> ScreenContent(
         components = screenData,
         onNavToOnboarding = onNavToOnboarding, onNavToInitialization = onNavToInitialization,
-        onNavToAuth = onNavToAuth, onNavToRoleSelection = onNavToRoleSelection, onNavToDashboard = onNavToDashboard
+        onNavToAuth = onNavToAuth, onNavToRoleSelection = onNavToRoleSelection, onNavToHome = onNavToHome
     )
 }
 @Composable private fun ScreenContent(
     components: ScreenDataState.Loaded, stateApp: StateApp = LocalStateApp.current,
     onNavToOnboarding: () -> Unit, onNavToInitialization: () -> Unit,
-    onNavToAuth: () -> Unit, onNavToRoleSelection: () -> Unit, onNavToDashboard: () -> Unit
+    onNavToAuth: () -> Unit, onNavToRoleSelection: () -> Unit, onNavToHome: () -> Unit
 ) = when (components.confCommon.onboardingStatus) {
     OnboardingStatus.SHOW -> onNavToOnboarding()
     OnboardingStatus.HIDE -> when (components.confCommon.firstTimeStatus) {
@@ -63,7 +63,7 @@ import kotlinx.coroutines.launch
                 onLoading = { _ -> },
                 onInvalid = { _, _ -> onNavToAuth() },
                 onNoCurrentRole = { _, _ -> onNavToRoleSelection() },
-                onValid = { _, _, _ -> onNavToDashboard() }
+                onValid = { _, _, _ -> onNavToHome() }
             )
         }
     }

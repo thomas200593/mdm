@@ -1,7 +1,7 @@
-package com.thomas200593.mdm.features.tld.user_profile.di
+package com.thomas200593.mdm.features.user_profile.di
 
-import com.thomas200593.mdm.features.tld.user_profile.repository.RepoUserProfile
-import com.thomas200593.mdm.features.tld.user_profile.repository.RepoUserProfileImpl
+import com.thomas200593.mdm.features.user_profile.repository.RepoUserProfile
+import com.thomas200593.mdm.features.user_profile.repository.RepoUserProfileImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

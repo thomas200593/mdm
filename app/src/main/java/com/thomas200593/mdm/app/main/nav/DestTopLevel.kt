@@ -7,12 +7,12 @@ enum class DestTopLevel(
     val route: KClass<*>,
     val baseRoute: KClass<*> = route
 ) {
-    DASHBOARD(
-        scrGraphs = ScrGraphs.DestTopLevel.Dashboard,
-        route = ScrGraphs.DestTopLevel.Dashboard::class
+    HOME(
+        scrGraphs = ScrGraphs.DestTopLevel.Home,
+        route = ScrGraphs.DestTopLevel.Home::class
     ),
-    USER_PROFILE(
-        scrGraphs = ScrGraphs.DestTopLevel.UserProfile,
-        route = ScrGraphs.DestTopLevel.UserProfile::class
+    MENU(
+        scrGraphs = ScrGraphs.DestTopLevel.Menu,
+        route = ScrGraphs.DestTopLevel.Menu::class
     )
 }

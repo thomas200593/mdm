@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.features.tld.user_profile.entity
+package com.thomas200593.mdm.features.user_profile.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

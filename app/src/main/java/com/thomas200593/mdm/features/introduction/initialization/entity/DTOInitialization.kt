@@ -4,7 +4,7 @@ import com.thomas200593.mdm.features.auth.entity.AuthEntity
 import com.thomas200593.mdm.features.auth.entity.AuthType
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
 import com.thomas200593.mdm.features.management.user.entity.UserEntity
-import com.thomas200593.mdm.features.tld.user_profile.entity.UserProfileEntity
+import com.thomas200593.mdm.features.user_profile.entity.UserProfileEntity
 import com.thomas200593.mdm.features.management.user_role.entity.UserRoleEntity
 import kotlinx.serialization.Serializable
 

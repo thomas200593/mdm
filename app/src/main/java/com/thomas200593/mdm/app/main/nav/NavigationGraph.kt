@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
     @Serializable data object GraphInitialization
     @Serializable data object GraphAuth
     @Serializable data object GraphRoleSelection
-    @Serializable data object GraphDashboard
+    @Serializable data object GraphHome
+    @Serializable data object GraphMenu
     @Serializable data object GraphUserProfile
 }

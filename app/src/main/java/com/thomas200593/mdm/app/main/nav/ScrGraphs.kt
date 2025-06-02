@@ -32,15 +32,15 @@ import kotlinx.serialization.Serializable
         @StringRes val title: Int,
         @StringRes val description: Int
     ) {
-        @Serializable data object Dashboard : DestTopLevel(
-            iconRes = AppIcons.DestTopLevel.Dashboard,
-            title = R.string.str_dashboard,
-            description = R.string.str_dashboard_desc
+        @Serializable data object Home : DestTopLevel(
+            iconRes = AppIcons.DestTopLevel.Home,
+            title = R.string.str_home,
+            description = R.string.str_home_desc
         )
-        @Serializable data object UserProfile : DestTopLevel(
-            iconRes = AppIcons.DestTopLevel.UserProfile,
-            title = R.string.str_user_profile,
-            description = R.string.str_user_profile_desc
+        @Serializable data object Menu : DestTopLevel(
+            iconRes = AppIcons.DestTopLevel.Menu,
+            title = R.string.str_menu,
+            description = R.string.str_menu_desc
         )
     }
 }
