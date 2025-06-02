@@ -59,6 +59,7 @@ import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.SessionHandler
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
+import com.thomas200593.mdm.core.ui.common.AppIcons
 import com.thomas200593.mdm.core.ui.common.anim.SlideUpFadeAnim
 import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
@@ -368,7 +369,7 @@ import java.io.File
         content = {
             val imgModel = File(role.image)
                 .takeIf { role.image.isNotEmpty() && role.image != Constants.STR_SYSTEM && it.exists() }
-                ?: R.drawable.app_icon_48x48px
+                ?: AppIcons.App.icon
             Surface(
                 shape = RoundedCornerShape(Constants.Dimens.dp8),
                 border = BorderStroke(
@@ -440,7 +441,7 @@ import java.io.File
         content = {
             val imgModel = File(role.image)
                 .takeIf { role.image.isNotEmpty() && role.image != Constants.STR_SYSTEM && it.exists() }
-                ?: R.drawable.app_icon_48x48px
+                ?: AppIcons.App.icon
             Surface(
                 shape = RoundedCornerShape(Constants.Dimens.dp8),
                 border = BorderStroke(

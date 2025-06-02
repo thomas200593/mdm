@@ -42,6 +42,7 @@ import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
+import com.thomas200593.mdm.core.ui.common.AppIcons
 import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
@@ -172,7 +173,7 @@ import kotlinx.coroutines.launch
     Surface(
         modifier = Modifier.height(100.dp), content = {
             Image(
-                painter = painterResource(R.drawable.app_icon_48x48px),
+                painter = painterResource(AppIcons.App.icon),
                 contentDescription = null
             )
         }
