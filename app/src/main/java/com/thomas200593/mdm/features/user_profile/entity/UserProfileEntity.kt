@@ -7,6 +7,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.thomas200593.mdm.core.data.local.database.entity_common.AuditTrail
 import com.thomas200593.mdm.core.design_system.base_class.BaseEntity
+import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.features.management.user.entity.UserEntity
 
 @Entity(
@@ -28,6 +29,7 @@ data class UserProfileEntity(
     @ColumnInfo(name = "user_id") val userId: String,
     @ColumnInfo(name = "first_name") val firstName: String,
     @ColumnInfo(name = "last_name") val lastName: String,
+    @ColumnInfo(name = "image") val image: String = Constants.STR_SYSTEM,
     @ColumnInfo(name = "date_of_birth") val dateOfBirth: String,
     @ColumnInfo(name = "audit_trail") override val auditTrail: AuditTrail = AuditTrail()
 ) : BaseEntity
