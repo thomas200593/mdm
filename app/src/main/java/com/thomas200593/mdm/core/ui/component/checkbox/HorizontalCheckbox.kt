@@ -12,14 +12,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import com.thomas200593.mdm.core.design_system.util.Constants
 
-@Composable
-fun HorizontalCheckbox(modifier: Modifier = Modifier, enabled: Boolean, checked: Boolean, onCheckedChange: (Boolean) -> Unit, annotatedText: AnnotatedString) = Row(
-    modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8), verticalAlignment = Alignment.CenterVertically,
+@Composable fun HorizontalCheckbox(
+    modifier: Modifier = Modifier, enabled: Boolean, checked: Boolean, annotatedText: AnnotatedString,
+    onCheckedChange: (Boolean) -> Unit
+) = Row(
+    modifier = modifier.fillMaxWidth(),
+    horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
+    verticalAlignment = Alignment.CenterVertically,
     content = {
-        Checkbox(
-            modifier = Modifier.wrapContentWidth(), enabled = enabled, checked = checked,
-            onCheckedChange = onCheckedChange
-        )
+        Checkbox(modifier = Modifier.wrapContentWidth(), enabled = enabled, checked = checked, onCheckedChange = onCheckedChange)
         Text(modifier = Modifier.weight(1f), text = annotatedText)
     }
 )

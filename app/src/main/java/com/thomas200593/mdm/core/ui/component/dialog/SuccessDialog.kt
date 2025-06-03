@@ -11,9 +11,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.thomas200593.mdm.R
 
 @Composable fun SuccessDialog(
-    onDismissRequest: () -> Unit,
-    title: String = stringResource(R.string.str_success),
-    message: String = stringResource(R.string.str_success),
+    onDismissRequest: () -> Unit, title: String = stringResource(R.string.str_success), message: String = stringResource(R.string.str_success),
     btnConfirmText: String = stringResource(R.string.str_ok)
 ) = BaseAlertDialog(
     onDismissRequest = onDismissRequest,
