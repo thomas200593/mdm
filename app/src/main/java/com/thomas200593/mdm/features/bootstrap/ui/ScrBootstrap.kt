@@ -11,10 +11,11 @@ import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.SessionHandler
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
-import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
+import com.thomas200593.mdm.core.ui.component.loading.LoadingType
+import com.thomas200593.mdm.core.ui.component.loading.UiLoading
+import com.thomas200593.mdm.features.auth.nav.navToAuth
 import com.thomas200593.mdm.features.bootstrap.ui.events.Events
 import com.thomas200593.mdm.features.bootstrap.ui.state.ScreenDataState
-import com.thomas200593.mdm.features.auth.nav.navToAuth
 import com.thomas200593.mdm.features.introduction.initialization.entity.FirstTimeStatus
 import com.thomas200593.mdm.features.introduction.initialization.nav.navToInitialization
 import com.thomas200593.mdm.features.introduction.onboarding.entity.OnboardingStatus
@@ -43,7 +44,7 @@ import kotlinx.coroutines.launch
     onNavToOnboarding: () -> Unit, onNavToInitialization: () -> Unit, onNavToAuth: () -> Unit,
     onNavToRoleSelection: () -> Unit, onNavToHome: () -> Unit
 ) = when (screenData) {
-    is ScreenDataState.Loading -> ScrLoading(label = scrGraph.title)
+    is ScreenDataState.Loading -> UiLoading(type = LoadingType.Screen)
     is ScreenDataState.Loaded -> ScreenContent(
         components = screenData,
         onNavToOnboarding = onNavToOnboarding, onNavToInitialization = onNavToInitialization,

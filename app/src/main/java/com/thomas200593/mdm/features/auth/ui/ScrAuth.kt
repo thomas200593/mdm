@@ -46,9 +46,9 @@ import com.thomas200593.mdm.core.ui.common.AppIcons
 import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
-import com.thomas200593.mdm.core.ui.component.dialog.LoadingDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
-import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
+import com.thomas200593.mdm.core.ui.component.loading.LoadingType
+import com.thomas200593.mdm.core.ui.component.loading.UiLoading
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.features.auth.ui.events.Events
@@ -85,7 +85,7 @@ import kotlinx.coroutines.launch
     onFormAuthEvent: (Events.Content.Form) -> Unit,
     onSignInCallback: (Events.Content.SignInCallback) -> Unit
 ) = when (uiState.screenData) {
-    is ScreenDataState.Loading -> ScrLoading()
+    is ScreenDataState.Loading -> UiLoading(type = LoadingType.Screen)
     is ScreenDataState.Loaded -> ScreenContent(
         scrGraph = scrGraph,
         dialog = uiState.dialog,
@@ -105,8 +105,8 @@ import kotlinx.coroutines.launch
         onDismissRequest = { onTopBarEvent(Events.TopBar.BtnScrDesc.Dismissed) },
         title = stringResource(scrGraph.title), description = stringResource(scrGraph.description)
     )
-    is DialogState.LoadingAuthDialog -> LoadingDialog(message = "Authenticating...")
-    is DialogState.LoadingSessionDialog -> LoadingDialog(message = "Creating Session...")
+    is DialogState.LoadingAuthDialog -> UiLoading(type = LoadingType.Dialog, message = "Authenticating...")
+    is DialogState.LoadingSessionDialog -> UiLoading(type = LoadingType.Dialog, message = "Creating Session...")
 }
 @Composable private fun ScreenContent(
     scrGraph: ScrGraphs.Auth,

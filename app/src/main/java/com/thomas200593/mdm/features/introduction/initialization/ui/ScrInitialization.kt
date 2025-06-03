@@ -43,27 +43,27 @@ import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
+import com.thomas200593.mdm.core.ui.common.anim.SlideUpFadeAnim
 import com.thomas200593.mdm.core.ui.component.PanelCard
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.TxtMdTitle
-import com.thomas200593.mdm.core.ui.common.anim.SlideUpFadeAnim
 import com.thomas200593.mdm.core.ui.component.checkbox.HorizontalCheckbox
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
-import com.thomas200593.mdm.core.ui.component.dialog.LoadingDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.dialog.SuccessDialog
-import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
+import com.thomas200593.mdm.core.ui.component.loading.LoadingType
+import com.thomas200593.mdm.core.ui.component.loading.UiLoading
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldDatePicker
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPersonName
 import com.thomas200593.mdm.features.bootstrap.nav.navToBootstrap
 import com.thomas200593.mdm.features.introduction.initialization.ui.events.Events
-import com.thomas200593.mdm.features.introduction.initialization.ui.state.ScreenDataState
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.DialogState
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.FormInitializationState
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.ResultInitializationState
+import com.thomas200593.mdm.features.introduction.initialization.ui.state.ScreenDataState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -93,7 +93,7 @@ import kotlinx.coroutines.launch
     onDialogEvent: (Events.Dialog) -> Unit, onTopBarEvent: (Events.TopBar) -> Unit,
     onFormEvent: (Events.Content.Form) -> Unit, onBottomBarEvent: (Events.BottomBar) -> Unit
 ) = when (uiState.screenData) {
-    is ScreenDataState.Loading -> ScrLoading()
+    is ScreenDataState.Loading -> UiLoading(type = LoadingType.Screen)
     is ScreenDataState.Loaded -> ScreenContent(
         scrGraph = scrGraph,
         resultInitialization = uiState.resultInitialization,
@@ -114,7 +114,7 @@ import kotlinx.coroutines.launch
         title = stringResource(scrGraph.title), description = stringResource(scrGraph.description),
         onDismissRequest = { onTopBarEvent(Events.TopBar.BtnScrDesc.Dismissed) }
     )
-    is DialogState.LoadingDialog -> LoadingDialog()
+    is DialogState.LoadingDialog -> UiLoading(type = LoadingType.Dialog)
     is DialogState.ErrorDialog -> when (resultInitialization) {
         is ResultInitializationState.Idle, is ResultInitializationState.Loading, is ResultInitializationState.Success -> Unit
         is ResultInitializationState.Failure -> ErrorDialog(

@@ -67,8 +67,8 @@ import com.thomas200593.mdm.core.ui.component.TxtMdLabel
 import com.thomas200593.mdm.core.ui.component.TxtMdTitle
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
-import com.thomas200593.mdm.core.ui.component.screen.InnerCircularProgressIndicator
-import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
+import com.thomas200593.mdm.core.ui.component.loading.LoadingType
+import com.thomas200593.mdm.core.ui.component.loading.UiLoading
 import com.thomas200593.mdm.core.ui.component.text_field.SearchToolBar
 import com.thomas200593.mdm.features.auth.nav.navToAuth
 import com.thomas200593.mdm.features.bootstrap.nav.navToBootstrap
@@ -118,7 +118,7 @@ import java.io.File
     onBottomBarEvent: (Events.BottomBar) -> Unit,
     onUserRoleSetCallback: (Events.Content.UserRoleSetCallback) -> Unit
 ) = when (uiState.screenData) {
-    is ScreenDataState.Loading -> ScrLoading()
+    is ScreenDataState.Loading -> UiLoading(type = LoadingType.Screen)
     is ScreenDataState.Loaded -> ScreenContent(
         scrGraph = scrGraph,
         screenData = uiState.screenData,
@@ -381,7 +381,8 @@ import java.io.File
                 tonalElevation = Constants.Dimens.dp2,
                 modifier = Modifier.size(Constants.Dimens.dp48),
                 content = { SubcomposeAsyncImage(
-                    model = imgModel, contentDescription = null, loading = { InnerCircularProgressIndicator() },
+                    model = imgModel, contentDescription = null,
+                    loading = { UiLoading(type = LoadingType.InnerCircularProgressIndicator) },
                     contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize()
                 ) }
             )
@@ -454,7 +455,7 @@ import java.io.File
                 modifier = Modifier.size(Constants.Dimens.dp100),
                 content = { SubcomposeAsyncImage(
                     model = imgModel, contentDescription = null,
-                    loading = { InnerCircularProgressIndicator() },
+                    loading = { UiLoading(type = LoadingType.InnerCircularProgressIndicator) },
                     contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize()
                 ) }
             )

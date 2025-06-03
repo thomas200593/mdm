@@ -48,10 +48,10 @@ import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.ui.component.button.BtnConfLang
 import com.thomas200593.mdm.core.ui.component.button.BtnNext
 import com.thomas200593.mdm.core.ui.component.button.BtnPrevious
-import com.thomas200593.mdm.core.ui.component.screen.InnerCircularProgressIndicator
-import com.thomas200593.mdm.core.ui.component.screen.ScrLoading
 import com.thomas200593.mdm.core.ui.component.TxtLgTitle
 import com.thomas200593.mdm.core.ui.component.TxtMdBody
+import com.thomas200593.mdm.core.ui.component.loading.LoadingType
+import com.thomas200593.mdm.core.ui.component.loading.UiLoading
 import com.thomas200593.mdm.features.common.cnf_localization_language.entity.Language
 import com.thomas200593.mdm.features.common.cnf_common.entity.Common
 import com.thomas200593.mdm.features.introduction.initialization.nav.navToInitialization
@@ -83,7 +83,7 @@ import kotlinx.coroutines.launch
     scrGraph : ScrGraphs.Onboarding, uiState : VMOnboarding.UiState, formOnboarding : FormOnboardingState,
     onTopBarEvent : (Events.TopBar) -> Unit, onBottomBarEvent : (Events.BottomBar) -> Unit
 ) = when (uiState.screenData) {
-    is ScreenDataState.Loading -> ScrLoading(label = scrGraph.title)
+    is ScreenDataState.Loading -> UiLoading(type = LoadingType.Screen, message = stringResource(scrGraph.title))
     is ScreenDataState.Loaded -> ScreenContent(
         screenData = uiState.screenData, formOnboarding = formOnboarding,
         onTopBarEvent = onTopBarEvent, onBottomBarEvent = onBottomBarEvent
@@ -128,7 +128,7 @@ import kotlinx.coroutines.launch
             modifier = Modifier.fillMaxSize(),
             model = ImageRequest.Builder(LocalContext.current).crossfade(250).data(currentPage.imageRes).build(),
             contentDescription = null,
-            loading = { InnerCircularProgressIndicator() },
+            loading = { UiLoading(type = LoadingType.InnerCircularProgressIndicator) },
             contentScale = ContentScale.FillWidth
         )
         Box(modifier = Modifier.fillMaxSize().align(Alignment.BottomCenter).graphicsLayer { alpha = 0.6f }
