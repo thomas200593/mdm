@@ -6,6 +6,155 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
 object Color {
+    object BootstrapV5Base {
+        /**
+         * Blue
+         */
+        val Blue = Color(0xFF0D6EFD)
+        val Blue100 = Color(0xFFCCE5FF)
+        val Blue200 = Color(0xFF99CCFF)
+        val Blue300 = Color(0xFF66B2FF)
+        val Blue400 = Color(0xFF3399FF)
+        val Blue500 = Color(0xFF007BFF)
+        val Blue600 = Color(0xFF0069D9)
+        val Blue700 = Color(0xFF0056B3)
+        val Blue800 = Color(0xFF004085)
+        val Blue900 = Color(0xFF002752)
+        /**
+         * Indigo
+         */
+        val Indigo = Color(0xFF6610F2)
+        val Indigo100 = Color(0xFFE0CFFC)
+        val Indigo200 = Color(0xFFC29FFA)
+        val Indigo300 = Color(0xFFA370F7)
+        val Indigo400 = Color(0xFF8540F5)
+        val Indigo500 = Color(0xFF6610F2)
+        val Indigo600 = Color(0xFF520DC2)
+        val Indigo700 = Color(0xFF3D0A91)
+        val Indigo800 = Color(0xFF290661)
+        val Indigo900 = Color(0xFF140330)
+        /**
+         * Purple
+         */
+        val Purple = Color(0xFF6F42C1)
+        val Purple100 = Color(0xFFE2D9F3)
+        val Purple200 = Color(0xFFC5B3E6)
+        val Purple300 = Color(0xFFA98EDA)
+        val Purple400 = Color(0xFF8C68CD)
+        val Purple500 = Color(0xFF6F42C1)
+        val Purple600 = Color(0xFF59359A)
+        val Purple700 = Color(0xFF432874)
+        val Purple800 = Color(0xFF2C1A4D)
+        val Purple900 = Color(0xFF160D27)
+        /**
+         * Pink
+         */
+        val Pink = Color(0xFFD63384)
+        val Pink100 = Color(0xFFF7D6E6)
+        val Pink200 = Color(0xFFEFADCD)
+        val Pink300 = Color(0xFFE685B5)
+        val Pink400 = Color(0xFFDE5C9C)
+        val Pink500 = Color(0xFFD63384)
+        val Pink600 = Color(0xFFAB296A)
+        val Pink700 = Color(0xFF801F4F)
+        val Pink800 = Color(0xFF561435)
+        val Pink900 = Color(0xFF2B0A1A)
+        /**
+         * Red
+         */
+        val Red = Color(0xFFDC3545)
+        val Red100 = Color(0xFFF8D7DA)
+        val Red200 = Color(0xFFF1AEB5)
+        val Red300 = Color(0xFFEA868F)
+        val Red400 = Color(0xFFE35D6A)
+        val Red500 = Color(0xFFDC3545)
+        val Red600 = Color(0xFFB02A37)
+        val Red700 = Color(0xFF842029)
+        val Red800 = Color(0xFF58151C)
+        val Red900 = Color(0xFF2C0B0E)
+        /**
+         * Orange
+         */
+        val Orange = Color(0xFFFD7E14)
+        val Orange100 = Color(0xFFFFE5D0)
+        val Orange200 = Color(0xFFFFCBA1)
+        val Orange300 = Color(0xFFFFB072)
+        val Orange400 = Color(0xFFFF9643)
+        val Orange500 = Color(0xFFFD7E14)
+        val Orange600 = Color(0xFFCA6510)
+        val Orange700 = Color(0xFF984C0C)
+        val Orange800 = Color(0xFF653208)
+        val Orange900 = Color(0xFF331904)
+        /**
+         * Yellow
+         */
+        val Yellow = Color(0xFFFFC107)
+        val Yellow100 = Color(0xFFFFF3CD)
+        val Yellow200 = Color(0xFFFFE69C)
+        val Yellow300 = Color(0xFFFFDA6B)
+        val Yellow400 = Color(0xFFFFCD3A)
+        val Yellow500 = Color(0xFFFFC107)
+        val Yellow600 = Color(0xFFCC9A06)
+        val Yellow700 = Color(0xFF997404)
+        val Yellow800 = Color(0xFF664D03)
+        val Yellow900 = Color(0xFF332701)
+        /**
+         * Green
+         */
+        val Green = Color(0xFF198754)
+        val Green100 = Color(0xFFD1E7DD)
+        val Green200 = Color(0xFFA3CFBB)
+        val Green300 = Color(0xFF75B798)
+        val Green400 = Color(0xFF479F76)
+        val Green500 = Color(0xFF198754)
+        val Green600 = Color(0xFF146C43)
+        val Green700 = Color(0xFF0F5132)
+        val Green800 = Color(0xFF0A3622)
+        val Green900 = Color(0xFF051B11)
+        /**
+         * Teal
+         */
+        val Teal = Color(0xFF20C997)
+        val Teal100 = Color(0xFFD2F4EA)
+        val Teal200 = Color(0xFFA6E9D5)
+        val Teal300 = Color(0xFF79DFC1)
+        val Teal400 = Color(0xFF4DD4AC)
+        val Teal500 = Color(0xFF20C997)
+        val Teal600 = Color(0xFF1AA179)
+        val Teal700 = Color(0xFF13795B)
+        val Teal800 = Color(0xFF0D503C)
+        val Teal900 = Color(0xFF06281E)
+        /**
+         * Cyan
+         */
+        val Cyan = Color(0xFF0DCAF0)
+        val Cyan100 = Color(0xFFCFF4FC)
+        val Cyan200 = Color(0xFF9EEAF9)
+        val Cyan300 = Color(0xFF6EDFF6)
+        val Cyan400 = Color(0xFF3DD5F3)
+        val Cyan500 = Color(0xFF0DCAF0)
+        val Cyan600 = Color(0xFF0AA2C0)
+        val Cyan700 = Color(0xFF087990)
+        val Cyan800 = Color(0xFF055160)
+        val Cyan900 = Color(0xFF032830)
+        /**
+         * Gray (Neutral grayscale used for text, background, borders)
+         */
+        val Gray100 = Color(0xFFF8F9FA)
+        val Gray200 = Color(0xFFE9ECEF)
+        val Gray300 = Color(0xFFDEE2E6)
+        val Gray400 = Color(0xFFCED4DA)
+        val Gray500 = Color(0xFFADB5BD)
+        val Gray600 = Color(0xFF6C757D)
+        val Gray700 = Color(0xFF495057)
+        val Gray800 = Color(0xFF343A40)
+        val Gray900 = Color(0xFF212529)
+        /**
+         * Black & White
+         */
+        val Black = Color(0xFF000000)
+        val White = Color(0xFFFFFFFF)
+    }
     object Light {
         val scrimARGB = argb(0xe6, 0xFF, 0xFF, 0xFF)
         object ContrastDefault {
