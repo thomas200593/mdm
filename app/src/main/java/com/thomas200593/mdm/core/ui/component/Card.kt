@@ -24,23 +24,19 @@ import com.thomas200593.mdm.core.design_system.util.Constants
     shape: Shape = MaterialTheme.shapes.extraSmall,
     colors: CardColors = CardDefaults.cardColors(),
     elevation: CardElevation = CardDefaults.cardElevation()
-) {
-    Card(
-        modifier = modifier,
-        border = border,
-        shape = shape,
-        colors = colors,
-        elevation = elevation,
+) = Card(
+    modifier = modifier,
+    border = border,
+    shape = shape,
+    colors = colors,
+    elevation = elevation,
+    content = { Column (
+        modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp16),
+        verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
         content = {
-            Column (
-                modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp16),
-                verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
-                content = {
-                    title?.invoke()
-                    content.invoke()
-                    footer?.invoke()
-                }
-            )
+            title?.invoke()
+            content.invoke()
+            footer?.invoke()
         }
-    )
-}
+    ) }
+)
