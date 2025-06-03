@@ -1,12 +1,33 @@
 package com.thomas200593.mdm.core.ui.common
 
 import android.graphics.Color.argb
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 
 object Color {
     object BootstrapV5Base {
+        /**
+         * For Light Theme:
+         *   - Background (BG): The higher the contrast, the darker the color should be.
+         *   - Foreground (FG): The higher the contrast, the lighter the color should be.
+         * For Dark Theme:
+         *   - Background (BG): The higher the contrast, the lighter the color should be.
+         *   - Foreground (FG): The higher the contrast, the darker the color should be.
+         */
         /**
          * Blue
          */
@@ -158,25 +179,25 @@ object Color {
     object Light {
         val scrimARGB = argb(0xe6, 0xFF, 0xFF, 0xFF)
         object ContrastDefault {
-            private val primaryLight = Color(0xFF0D6680)
-            private val onPrimaryLight = Color(0xFFFFFFFF)
-            private val primaryContainerLight = Color(0xFFBAEAFF)
-            private val onPrimaryContainerLight = Color(0xFF004D62)
-            private val secondaryLight = Color(0xFF4C616B)
-            private val onSecondaryLight = Color(0xFFFFFFFF)
-            private val secondaryContainerLight = Color(0xFFCFE6F1)
-            private val onSecondaryContainerLight = Color(0xFF354A53)
-            private val tertiaryLight = Color(0xFF5C5B7E)
-            private val onTertiaryLight = Color(0xFFFFFFFF)
-            private val tertiaryContainerLight = Color(0xFFE2DFFF)
-            private val onTertiaryContainerLight = Color(0xFF444465)
-            private val errorLight = Color(0xFFBA1A1A)
-            private val onErrorLight = Color(0xFFFFFFFF)
-            private val errorContainerLight = Color(0xFFFFDAD6)
-            private val onErrorContainerLight = Color(0xFF93000A)
-            private val backgroundLight = Color(0xFFF5FAFD)
+            private val primaryLight = Color(0xFF0D6680) //done
+            private val onPrimaryLight = Color(0xFFFFFFFF) //done
+            private val primaryContainerLight = Color(0xFFBAEAFF) //done
+            private val onPrimaryContainerLight = Color(0xFF004D62) //done
+            private val secondaryLight = Color(0xFF4C616B) //done
+            private val onSecondaryLight = Color(0xFFFFFFFF) //done
+            private val secondaryContainerLight = Color(0xFFCFE6F1) //done
+            private val onSecondaryContainerLight = Color(0xFF354A53) //done
+            private val tertiaryLight = Color(0xFF5C5B7E) //done
+            private val onTertiaryLight = Color(0xFFFFFFFF) //done
+            private val tertiaryContainerLight = Color(0xFFE2DFFF) //done
+            private val onTertiaryContainerLight = Color(0xFF444465) //done
+            private val errorLight = Color(0xFFBA1A1A) //done
+            private val onErrorLight = Color(0xFFFFFFFF) //done
+            private val errorContainerLight = Color(0xFFFFDAD6) //done
+            private val onErrorContainerLight = Color(0xFF93000A) //done
+            private val backgroundLight = Color(0xFFF5FAFD) //Gray100
             private val onBackgroundLight = Color(0xFF171C1F)
-            private val surfaceLight = Color(0xFFF5FAFD)
+            private val surfaceLight = Color(0xFFF5FAFD) //Gray100
             private val onSurfaceLight = Color(0xFF171C1F)
             private val surfaceVariantLight = Color(0xFFDCE4E8)
             private val onSurfaceVariantLight = Color(0xFF40484C)
@@ -185,9 +206,9 @@ object Color {
             private val scrimLight = Color(0xFF000000)
             private val inverseSurfaceLight = Color(0xFF2C3134)
             private val inverseOnSurfaceLight = Color(0xFFEDF1F5)
-            private val inversePrimaryLight = Color(0xFF89D0EE)
+            private val inversePrimaryLight = Color(0xFF89D0EE) //done
             private val surfaceDimLight = Color(0xFFD6DBDE)
-            private val surfaceBrightLight = Color(0xFFF5FAFD)
+            private val surfaceBrightLight = Color(0xFFF5FAFD) //Gray100
             private val surfaceContainerLowestLight = Color(0xFFFFFFFF)
             private val surfaceContainerLowLight = Color(0xFFF0F4F7)
             private val surfaceContainerLight = Color(0xFFEAEEF2)
@@ -249,9 +270,9 @@ object Color {
             private val onErrorLightMediumContrast = Color(0xFFFFFFFF)
             private val errorContainerLightMediumContrast = Color(0xFFCF2C27)
             private val onErrorContainerLightMediumContrast = Color(0xFFFFFFFF)
-            private val backgroundLightMediumContrast = Color(0xFFF5FAFD)
+            private val backgroundLightMediumContrast = Color(0xFFF5FAFD) //Gray100
             private val onBackgroundLightMediumContrast = Color(0xFF171C1F)
-            private val surfaceLightMediumContrast = Color(0xFFF5FAFD)
+            private val surfaceLightMediumContrast = Color(0xFFF5FAFD) //Gray100
             private val onSurfaceLightMediumContrast = Color(0xFF0D1214)
             private val surfaceVariantLightMediumContrast = Color(0xFFDCE4E8)
             private val onSurfaceVariantLightMediumContrast = Color(0xFF2F373B)
@@ -262,7 +283,7 @@ object Color {
             private val inverseOnSurfaceLightMediumContrast = Color(0xFFEDF1F5)
             private val inversePrimaryLightMediumContrast = Color(0xFF89D0EE)
             private val surfaceDimLightMediumContrast = Color(0xFFC2C7CA)
-            private val surfaceBrightLightMediumContrast = Color(0xFFF5FAFD)
+            private val surfaceBrightLightMediumContrast = Color(0xFFF5FAFD) //Gray100
             private val surfaceContainerLowestLightMediumContrast = Color(0xFFFFFFFF)
             private val surfaceContainerLowLightMediumContrast = Color(0xFFF0F4F7)
             private val surfaceContainerLightMediumContrast = Color(0xFFE4E9EC)
@@ -324,9 +345,9 @@ object Color {
             private val onErrorLightHighContrast = Color(0xFFFFFFFF)
             private val errorContainerLightHighContrast = Color(0xFF98000A)
             private val onErrorContainerLightHighContrast = Color(0xFFFFFFFF)
-            private val backgroundLightHighContrast = Color(0xFFF5FAFD)
+            private val backgroundLightHighContrast = Color(0xFFF5FAFD) //Gray100
             private val onBackgroundLightHighContrast = Color(0xFF171C1F)
-            private val surfaceLightHighContrast = Color(0xFFF5FAFD)
+            private val surfaceLightHighContrast = Color(0xFFF5FAFD) //Gray100
             private val onSurfaceLightHighContrast = Color(0xFF000000)
             private val surfaceVariantLightHighContrast = Color(0xFFDCE4E8)
             private val onSurfaceVariantLightHighContrast = Color(0xFF000000)
@@ -337,7 +358,7 @@ object Color {
             private val inverseOnSurfaceLightHighContrast = Color(0xFFFFFFFF)
             private val inversePrimaryLightHighContrast = Color(0xFF89D0EE)
             private val surfaceDimLightHighContrast = Color(0xFFB4B9BD)
-            private val surfaceBrightLightHighContrast = Color(0xFFF5FAFD)
+            private val surfaceBrightLightHighContrast = Color(0xFFF5FAFD) //Gray100
             private val surfaceContainerLowestLightHighContrast = Color(0xFFFFFFFF)
             private val surfaceContainerLowLightHighContrast = Color(0xFFEDF1F5)
             private val surfaceContainerLightHighContrast = Color(0xFFDEE3E6)
@@ -612,3 +633,251 @@ object Color {
         }
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////////
+@Preview(group = "Primary") @Composable fun BtnPrimaryLightContrastDefault() = Button(
+    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+    colors = ButtonColors (
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Blue600,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+    ), content = { Text("Text") }
+)
+@Preview(group = "Primary") @Composable fun BtnPrimaryLightContrastMedium() = Button(
+    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+    colors = ButtonColors (
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Blue700,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+    ), content = { Text("Text") }
+)
+@Preview(group = "Primary") @Composable fun BtnPrimaryLightContrastHigh() = Button(
+    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+    colors = ButtonColors (
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Blue800,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+    ), content = { Text("Text") }
+)
+@Preview(group = "Primary") @Composable fun BtnInversePrimaryLightContrastDefault() = Button(
+    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+    colors = ButtonColors (
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Blue100,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Black,
+        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+    ), content = { Text("Text") }
+)
+@Preview(group = "Primary") @Composable fun BtnInversePrimaryLightContrastMedium() = Button(
+    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+    colors = ButtonColors (
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Blue200,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Black,
+        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+    ), content = { Text("Text") }
+)
+@Preview(group = "Primary") @Composable fun BtnInversePrimaryLightContrastHigh() = Button(
+    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+    colors = ButtonColors (
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Blue300,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Black,
+        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+    ), content = { Text("Text") }
+)
+@Preview(group = "Primary") @Composable fun BtnPrimaryContainerLightContrastDefault() = Card(
+    shape = MaterialTheme.shapes.extraSmall,
+    colors = CardColors(
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Blue500,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+        disabledContainerColor = CardDefaults.cardColors().disabledContainerColor,
+        disabledContentColor = CardDefaults.cardColors().disabledContentColor
+    ),
+    content = {
+        Column (
+            horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
+            content = {
+                Button(
+                    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+                    colors = ButtonColors (
+                        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Blue600,
+                        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+                        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+                        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+                    ), content = { Text("Text") }
+                )
+                Text("onPrimaryContainer")
+            }
+        )
+    }
+)
+
+////////////////////////////////////////////////////////////////////////////////////
+@Preview(group = "Secondary") @Composable fun BtnSecondaryLightContrastDefault() = Button(
+    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+    colors = ButtonColors (
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Gray600,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+    ), content = { Text("Text") }
+)
+@Preview(group = "Secondary") @Composable fun BtnSecondaryLightContrastMedium() = Button(
+    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+    colors = ButtonColors (
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Gray700,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+    ),
+    content = { Text("Text") }
+)
+@Preview(group = "Secondary") @Composable fun BtnSecondaryLightContrastHigh() = Button(
+    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+    colors = ButtonColors (
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Gray800,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+    ), content = { Text("Text") }
+)
+@Preview(group = "Secondary") @Composable fun BtnSecondaryContainerLightContrastDefault() = Card(
+    shape = MaterialTheme.shapes.extraSmall,
+    colors = CardColors(
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Gray500,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Gray800,
+        disabledContainerColor = CardDefaults.cardColors().disabledContainerColor,
+        disabledContentColor = CardDefaults.cardColors().disabledContentColor
+    ),
+    content = {
+        Column (
+            horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
+            content = {
+                Button(
+                    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+                    colors = ButtonColors (
+                        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Gray600,
+                        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+                        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+                        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+                    ), content = { Text("Text") }
+                )
+                Text("onPrimaryContainer")
+            }
+        )
+    }
+)
+
+////////////////////////////////////////////////////////////////////////////////////
+@Preview(group = "Tertiary") @Composable fun BtnTertiaryLightContrastDefault() = Button(
+    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+    colors = ButtonColors (
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Purple600,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+    ), content = { Text("Text") }
+)
+@Preview(group = "Tertiary") @Composable fun BtnTertiaryLightContrastMedium() = Button(
+    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+    colors = ButtonColors (
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Purple700,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+    ), content = { Text("Text") }
+)
+@Preview(group = "Tertiary") @Composable fun BtnTertiaryLightContrastHigh() = Button(
+    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+    colors = ButtonColors (
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Purple800,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+    ), content = { Text("Text") }
+)
+@Preview(group = "Tertiary") @Composable fun BtnTertiaryContainerLightContrastDefault() = Card(
+    shape = MaterialTheme.shapes.extraSmall,
+    colors = CardColors(
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Purple500,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+        disabledContainerColor = CardDefaults.cardColors().disabledContainerColor,
+        disabledContentColor = CardDefaults.cardColors().disabledContentColor
+    ),
+    content = {
+        Column (
+            horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
+            content = {
+                Button(
+                    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+                    colors = ButtonColors (
+                        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Purple600,
+                        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+                        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+                        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+                    ), content = { Text("Text") }
+                )
+                Text("onTertiaryContainer")
+            }
+        )
+    }
+)
+
+////////////////////////////////////////////////////////////////////////////////////
+@Preview(group = "Errors") @Composable fun BtnErrorLightContrastDefault() = Button(
+    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+    colors = ButtonColors (
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Red600,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+    ), content = { Text("Text") }
+)
+@Preview(group = "Errors") @Composable fun BtnErrorLightContrastMedium() = Button(
+    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+    colors = ButtonColors (
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Red700,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+    ), content = { Text("Text") }
+)
+@Preview(group = "Errors") @Composable fun BtnErrorLightContrastHigh() = Button(
+    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+    colors = ButtonColors (
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Red800,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+    ), content = { Text("Text") }
+)
+@Preview(group = "Errors") @Composable fun BtnErrorContainerLightContrastDefault() = Card(
+    shape = MaterialTheme.shapes.extraSmall,
+    colors = CardColors(
+        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Red200,
+        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Red800,
+        disabledContainerColor = CardDefaults.cardColors().disabledContainerColor,
+        disabledContentColor = CardDefaults.cardColors().disabledContentColor
+    ),
+    content = {
+        Column (
+            horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
+            content = {
+                Button(
+                    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
+                    colors = ButtonColors (
+                        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Red600,
+                        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
+                        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
+                        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
+                    ), content = { Text("Text") }
+                )
+                Text("onErrorContainer")
+            }
+        )
+    }
+)
