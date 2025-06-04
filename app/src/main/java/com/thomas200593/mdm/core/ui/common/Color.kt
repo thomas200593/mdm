@@ -1,33 +1,20 @@
 package com.thomas200593.mdm.core.ui.common
 
 import android.graphics.Color.argb
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 
 object Color {
+    /**
+     * For Light Theme:
+     *   - Background (BG): The higher the contrast, the darker the color should be.
+     *   - Foreground (FG): The higher the contrast, the lighter the color should be.
+     * For Dark Theme:
+     *   - Background (BG): The higher the contrast, the lighter the color should be.
+     *   - Foreground (FG): The higher the contrast, the darker the color should be.
+     */
     object BootstrapV5Base {
-        /**
-         * For Light Theme:
-         *   - Background (BG): The higher the contrast, the darker the color should be.
-         *   - Foreground (FG): The higher the contrast, the lighter the color should be.
-         * For Dark Theme:
-         *   - Background (BG): The higher the contrast, the lighter the color should be.
-         *   - Foreground (FG): The higher the contrast, the darker the color should be.
-         */
         /**
          * Blue
          */
@@ -176,44 +163,45 @@ object Color {
         val Black = Color(0xFF000000)
         val White = Color(0xFFFFFFFF)
     }
+    //V2
     object Light {
         val scrimARGB = argb(0xe6, 0xFF, 0xFF, 0xFF)
         object ContrastDefault {
-            private val primaryLight = Color(0xFF0D6680) //done
-            private val onPrimaryLight = Color(0xFFFFFFFF) //done
-            private val primaryContainerLight = Color(0xFFBAEAFF) //done
-            private val onPrimaryContainerLight = Color(0xFF004D62) //done
-            private val secondaryLight = Color(0xFF4C616B) //done
-            private val onSecondaryLight = Color(0xFFFFFFFF) //done
-            private val secondaryContainerLight = Color(0xFFCFE6F1) //done
-            private val onSecondaryContainerLight = Color(0xFF354A53) //done
-            private val tertiaryLight = Color(0xFF5C5B7E) //done
-            private val onTertiaryLight = Color(0xFFFFFFFF) //done
-            private val tertiaryContainerLight = Color(0xFFE2DFFF) //done
-            private val onTertiaryContainerLight = Color(0xFF444465) //done
-            private val errorLight = Color(0xFFBA1A1A) //done
-            private val onErrorLight = Color(0xFFFFFFFF) //done
-            private val errorContainerLight = Color(0xFFFFDAD6) //done
-            private val onErrorContainerLight = Color(0xFF93000A) //done
-            private val backgroundLight = Color(0xFFF5FAFD) //Gray100
-            private val onBackgroundLight = Color(0xFF171C1F)
-            private val surfaceLight = Color(0xFFF5FAFD) //Gray100
-            private val onSurfaceLight = Color(0xFF171C1F)
-            private val surfaceVariantLight = Color(0xFFDCE4E8)
-            private val onSurfaceVariantLight = Color(0xFF40484C)
-            private val outlineLight = Color(0xFF70787D)
-            private val outlineVariantLight = Color(0xFFC0C8CC)
-            private val scrimLight = Color(0xFF000000)
-            private val inverseSurfaceLight = Color(0xFF2C3134)
-            private val inverseOnSurfaceLight = Color(0xFFEDF1F5)
-            private val inversePrimaryLight = Color(0xFF89D0EE) //done
-            private val surfaceDimLight = Color(0xFFD6DBDE)
-            private val surfaceBrightLight = Color(0xFFF5FAFD) //Gray100
-            private val surfaceContainerLowestLight = Color(0xFFFFFFFF)
-            private val surfaceContainerLowLight = Color(0xFFF0F4F7)
-            private val surfaceContainerLight = Color(0xFFEAEEF2)
-            private val surfaceContainerHighLight = Color(0xFFE4E9EC)
-            private val surfaceContainerHighestLight = Color(0xFFDEE3E6)
+            private val primaryLight = BootstrapV5Base.Blue600
+            private val onPrimaryLight = BootstrapV5Base.White
+            private val primaryContainerLight = BootstrapV5Base.Blue500
+            private val onPrimaryContainerLight = BootstrapV5Base.White
+            private val secondaryLight = BootstrapV5Base.Gray600
+            private val onSecondaryLight = BootstrapV5Base.White
+            private val secondaryContainerLight = BootstrapV5Base.Gray500
+            private val onSecondaryContainerLight = BootstrapV5Base.Gray800
+            private val tertiaryLight = BootstrapV5Base.Purple600
+            private val onTertiaryLight = BootstrapV5Base.White
+            private val tertiaryContainerLight = BootstrapV5Base.Purple500
+            private val onTertiaryContainerLight = BootstrapV5Base.White
+            private val errorLight = BootstrapV5Base.Red600
+            private val onErrorLight = BootstrapV5Base.White
+            private val errorContainerLight = BootstrapV5Base.Red200
+            private val onErrorContainerLight = BootstrapV5Base.Red800
+            private val backgroundLight = BootstrapV5Base.Gray100
+            private val onBackgroundLight = BootstrapV5Base.Gray900
+            private val surfaceLight = BootstrapV5Base.Gray100
+            private val onSurfaceLight = BootstrapV5Base.Gray900
+            private val surfaceVariantLight = BootstrapV5Base.Gray200
+            private val onSurfaceVariantLight = BootstrapV5Base.Gray800
+            private val outlineLight = BootstrapV5Base.Gray600
+            private val outlineVariantLight = BootstrapV5Base.Gray500
+            private val scrimLight = BootstrapV5Base.Black
+            private val inverseSurfaceLight = BootstrapV5Base.Gray900
+            private val inverseOnSurfaceLight = BootstrapV5Base.Gray100
+            private val inversePrimaryLight = BootstrapV5Base.Blue100
+            private val surfaceDimLight = BootstrapV5Base.Gray100
+            private val surfaceBrightLight = BootstrapV5Base.Gray100
+            private val surfaceContainerLowestLight = BootstrapV5Base.Gray300
+            private val surfaceContainerLowLight = BootstrapV5Base.Gray300
+            private val surfaceContainerLight = BootstrapV5Base.Gray300
+            private val surfaceContainerHighLight = BootstrapV5Base.Gray300
+            private val surfaceContainerHighestLight = BootstrapV5Base.Gray300
             val colorScheme = lightColorScheme(
                 primary = primaryLight,
                 onPrimary = onPrimaryLight,
@@ -254,41 +242,41 @@ object Color {
             )
         }
         object ContrastMedium {
-            private val primaryLightMediumContrast = Color(0xFF003B4C)
-            private val onPrimaryLightMediumContrast = Color(0xFFFFFFFF)
-            private val primaryContainerLightMediumContrast = Color(0xFF277590)
-            private val onPrimaryContainerLightMediumContrast = Color(0xFFFFFFFF)
-            private val secondaryLightMediumContrast = Color(0xFF243942)
-            private val onSecondaryLightMediumContrast = Color(0xFFFFFFFF)
-            private val secondaryContainerLightMediumContrast = Color(0xFF5B707A)
-            private val onSecondaryContainerLightMediumContrast = Color(0xFFFFFFFF)
-            private val tertiaryLightMediumContrast = Color(0xFF333353)
-            private val onTertiaryLightMediumContrast = Color(0xFFFFFFFF)
-            private val tertiaryContainerLightMediumContrast = Color(0xFF6A6A8D)
-            private val onTertiaryContainerLightMediumContrast = Color(0xFFFFFFFF)
-            private val errorLightMediumContrast = Color(0xFF740006)
-            private val onErrorLightMediumContrast = Color(0xFFFFFFFF)
-            private val errorContainerLightMediumContrast = Color(0xFFCF2C27)
-            private val onErrorContainerLightMediumContrast = Color(0xFFFFFFFF)
-            private val backgroundLightMediumContrast = Color(0xFFF5FAFD) //Gray100
-            private val onBackgroundLightMediumContrast = Color(0xFF171C1F)
-            private val surfaceLightMediumContrast = Color(0xFFF5FAFD) //Gray100
-            private val onSurfaceLightMediumContrast = Color(0xFF0D1214)
-            private val surfaceVariantLightMediumContrast = Color(0xFFDCE4E8)
-            private val onSurfaceVariantLightMediumContrast = Color(0xFF2F373B)
-            private val outlineLightMediumContrast = Color(0xFF4C5458)
-            private val outlineVariantLightMediumContrast = Color(0xFF666E73)
-            private val scrimLightMediumContrast = Color(0xFF000000)
-            private val inverseSurfaceLightMediumContrast = Color(0xFF2C3134)
-            private val inverseOnSurfaceLightMediumContrast = Color(0xFFEDF1F5)
-            private val inversePrimaryLightMediumContrast = Color(0xFF89D0EE)
-            private val surfaceDimLightMediumContrast = Color(0xFFC2C7CA)
-            private val surfaceBrightLightMediumContrast = Color(0xFFF5FAFD) //Gray100
-            private val surfaceContainerLowestLightMediumContrast = Color(0xFFFFFFFF)
-            private val surfaceContainerLowLightMediumContrast = Color(0xFFF0F4F7)
-            private val surfaceContainerLightMediumContrast = Color(0xFFE4E9EC)
-            private val surfaceContainerHighLightMediumContrast = Color(0xFFD9DDE1)
-            private val surfaceContainerHighestLightMediumContrast = Color(0xFFCDD2D5)
+            private val primaryLightMediumContrast = BootstrapV5Base.Blue700
+            private val onPrimaryLightMediumContrast = BootstrapV5Base.White
+            private val primaryContainerLightMediumContrast = BootstrapV5Base.Blue500
+            private val onPrimaryContainerLightMediumContrast = BootstrapV5Base.White
+            private val secondaryLightMediumContrast = BootstrapV5Base.Gray700
+            private val onSecondaryLightMediumContrast = BootstrapV5Base.White
+            private val secondaryContainerLightMediumContrast = BootstrapV5Base.Gray500
+            private val onSecondaryContainerLightMediumContrast = BootstrapV5Base.Gray800
+            private val tertiaryLightMediumContrast = BootstrapV5Base.Purple600
+            private val onTertiaryLightMediumContrast = BootstrapV5Base.White
+            private val tertiaryContainerLightMediumContrast = BootstrapV5Base.Purple500
+            private val onTertiaryContainerLightMediumContrast = BootstrapV5Base.White
+            private val errorLightMediumContrast = BootstrapV5Base.Red700
+            private val onErrorLightMediumContrast = BootstrapV5Base.White
+            private val errorContainerLightMediumContrast = BootstrapV5Base.Red200
+            private val onErrorContainerLightMediumContrast = BootstrapV5Base.Red800
+            private val backgroundLightMediumContrast = BootstrapV5Base.Gray100
+            private val onBackgroundLightMediumContrast = BootstrapV5Base.Gray900
+            private val surfaceLightMediumContrast = BootstrapV5Base.Gray100
+            private val onSurfaceLightMediumContrast = BootstrapV5Base.Gray900
+            private val surfaceVariantLightMediumContrast = BootstrapV5Base.Gray200
+            private val onSurfaceVariantLightMediumContrast = BootstrapV5Base.Gray800
+            private val outlineLightMediumContrast = BootstrapV5Base.Gray600
+            private val outlineVariantLightMediumContrast = BootstrapV5Base.Gray500
+            private val scrimLightMediumContrast = BootstrapV5Base.Black
+            private val inverseSurfaceLightMediumContrast = BootstrapV5Base.Gray900
+            private val inverseOnSurfaceLightMediumContrast = BootstrapV5Base.Gray100
+            private val inversePrimaryLightMediumContrast = BootstrapV5Base.Blue100
+            private val surfaceDimLightMediumContrast = BootstrapV5Base.Gray100
+            private val surfaceBrightLightMediumContrast = BootstrapV5Base.Gray100
+            private val surfaceContainerLowestLightMediumContrast = BootstrapV5Base.Gray300
+            private val surfaceContainerLowLightMediumContrast = BootstrapV5Base.Gray300
+            private val surfaceContainerLightMediumContrast = BootstrapV5Base.Gray300
+            private val surfaceContainerHighLightMediumContrast = BootstrapV5Base.Gray300
+            private val surfaceContainerHighestLightMediumContrast = BootstrapV5Base.Gray300
             val colorScheme = lightColorScheme(
                 primary = primaryLightMediumContrast,
                 onPrimary = onPrimaryLightMediumContrast,
@@ -329,41 +317,41 @@ object Color {
             )
         }
         object ContrastHigh {
-            private val primaryLightHighContrast = Color(0xFF00313F)
-            private val onPrimaryLightHighContrast = Color(0xFFFFFFFF)
-            private val primaryContainerLightHighContrast = Color(0xFF005066)
-            private val onPrimaryContainerLightHighContrast = Color(0xFFFFFFFF)
-            private val secondaryLightHighContrast = Color(0xFF1A2F38)
-            private val onSecondaryLightHighContrast = Color(0xFFFFFFFF)
-            private val secondaryContainerLightHighContrast = Color(0xFF374C55)
-            private val onSecondaryContainerLightHighContrast = Color(0xFFFFFFFF)
-            private val tertiaryLightHighContrast = Color(0xFF292948)
-            private val onTertiaryLightHighContrast = Color(0xFFFFFFFF)
-            private val tertiaryContainerLightHighContrast = Color(0xFF464667)
-            private val onTertiaryContainerLightHighContrast = Color(0xFFFFFFFF)
-            private val errorLightHighContrast = Color(0xFF600004)
-            private val onErrorLightHighContrast = Color(0xFFFFFFFF)
-            private val errorContainerLightHighContrast = Color(0xFF98000A)
-            private val onErrorContainerLightHighContrast = Color(0xFFFFFFFF)
-            private val backgroundLightHighContrast = Color(0xFFF5FAFD) //Gray100
-            private val onBackgroundLightHighContrast = Color(0xFF171C1F)
-            private val surfaceLightHighContrast = Color(0xFFF5FAFD) //Gray100
-            private val onSurfaceLightHighContrast = Color(0xFF000000)
-            private val surfaceVariantLightHighContrast = Color(0xFFDCE4E8)
-            private val onSurfaceVariantLightHighContrast = Color(0xFF000000)
-            private val outlineLightHighContrast = Color(0xFF252D31)
-            private val outlineVariantLightHighContrast = Color(0xFF424A4E)
-            private val scrimLightHighContrast = Color(0xFF000000)
-            private val inverseSurfaceLightHighContrast = Color(0xFF2C3134)
-            private val inverseOnSurfaceLightHighContrast = Color(0xFFFFFFFF)
-            private val inversePrimaryLightHighContrast = Color(0xFF89D0EE)
-            private val surfaceDimLightHighContrast = Color(0xFFB4B9BD)
-            private val surfaceBrightLightHighContrast = Color(0xFFF5FAFD) //Gray100
-            private val surfaceContainerLowestLightHighContrast = Color(0xFFFFFFFF)
-            private val surfaceContainerLowLightHighContrast = Color(0xFFEDF1F5)
-            private val surfaceContainerLightHighContrast = Color(0xFFDEE3E6)
-            private val surfaceContainerHighLightHighContrast = Color(0xFFD0D5D8)
-            private val surfaceContainerHighestLightHighContrast = Color(0xFFC2C7CA)
+            private val primaryLightHighContrast = BootstrapV5Base.Blue800
+            private val onPrimaryLightHighContrast = BootstrapV5Base.White
+            private val primaryContainerLightHighContrast = BootstrapV5Base.Blue500
+            private val onPrimaryContainerLightHighContrast = BootstrapV5Base.White
+            private val secondaryLightHighContrast = BootstrapV5Base.Gray800
+            private val onSecondaryLightHighContrast = BootstrapV5Base.White
+            private val secondaryContainerLightHighContrast = BootstrapV5Base.Gray500
+            private val onSecondaryContainerLightHighContrast = BootstrapV5Base.Gray800
+            private val tertiaryLightHighContrast = BootstrapV5Base.Purple800
+            private val onTertiaryLightHighContrast = BootstrapV5Base.White
+            private val tertiaryContainerLightHighContrast = BootstrapV5Base.Purple500
+            private val onTertiaryContainerLightHighContrast = BootstrapV5Base.White
+            private val errorLightHighContrast = BootstrapV5Base.Red800
+            private val onErrorLightHighContrast = BootstrapV5Base.White
+            private val errorContainerLightHighContrast = BootstrapV5Base.Red200
+            private val onErrorContainerLightHighContrast = BootstrapV5Base.Red800
+            private val backgroundLightHighContrast = BootstrapV5Base.Gray100
+            private val onBackgroundLightHighContrast = BootstrapV5Base.Gray900
+            private val surfaceLightHighContrast = BootstrapV5Base.Gray100
+            private val onSurfaceLightHighContrast = BootstrapV5Base.Gray900
+            private val surfaceVariantLightHighContrast = BootstrapV5Base.Gray200
+            private val onSurfaceVariantLightHighContrast = BootstrapV5Base.Gray800
+            private val outlineLightHighContrast = BootstrapV5Base.Gray600
+            private val outlineVariantLightHighContrast = BootstrapV5Base.Gray500
+            private val scrimLightHighContrast = BootstrapV5Base.Black
+            private val inverseSurfaceLightHighContrast = BootstrapV5Base.Gray900
+            private val inverseOnSurfaceLightHighContrast = BootstrapV5Base.Gray100
+            private val inversePrimaryLightHighContrast = BootstrapV5Base.Blue100
+            private val surfaceDimLightHighContrast = BootstrapV5Base.Gray100
+            private val surfaceBrightLightHighContrast = BootstrapV5Base.Gray100
+            private val surfaceContainerLowestLightHighContrast = BootstrapV5Base.Gray300
+            private val surfaceContainerLowLightHighContrast = BootstrapV5Base.Gray300
+            private val surfaceContainerLightHighContrast = BootstrapV5Base.Gray300
+            private val surfaceContainerHighLightHighContrast = BootstrapV5Base.Gray300
+            private val surfaceContainerHighestLightHighContrast = BootstrapV5Base.Gray300
             val colorScheme = lightColorScheme(
                 primary = primaryLightHighContrast,
                 onPrimary = onPrimaryLightHighContrast,
@@ -407,41 +395,41 @@ object Color {
     object Dark {
         val scrimARGB = argb(0x80, 0x1b, 0x1b, 0x1b)
         object ContrastDefault {
-            private val primaryDark = Color(0xFF89D0EE)
-            private val onPrimaryDark = Color(0xFF003545)
-            private val primaryContainerDark = Color(0xFF004D62)
-            private val onPrimaryContainerDark = Color(0xFFBAEAFF)
-            private val secondaryDark = Color(0xFFB4CAD5)
-            private val onSecondaryDark = Color(0xFF1E333C)
-            private val secondaryContainerDark = Color(0xFF354A53)
-            private val onSecondaryContainerDark = Color(0xFFCFE6F1)
-            private val tertiaryDark = Color(0xFFC5C3EA)
-            private val onTertiaryDark = Color(0xFF2D2D4D)
-            private val tertiaryContainerDark = Color(0xFF444465)
-            private val onTertiaryContainerDark = Color(0xFFE2DFFF)
-            private val errorDark = Color(0xFFFFB4AB)
-            private val onErrorDark = Color(0xFF690005)
-            private val errorContainerDark = Color(0xFF93000A)
-            private val onErrorContainerDark = Color(0xFFFFDAD6)
-            private val backgroundDark = Color(0xFF0F1417)
-            private val onBackgroundDark = Color(0xFFDEE3E6)
-            private val surfaceDark = Color(0xFF0F1417)
-            private val onSurfaceDark = Color(0xFFDEE3E6)
-            private val surfaceVariantDark = Color(0xFF40484C)
-            private val onSurfaceVariantDark = Color(0xFFC0C8CC)
-            private val outlineDark = Color(0xFF8A9296)
-            private val outlineVariantDark = Color(0xFF40484C)
-            private val scrimDark = Color(0xFF000000)
-            private val inverseSurfaceDark = Color(0xFFDEE3E6)
-            private val inverseOnSurfaceDark = Color(0xFF2C3134)
-            private val inversePrimaryDark = Color(0xFF0D6680)
-            private val surfaceDimDark = Color(0xFF0F1417)
-            private val surfaceBrightDark = Color(0xFF353A3D)
-            private val surfaceContainerLowestDark = Color(0xFF0A0F11)
-            private val surfaceContainerLowDark = Color(0xFF171C1F)
-            private val surfaceContainerDark = Color(0xFF1B2023)
-            private val surfaceContainerHighDark = Color(0xFF252B2D)
-            private val surfaceContainerHighestDark = Color(0xFF303638)
+            private val primaryDark = BootstrapV5Base.Blue400
+            private val onPrimaryDark = BootstrapV5Base.White
+            private val primaryContainerDark = BootstrapV5Base.Blue500
+            private val onPrimaryContainerDark = BootstrapV5Base.White
+            private val secondaryDark = BootstrapV5Base.Gray400
+            private val onSecondaryDark = BootstrapV5Base.White
+            private val secondaryContainerDark = BootstrapV5Base.Gray500
+            private val onSecondaryContainerDark = BootstrapV5Base.Gray800
+            private val tertiaryDark = BootstrapV5Base.Purple400
+            private val onTertiaryDark = BootstrapV5Base.White
+            private val tertiaryContainerDark = BootstrapV5Base.Purple500
+            private val onTertiaryContainerDark = BootstrapV5Base.White
+            private val errorDark = BootstrapV5Base.Red400
+            private val onErrorDark = BootstrapV5Base.White
+            private val errorContainerDark = BootstrapV5Base.Red200
+            private val onErrorContainerDark = BootstrapV5Base.Red800
+            private val backgroundDark = BootstrapV5Base.Gray900
+            private val onBackgroundDark = BootstrapV5Base.Gray100
+            private val surfaceDark = BootstrapV5Base.Black
+            private val onSurfaceDark = BootstrapV5Base.Gray100
+            private val surfaceVariantDark = BootstrapV5Base.Gray900
+            private val onSurfaceVariantDark = BootstrapV5Base.Gray200
+            private val outlineDark = BootstrapV5Base.Gray600
+            private val outlineVariantDark = BootstrapV5Base.Gray500
+            private val scrimDark = BootstrapV5Base.White
+            private val inverseSurfaceDark = BootstrapV5Base.Gray100
+            private val inverseOnSurfaceDark = BootstrapV5Base.Gray900
+            private val inversePrimaryDark = BootstrapV5Base.Blue100
+            private val surfaceDimDark = BootstrapV5Base.Black
+            private val surfaceBrightDark = BootstrapV5Base.Black
+            private val surfaceContainerLowestDark = BootstrapV5Base.Gray800
+            private val surfaceContainerLowDark = BootstrapV5Base.Gray800
+            private val surfaceContainerDark = BootstrapV5Base.Gray800
+            private val surfaceContainerHighDark = BootstrapV5Base.Gray800
+            private val surfaceContainerHighestDark = BootstrapV5Base.Gray800
             val colorScheme = darkColorScheme(
                 primary = primaryDark,
                 onPrimary = onPrimaryDark,
@@ -482,41 +470,41 @@ object Color {
             )
         }
         object ContrastMedium {
-            private val primaryDarkMediumContrast = Color(0xFFA9E5FF)
-            private val onPrimaryDarkMediumContrast = Color(0xFF002A36)
-            private val primaryContainerDarkMediumContrast = Color(0xFF529AB5)
-            private val onPrimaryContainerDarkMediumContrast = Color(0xFF000000)
-            private val secondaryDarkMediumContrast = Color(0xFFC9E0EB)
-            private val onSecondaryDarkMediumContrast = Color(0xFF132831)
-            private val secondaryContainerDarkMediumContrast = Color(0xFF7E949E)
-            private val onSecondaryContainerDarkMediumContrast = Color(0xFF000000)
-            private val tertiaryDarkMediumContrast = Color(0xFFDBD9FF)
-            private val onTertiaryDarkMediumContrast = Color(0xFF222241)
-            private val tertiaryContainerDarkMediumContrast = Color(0xFF8E8DB2)
-            private val onTertiaryContainerDarkMediumContrast = Color(0xFF000000)
-            private val errorDarkMediumContrast = Color(0xFFFFD2CC)
-            private val onErrorDarkMediumContrast = Color(0xFF540003)
-            private val errorContainerDarkMediumContrast = Color(0xFFFF5449)
-            private val onErrorContainerDarkMediumContrast = Color(0xFF000000)
-            private val backgroundDarkMediumContrast = Color(0xFF0F1417)
-            private val onBackgroundDarkMediumContrast = Color(0xFFDEE3E6)
-            private val surfaceDarkMediumContrast = Color(0xFF0F1417)
-            private val onSurfaceDarkMediumContrast = Color(0xFFFFFFFF)
-            private val surfaceVariantDarkMediumContrast = Color(0xFF40484C)
-            private val onSurfaceVariantDarkMediumContrast = Color(0xFFD5DDE2)
-            private val outlineDarkMediumContrast = Color(0xFFABB3B8)
-            private val outlineVariantDarkMediumContrast = Color(0xFF899196)
-            private val scrimDarkMediumContrast = Color(0xFF000000)
-            private val inverseSurfaceDarkMediumContrast = Color(0xFFDEE3E6)
-            private val inverseOnSurfaceDarkMediumContrast = Color(0xFF262B2D)
-            private val inversePrimaryDarkMediumContrast = Color(0xFF004F64)
-            private val surfaceDimDarkMediumContrast = Color(0xFF0F1417)
-            private val surfaceBrightDarkMediumContrast = Color(0xFF404548)
-            private val surfaceContainerLowestDarkMediumContrast = Color(0xFF04080A)
-            private val surfaceContainerLowDarkMediumContrast = Color(0xFF191E21)
-            private val surfaceContainerDarkMediumContrast = Color(0xFF23292B)
-            private val surfaceContainerHighDarkMediumContrast = Color(0xFF2E3336)
-            private val surfaceContainerHighestDarkMediumContrast = Color(0xFF393E41)
+            private val primaryDarkMediumContrast = BootstrapV5Base.Blue300
+            private val onPrimaryDarkMediumContrast = BootstrapV5Base.Black
+            private val primaryContainerDarkMediumContrast = BootstrapV5Base.Blue500
+            private val onPrimaryContainerDarkMediumContrast = BootstrapV5Base.White
+            private val secondaryDarkMediumContrast = BootstrapV5Base.Gray300
+            private val onSecondaryDarkMediumContrast = BootstrapV5Base.Black
+            private val secondaryContainerDarkMediumContrast = BootstrapV5Base.Gray500
+            private val onSecondaryContainerDarkMediumContrast = BootstrapV5Base.Gray800
+            private val tertiaryDarkMediumContrast = BootstrapV5Base.Purple300
+            private val onTertiaryDarkMediumContrast = BootstrapV5Base.Black
+            private val tertiaryContainerDarkMediumContrast = BootstrapV5Base.Purple500
+            private val onTertiaryContainerDarkMediumContrast = BootstrapV5Base.White
+            private val errorDarkMediumContrast = BootstrapV5Base.Red300
+            private val onErrorDarkMediumContrast = BootstrapV5Base.Black
+            private val errorContainerDarkMediumContrast = BootstrapV5Base.Red200
+            private val onErrorContainerDarkMediumContrast = BootstrapV5Base.Red800
+            private val backgroundDarkMediumContrast = BootstrapV5Base.Gray900
+            private val onBackgroundDarkMediumContrast = BootstrapV5Base.Gray100
+            private val surfaceDarkMediumContrast = BootstrapV5Base.Black
+            private val onSurfaceDarkMediumContrast = BootstrapV5Base.Gray100
+            private val surfaceVariantDarkMediumContrast = BootstrapV5Base.Gray900
+            private val onSurfaceVariantDarkMediumContrast = BootstrapV5Base.Gray200
+            private val outlineDarkMediumContrast = BootstrapV5Base.Gray600
+            private val outlineVariantDarkMediumContrast = BootstrapV5Base.Gray500
+            private val scrimDarkMediumContrast = BootstrapV5Base.White
+            private val inverseSurfaceDarkMediumContrast = BootstrapV5Base.Gray100
+            private val inverseOnSurfaceDarkMediumContrast = BootstrapV5Base.Gray900
+            private val inversePrimaryDarkMediumContrast = BootstrapV5Base.Blue100
+            private val surfaceDimDarkMediumContrast = BootstrapV5Base.Black
+            private val surfaceBrightDarkMediumContrast = BootstrapV5Base.Black
+            private val surfaceContainerLowestDarkMediumContrast = BootstrapV5Base.Gray800
+            private val surfaceContainerLowDarkMediumContrast = BootstrapV5Base.Gray800
+            private val surfaceContainerDarkMediumContrast = BootstrapV5Base.Gray800
+            private val surfaceContainerHighDarkMediumContrast = BootstrapV5Base.Gray800
+            private val surfaceContainerHighestDarkMediumContrast = BootstrapV5Base.Gray800
             val colorScheme = darkColorScheme(
                 primary = primaryDarkMediumContrast,
                 onPrimary = onPrimaryDarkMediumContrast,
@@ -557,41 +545,41 @@ object Color {
             )
         }
         object ContrastHigh {
-            private val primaryDarkHighContrast = Color(0xFFDDF4FF)
-            private val onPrimaryDarkHighContrast = Color(0xFF000000)
-            private val primaryContainerDarkHighContrast = Color(0xFF85CCEA)
-            private val onPrimaryContainerDarkHighContrast = Color(0xFF000D13)
-            private val secondaryDarkHighContrast = Color(0xFFDDF4FF)
-            private val onSecondaryDarkHighContrast = Color(0xFF000000)
-            private val secondaryContainerDarkHighContrast = Color(0xFFB0C6D1)
-            private val onSecondaryContainerDarkHighContrast = Color(0xFF000D13)
-            private val tertiaryDarkHighContrast = Color(0xFFF1EEFF)
-            private val onTertiaryDarkHighContrast = Color(0xFF000000)
-            private val tertiaryContainerDarkHighContrast = Color(0xFFC1BFE6)
-            private val onTertiaryContainerDarkHighContrast = Color(0xFF080726)
-            private val errorDarkHighContrast = Color(0xFFFFECE9)
-            private val onErrorDarkHighContrast = Color(0xFF000000)
-            private val errorContainerDarkHighContrast = Color(0xFFFFAEA4)
-            private val onErrorContainerDarkHighContrast = Color(0xFF220001)
-            private val backgroundDarkHighContrast = Color(0xFF0F1417)
-            private val onBackgroundDarkHighContrast = Color(0xFFDEE3E6)
-            private val surfaceDarkHighContrast = Color(0xFF0F1417)
-            private val onSurfaceDarkHighContrast = Color(0xFFFFFFFF)
-            private val surfaceVariantDarkHighContrast = Color(0xFF40484C)
-            private val onSurfaceVariantDarkHighContrast = Color(0xFFFFFFFF)
-            private val outlineDarkHighContrast = Color(0xFFE9F1F6)
-            private val outlineVariantDarkHighContrast = Color(0xFFBCC4C8)
-            private val scrimDarkHighContrast = Color(0xFF000000)
-            private val inverseSurfaceDarkHighContrast = Color(0xFFDEE3E6)
-            private val inverseOnSurfaceDarkHighContrast = Color(0xFF000000)
-            private val inversePrimaryDarkHighContrast = Color(0xFF004F64)
-            private val surfaceDimDarkHighContrast = Color(0xFF0F1417)
-            private val surfaceBrightDarkHighContrast = Color(0xFF4C5154)
-            private val surfaceContainerLowestDarkHighContrast = Color(0xFF000000)
-            private val surfaceContainerLowDarkHighContrast = Color(0xFF1B2023)
-            private val surfaceContainerDarkHighContrast = Color(0xFF2C3134)
-            private val surfaceContainerHighDarkHighContrast = Color(0xFF373C3F)
-            private val surfaceContainerHighestDarkHighContrast = Color(0xFF42484A)
+            private val primaryDarkHighContrast = BootstrapV5Base.Blue200
+            private val onPrimaryDarkHighContrast = BootstrapV5Base.Black
+            private val primaryContainerDarkHighContrast = BootstrapV5Base.Blue500
+            private val onPrimaryContainerDarkHighContrast = BootstrapV5Base.White
+            private val secondaryDarkHighContrast = BootstrapV5Base.Gray200
+            private val onSecondaryDarkHighContrast = BootstrapV5Base.Black
+            private val secondaryContainerDarkHighContrast = BootstrapV5Base.Gray500
+            private val onSecondaryContainerDarkHighContrast = BootstrapV5Base.Gray800
+            private val tertiaryDarkHighContrast = BootstrapV5Base.Purple200
+            private val onTertiaryDarkHighContrast = BootstrapV5Base.Black
+            private val tertiaryContainerDarkHighContrast = BootstrapV5Base.Purple500
+            private val onTertiaryContainerDarkHighContrast = BootstrapV5Base.White
+            private val errorDarkHighContrast = BootstrapV5Base.Red200
+            private val onErrorDarkHighContrast = BootstrapV5Base.Black
+            private val errorContainerDarkHighContrast = BootstrapV5Base.Red200
+            private val onErrorContainerDarkHighContrast = BootstrapV5Base.Red800
+            private val backgroundDarkHighContrast = BootstrapV5Base.Gray900
+            private val onBackgroundDarkHighContrast = BootstrapV5Base.Gray100
+            private val surfaceDarkHighContrast = BootstrapV5Base.Black
+            private val onSurfaceDarkHighContrast = BootstrapV5Base.Gray100
+            private val surfaceVariantDarkHighContrast = BootstrapV5Base.Gray900
+            private val onSurfaceVariantDarkHighContrast = BootstrapV5Base.Gray200
+            private val outlineDarkHighContrast = BootstrapV5Base.Gray600
+            private val outlineVariantDarkHighContrast = BootstrapV5Base.Gray500
+            private val scrimDarkHighContrast = BootstrapV5Base.White
+            private val inverseSurfaceDarkHighContrast = BootstrapV5Base.Gray100
+            private val inverseOnSurfaceDarkHighContrast = BootstrapV5Base.Gray900
+            private val inversePrimaryDarkHighContrast = BootstrapV5Base.Blue100
+            private val surfaceDimDarkHighContrast = BootstrapV5Base.Black
+            private val surfaceBrightDarkHighContrast = BootstrapV5Base.Black
+            private val surfaceContainerLowestDarkHighContrast = BootstrapV5Base.Gray800
+            private val surfaceContainerLowDarkHighContrast = BootstrapV5Base.Gray800
+            private val surfaceContainerDarkHighContrast = BootstrapV5Base.Gray800
+            private val surfaceContainerHighDarkHighContrast = BootstrapV5Base.Gray800
+            private val surfaceContainerHighestDarkHighContrast = BootstrapV5Base.Gray800
             val colorScheme = darkColorScheme(
                 primary = primaryDarkHighContrast,
                 onPrimary = onPrimaryDarkHighContrast,
@@ -633,251 +621,3 @@ object Color {
         }
     }
 }
-
-////////////////////////////////////////////////////////////////////////////////////
-@Preview(group = "Primary") @Composable fun BtnPrimaryLightContrastDefault() = Button(
-    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-    colors = ButtonColors (
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Blue600,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-    ), content = { Text("Text") }
-)
-@Preview(group = "Primary") @Composable fun BtnPrimaryLightContrastMedium() = Button(
-    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-    colors = ButtonColors (
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Blue700,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-    ), content = { Text("Text") }
-)
-@Preview(group = "Primary") @Composable fun BtnPrimaryLightContrastHigh() = Button(
-    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-    colors = ButtonColors (
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Blue800,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-    ), content = { Text("Text") }
-)
-@Preview(group = "Primary") @Composable fun BtnInversePrimaryLightContrastDefault() = Button(
-    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-    colors = ButtonColors (
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Blue100,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Black,
-        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-    ), content = { Text("Text") }
-)
-@Preview(group = "Primary") @Composable fun BtnInversePrimaryLightContrastMedium() = Button(
-    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-    colors = ButtonColors (
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Blue200,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Black,
-        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-    ), content = { Text("Text") }
-)
-@Preview(group = "Primary") @Composable fun BtnInversePrimaryLightContrastHigh() = Button(
-    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-    colors = ButtonColors (
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Blue300,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Black,
-        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-    ), content = { Text("Text") }
-)
-@Preview(group = "Primary") @Composable fun BtnPrimaryContainerLightContrastDefault() = Card(
-    shape = MaterialTheme.shapes.extraSmall,
-    colors = CardColors(
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Blue500,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-        disabledContainerColor = CardDefaults.cardColors().disabledContainerColor,
-        disabledContentColor = CardDefaults.cardColors().disabledContentColor
-    ),
-    content = {
-        Column (
-            horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
-            content = {
-                Button(
-                    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-                    colors = ButtonColors (
-                        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Blue600,
-                        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-                        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-                        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-                    ), content = { Text("Text") }
-                )
-                Text("onPrimaryContainer")
-            }
-        )
-    }
-)
-
-////////////////////////////////////////////////////////////////////////////////////
-@Preview(group = "Secondary") @Composable fun BtnSecondaryLightContrastDefault() = Button(
-    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-    colors = ButtonColors (
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Gray600,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-    ), content = { Text("Text") }
-)
-@Preview(group = "Secondary") @Composable fun BtnSecondaryLightContrastMedium() = Button(
-    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-    colors = ButtonColors (
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Gray700,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-    ),
-    content = { Text("Text") }
-)
-@Preview(group = "Secondary") @Composable fun BtnSecondaryLightContrastHigh() = Button(
-    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-    colors = ButtonColors (
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Gray800,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-    ), content = { Text("Text") }
-)
-@Preview(group = "Secondary") @Composable fun BtnSecondaryContainerLightContrastDefault() = Card(
-    shape = MaterialTheme.shapes.extraSmall,
-    colors = CardColors(
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Gray500,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Gray800,
-        disabledContainerColor = CardDefaults.cardColors().disabledContainerColor,
-        disabledContentColor = CardDefaults.cardColors().disabledContentColor
-    ),
-    content = {
-        Column (
-            horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
-            content = {
-                Button(
-                    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-                    colors = ButtonColors (
-                        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Gray600,
-                        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-                        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-                        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-                    ), content = { Text("Text") }
-                )
-                Text("onPrimaryContainer")
-            }
-        )
-    }
-)
-
-////////////////////////////////////////////////////////////////////////////////////
-@Preview(group = "Tertiary") @Composable fun BtnTertiaryLightContrastDefault() = Button(
-    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-    colors = ButtonColors (
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Purple600,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-    ), content = { Text("Text") }
-)
-@Preview(group = "Tertiary") @Composable fun BtnTertiaryLightContrastMedium() = Button(
-    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-    colors = ButtonColors (
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Purple700,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-    ), content = { Text("Text") }
-)
-@Preview(group = "Tertiary") @Composable fun BtnTertiaryLightContrastHigh() = Button(
-    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-    colors = ButtonColors (
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Purple800,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-    ), content = { Text("Text") }
-)
-@Preview(group = "Tertiary") @Composable fun BtnTertiaryContainerLightContrastDefault() = Card(
-    shape = MaterialTheme.shapes.extraSmall,
-    colors = CardColors(
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Purple500,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-        disabledContainerColor = CardDefaults.cardColors().disabledContainerColor,
-        disabledContentColor = CardDefaults.cardColors().disabledContentColor
-    ),
-    content = {
-        Column (
-            horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
-            content = {
-                Button(
-                    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-                    colors = ButtonColors (
-                        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Purple600,
-                        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-                        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-                        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-                    ), content = { Text("Text") }
-                )
-                Text("onTertiaryContainer")
-            }
-        )
-    }
-)
-
-////////////////////////////////////////////////////////////////////////////////////
-@Preview(group = "Errors") @Composable fun BtnErrorLightContrastDefault() = Button(
-    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-    colors = ButtonColors (
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Red600,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-    ), content = { Text("Text") }
-)
-@Preview(group = "Errors") @Composable fun BtnErrorLightContrastMedium() = Button(
-    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-    colors = ButtonColors (
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Red700,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-    ), content = { Text("Text") }
-)
-@Preview(group = "Errors") @Composable fun BtnErrorLightContrastHigh() = Button(
-    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-    colors = ButtonColors (
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Red800,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-    ), content = { Text("Text") }
-)
-@Preview(group = "Errors") @Composable fun BtnErrorContainerLightContrastDefault() = Card(
-    shape = MaterialTheme.shapes.extraSmall,
-    colors = CardColors(
-        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Red200,
-        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Red800,
-        disabledContainerColor = CardDefaults.cardColors().disabledContainerColor,
-        disabledContentColor = CardDefaults.cardColors().disabledContentColor
-    ),
-    content = {
-        Column (
-            horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
-            content = {
-                Button(
-                    onClick = {}, enabled = true, shape = MaterialTheme.shapes.extraSmall,
-                    colors = ButtonColors (
-                        containerColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.Red600,
-                        contentColor = com.thomas200593.mdm.core.ui.common.Color.BootstrapV5Base.White,
-                        disabledContainerColor = ButtonDefaults.buttonColors().disabledContainerColor,
-                        disabledContentColor = ButtonDefaults.buttonColors().disabledContentColor
-                    ), content = { Text("Text") }
-                )
-                Text("onErrorContainer")
-            }
-        )
-    }
-)
