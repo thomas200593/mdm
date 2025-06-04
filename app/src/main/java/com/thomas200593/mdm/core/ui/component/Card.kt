@@ -33,10 +33,6 @@ import com.thomas200593.mdm.core.design_system.util.Constants
     content = { Column (
         modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp16),
         verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
-        content = {
-            title?.invoke()
-            content.invoke()
-            footer?.invoke()
-        }
+        content = { title?.invoke(); content.invoke(); footer?.invoke() }
     ) }
 )

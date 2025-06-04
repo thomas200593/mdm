@@ -14,5 +14,15 @@ import androidx.compose.ui.Modifier
 private val slideFadeIn: EnterTransition = fadeIn() + slideInVertically { fullHeight -> fullHeight }
 private val slideFadeOut: ExitTransition = fadeOut() + slideOutVertically { fullHeight -> fullHeight }
 @Composable fun SlideUpFadeAnim(
-    visible : Boolean, content : @Composable AnimatedVisibilityScope.() -> Unit, modifier: Modifier = Modifier
-) = AnimatedVisibility(visible = visible, modifier = modifier, enter = slideFadeIn, exit = slideFadeOut, content = content)
+    modifier : Modifier = Modifier,
+    visible : Boolean,
+    label : String = "AnimatedVisibility",
+    content : @Composable AnimatedVisibilityScope.() -> Unit
+) = AnimatedVisibility(
+    modifier = modifier,
+    visible = visible,
+    enter = slideFadeIn,
+    exit = slideFadeOut,
+    label = label,
+    content = content
+)
