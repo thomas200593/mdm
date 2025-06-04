@@ -165,8 +165,8 @@ import kotlinx.coroutines.launch
             Row(modifier = Modifier.weight(0.5f),
                 horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically,
                 content = {
-                    val strNext = Pair(stringResource(R.string.str_next), stringResource(R.string.str_finish))
-                    val btnNextColor = Pair(MaterialTheme.colorScheme.tertiaryContainer, MaterialTheme.colorScheme.onTertiaryContainer)
+                    val strNext = stringResource(R.string.str_next) to stringResource(R.string.str_finish)
+                    val btnNextColor = MaterialTheme.colorScheme.tertiaryContainer to MaterialTheme.colorScheme.onTertiaryContainer
                     val btnNextState by remember(currentIndex, maxIndex) {
                         derivedStateOf {
                             if (currentIndex < maxIndex) Triple(strNext.first, Icons.AutoMirrored.Default.NavigateNext, null) to
