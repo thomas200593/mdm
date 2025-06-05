@@ -9,6 +9,8 @@
         <item name="windowSplashScreenBackground">@color/starting_day</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/scaled_app_icon</item>
         <item name="postSplashScreenTheme">@style/Theme.Mdm</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
     <!-- /CustomThemes.App.Starting -->
 </resources>
