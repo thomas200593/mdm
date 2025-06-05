@@ -19,7 +19,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
@@ -121,10 +120,10 @@ import kotlin.reflect.KClass
                     if (destination != null) {
                         shouldShowTopAppBar = true
                         DestTopLevelAppBar(
-                            title = destination.scrGraphs.title,
+                            modifier = modifier,
                             navigationIcon = destination.scrGraphs.navigationIcon,
-                            actions = destination.scrGraphs.actions,
-                            modifier = modifier
+                            title = destination.scrGraphs.title,
+                            actions = destination.scrGraphs.actions
                         )
                     }
                     Box(

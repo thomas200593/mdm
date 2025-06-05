@@ -3,6 +3,7 @@ package com.thomas200593.mdm.core.ui.component.top_bar
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
@@ -12,7 +13,8 @@ import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class) @Composable fun DestTopLevelAppBar(
     modifier : Modifier = Modifier,
-    colors : TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
+    colors : TopAppBarColors = TopAppBarDefaults
+        .topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
     @StringRes title : Int? = null,
     navigationIcon : @Composable (() -> Unit)? = null,
     actions : @Composable (RowScope.() -> Unit) = {}

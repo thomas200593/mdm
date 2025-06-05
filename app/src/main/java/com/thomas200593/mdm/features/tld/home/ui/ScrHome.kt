@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
@@ -65,6 +66,10 @@ import kotlinx.coroutines.CoroutineScope
     val imgModel = null //temporary
     Card(
         modifier = Modifier.fillMaxWidth(), shape = RectangleShape,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+        ),
         content = {
             Column (
                 content = {
@@ -87,7 +92,10 @@ import kotlinx.coroutines.CoroutineScope
                                 }
                             )
                             UiText(
-                                text = "User Name", type = TextType.TITLE_MD, modifier = Modifier.weight(1f),
+                                text = buildString {
+                                    append("Hi").append(", ").append("First").append("+").append("Last name")
+                                },
+                                type = TextType.TITLE_MD, modifier = Modifier.weight(1f),
                                 maxLines = 1, overflow = TextOverflow.Ellipsis
                             )
                             IconButton (
