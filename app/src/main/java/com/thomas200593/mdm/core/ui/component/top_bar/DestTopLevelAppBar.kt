@@ -22,27 +22,25 @@ import com.thomas200593.mdm.core.ui.common.AppIcons
     navBtnIcon: AppIcons.DestTopLevel,
     navBtnOnClick: () -> Unit = {},
     actBtnOnClick: () -> Unit = {}
-) {
-    UiTopBar(
-        modifier = modifier, title = { title?.let { Text(text = stringResource(id = title)) } },
-        type = TopAppBarType.Default, navigationIcon = { IconButton(
-            onClick = navBtnOnClick,
+) = UiTopBar(
+    modifier = modifier, title = { title?.let { Text(text = stringResource(id = title)) } },
+    type = TopAppBarType.Default, navigationIcon = { IconButton(
+        onClick = navBtnOnClick,
+        content = { Icon(
+            imageVector = AppIcons.mapTopLevelToMaterialIcons(navBtnIcon),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurface
+        ) }
+    ) },
+    actions = {
+        IconButton(
+            onClick = actBtnOnClick,
             content = { Icon(
-                imageVector = AppIcons.mapTopLevelToMaterialIcons(navBtnIcon),
+                imageVector = Icons.Default.Info,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurface
             ) }
-        ) },
-        actions = {
-            IconButton(
-                onClick = actBtnOnClick,
-                content = { Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                ) }
-            )
-        },
-        colors = colors
-    )
-}
+        )
+    },
+    colors = colors
+)
