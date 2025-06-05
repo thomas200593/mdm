@@ -1,14 +1,8 @@
 package com.thomas200593.mdm.core.ui.component
 
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationDrawerItemDefaults
-import androidx.compose.material3.NavigationRail
-import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
@@ -17,89 +11,16 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItemCo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldState
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldValue
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScope
-import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 
-@Composable fun RowScope.NavBarItem(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    enabled: Boolean = true,
-    label: @Composable (() -> Unit)? = null,
-    selected: Boolean,
-    alwaysShowLabel: Boolean = true,
-    icon: @Composable () -> Unit,
-    selectedIcon: @Composable () -> Unit = icon,
-) = NavigationBarItem(
-    selected = selected,
-    onClick = onClick,
-    icon = if (selected) selectedIcon else icon,
-    modifier = modifier,
-    enabled = enabled,
-    label = label,
-    alwaysShowLabel = alwaysShowLabel,
-    colors = NavigationBarItemDefaults.colors(
-        selectedIconColor = NavDefaults.navSelectedItemColor(),
-        unselectedIconColor = NavDefaults.navContentColor(),
-        selectedTextColor = NavDefaults.navSelectedItemColor(),
-        unselectedTextColor = NavDefaults.navContentColor(),
-        indicatorColor = NavDefaults.navIndicatorColor()
-    )
-)
-@Composable fun NavBar(
-    modifier: Modifier = Modifier,
-    content: @Composable RowScope.() -> Unit
-) = NavigationBar(
-    modifier = modifier,
-    contentColor = NavDefaults.navContentColor(),
-    tonalElevation = 0.dp,
-    content = content
-)
-@Composable fun NavRailItem(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    enabled: Boolean = true,
-    label: @Composable (() -> Unit)? = null,
-    selected: Boolean,
-    alwaysShowLabel: Boolean = true,
-    icon: @Composable () -> Unit,
-    selectedIcon: @Composable () -> Unit = icon,
-) = NavigationRailItem(
-    selected = selected,
-    onClick = onClick,
-    icon = if (selected) selectedIcon else icon,
-    modifier = modifier,
-    enabled = enabled,
-    label = label,
-    alwaysShowLabel = alwaysShowLabel,
-    colors = NavigationRailItemDefaults.colors(
-        selectedIconColor = NavDefaults.navSelectedItemColor(),
-        unselectedIconColor = NavDefaults.navContentColor(),
-        selectedTextColor = NavDefaults.navSelectedItemColor(),
-        unselectedTextColor = NavDefaults.navContentColor(),
-        indicatorColor = NavDefaults.navIndicatorColor()
-    )
-)
-@Composable fun NavRail(
-    modifier: Modifier = Modifier,
-    header: @Composable (ColumnScope.() -> Unit)? = null,
-    content: @Composable ColumnScope.() -> Unit
-) = NavigationRail(
-    modifier = modifier,
-    containerColor = Color.Transparent,
-    contentColor = NavDefaults.navContentColor(),
-    header = header,
-    content = content
-)
 @Composable fun AppNavSuiteScaffold(
-    modifier: Modifier = Modifier,
-    navSuiteItems: NavSuiteScope.() -> Unit,
-    windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
-    content: @Composable () -> Unit,
+    modifier : Modifier = Modifier,
+    navSuiteItems : NavSuiteScope.() -> Unit,
+    windowAdaptiveInfo : WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
+    content : @Composable () -> Unit,
     state : NavigationSuiteScaffoldState
 ) {
     val layoutType = NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(windowAdaptiveInfo)
@@ -126,8 +47,12 @@ import androidx.compose.ui.unit.dp
         )
     )
     NavigationSuiteScaffold(
-        navigationSuiteItems =
-            { NavSuiteScope(navigationSuiteScope = this, navSuiteItemColors = navSuiteItemColors).run(navSuiteItems) },
+        navigationSuiteItems = {
+            NavSuiteScope(
+                navigationSuiteScope = this,
+                navSuiteItemColors = navSuiteItemColors
+            ).run(navSuiteItems)
+        },
         layoutType = layoutType,
         containerColor = Color.Transparent,
         navigationSuiteColors = NavigationSuiteDefaults.colors(
