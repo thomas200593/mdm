@@ -146,47 +146,50 @@ import kotlinx.coroutines.launch
         item { UiText(text = stringResource(currentPage.description)) }
     }
 )
-@Composable private fun SectionBottomBar(currentIndex: Int, maxIndex: Int,
-    onBottomBarEvents: (Events.BottomBar) -> Unit) = UiBottomBar (
-    content = { Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
-        content = {
-            Row(modifier = Modifier.weight(0.5f),
-                horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically,
-                content = {
-                    val strPrev = stringResource(R.string.str_back)
-                    val btnPrevState by remember(currentIndex, maxIndex) {
-                        derivedStateOf { if (currentIndex > 0) true to
-                        { onBottomBarEvents(Events.BottomBar.NavButton.Page(Events.Action.PREV)) } else false to {} }
-                    }
-                    AnimatedVisibility(visible = btnPrevState.first, content = { BtnPrevious(onClick = btnPrevState.second, label = strPrev) })
-                }
-            )
-            Row(modifier = Modifier.weight(0.5f),
-                horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically,
-                content = {
-                    val strNext = stringResource(R.string.str_next) to stringResource(R.string.str_finish)
-                    val btnNextColor = MaterialTheme.colorScheme.tertiaryContainer to MaterialTheme.colorScheme.onTertiaryContainer
-                    val btnNextState by remember(currentIndex, maxIndex) {
-                        derivedStateOf {
-                            if (currentIndex < maxIndex) Triple(strNext.first, Icons.AutoMirrored.Default.NavigateNext, null) to
-                            { onBottomBarEvents(Events.BottomBar.NavButton.Page(Events.Action.NEXT)) }
-                            else Triple(strNext.second, Icons.Default.Check, BorderStroke(1.dp, btnNextColor.second)) to
-                            { onBottomBarEvents(Events.BottomBar.NavButton.Finish) }
+@Composable private fun SectionBottomBar(
+    currentIndex: Int, maxIndex: Int,
+    onBottomBarEvents: (Events.BottomBar) -> Unit
+) = UiBottomBar (
+    content = {
+        Row(
+            horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth(), content = {
+                Row(
+                    horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(0.5f), content = {
+                        val strPrev = stringResource(R.string.str_back)
+                        val btnPrevState by remember(currentIndex, maxIndex) {
+                            derivedStateOf { if (currentIndex > 0) true to
+                                    { onBottomBarEvents(Events.BottomBar.NavButton.Page(Events.Action.PREV)) } else false to {} }
                         }
+                        AnimatedVisibility(visible = btnPrevState.first, content = { BtnPrevious(onClick = btnPrevState.second, label = strPrev) })
                     }
-                    BtnNext(onClick = btnNextState.second, label = btnNextState.first.first,
-                        icon = btnNextState.first.second, border = btnNextState.first.third,
-                        colors =
-                            if (currentIndex < maxIndex) ButtonDefaults.textButtonColors()
-                            else ButtonDefaults.textButtonColors().copy(
-                                containerColor = btnNextColor.first,
-                                contentColor = btnNextColor.second
-                            )
-                    )
-                }
-            )
-        }
-    ) }
+                )
+                Row(modifier = Modifier.weight(0.5f),
+                    horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically,
+                    content = {
+                        val strNext = stringResource(R.string.str_next) to stringResource(R.string.str_finish)
+                        val btnNextColor = MaterialTheme.colorScheme.tertiaryContainer to MaterialTheme.colorScheme.onTertiaryContainer
+                        val btnNextState by remember(currentIndex, maxIndex) {
+                            derivedStateOf {
+                                if (currentIndex < maxIndex) Triple(strNext.first, Icons.AutoMirrored.Default.NavigateNext, null) to
+                                        { onBottomBarEvents(Events.BottomBar.NavButton.Page(Events.Action.NEXT)) }
+                                else Triple(strNext.second, Icons.Default.Check, BorderStroke(1.dp, btnNextColor.second)) to
+                                        { onBottomBarEvents(Events.BottomBar.NavButton.Finish) }
+                            }
+                        }
+                        BtnNext(onClick = btnNextState.second, label = btnNextState.first.first,
+                            icon = btnNextState.first.second, border = btnNextState.first.third,
+                            colors =
+                                if (currentIndex < maxIndex) ButtonDefaults.textButtonColors()
+                                else ButtonDefaults.textButtonColors().copy(
+                                    containerColor = btnNextColor.first,
+                                    contentColor = btnNextColor.second
+                                )
+                        )
+                    }
+                )
+            }
+        )
+    }
 )
