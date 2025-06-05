@@ -158,10 +158,10 @@ import kotlinx.coroutines.launch
                     horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.weight(0.5f), content = {
                         val strPrev = stringResource(R.string.str_back)
-                        val btnPrevState by remember(currentIndex, maxIndex) {
-                            derivedStateOf { if (currentIndex > 0) true to
-                                    { onBottomBarEvents(Events.BottomBar.NavButton.Page(Events.Action.PREV)) } else false to {} }
-                        }
+                        val btnPrevState by remember(currentIndex, maxIndex) { derivedStateOf {
+                            if (currentIndex > 0) true to { onBottomBarEvents(Events.BottomBar.NavButton.Page(Events.Action.PREV)) }
+                            else false to {}
+                        } }
                         AnimatedVisibility(visible = btnPrevState.first, content = { BtnPrevious(onClick = btnPrevState.second, label = strPrev) })
                     }
                 )
