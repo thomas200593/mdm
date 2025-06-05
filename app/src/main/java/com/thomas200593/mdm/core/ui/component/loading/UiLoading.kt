@@ -26,8 +26,8 @@ import androidx.compose.ui.window.DialogProperties
 import com.thomas200593.mdm.R
 import com.thomas200593.mdm.core.design_system.util.Constants.Dimens.dp16
 import com.thomas200593.mdm.core.design_system.util.Constants.STR_APP_VERSION
-import com.thomas200593.mdm.core.ui.component.TxtLgTitle
-import com.thomas200593.mdm.core.ui.component.TxtMdTitle
+import com.thomas200593.mdm.core.ui.component.text.TextType
+import com.thomas200593.mdm.core.ui.component.text.UiText
 
 @Composable fun UiLoading(modifier: Modifier = Modifier, type: LoadingType, message: String = stringResource(R.string.str_loading)) = when (type) {
     is LoadingType.Dialog -> Dialog (
@@ -55,14 +55,14 @@ import com.thomas200593.mdm.core.ui.component.TxtMdTitle
         horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(dp16, Alignment.CenterVertically),
         content = {
             CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-            TxtLgTitle(text = message)
+            UiText(text = message, type = TextType.TITLE_LG)
         }
     ) }, bottomBar = { Column(
         modifier = modifier.fillMaxWidth().navigationBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(dp16, Alignment.CenterVertically),
         content = {
-            TxtLgTitle(text = stringResource(R.string.app_name))
-            TxtMdTitle(text = stringResource(R.string.str_version) + STR_APP_VERSION)
+            UiText(text = stringResource(R.string.app_name), type = TextType.TITLE_LG)
+            UiText(text = stringResource(R.string.str_version) + STR_APP_VERSION, type = TextType.TITLE_MD)
         }
     ) } )
 }

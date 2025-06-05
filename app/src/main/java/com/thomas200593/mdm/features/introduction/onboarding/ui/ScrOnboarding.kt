@@ -45,15 +45,15 @@ import com.thomas200593.mdm.R
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
+import com.thomas200593.mdm.core.ui.component.text.TextType
+import com.thomas200593.mdm.core.ui.component.text.UiText
 import com.thomas200593.mdm.core.ui.component.button.BtnConfLang
 import com.thomas200593.mdm.core.ui.component.button.BtnNext
 import com.thomas200593.mdm.core.ui.component.button.BtnPrevious
-import com.thomas200593.mdm.core.ui.component.TxtLgTitle
-import com.thomas200593.mdm.core.ui.component.TxtMdBody
 import com.thomas200593.mdm.core.ui.component.loading.LoadingType
 import com.thomas200593.mdm.core.ui.component.loading.UiLoading
-import com.thomas200593.mdm.features.common.cnf_localization_language.entity.Language
 import com.thomas200593.mdm.features.common.cnf_common.entity.Common
+import com.thomas200593.mdm.features.common.cnf_localization_language.entity.Language
 import com.thomas200593.mdm.features.introduction.initialization.nav.navToInitialization
 import com.thomas200593.mdm.features.introduction.onboarding.entity.Onboarding
 import com.thomas200593.mdm.features.introduction.onboarding.ui.events.Events
@@ -141,8 +141,8 @@ import kotlinx.coroutines.launch
 @Composable private fun PartDetail(modifier: Modifier, currentPage: Onboarding) = LazyColumn(
     modifier = modifier.fillMaxWidth(),
     verticalArrangement = Arrangement.spacedBy(16.dp), content = {
-        item { TxtLgTitle(text = stringResource(currentPage.title)) }
-        item { TxtMdBody(text = stringResource(currentPage.description)) }
+        item { UiText(text = stringResource(currentPage.title), type = TextType.TITLE_LG) }
+        item { UiText(text = stringResource(currentPage.description)) }
     }
 )
 @Composable private fun SectionBottomBar(currentIndex: Int, maxIndex: Int,

@@ -32,7 +32,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import com.thomas200593.mdm.core.design_system.util.Constants
-import com.thomas200593.mdm.core.ui.component.TxtMdLabel
+import com.thomas200593.mdm.core.ui.component.text.TextType
+import com.thomas200593.mdm.core.ui.component.text.UiText
 
 @OptIn(ExperimentalMaterial3Api::class) @Composable fun <T> BtnDropdown(
     modifier: Modifier = Modifier,
@@ -68,7 +69,7 @@ import com.thomas200593.mdm.core.ui.component.TxtMdLabel
                     verticalAlignment = Alignment.CenterVertically,
                     content = {
                         RenderSelectorIcon(icon = selectedIcon)
-                        selectedLabel?.let { TxtMdLabel(text = it, color = colors.contentColor, maxLines = 1) }
+                        selectedLabel?.let { UiText(text = it, type = TextType.LABEL_MD, maxLines = 1) }
                     }
                 ) }
             )
@@ -88,7 +89,7 @@ import com.thomas200593.mdm.core.ui.component.TxtMdLabel
 }
 @Composable
 private fun RenderSelectorIcon(icon: SelectorIcon, iconSize: Dp = ButtonDefaults.IconSize) = when (icon) {
-    is SelectorIcon.EmojiString -> Text(text = icon.emoji)
+    is SelectorIcon.EmojiString -> UiText(text = icon.emoji, type = TextType.LABEL_MD, maxLines = 1)
     is SelectorIcon.DrawableAssets -> Icon(modifier = Modifier.size(iconSize),
         imageVector = ImageVector.vectorResource(icon.resId), contentDescription = null)
 }

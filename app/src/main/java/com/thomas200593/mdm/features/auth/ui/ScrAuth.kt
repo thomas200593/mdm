@@ -44,8 +44,8 @@ import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.AppIcons
 import com.thomas200593.mdm.core.ui.component.PanelCard
-import com.thomas200593.mdm.core.ui.component.TxtLgTitle
-import com.thomas200593.mdm.core.ui.component.TxtMdBody
+import com.thomas200593.mdm.core.ui.component.text.TextType
+import com.thomas200593.mdm.core.ui.component.text.UiText
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.loading.LoadingType
 import com.thomas200593.mdm.core.ui.component.loading.UiLoading
@@ -183,8 +183,8 @@ import kotlinx.coroutines.launch
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16, Alignment.CenterVertically),
     content = {
-        TxtLgTitle(stringResource(R.string.str_auth))
-        TxtMdBody("To continue, please sign-in into your account.")
+        UiText(text = stringResource(R.string.str_auth), type = TextType.TITLE_LG)
+        UiText(text = "To continue, please sign-in into your account.", type = TextType.BODY_MD)
     }
 )
 @Composable private fun SectionPageAuthPanel(
@@ -212,7 +212,7 @@ import kotlinx.coroutines.launch
                             containerColor = MaterialTheme.colorScheme.errorContainer,
                             contentColor = MaterialTheme.colorScheme.onErrorContainer
                         ),
-                        content = { error.t.message?.let { TxtMdBody(text = it, modifier = Modifier.fillMaxWidth()) } }
+                        content = { error.t.message?.let { UiText(text = it, modifier = Modifier.fillMaxWidth()) } }
                     )
                 }
             )
@@ -233,7 +233,7 @@ import kotlinx.coroutines.launch
     verticalArrangement = Arrangement.Center,
     content = { TextButton(
         onClick = { onFormAuthEvent(Events.Content.Form.BtnRecoverAccount.Clicked) },
-        content = { TxtMdBody("Recover my account") }
+        content = { UiText("Recover my account") }
     ) }
 )
 @Composable private fun SectionBottomBar() = BottomAppBar (
@@ -242,6 +242,6 @@ import kotlinx.coroutines.launch
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
-        content = { TxtMdBody(stringResource(R.string.app_name) + Constants.STR_APP_VERSION) }
+        content = { UiText(stringResource(R.string.app_name) + Constants.STR_APP_VERSION) }
     ) }
 )

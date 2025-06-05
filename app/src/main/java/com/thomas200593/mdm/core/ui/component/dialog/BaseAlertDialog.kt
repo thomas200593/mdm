@@ -10,10 +10,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.DialogProperties
 
-enum class DialogType {
-    CONFIRMATION, ERROR, INFORMATION, SUCCESS, WARNING;
-    companion object { val defaultValue = INFORMATION }
-}
 @Composable fun BaseAlertDialog (
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,

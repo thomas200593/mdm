@@ -62,9 +62,8 @@ import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.AppIcons
 import com.thomas200593.mdm.core.ui.common.anim.SlideUpFadeAnim
 import com.thomas200593.mdm.core.ui.component.PanelCard
-import com.thomas200593.mdm.core.ui.component.TxtMdBody
-import com.thomas200593.mdm.core.ui.component.TxtMdLabel
-import com.thomas200593.mdm.core.ui.component.TxtMdTitle
+import com.thomas200593.mdm.core.ui.component.text.TextType
+import com.thomas200593.mdm.core.ui.component.text.UiText
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.loading.LoadingType
@@ -249,7 +248,7 @@ import java.io.File
             )
             HorizontalDivider()
         },
-        content = { TxtMdBody(stringResource(R.string.str_user_have_no_roles_assoc)) }
+        content = { UiText(stringResource(R.string.str_user_have_no_roles_assoc)) }
     ) }
 )
 @Composable private fun PartContentUserRoleSearchNoResult(query: String) = Column (
@@ -262,7 +261,7 @@ import java.io.File
                 imageVector = Icons.Default.ImagesearchRoller, contentDescription = null)
             HorizontalDivider()
         },
-        content = { TxtMdBody("No roles found for keyword '$query'.") }
+        content = { UiText("No roles found for keyword '$query'.") }
     ) }
 )
 @Composable private fun PartContentUserRoleToolbar(
@@ -391,9 +390,9 @@ import java.io.File
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp4),
                 content = {
-                    TxtMdTitle(
-                        text = role.label, modifier = Modifier.fillMaxWidth(),
-                        maxLines = 1, overflow = TextOverflow.Ellipsis
+                    UiText(
+                        text = role.label, type = TextType.TITLE_MD,
+                        modifier = Modifier.fillMaxWidth(), maxLines = 1, overflow = TextOverflow.Ellipsis
                     )
                     Card(
                         modifier = Modifier, border = BorderStroke(
@@ -403,10 +402,13 @@ import java.io.File
                                 else MaterialTheme.colorScheme.outline
                         ),
                         shape = MaterialTheme.shapes.extraSmall,
-                        content = { TxtMdLabel(
-                            text = role.roleType.toString(), maxLines = 1,
-                            modifier = Modifier.padding(Constants.Dimens.dp4), overflow = TextOverflow.Ellipsis
-                        ) }
+                        content = {
+                            UiText(
+                                text = role.roleType.toString(), type = TextType.LABEL_MD,
+                                modifier = Modifier.padding(Constants.Dimens.dp4), maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
                     )
                 }
             )
@@ -459,9 +461,9 @@ import java.io.File
                     contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize()
                 ) }
             )
-            TxtMdTitle(
-                text = role.label, modifier = Modifier.fillMaxWidth(), maxLines = 1,
-                textAlign = TextAlign.Center, overflow = TextOverflow.Ellipsis
+            UiText(
+                text = role.label, type = TextType.TITLE_MD, textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(), maxLines = 1, overflow = TextOverflow.Ellipsis
             )
         }
     ) }

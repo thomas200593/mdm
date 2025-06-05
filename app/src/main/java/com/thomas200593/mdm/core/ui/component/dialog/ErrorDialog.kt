@@ -35,8 +35,8 @@ import com.thomas200593.mdm.R
 import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.component.PanelCard
-import com.thomas200593.mdm.core.ui.component.TxtMdBody
-import com.thomas200593.mdm.core.ui.component.TxtMdLabel
+import com.thomas200593.mdm.core.ui.component.text.TextType
+import com.thomas200593.mdm.core.ui.component.text.UiText
 import kotlinx.coroutines.launch
 
 @Composable fun ErrorDialog(
@@ -61,14 +61,14 @@ import kotlinx.coroutines.launch
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp16),
             content = {
-                item { TxtMdBody(message) }
+                item { UiText(text = message) }
                 error?.let {
                     it.message
                         ?. takeIf { msg -> msg.isNotBlank() }
-                        ?. let { msg -> item { TxtMdBody("Failure Message: ${it.emoji} $msg", modifier = Modifier.fillMaxWidth()) } }
+                        ?. let { msg -> item { UiText("Failure Message: ${it.emoji} $msg", modifier = Modifier.fillMaxWidth()) } }
                     it.cause ?. toString()
                         ?. takeIf { c -> c.isNotBlank() }
-                        ?. let { causeStr -> item { TxtMdBody("Cause: $causeStr", modifier = Modifier.fillMaxWidth()) } }
+                        ?. let { causeStr -> item { UiText("Cause: $causeStr", modifier = Modifier.fillMaxWidth()) } }
                     if (showStackTrace) {
                         val traceText = it.stackTrace.joinToString("\n") { ste -> ste.toString() }
                         item { PanelCard(
@@ -78,8 +78,9 @@ import kotlinx.coroutines.launch
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     content = {
-                                        TxtMdLabel(
+                                        UiText(
                                             text = if (isExpanded) "StackTrace (Tap to hide)" else "StackTrace (Tap to show)",
+                                            type = TextType.LABEL_MD,
                                             modifier = Modifier.weight(1f)
                                         )
                                         Row(content =  {

@@ -45,10 +45,9 @@ import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.anim.SlideUpFadeAnim
 import com.thomas200593.mdm.core.ui.component.PanelCard
-import com.thomas200593.mdm.core.ui.component.TxtLgTitle
-import com.thomas200593.mdm.core.ui.component.TxtMdBody
-import com.thomas200593.mdm.core.ui.component.TxtMdTitle
-import com.thomas200593.mdm.core.ui.component.checkbox.HorizontalCheckbox
+import com.thomas200593.mdm.core.ui.component.text.TextType
+import com.thomas200593.mdm.core.ui.component.text.UiText
+import com.thomas200593.mdm.core.ui.component.checkbox.UiHCheckbox
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.dialog.SuccessDialog
@@ -193,10 +192,10 @@ import kotlinx.coroutines.launch
         verticalAlignment = Alignment.CenterVertically,
         content = {
             Icon(modifier = Modifier.wrapContentWidth(), imageVector = Icons.Default.Info, contentDescription = null)
-            TxtMdTitle(modifier = Modifier.weight(1.0f), text = "Important")
+            UiText(text = "Important", type = TextType.TITLE_LG, modifier = Modifier.weight(1.0f))
         }
     ) },
-    content = { TxtMdBody(modifier = Modifier.fillMaxWidth(), text = "First thing first, set up your account") }
+    content = { UiText(modifier = Modifier.fillMaxWidth(), text = "First thing first, set up your account") }
 )
 @Composable private fun partTOCText(): AnnotatedString = buildAnnotatedString {
     append("I agree to the "); withLink(
@@ -215,7 +214,8 @@ import kotlinx.coroutines.launch
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun PartForm(
     formInitialization: FormInitializationState, onFormEvent: (Events.Content.Form) -> Unit
-) = PanelCard(modifier = Modifier.padding(Constants.Dimens.dp8), title = { TxtLgTitle(stringResource(R.string.str_initialization)) },
+) = PanelCard(modifier = Modifier.padding(Constants.Dimens.dp8),
+    title = { UiText(text = stringResource(R.string.str_initialization), type = TextType.TITLE_LG) },
     content = {
         TxtFieldPersonName(
             value = formInitialization.fldFirstName,
@@ -257,7 +257,7 @@ import kotlinx.coroutines.launch
             errorMessage = formInitialization.fldPasswordError,
             placeholder = "********"
         )
-        HorizontalCheckbox(
+        UiHCheckbox(
             annotatedText = partTOCText(),
             enabled = formInitialization.fldChbToCEnabled,
             checked = formInitialization.fldChbToCChecked,

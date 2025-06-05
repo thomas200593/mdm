@@ -15,7 +15,6 @@ import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,7 +25,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import com.thomas200593.mdm.core.design_system.util.Constants
-import com.thomas200593.mdm.core.ui.component.TxtMdLabel
+import com.thomas200593.mdm.core.ui.component.text.TextType
+import com.thomas200593.mdm.core.ui.component.text.UiText
 import com.thomas200593.mdm.features.common.cnf_localization_language.entity.Language
 
 @OptIn(ExperimentalMaterial3Api::class) @Composable fun BtnConfLang(
@@ -47,8 +47,8 @@ import com.thomas200593.mdm.features.common.cnf_localization_language.entity.Lan
                     horizontalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
                     verticalAlignment = Alignment.CenterVertically,
                     content = {
-                        TxtMdLabel(text = languageIcon)
-                        languageName?.let { TxtMdLabel(text = it, color = colors.contentColor, maxLines = 1) }
+                        UiText(text = languageIcon, type = TextType.LABEL_MD)
+                        languageName?.let { UiText(text = it, type = TextType.LABEL_MD, maxLines = 1) }
                     }
                 ) }
             )
@@ -57,8 +57,8 @@ import com.thomas200593.mdm.features.common.cnf_localization_language.entity.Lan
                 modifier = Modifier.fillMaxWidth(0.5f), content = { languages.forEach { DropdownMenuItem(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = { expanded = false; onSelectLanguage.invoke(it) },
-                    leadingIcon = { Text(it.country.flag) },
-                    text = { TxtMdLabel(text = it.country.name) },
+                    leadingIcon = { UiText(text = it.country.flag, type = TextType.LABEL_MD) },
+                    text = { UiText(text = it.country.name, type = TextType.LABEL_MD) },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                 ) } }
             )
