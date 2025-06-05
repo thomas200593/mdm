@@ -122,11 +122,9 @@ import kotlin.reflect.KClass
                         shouldShowTopAppBar = true
                         DestTopLevelAppBar(
                             title = destination.scrGraphs.title,
-                            navBtnIcon = destination.scrGraphs.iconRes,
-                            modifier = modifier,
-                            colors = TopAppBarDefaults.topAppBarColors(),
-                            navBtnOnClick = { /*TODO*/ },
-                            actBtnOnClick = { /*TODO*/ }
+                            navigationIcon = destination.scrGraphs.navigationIcon,
+                            actions = destination.scrGraphs.actions,
+                            modifier = modifier
                         )
                     }
                     Box(
