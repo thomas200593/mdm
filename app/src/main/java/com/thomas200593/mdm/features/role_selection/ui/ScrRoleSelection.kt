@@ -35,7 +35,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -62,13 +61,15 @@ import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.AppIcons
 import com.thomas200593.mdm.core.ui.common.anim.SlideUpFadeAnim
 import com.thomas200593.mdm.core.ui.component.PanelCard
-import com.thomas200593.mdm.core.ui.component.text.TextType
-import com.thomas200593.mdm.core.ui.component.text.UiText
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.loading.LoadingType
 import com.thomas200593.mdm.core.ui.component.loading.UiLoading
+import com.thomas200593.mdm.core.ui.component.text.TextType
+import com.thomas200593.mdm.core.ui.component.text.UiText
 import com.thomas200593.mdm.core.ui.component.text_field.SearchToolBar
+import com.thomas200593.mdm.core.ui.component.top_bar.TopAppBarType
+import com.thomas200593.mdm.core.ui.component.top_bar.UiTopBar
 import com.thomas200593.mdm.features.auth.nav.navToAuth
 import com.thomas200593.mdm.features.bootstrap.nav.navToBootstrap
 import com.thomas200593.mdm.features.management.role.entity.RoleEntity
@@ -193,8 +194,8 @@ import java.io.File
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
     scrGraph: ScrGraphs.RoleSelection, onTopBarEvent: (Events.TopBar) -> Unit
-) = TopAppBar(
-    title = { Text(stringResource(scrGraph.title)) },
+) = UiTopBar(
+    title = { Text(stringResource(scrGraph.title)) }, type = TopAppBarType.Default,
     actions = {
         IconButton(
             onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Clicked) },

@@ -21,7 +21,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -45,18 +44,20 @@ import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.anim.SlideUpFadeAnim
 import com.thomas200593.mdm.core.ui.component.PanelCard
-import com.thomas200593.mdm.core.ui.component.text.TextType
-import com.thomas200593.mdm.core.ui.component.text.UiText
 import com.thomas200593.mdm.core.ui.component.checkbox.UiHCheckbox
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.dialog.SuccessDialog
 import com.thomas200593.mdm.core.ui.component.loading.LoadingType
 import com.thomas200593.mdm.core.ui.component.loading.UiLoading
+import com.thomas200593.mdm.core.ui.component.text.TextType
+import com.thomas200593.mdm.core.ui.component.text.UiText
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldDatePicker
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldEmail
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPassword
 import com.thomas200593.mdm.core.ui.component.text_field.TxtFieldPersonName
+import com.thomas200593.mdm.core.ui.component.top_bar.TopAppBarType
+import com.thomas200593.mdm.core.ui.component.top_bar.UiTopBar
 import com.thomas200593.mdm.features.bootstrap.nav.navToBootstrap
 import com.thomas200593.mdm.features.introduction.initialization.ui.events.Events
 import com.thomas200593.mdm.features.introduction.initialization.ui.state.DialogState
@@ -149,9 +150,8 @@ import kotlinx.coroutines.launch
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
     onTopBarEvent: (Events.TopBar) -> Unit
-) = TopAppBar(
-    title = {},
-    actions = {
+) = UiTopBar(
+    title = {}, type = TopAppBarType.Default, actions = {
         IconButton(
             onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Clicked) },
             content = {

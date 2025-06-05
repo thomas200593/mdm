@@ -21,7 +21,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -45,13 +44,15 @@ import com.thomas200593.mdm.R
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
-import com.thomas200593.mdm.core.ui.component.text.TextType
-import com.thomas200593.mdm.core.ui.component.text.UiText
 import com.thomas200593.mdm.core.ui.component.button.BtnConfLang
 import com.thomas200593.mdm.core.ui.component.button.BtnNext
 import com.thomas200593.mdm.core.ui.component.button.BtnPrevious
 import com.thomas200593.mdm.core.ui.component.loading.LoadingType
 import com.thomas200593.mdm.core.ui.component.loading.UiLoading
+import com.thomas200593.mdm.core.ui.component.text.TextType
+import com.thomas200593.mdm.core.ui.component.text.UiText
+import com.thomas200593.mdm.core.ui.component.top_bar.TopAppBarType
+import com.thomas200593.mdm.core.ui.component.top_bar.UiTopBar
 import com.thomas200593.mdm.features.common.cnf_common.entity.Common
 import com.thomas200593.mdm.features.common.cnf_localization_language.entity.Language
 import com.thomas200593.mdm.features.introduction.initialization.nav.navToInitialization
@@ -107,8 +108,8 @@ import kotlinx.coroutines.launch
 )
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
     confCommon: Common, languages: List<Language>, onTopBarEvent: (Events.TopBar) -> Unit
-) = TopAppBar(
-    title = {}, actions = { BtnConfLang(
+) = UiTopBar(
+    title = {}, type = TopAppBarType.Default, actions = { BtnConfLang(
         languages = languages, languageIcon = confCommon.localization.language.country.flag,
         onSelectLanguage = { onTopBarEvent(Events.TopBar.BtnLanguage.Selected(it)) }
     ) }
