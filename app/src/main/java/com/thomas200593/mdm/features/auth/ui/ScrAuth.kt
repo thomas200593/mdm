@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,6 +42,7 @@ import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.AppIcons
 import com.thomas200593.mdm.core.ui.component.PanelCard
+import com.thomas200593.mdm.core.ui.component.bottom_bar.UiBottomBar
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.loading.LoadingType
 import com.thomas200593.mdm.core.ui.component.loading.UiLoading
@@ -239,8 +239,7 @@ import kotlinx.coroutines.launch
         content = { UiText("Recover my account") }
     ) }
 )
-@Composable private fun SectionBottomBar() = BottomAppBar (
-    containerColor = MaterialTheme.colorScheme.surface,
+@Composable private fun SectionBottomBar() = UiBottomBar (
     content = { Row (
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,

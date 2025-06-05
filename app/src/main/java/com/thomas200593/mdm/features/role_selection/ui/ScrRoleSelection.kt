@@ -23,7 +23,6 @@ import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.GridOn
 import androidx.compose.material.icons.filled.ImagesearchRoller
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -61,6 +60,7 @@ import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.AppIcons
 import com.thomas200593.mdm.core.ui.common.anim.SlideUpFadeAnim
 import com.thomas200593.mdm.core.ui.component.PanelCard
+import com.thomas200593.mdm.core.ui.component.bottom_bar.UiBottomBar
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.loading.LoadingType
@@ -471,7 +471,7 @@ import java.io.File
 )
 @Composable private fun SectionBottomBar(
     formRoleSelection: FormRoleSelectionState, onBottomBarEvent : (Events.BottomBar) -> Unit
-) = BottomAppBar(
+) = UiBottomBar(
     modifier = Modifier.fillMaxWidth(),
     content = { Row(
         modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,

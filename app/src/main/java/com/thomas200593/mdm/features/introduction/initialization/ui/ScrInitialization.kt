@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,6 +43,7 @@ import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.anim.SlideUpFadeAnim
 import com.thomas200593.mdm.core.ui.component.PanelCard
+import com.thomas200593.mdm.core.ui.component.bottom_bar.UiBottomBar
 import com.thomas200593.mdm.core.ui.component.checkbox.UiHCheckbox
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
@@ -268,7 +268,7 @@ import kotlinx.coroutines.launch
 @Composable private fun SectionBottomBar(
     formInitialization: FormInitializationState,
     onBottomBarEvent: (Events.BottomBar) -> Unit
-) = BottomAppBar( content = { Button (
+) = UiBottomBar( content = { Button (
     modifier = Modifier.fillMaxWidth(),
     onClick = { onBottomBarEvent(Events.BottomBar.BtnProceedInit.Clicked) },
     enabled = formInitialization.btnProceedEnabled,

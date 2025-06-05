@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -44,6 +43,7 @@ import com.thomas200593.mdm.R
 import com.thomas200593.mdm.app.main.nav.ScrGraphs
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
+import com.thomas200593.mdm.core.ui.component.bottom_bar.UiBottomBar
 import com.thomas200593.mdm.core.ui.component.button.BtnConfLang
 import com.thomas200593.mdm.core.ui.component.button.BtnNext
 import com.thomas200593.mdm.core.ui.component.button.BtnPrevious
@@ -147,7 +147,7 @@ import kotlinx.coroutines.launch
     }
 )
 @Composable private fun SectionBottomBar(currentIndex: Int, maxIndex: Int,
-    onBottomBarEvents: (Events.BottomBar) -> Unit) = BottomAppBar (
+    onBottomBarEvents: (Events.BottomBar) -> Unit) = UiBottomBar (
     content = { Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
