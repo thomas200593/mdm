@@ -39,7 +39,7 @@ import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.ui.common.AppIcons
 import com.thomas200593.mdm.core.ui.component.AppNavSuiteScaffold
-import com.thomas200593.mdm.core.ui.component.DestTopLevelAppBar
+import com.thomas200593.mdm.core.ui.component.top_bar.DestTopLevelAppBar
 import kotlin.reflect.KClass
 
 @Composable fun ScrApp(

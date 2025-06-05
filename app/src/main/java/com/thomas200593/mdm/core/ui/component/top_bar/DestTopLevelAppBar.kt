@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.core.ui.component
+package com.thomas200593.mdm.core.ui.component.top_bar
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
