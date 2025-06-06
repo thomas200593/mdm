@@ -1,4 +1,4 @@
-package com.thomas200593.mdm.core.ui.component
+package com.thomas200593.mdm.core.ui.component.navigation
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItemDefaults
