@@ -9,7 +9,6 @@ import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -25,6 +24,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.thomas200593.mdm.R
+import com.thomas200593.mdm.core.ui.component.text.UiText
 import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 
 @Composable fun TxtFieldPassword(
@@ -48,8 +48,8 @@ import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
         value = value,
         onValueChange = { currentOnValueChange(it) },
         enabled = enabled,
-        label = { Text(label) },
-        placeholder = { Text(placeholder) },
+        label = { UiText(label) },
+        placeholder = { UiText(placeholder) },
         leadingIcon = leadingIcon,
         trailingIcon = { PasswordVisibilityToggleIcon(
             enabled = enabled, passwordVisible = passwordVisible,

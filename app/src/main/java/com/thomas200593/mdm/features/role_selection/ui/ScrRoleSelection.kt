@@ -33,7 +33,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -195,7 +194,7 @@ import java.io.File
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun SectionTopBar(
     scrGraph: ScrGraphs.RoleSelection, onTopBarEvent: (Events.TopBar) -> Unit
 ) = UiTopBar(
-    title = { Text(stringResource(scrGraph.title)) }, type = TopAppBarType.Default,
+    title = { UiText(stringResource(scrGraph.title)) }, type = TopAppBarType.Default,
     actions = {
         IconButton(
             onClick = { onTopBarEvent(Events.TopBar.BtnScrDesc.Clicked) },
@@ -484,7 +483,7 @@ import java.io.File
             Button(
                 onClick = { formRoleSelection.fldSelectedRole
                     ?.let { onBottomBarEvent(Events.BottomBar.BtnConfirmRole.Clicked(it)) } },
-                content = { Text(stringResource(R.string.str_select)) },
+                content = { UiText(stringResource(R.string.str_select)) },
                 shape = MaterialTheme.shapes.extraSmall,
                 modifier = Modifier.weight(1f)
             )

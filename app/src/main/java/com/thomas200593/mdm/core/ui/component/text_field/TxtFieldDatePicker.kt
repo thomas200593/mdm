@@ -21,7 +21,6 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.setSelectedDate
@@ -41,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import com.thomas200593.mdm.R
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.design_system.util.DateTimePattern
+import com.thomas200593.mdm.core.ui.component.text.UiText
 import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 import java.time.Instant
 import java.time.LocalDate
@@ -102,14 +102,14 @@ import java.util.Locale
                         showDialog = false
                     },
                     content = {
-                        Text(stringResource(R.string.str_ok))
+                        UiText(stringResource(R.string.str_ok))
                     }
                 )
             },
             dismissButton = {
                 TextButton(
                     onClick = { showDialog = false },
-                    content = { Text(stringResource(R.string.str_back)) }
+                    content = { UiText(stringResource(R.string.str_back)) }
                 )
             },
             content = {
@@ -129,7 +129,7 @@ import java.util.Locale
                                         showDialog = false
                                     },
                                     content = {
-                                        Text(stringResource(R.string.str_today))
+                                        UiText(stringResource(R.string.str_today))
                                     }
                                 )
                             }
@@ -146,7 +146,7 @@ import java.util.Locale
                 value = displayText, onValueChange = {},
                 modifier = Modifier.weight(1f),
                 enabled = enabled, readOnly = true,
-                label = label?.let { { Text(it) } }, placeholder = placeholder?.let { { Text(it) } },
+                label = label?.let { { UiText(it) } }, placeholder = placeholder?.let { { UiText(it) } },
                 leadingIcon = leadingIcon,
                 trailingIcon = {
                     if (value.isNotBlank()) IconButton(

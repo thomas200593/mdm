@@ -22,7 +22,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -211,6 +210,7 @@ import kotlinx.coroutines.launch
                 visible = true,
                 content = {
                     PanelCard(
+                        modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp16),
                         colors = CardDefaults.cardColors().copy(
                             containerColor = MaterialTheme.colorScheme.errorContainer,
                             contentColor = MaterialTheme.colorScheme.onErrorContainer
@@ -225,7 +225,7 @@ import kotlinx.coroutines.launch
             onClick = { onFormAuthEvent(Events.Content.Form.BtnSignIn.Clicked(FormAuthTypeState.LocalEmailPassword)) },
             shape = MaterialTheme.shapes.extraSmall,
             enabled = formAuth.btnSignInEnabled,
-            content = { Text(text = stringResource(R.string.str_sign_in)) }
+            content = { UiText(text = stringResource(R.string.str_sign_in)) }
         )
         SectionRecoverAccount(onFormAuthEvent = onFormAuthEvent)
     }

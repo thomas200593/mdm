@@ -9,12 +9,12 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.thomas200593.mdm.core.ui.component.text.UiText
 
 @Composable fun BtnPrevious(
     modifier: Modifier = Modifier, onClick: () -> Unit,
@@ -25,5 +25,5 @@ import androidx.compose.ui.graphics.vector.ImageVector
 ) = TextButton (
     modifier = modifier, onClick = onClick, enabled = enabled, shape = shape, colors = colors,
     elevation = elevation, border = border, contentPadding = contentPadding, interactionSource = interactionSource,
-    content = { Icon(imageVector = icon, contentDescription = null); Text(label) }
+    content = { Icon(imageVector = icon, contentDescription = null); UiText(label) }
 )

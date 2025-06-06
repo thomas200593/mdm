@@ -19,7 +19,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -273,5 +272,5 @@ import kotlinx.coroutines.launch
     onClick = { onBottomBarEvent(Events.BottomBar.BtnProceedInit.Clicked) },
     enabled = formInitialization.btnProceedEnabled,
     shape = MaterialTheme.shapes.extraSmall,
-    content = { Text(text = stringResource(R.string.str_proceed)) }
+    content = { UiText(text = stringResource(R.string.str_proceed)) }
 ) } )

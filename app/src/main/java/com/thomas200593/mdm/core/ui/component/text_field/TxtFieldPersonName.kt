@@ -6,7 +6,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -16,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import com.thomas200593.mdm.core.ui.component.text.UiText
 import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 
 @Composable fun TxtFieldPersonName(
@@ -38,8 +38,8 @@ import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
         onValueChange = { currentOnValueChange(it) },
         modifier = modifier.fillMaxWidth(),
         enabled = enabled,
-        label = { label?.let { Text(it) } },
-        placeholder = { placeholder?.let { Text(it) } },
+        label = { label?.let { UiText(it) } },
+        placeholder = { placeholder?.let { UiText(it) } },
         leadingIcon = leadingIcon,
         supportingText = { if (isError && errorTexts.isNotEmpty()) ErrorSupportingText(errorTexts) },
         isError = isError,

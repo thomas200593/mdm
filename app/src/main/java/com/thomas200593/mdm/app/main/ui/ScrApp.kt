@@ -18,7 +18,6 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
@@ -38,6 +37,7 @@ import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.ui.common.AppIcons
 import com.thomas200593.mdm.core.ui.component.AppNavSuiteScaffold
+import com.thomas200593.mdm.core.ui.component.text.UiText
 import com.thomas200593.mdm.core.ui.component.top_bar.DestTopLevelAppBar
 import kotlin.reflect.KClass
 
@@ -92,7 +92,7 @@ import kotlin.reflect.KClass
                             contentDescription = null
                         )
                     },
-                    label = { dest.scrGraphs.title.let { Text(stringResource(it)) } },
+                    label = { dest.scrGraphs.title.let { UiText(stringResource(it)) } },
                     modifier = Modifier
                 )
             }

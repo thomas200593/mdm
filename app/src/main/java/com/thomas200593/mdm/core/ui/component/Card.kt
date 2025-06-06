@@ -3,8 +3,6 @@ package com.thomas200593.mdm.core.ui.component
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
@@ -31,7 +29,7 @@ import com.thomas200593.mdm.core.design_system.util.Constants
     colors = colors,
     elevation = elevation,
     content = { Column (
-        modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp16),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(Constants.Dimens.dp8),
         content = { title?.invoke(); content.invoke(); footer?.invoke() }
     ) }

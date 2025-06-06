@@ -6,7 +6,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -18,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.thomas200593.mdm.R
+import com.thomas200593.mdm.core.ui.component.text.UiText
 import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
 
 @Composable fun TxtFieldEmail(
@@ -40,8 +40,8 @@ import com.thomas200593.mdm.core.ui.component.text_field.state.UiText
         value = value,
         onValueChange = { currentOnValueChange(it) },
         enabled = enabled,
-        label = { Text(label) },
-        placeholder = { Text(placeholder) },
+        label = { UiText(label) },
+        placeholder = { UiText(placeholder) },
         leadingIcon = leadingIcon,
         supportingText = { if (isError && errorTexts.isNotEmpty()) ErrorSupportingText(errorTexts) },
         isError = isError,

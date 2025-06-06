@@ -14,7 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +37,7 @@ import com.thomas200593.mdm.core.ui.component.text.UiText
                 horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(16.dp),
                 content = {
                     CircularProgressIndicator()
-                    Text(text = message, color = Color.White, style = MaterialTheme.typography.bodyMedium)
+                    UiText(text = message, color = Color.White, type = TextType.BODY_MD)
                 }
             ) }
         ) }
@@ -47,7 +46,7 @@ import com.thomas200593.mdm.core.ui.component.text.UiText
         horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
         modifier = modifier.fillMaxWidth(), content = {
             CircularProgressIndicator()
-            Text(text = message)
+            UiText(text = message)
         }
     )
     is LoadingType.Screen -> Scaffold(content = { Column (

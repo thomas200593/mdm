@@ -15,8 +15,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,7 +53,7 @@ import kotlinx.coroutines.launch
         onDismissRequest = onDismissRequest,
         dialogType = DialogType.ERROR,
         icon = { Icon(Icons.Default.Close, contentDescription = null) },
-        title = { Text(title) },
+        title = { UiText(title) },
         text = { LazyColumn (
             modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp8),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -72,6 +70,7 @@ import kotlinx.coroutines.launch
                     if (showStackTrace) {
                         val traceText = it.stackTrace.joinToString("\n") { ste -> ste.toString() }
                         item { PanelCard(
+                            modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp16),
                             title = {
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
@@ -104,9 +103,8 @@ import kotlinx.coroutines.launch
                                     }
                                 )
                             },
-                            content = { if (isExpanded && traceText.isNotBlank()) Text(
+                            content = { if (isExpanded && traceText.isNotBlank()) UiText(
                                 text = traceText,
-                                style = MaterialTheme.typography.bodySmall,
                                 modifier = Modifier.fillMaxWidth()
                             ) }
                         ) }
@@ -114,7 +112,7 @@ import kotlinx.coroutines.launch
                 }
             }
         ) },
-        confirmButton = { Button(onClick = onDismissRequest, content = { Text(btnConfirmText) }) },
+        confirmButton = { Button(onClick = onDismissRequest, content = { UiText(btnConfirmText) }) },
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
     )
 }
