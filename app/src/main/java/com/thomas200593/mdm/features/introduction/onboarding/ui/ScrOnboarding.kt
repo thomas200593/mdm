@@ -64,8 +64,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable fun ScrOnboarding(
-    scrGraph: ScrGraphs.Onboarding, vm: VMOnboarding = hiltViewModel(), stateApp: StateApp = LocalStateApp.current,
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
+    scrGraph: ScrGraphs.Onboarding, vm: VMOnboarding = hiltViewModel(),
+    stateApp: StateApp = LocalStateApp.current, coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
     val formOnboarding = vm.formOnboarding
@@ -147,8 +147,7 @@ import kotlinx.coroutines.launch
     }
 )
 @Composable private fun SectionBottomBar(
-    currentIndex: Int, maxIndex: Int,
-    onBottomBarEvents: (Events.BottomBar) -> Unit
+    currentIndex: Int, maxIndex: Int, onBottomBarEvents: (Events.BottomBar) -> Unit
 ) = UiBottomBar (
     content = {
         Row(
