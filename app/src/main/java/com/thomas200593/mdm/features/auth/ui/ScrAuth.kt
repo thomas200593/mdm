@@ -40,7 +40,7 @@ import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.AppIcons
-import com.thomas200593.mdm.core.ui.component.PanelCard
+import com.thomas200593.mdm.core.ui.component.card.ThreeColumnsCard
 import com.thomas200593.mdm.core.ui.component.bottom_bar.UiBottomBar
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
 import com.thomas200593.mdm.core.ui.component.loading.LoadingType
@@ -193,7 +193,7 @@ import kotlinx.coroutines.launch
     resultSignIn: ResultSignInState,
     formAuth: FormAuthState,
     onFormAuthEvent: (Events.Content.Form) -> Unit
-) = PanelCard(
+) = ThreeColumnsCard(
     modifier = Modifier.padding(Constants.Dimens.dp16), content = {
         TxtFieldEmail(
             value = formAuth.fldEmail,
@@ -209,7 +209,7 @@ import kotlinx.coroutines.launch
             AnimatedVisibility(
                 visible = true,
                 content = {
-                    PanelCard(
+                    ThreeColumnsCard(
                         modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp16),
                         colors = CardDefaults.cardColors().copy(
                             containerColor = MaterialTheme.colorScheme.errorContainer,

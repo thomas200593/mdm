@@ -36,7 +36,7 @@ import com.thomas200593.mdm.app.main.nav.NavigationHost
 import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.ui.common.AppIcons
-import com.thomas200593.mdm.core.ui.component.AppNavSuiteScaffold
+import com.thomas200593.mdm.core.ui.component.TLDNavSuiteScaffold
 import com.thomas200593.mdm.core.ui.component.text.UiText
 import com.thomas200593.mdm.core.ui.component.top_bar.DestTopLevelAppBar
 import kotlin.reflect.KClass
@@ -71,7 +71,7 @@ import kotlin.reflect.KClass
         if (isTld) navSuiteScaffoldState.show()
         else navSuiteScaffoldState.hide()
     }
-    AppNavSuiteScaffold(
+    TLDNavSuiteScaffold(
         modifier = modifier,
         state = navSuiteScaffoldState,
         navSuiteItems = {

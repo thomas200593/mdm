@@ -32,7 +32,7 @@ import com.thomas200593.mdm.BuildConfig
 import com.thomas200593.mdm.R
 import com.thomas200593.mdm.core.design_system.error.Error
 import com.thomas200593.mdm.core.design_system.util.Constants
-import com.thomas200593.mdm.core.ui.component.PanelCard
+import com.thomas200593.mdm.core.ui.component.card.ThreeColumnsCard
 import com.thomas200593.mdm.core.ui.component.text.TextType
 import com.thomas200593.mdm.core.ui.component.text.UiText
 import kotlinx.coroutines.launch
@@ -69,7 +69,7 @@ import kotlinx.coroutines.launch
                         ?. let { causeStr -> item { UiText("Cause: $causeStr", modifier = Modifier.fillMaxWidth()) } }
                     if (showStackTrace) {
                         val traceText = it.stackTrace.joinToString("\n") { ste -> ste.toString() }
-                        item { PanelCard(
+                        item { ThreeColumnsCard(
                             modifier = Modifier.fillMaxWidth().padding(Constants.Dimens.dp16),
                             title = {
                                 Row(

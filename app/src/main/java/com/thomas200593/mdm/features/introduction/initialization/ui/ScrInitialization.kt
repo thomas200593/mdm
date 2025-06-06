@@ -41,7 +41,7 @@ import com.thomas200593.mdm.core.design_system.state_app.LocalStateApp
 import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.anim.SlideUpFadeAnim
-import com.thomas200593.mdm.core.ui.component.PanelCard
+import com.thomas200593.mdm.core.ui.component.card.ThreeColumnsCard
 import com.thomas200593.mdm.core.ui.component.bottom_bar.UiBottomBar
 import com.thomas200593.mdm.core.ui.component.checkbox.UiHCheckbox
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
@@ -179,7 +179,7 @@ import kotlinx.coroutines.launch
         }
     ) }
 )
-@Composable private fun PartFormTitle() = PanelCard(
+@Composable private fun PartFormTitle() = ThreeColumnsCard(
     modifier = Modifier.padding(Constants.Dimens.dp8),
     colors = CardDefaults.cardColors().copy(
         containerColor = MaterialTheme.colorScheme.tertiaryContainer,
@@ -213,7 +213,7 @@ import kotlinx.coroutines.launch
 }
 @OptIn(ExperimentalMaterial3Api::class) @Composable private fun PartForm(
     formInitialization: FormInitializationState, onFormEvent: (Events.Content.Form) -> Unit
-) = PanelCard(modifier = Modifier.padding(Constants.Dimens.dp8),
+) = ThreeColumnsCard(modifier = Modifier.padding(Constants.Dimens.dp8),
     title = { UiText(text = stringResource(R.string.str_initialization), type = TextType.TITLE_LG) },
     content = {
         TxtFieldPersonName(

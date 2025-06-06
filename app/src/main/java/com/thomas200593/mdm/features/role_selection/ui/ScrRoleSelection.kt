@@ -58,7 +58,7 @@ import com.thomas200593.mdm.core.design_system.state_app.StateApp
 import com.thomas200593.mdm.core.design_system.util.Constants
 import com.thomas200593.mdm.core.ui.common.AppIcons
 import com.thomas200593.mdm.core.ui.common.anim.SlideUpFadeAnim
-import com.thomas200593.mdm.core.ui.component.PanelCard
+import com.thomas200593.mdm.core.ui.component.card.ThreeColumnsCard
 import com.thomas200593.mdm.core.ui.component.bottom_bar.UiBottomBar
 import com.thomas200593.mdm.core.ui.component.dialog.ErrorDialog
 import com.thomas200593.mdm.core.ui.component.dialog.ScrInfoDialog
@@ -239,7 +239,7 @@ import java.io.File
     modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center,
-    content = { PanelCard(
+    content = { ThreeColumnsCard(
         modifier = Modifier.padding(Constants.Dimens.dp16), title = {
             Icon(
                 modifier = Modifier.fillMaxWidth(),
@@ -255,7 +255,7 @@ import java.io.File
     modifier = Modifier.fillMaxSize().padding(Constants.Dimens.dp16),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center,
-    content = { PanelCard(
+    content = { ThreeColumnsCard(
         modifier = Modifier.padding(Constants.Dimens.dp16), title = {
             Icon(modifier = Modifier.fillMaxWidth(),
                 imageVector = Icons.Default.ImagesearchRoller, contentDescription = null)

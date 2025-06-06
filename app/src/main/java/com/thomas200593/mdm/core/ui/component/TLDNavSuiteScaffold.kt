@@ -16,7 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
-@Composable fun AppNavSuiteScaffold(
+@Composable fun TLDNavSuiteScaffold(
     modifier : Modifier = Modifier,
     navSuiteItems : NavSuiteScope.() -> Unit,
     windowAdaptiveInfo : WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
